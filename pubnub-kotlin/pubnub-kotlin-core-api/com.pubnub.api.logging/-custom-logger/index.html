@@ -39,7 +39,7 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">13.3.0
+        <div class="library-version" id="library-version">13.4.0
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
@@ -96,7 +96,7 @@
     <h1 class="cover"><span>Custom</span><wbr><span><span>Logger</span></span></h1>
     <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
       <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">CustomLogger</a></div><p class="paragraph">Interface for custom logger implementations. Provides both string-based and structured LogMessage-based logging.</p></div>    </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">CustomLogger</a></div><p class="paragraph">Interface for custom logger implementations. Provides both string-based and structured LogMessage-based logging.</p><p class="paragraph">Implementations receive every record the SDK produces. Per-record filtering (by level, format, or sampling) is the implementation's responsibility — typically inside the <a href="debug.html">debug</a> / <a href="trace.html">trace</a> / <a href="info.html">info</a> / <a href="warn.html">warn</a> / <a href="error.html">error</a> methods or in the downstream sink they delegate to. The SDK does not route records based on a per-logger level threshold.</p><p class="paragraph">The only knob the SDK consults on this interface before preparing expensive debug payloads is <a href="is-debug-enabled.html">isDebugEnabled</a>, and that is a <strong>performance hint</strong> — see its KDoc for details.</p></div>    </div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -171,6 +171,23 @@
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
 <div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="info.html"><span class="token function">info</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logMessage<span class="token operator">: </span><a href="../-log-message/index.html">LogMessage</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Log an info message with structured data.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="info.html"><span class="token function">info</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Log an info message with a string.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1939654498%2FFunctions%2F-654868808" anchor-label="isDebugEnabled" id="-1939654498%2FFunctions%2F-654868808" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-debug-enabled.html"><span>is</span><wbr><span>Debug</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1939654498%2FFunctions%2F-654868808"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="is-debug-enabled.html"><span class="token function">isDebugEnabled</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Hint to the SDK whether preparing expensive DEBUG payloads (message fingerprinting, UTF-8 truncation on publish/signal/subscribe) is worthwhile for this logger. Return <code class="lang-kotlin">false</code> if the downstream sink is configured at INFO or higher; the SDK will skip that work unless another attached sink still needs DEBUG payloads.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
