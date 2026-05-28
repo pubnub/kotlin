@@ -171,10 +171,13 @@ class CompositeLogger(
         customLoggers?.forEach { logger ->
             try {
                 action(logger)
-            } catch (e: Exception) {
-                // A custom logger throwing must not crash the SDK call. Report through
-                // primary sinks and continue dispatching to the remaining loggers.
-                reportCustomLoggerFailure(logger.name, "log dispatch", e)
+            } catch (t:  Throwable) {
+                // A custom logger throwing must not crash the SDK call. Catch Throwable so
+                // unchecked errors (LinkageError, AssertionError, etc.) from a misbehaving
+                // logger cannot unwind through the SDK caller — e.g. aborting an in-flight
+                // HTTP request from CustomPnHttpLoggingInterceptor purely because logging
+                // failed. Report through primary sinks and continue with remaining loggers.
+                reportCustomLoggerFailure(logger.name, "log dispatch", t)
             }
         }
     }
