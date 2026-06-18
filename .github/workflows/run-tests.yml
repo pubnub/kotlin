@@ -50,11 +50,14 @@ jobs:
           ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:integrationTest \
             --tests "com.pubnub.api.integration.PublishIntegrationTests"
         env:
-          SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
-          SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}
-          SDK_PAM_SUB_KEY: ${{ secrets.SDK_PAM_SUB_KEY }}
-          SDK_PAM_PUB_KEY: ${{ secrets.SDK_PAM_PUB_KEY }}
-          SDK_PAM_SEC_KEY: ${{ secrets.SDK_PAM_SEC_KEY }}
+          # The integrationTest source set's com.pubnub.test.Keys reads System.getenv()
+          # for UNPREFIXED names (pubKey, subKey, ...), not the SDK_* names. Map them
+          # here, otherwise every test NPEs while building its PNConfiguration.
+          pubKey: ${{ secrets.SDK_PUB_KEY }}
+          subKey: ${{ secrets.SDK_SUB_KEY }}
+          pamSubKey: ${{ secrets.SDK_PAM_SUB_KEY }}
+          pamPubKey: ${{ secrets.SDK_PAM_PUB_KEY }}
+          pamSecKey: ${{ secrets.SDK_PAM_SEC_KEY }}
       - name: Build and run tests
         run: |
           ./gradlew check
