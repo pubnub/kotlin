@@ -36,22 +36,28 @@ jobs:
       - name: Update CocoaPods trunk
         run: |
           pod repo update
-      - name: Build and run tests
+      # Fail fast on a broken build before spending time on the network repro below.
+      # JVM-only compile of the integration test source set (no CocoaPods/iOS path).
+      - name: Compile integration tests (fail fast)
         run: |
-          ./gradlew check
+          ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:compileIntegrationTestKotlin
+      # The `integrationTest` task is not wired into `check`, so integration tests
+      # don't otherwise run on CI. Run PublishIntegrationTests explicitly and BEFORE
+      # `check` to reproduce the Pingora keep-alive silent-drop on the low-latency
+      # CI runner as early as possible.
+      - name: Run Publish integration tests
+        run: |
+          ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:integrationTest \
+            --tests "com.pubnub.api.integration.PublishIntegrationTests"
         env:
           SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
           SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}
           SDK_PAM_SUB_KEY: ${{ secrets.SDK_PAM_SUB_KEY }}
           SDK_PAM_PUB_KEY: ${{ secrets.SDK_PAM_PUB_KEY }}
           SDK_PAM_SEC_KEY: ${{ secrets.SDK_PAM_SEC_KEY }}
-      # The `integrationTest` task is not wired into `check`, so integration tests
-      # don't otherwise run on CI. Run PublishIntegrationTests explicitly here to
-      # reproduce the Pingora keep-alive silent-drop on the low-latency CI runner.
-      - name: Run Publish integration tests
+      - name: Build and run tests
         run: |
-          ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:integrationTest \
-            --tests "com.pubnub.api.integration.PublishIntegrationTests"
+          ./gradlew check
         env:
           SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
           SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}
