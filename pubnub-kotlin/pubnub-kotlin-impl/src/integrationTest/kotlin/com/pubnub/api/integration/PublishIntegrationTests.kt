@@ -925,9 +925,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
      * `fails.isNotEmpty()` would invert the test (red when everything is fine). Run it by
      * hand and read the printed indices.
      */
-//    @Ignore("Manual diagnostic probe for the Pingora keep-alive silent-drop; hits the live server directly")
     @Test
-
     fun reproducesPingoraKeepAliveDrop() {
         val client = OkHttpClient.Builder()
             .connectionPool(ConnectionPool(1, 5, TimeUnit.MINUTES)) // force reuse of ONE connection
