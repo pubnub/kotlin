@@ -8,7 +8,7 @@ import com.pubnub.api.logging.LogContentConfig;
 
 /**
  * Demonstrates LogContentConfig usage for controlling what gets logged in PubNub SDK.
- * Shows three different configurations: default byte limits, suppressed message content, and unlimited HTTP responses.
+ * Shows three different configurations: custom byte limits, suppressed message content, and unlimited HTTP responses.
  */
 public class LogContentConfigApp {
     /**

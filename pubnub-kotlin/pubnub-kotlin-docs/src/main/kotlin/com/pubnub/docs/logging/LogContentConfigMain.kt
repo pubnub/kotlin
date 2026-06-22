@@ -22,7 +22,7 @@ fun main() {
 
     val pubnub = PubNub.create(config)
     // snippet.end
-    pubnub.close()
+    pubnub.destroy()
 
     // snippet.logContentConfigSuppressMessages
     val configSuppressMessages = PNConfiguration.builder(UserId("demoUserId"), "demo") {
@@ -34,7 +34,7 @@ fun main() {
 
     val pubnubSuppressMessages = PubNub.create(configSuppressMessages)
     // snippet.end
-    pubnubSuppressMessages.close()
+    pubnubSuppressMessages.destroy()
 
     // snippet.logContentConfigUnlimitedResponse
     val configUnlimitedResponse = PNConfiguration.builder(UserId("demoUserId"), "demo") {
@@ -46,5 +46,5 @@ fun main() {
 
     val pubnubUnlimitedResponse = PubNub.create(configUnlimitedResponse)
     // snippet.end
-    pubnubUnlimitedResponse.close()
+    pubnubUnlimitedResponse.destroy()
 }
