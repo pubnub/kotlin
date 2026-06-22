@@ -30,13 +30,14 @@ public class ConfigurationOther extends SnippetBase {
 
         // encrypts using 256-bit AES-CBC cipher (recommended)
         // decrypts data encrypted with the legacy and the 256-bit AES-CBC ciphers
-        builder.cryptoModule(CryptoModule.createAesCbcCryptoModule("enigma", true));
+        // use a high-entropy, randomly generated cipher key rather than a dictionary word
+        builder.cryptoModule(CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true));
 
         // OR
 
         // encrypts with 128-bit cipher key entropy (legacy)
         // decrypts data encrypted with the legacy and the 256-bit AES-CBC ciphers
-        builder.cryptoModule(CryptoModule.createLegacyCryptoModule("enigma", true));
+        builder.cryptoModule(CryptoModule.createLegacyCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true));
 
         PNConfiguration pnConfiguration = builder.build();
         // snippet.end
@@ -53,7 +54,7 @@ public class ConfigurationOther extends SnippetBase {
 
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
         configBuilder.publishKey("PublishKey");
-        configBuilder.cryptoModule(CryptoModule.createAesCbcCryptoModule("enigma", true));
+        configBuilder.cryptoModule(CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true));
         PNConfiguration config = configBuilder.build();
 
         // publish

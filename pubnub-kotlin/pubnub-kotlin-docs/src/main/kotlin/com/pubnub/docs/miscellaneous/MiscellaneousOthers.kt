@@ -32,7 +32,7 @@ class MiscellaneousOthers {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#encrypt-part-of-message
 
         // snippet.encryptString
-        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = "myCipherKey01", randomIv = true)
+        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = "pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", randomIv = true)
         val stringToBeEncrypted = "string to be encrypted"
         val encryptedData = aesCbcCryptoModule.encrypt(stringToBeEncrypted.toByteArray())
         // snippet.end
@@ -42,7 +42,7 @@ class MiscellaneousOthers {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-2
 
         // snippet.encryptInputStream
-        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = "myCipherKey01", randomIv = true)
+        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = "pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", randomIv = true)
         val stringToBeEncrypted = "string to be encrypted"
         val encryptedStream = aesCbcCryptoModule.encryptStream(stringToBeEncrypted.byteInputStream())
         // snippet.end
@@ -52,7 +52,7 @@ class MiscellaneousOthers {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-3
 
         // snippet.decryptString
-        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = "myCipherKey01", randomIv = true)
+        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = "pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", randomIv = true)
         val stringToBeEncrypted = "string to be encrypted"
         val encryptedData = aesCbcCryptoModule.encrypt(stringToBeEncrypted.toByteArray())
         val decryptedData = aesCbcCryptoModule.decrypt(encryptedData)
@@ -63,7 +63,7 @@ class MiscellaneousOthers {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-4
 
         // snippet.decryptInputStream
-        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = "myCipherKey01", randomIv = true)
+        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = "pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", randomIv = true)
         val stringToBeEncrypted = "string to be encrypted"
 
         val encryptedStream = aesCbcCryptoModule.encryptStream(stringToBeEncrypted.byteInputStream())
@@ -188,7 +188,7 @@ class MiscellaneousOthers {
         // snippet.createCryptoModuleBasic
         val config = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
             publishKey = "demo"
-            cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma")
+            cryptoModule = CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ")
         }.build()
 
         val pubnub = PubNub.create(config)

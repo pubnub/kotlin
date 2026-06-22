@@ -28,7 +28,8 @@ class ConfigurationOther : SnippetBase() {
         val builderWithAesCbcCryptoModule = PNConfiguration.builder(UserId("abc"), "subscribeKey").apply {
             // encrypts using 256-bit AES-CBC cipher (recommended)
             // decrypts data encrypted with the legacy and the 256-bit AES-CBC ciphers
-            cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma")
+            // use a high-entropy, randomly generated cipher key rather than a dictionary word
+            cryptoModule = CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ")
         }
 
         // OR
@@ -36,7 +37,7 @@ class ConfigurationOther : SnippetBase() {
         val builderWithLegacyCryptoModule = PNConfiguration.builder(UserId("abc"), "subscribeKey") {
             // encrypts with 128-bit cipher key entropy (legacy)
             // decrypts data encrypted with the legacy and the 256-bit AES-CBC ciphers
-            cryptoModule = CryptoModule.createLegacyCryptoModule("enigma")
+            cryptoModule = CryptoModule.createLegacyCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ")
         }
         val pubnub = PubNub.create(builderWithAesCbcCryptoModule.build())
         // snippet.end

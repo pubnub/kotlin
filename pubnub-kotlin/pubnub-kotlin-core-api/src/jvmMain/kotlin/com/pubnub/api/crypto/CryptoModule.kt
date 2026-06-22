@@ -11,11 +11,19 @@ interface CryptoModule {
 
     companion object {
         /**
-         * Creates a [CryptoModule] using the legacy PubNub cryptor for encryption and able to decrypt
-         * data produced by both the legacy and the AES-CBC cryptors.
+         * Returns a [CryptoModule] that encrypts in PubNub's older format.
+         *
+         * **Important:** Use only if you must keep producing payloads readable by very old clients that
+         * cannot decode [createAesCbcCryptoModule] output. For everything else, use
+         * [createAesCbcCryptoModule] — it encrypts with the stronger cipher and still decrypts payloads
+         * produced in the older format.
          *
          * @param cipherKey Use a randomly generated key instead of a dictionary word to increase security.
-         * @param randomIv whether to prepend a random initialization vector to the ciphertext (recommended).
+         * @param randomIv whether to prepend a random initialization vector to the ciphertext. Keep the
+         * default of `true`. **Setting `randomIv = false` makes every message encrypt with the same
+         * hardcoded static IV; reusing one IV with one key in AES-CBC means identical plaintext blocks
+         * produce identical ciphertext blocks, leaking plaintext equality across messages.** It exists only
+         * for backward compatibility with data already encrypted that way.
          */
         @JvmStatic
         fun createLegacyCryptoModule(
@@ -32,8 +40,10 @@ interface CryptoModule {
         }
 
         /**
-         * Creates a [CryptoModule] using the AES-CBC cryptor for encryption and able to decrypt
-         * data produced by both the AES-CBC and the legacy cryptors.
+         * Returns the recommended [CryptoModule] for encryption and decryption.
+         *
+         * Encrypts new payloads with the AES-CBC cryptor and registers the legacy cryptor as a secondary
+         * decryptor, so payloads produced in the older format remain readable.
          *
          * @param cipherKey Use a randomly generated key instead of a dictionary word to increase security.
          * @param randomIv applies only to the legacy cryptor kept for decryption: whether data being
