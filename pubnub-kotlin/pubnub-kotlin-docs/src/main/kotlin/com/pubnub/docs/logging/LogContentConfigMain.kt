@@ -6,8 +6,12 @@ import com.pubnub.api.UserId
 import com.pubnub.api.logging.LogContentConfig
 import com.pubnub.api.v2.PNConfiguration
 
+/**
+ * Demonstrates LogContentConfig usage for controlling what gets logged in PubNub SDK.
+ * Shows three different configurations: custom byte limits, suppressed message content, and unlimited HTTP responses.
+ */
 fun main() {
-    // snippet.logContentConfigDefault
+    // snippet.logContentConfigCustom
     val config = PNConfiguration.builder(UserId("demoUserId"), "demo") {
         publishKey = "demo"
         logContentConfig = LogContentConfig(
@@ -18,6 +22,7 @@ fun main() {
 
     val pubnub = PubNub.create(config)
     // snippet.end
+    pubnub.close()
 
     // snippet.logContentConfigSuppressMessages
     val configSuppressMessages = PNConfiguration.builder(UserId("demoUserId"), "demo") {
@@ -29,6 +34,7 @@ fun main() {
 
     val pubnubSuppressMessages = PubNub.create(configSuppressMessages)
     // snippet.end
+    pubnubSuppressMessages.close()
 
     // snippet.logContentConfigUnlimitedResponse
     val configUnlimitedResponse = PNConfiguration.builder(UserId("demoUserId"), "demo") {
@@ -40,4 +46,5 @@ fun main() {
 
     val pubnubUnlimitedResponse = PubNub.create(configUnlimitedResponse)
     // snippet.end
+    pubnubUnlimitedResponse.close()
 }
