@@ -10,6 +10,13 @@ interface CryptoModule {
     fun decrypt(encryptedData: ByteArray): ByteArray
 
     companion object {
+        /**
+         * Creates a [CryptoModule] using the legacy PubNub cryptor for encryption and able to decrypt
+         * data produced by both the legacy and the AES-CBC cryptors.
+         *
+         * @param cipherKey Use a randomly generated key instead of a dictionary word to increase security.
+         * @param randomIv whether to prepend a random initialization vector to the ciphertext (recommended).
+         */
         @JvmStatic
         fun createLegacyCryptoModule(
             cipherKey: String,
@@ -24,6 +31,15 @@ interface CryptoModule {
             )
         }
 
+        /**
+         * Creates a [CryptoModule] using the AES-CBC cryptor for encryption and able to decrypt
+         * data produced by both the AES-CBC and the legacy cryptors.
+         *
+         * @param cipherKey Use a randomly generated key instead of a dictionary word to increase security.
+         * @param randomIv applies only to the legacy cryptor kept for decryption: whether data being
+         * decrypted in the legacy format is expected to carry a random initialization vector. The AES-CBC
+         * cryptor used for encryption always uses a random IV regardless of this flag.
+         */
         @JvmStatic
         fun createAesCbcCryptoModule(
             cipherKey: String,
@@ -38,6 +54,14 @@ interface CryptoModule {
             )
         }
 
+        /**
+         * Creates a [CryptoModule] from custom [Cryptor] implementations: [defaultCryptor] is used for
+         * encryption, and any [cryptorsForDecryptionOnly] are additionally available for decryption.
+         *
+         * @param defaultCryptor the cryptor used to encrypt data and to decrypt data it produced.
+         * @param cryptorsForDecryptionOnly additional cryptors used only when decrypting data produced
+         * by other cryptors.
+         */
         @JvmStatic
         fun createNewCryptoModule(
             defaultCryptor: Cryptor,
