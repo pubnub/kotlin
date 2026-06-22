@@ -128,6 +128,25 @@ class AesCBCCryptorTest {
     }
 
     @Test
+    fun `should not leak padding-oracle bit in decryption error message`() {
+        // given a valid ciphertext whose last block is tampered to trigger a padding failure
+        val encrypted = objectUnderTest.encrypt("Hello world".toByteArray())
+        val tampered = encrypted.data.copyOf()
+        tampered[tampered.size - 1] = (tampered[tampered.size - 1].toInt() xor 0xFF).toByte()
+        val tamperedData = EncryptedData(metadata = encrypted.metadata, data = tampered)
+
+        // when
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                objectUnderTest.decrypt(tamperedData)
+            }
+
+        // then the generic message is returned and the underlying JCE failure mode is not leaked
+        assertEquals("Decryption failed", exception.errorMessage)
+        assertEquals(PubNubError.CRYPTO_ERROR, exception.pubnubError)
+    }
+
+    @Test
     fun `should throw exception when decrypting empty stream`() {
         // given
         val msgToDecrypt = ""
