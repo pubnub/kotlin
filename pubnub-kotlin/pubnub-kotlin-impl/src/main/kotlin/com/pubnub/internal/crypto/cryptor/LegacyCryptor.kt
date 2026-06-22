@@ -97,7 +97,7 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
                 )
             }
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
-            return CipherInputStream(bufferedInputStream, cipher)
+            return DecryptingInputStream(CipherInputStream(bufferedInputStream, cipher), DECRYPTION_ERROR_MESSAGE)
         } catch (e: PubNubException) {
             throw e
         } catch (e: Exception) {

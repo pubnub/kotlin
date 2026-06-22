@@ -302,6 +302,34 @@ class CryptoModuleTest {
         assertEquals(PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED, exception.pubnubError)
     }
 
+    @ParameterizedTest
+    @MethodSource("legacyAndAesCbcModulesWithRandomIv")
+    fun `should not leak padding-oracle bit when consuming a tampered decrypt stream`(cryptoModule: CryptoModule) {
+        // given a valid encrypted stream whose last ciphertext byte is tampered to force a padding failure
+        val encrypted = cryptoModule.encryptStream("Hello world, this is a longer payload".byteInputStream()).readBytes()
+        encrypted[encrypted.size - 1] = (encrypted[encrypted.size - 1].toInt() xor 0xFF).toByte()
+
+        // when the returned stream is consumed (doFinal runs lazily here, outside decryptStream's try/catch)
+        // bulk read(b, off, len) path:
+        val bulkException =
+            assertThrows(PubNubException::class.java) {
+                cryptoModule.decryptStream(ByteArrayInputStream(encrypted)).readBytes()
+            }
+        // single-byte read() path:
+        val singleByteException =
+            assertThrows(PubNubException::class.java) {
+                cryptoModule.decryptStream(ByteArrayInputStream(encrypted)).use { stream ->
+                    while (stream.read() != -1) { /* drain one byte at a time */ }
+                }
+            }
+
+        // then the generic message is returned on both paths and the underlying JCE failure mode is not leaked
+        for (exception in listOf(bulkException, singleByteException)) {
+            assertEquals("Decryption failed", exception.errorMessage)
+            assertEquals(PubNubError.CRYPTO_ERROR, exception.pubnubError)
+        }
+    }
+
     private fun myCustomCryptor() =
         object : Cryptor {
             override fun id(): ByteArray {
@@ -418,6 +446,13 @@ class CryptoModuleTest {
                 Arguments.of("Hello world2", CryptoModule.createLegacyCryptoModule("myCipherKey", false)),
                 Arguments.of("Hello world3", CryptoModule.createAesCbcCryptoModule("myCipherKey", true)),
                 Arguments.of("Hello world4", CryptoModule.createAesCbcCryptoModule("myCipherKey", false)),
+            )
+
+        @JvmStatic
+        fun legacyAndAesCbcModulesWithRandomIv(): List<Arguments> =
+            listOf(
+                Arguments.of(CryptoModule.createLegacyCryptoModule("myCipherKey", true)),
+                Arguments.of(CryptoModule.createAesCbcCryptoModule("myCipherKey", true)),
             )
 
         @JvmStatic

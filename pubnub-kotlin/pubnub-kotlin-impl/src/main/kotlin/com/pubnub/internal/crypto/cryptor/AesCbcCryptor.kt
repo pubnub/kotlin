@@ -77,7 +77,7 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
                 encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE }
                     ?: throw PubNubException(errorMessage = "Invalid random IV", pubnubError = PubNubError.CRYPTO_ERROR)
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
-            return CipherInputStream(bufferedInputStream, cipher)
+            return DecryptingInputStream(CipherInputStream(bufferedInputStream, cipher), DECRYPTION_ERROR_MESSAGE)
         } catch (e: PubNubException) {
             throw e
         } catch (e: Exception) {
