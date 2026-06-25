@@ -59,6 +59,7 @@ class ConfigurationLoggerTest {
             publishKey = "test-pub-key",
             secretKey = "test-secret",
             authKey = "test-auth",
+            authToken = "test-auth-token-value",
             origin = "custom-origin"
         )
         val instanceId = "test-instance-123"
@@ -74,8 +75,9 @@ class ConfigurationLoggerTest {
         val configSummary = capturedMessage.message as LogMessageContent.Object
 
         assertEquals("test-pub-key", configSummary.arguments!!["publishKey"])
-        assertEquals("set: *****", configSummary.arguments!!["secretKey"])
-        assertEquals("(@Deprecated) set: *****", configSummary.arguments!!["authKey"])
+        assertEquals("test-sec… (len=11)", configSummary.arguments!!["secretKey"])
+        assertEquals("(@Deprecated) ***", configSummary.arguments!!["authKey"])
+        assertEquals("test-aut… (len=21)", configSummary.arguments!!["authToken"])
         assertEquals("custom-origin", configSummary.arguments!!["origin"])
     }
 
@@ -108,6 +110,7 @@ class ConfigurationLoggerTest {
         assertEquals("not set", configSummary.arguments!!["publishKey"])
         assertEquals("not set", configSummary.arguments!!["secretKey"])
         assertEquals("not set", configSummary.arguments!!["authKey"])
+        assertEquals("not set", configSummary.arguments!!["authToken"])
         assertEquals("default", configSummary.arguments!!["origin"])
     }
 
