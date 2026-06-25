@@ -1,3 +1,11 @@
+## v13.4.1
+June 25 2026
+
+#### Fixed
+- Improved description of cryptors.
+- Modified cipherKeys in snippets to have high-entropy.
+- Added description for cryptors that emphasise that cipherKey with high entropy increases security.
+
 ## v13.4.0
 May 28 2026
 

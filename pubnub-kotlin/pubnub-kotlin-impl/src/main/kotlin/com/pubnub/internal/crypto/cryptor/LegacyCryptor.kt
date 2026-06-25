@@ -20,6 +20,7 @@ import javax.crypto.spec.SecretKeySpec
 
 private const val STATIC_IV = "0123456789012345"
 private const val CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding"
+private const val DECRYPTION_ERROR_MESSAGE = "Decryption failed"
 
 @get:JvmSynthetic
 internal val LEGACY_CRYPTOR_ID = ByteArray(4) { 0.toByte() }
@@ -65,8 +66,10 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
             val encryptedDataForProcessing = getEncryptedDataForProcessing(encryptedData)
             val decryptedData = cipher.doFinal(encryptedDataForProcessing)
             decryptedData
+        } catch (e: PubNubException) {
+            throw e
         } catch (e: Exception) {
-            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+            throw PubNubException(errorMessage = DECRYPTION_ERROR_MESSAGE, pubnubError = PubNubError.CRYPTO_ERROR)
         }
     }
 
@@ -94,9 +97,11 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
                 )
             }
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
-            return CipherInputStream(bufferedInputStream, cipher)
+            return DecryptingInputStream(CipherInputStream(bufferedInputStream, cipher), DECRYPTION_ERROR_MESSAGE)
+        } catch (e: PubNubException) {
+            throw e
         } catch (e: Exception) {
-            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+            throw PubNubException(errorMessage = DECRYPTION_ERROR_MESSAGE, pubnubError = PubNubError.CRYPTO_ERROR)
         }
     }
 

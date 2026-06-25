@@ -46,7 +46,7 @@ public class MiscellaneousOthers extends SnippetBase {
         // https://www.pubnub.com/docs/sdks/java/api-reference/misc#encrypt-part-of-message
 
         // snippet.encryptString
-        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey01", true);
+        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true);
         String stringToBeEncrypted = "string to be encrypted";
         byte[] encryptedData = aesCbcCryptoModule.encrypt(stringToBeEncrypted.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         // snippet.end
@@ -56,7 +56,7 @@ public class MiscellaneousOthers extends SnippetBase {
         // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-3
 
         // snippet.encryptInputStream
-        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey01", true);
+        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true);
         String stringToBeEncrypted = "string to be encrypted";
         InputStream inputStream = new java.io.ByteArrayInputStream(stringToBeEncrypted.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         InputStream encryptedStream = aesCbcCryptoModule.encryptStream(inputStream);
@@ -67,7 +67,7 @@ public class MiscellaneousOthers extends SnippetBase {
         // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-4
 
         // snippet.decryptString
-        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey01", true);
+        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true);
         String stringToBeEncrypted = "string to be encrypted";
 
         byte[] encryptedData = aesCbcCryptoModule.encrypt(stringToBeEncrypted.getBytes(java.nio.charset.StandardCharsets.UTF_8));
@@ -79,7 +79,7 @@ public class MiscellaneousOthers extends SnippetBase {
         // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-5
 
         // snippet.decryptInputStream
-        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey01", true);
+        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true);
         String stringToBeEncrypted = "string to be encrypted";
         InputStream inputStream = new java.io.ByteArrayInputStream(stringToBeEncrypted.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         InputStream encryptedStream = aesCbcCryptoModule.encryptStream(inputStream);
@@ -198,7 +198,7 @@ public class MiscellaneousOthers extends SnippetBase {
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
         // publishKey from Admin Portal (only required if publishing)
         configBuilder.publishKey("PublishKey");
-        configBuilder.cryptoModule(CryptoModule.createAesCbcCryptoModule("enigma", true));
+        configBuilder.cryptoModule(CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true));
         // all necessary config options
         PubNub pubNub = PubNub.create(configBuilder.build());
         // snippet.end
@@ -214,7 +214,7 @@ public class MiscellaneousOthers extends SnippetBase {
         clearData.addProperty("notes", "You are having twins!");
         byte[]  clearBytes = clearData.toString().getBytes(StandardCharsets.UTF_8);
 
-        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey01", true);
+        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true);
 
         byte[] encryptedData = aesCbcCryptoModule.encrypt(clearBytes);
         // [80, 78, 69, 68, 1, 65, 67, 82, 72, 16, 83, 67, -54, -1, 98, -51, 91, 120, 31, 121, 100, 95, 75, 54, -95, 60, -74, 32, 26, 108, 77, 107, -47, 50, -45, -8, 86, -67, 72, 30, -106, -9, 45, -92, -111, 118, 50, -55, -48, -103, -90, -115, -70, 120, -47, -107, 41, 7, -61, 52, -37, -61, 83, -20, 34, -30, -64, 61, 104, 24, 3, 25, 41, -122, -36, 60, 98, -16, 34, 81, -41, 46, 102, 7, -97, 64, -37, -10, 124, 67, -41, 101, 35, -80, -103, -27, -26, -34, -50, -86, -2, -84, 105, 16, -84, 4]
@@ -226,7 +226,7 @@ public class MiscellaneousOthers extends SnippetBase {
 
         // snippet.decryptingMessage
         // parse the received message and pass the encrypted parts to decrypt API.
-        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey01", true);
+        CryptoModule aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true);
         byte[] encryptedData = new byte[]{80, 78, 69, 68, 1, 65, 67, 82, 72, 16, 83, 67, -54, -1, 98, -51, 91, 120, 31, 121, 100, 95, 75, 54, -95, 60, -74, 32, 26, 108, 77, 107, -47, 50, -45, -8, 86, -67, 72, 30, -106, -9, 45, -92, -111, 118, 50, -55, -48, -103, -90, -115, -70, 120, -47, -107, 41, 7, -61, 52, -37, -61, 83, -20, 34, -30, -64, 61, 104, 24, 3, 25, 41, -122, -36, 60, 98, -16, 34, 81, -41, 46, 102, 7, -97, 64, -37, -10, 124, 67, -41, 101, 35, -80, -103, -27, -26, -34, -50, -86, -2, -84, 105, 16, -84, 4};
 
         byte[] decryptedBytes = aesCbcCryptoModule.decrypt(encryptedData);

@@ -150,6 +150,27 @@ class LegacyCryptorTest {
         Assertions.assertEquals(PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED, exception.pubnubError)
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `should not leak padding-oracle bit in decryption error message`(useRandomIv: Boolean) {
+        // given a valid ciphertext whose last block is tampered to trigger a padding failure
+        val cryptor = LegacyCryptor(cipherKey = "enigma", useRandomIv = useRandomIv)
+        val encrypted = cryptor.encrypt("Hello world".toByteArray())
+        val tampered = encrypted.data.copyOf()
+        tampered[tampered.size - 1] = (tampered[tampered.size - 1].toInt() xor 0xFF).toByte()
+        val tamperedData = EncryptedData(data = tampered)
+
+        // when
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                cryptor.decrypt(tamperedData)
+            }
+
+        // then the generic message is returned and the underlying JCE failure mode is not leaked
+        Assertions.assertEquals("Decryption failed", exception.errorMessage)
+        Assertions.assertEquals(PubNubError.CRYPTO_ERROR, exception.pubnubError)
+    }
+
     @Test
     fun `should throw exception when encrypting empty stream`() {
         // given

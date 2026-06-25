@@ -126,10 +126,10 @@ fun createEncryptedConfig(): PNConfiguration {
         publishKey = "demo"
 
         // Enable message encryption with 256-bit AES-CBC (recommended)
-        cryptoModule = CryptoModule.createAesCbcCryptoModule("my-secret-key")
+        cryptoModule = CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ")
 
         // Alternatively, for legacy compatibility:
-        // cryptoModule = CryptoModule.createLegacyCryptoModule("my-secret-key")
+        // cryptoModule = CryptoModule.createLegacyCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ")
     }
     return builder.build()
 }

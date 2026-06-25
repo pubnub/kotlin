@@ -10,6 +10,21 @@ interface CryptoModule {
     fun decrypt(encryptedData: ByteArray): ByteArray
 
     companion object {
+        /**
+         * Returns a [CryptoModule] that encrypts in PubNub's older format.
+         *
+         * **Important:** Use only if you must keep producing payloads readable by very old clients that
+         * cannot decode [createAesCbcCryptoModule] output. For everything else, use
+         * [createAesCbcCryptoModule] — it encrypts with the stronger cipher and still decrypts payloads
+         * produced in the older format.
+         *
+         * @param cipherKey Use a randomly generated key instead of a dictionary word to increase security.
+         * @param randomIv whether to prepend a random initialization vector to the ciphertext. Keep the
+         * default of `true`. **Setting `randomIv = false` makes every message encrypt with the same
+         * hardcoded static IV; reusing one IV with one key in AES-CBC means identical plaintext blocks
+         * produce identical ciphertext blocks, leaking plaintext equality across messages.** It exists only
+         * for backward compatibility with data already encrypted that way.
+         */
         @JvmStatic
         fun createLegacyCryptoModule(
             cipherKey: String,
@@ -24,6 +39,17 @@ interface CryptoModule {
             )
         }
 
+        /**
+         * Returns the recommended [CryptoModule] for encryption and decryption.
+         *
+         * Encrypts new payloads with the AES-CBC cryptor and registers the legacy cryptor as a secondary
+         * decryptor, so payloads produced in the older format remain readable.
+         *
+         * @param cipherKey Use a randomly generated key instead of a dictionary word to increase security.
+         * @param randomIv applies only to the legacy cryptor kept for decryption: whether data being
+         * decrypted in the legacy format is expected to carry a random initialization vector. The AES-CBC
+         * cryptor used for encryption always uses a random IV regardless of this flag.
+         */
         @JvmStatic
         fun createAesCbcCryptoModule(
             cipherKey: String,
@@ -38,6 +64,14 @@ interface CryptoModule {
             )
         }
 
+        /**
+         * Creates a [CryptoModule] from custom [Cryptor] implementations: [defaultCryptor] is used for
+         * encryption, and any [cryptorsForDecryptionOnly] are additionally available for decryption.
+         *
+         * @param defaultCryptor the cryptor used to encrypt data and to decrypt data it produced.
+         * @param cryptorsForDecryptionOnly additional cryptors used only when decrypting data produced
+         * by other cryptors.
+         */
         @JvmStatic
         fun createNewCryptoModule(
             defaultCryptor: Cryptor,

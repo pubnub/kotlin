@@ -6,6 +6,7 @@ import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.v2.PNConfiguration
 
 private const val NOT_SET = "not set"
+private const val REDACTION_PREFIX_LENGTH = 8
 
 object ConfigurationLogger {
     fun logConfiguration(
@@ -20,7 +21,7 @@ object ConfigurationLogger {
             "subscribeKey" to configuration.subscribeKey,
             // Optional parameters
             "publishKey" to (configuration.publishKey.takeIf { it.isNotBlank() } ?: NOT_SET),
-            "secretKey" to (configuration.secretKey.takeIf { it.isNotBlank() }?.let { "set: *****" } ?: NOT_SET),
+            "secretKey" to (configuration.secretKey.takeIf { it.isNotBlank() }?.let { redactWithPrefix(it) } ?: NOT_SET),
             // Security and connection settings
             "secure" to configuration.secure,
             "origin" to (configuration.origin.takeIf { it.isNotBlank() } ?: "default"),
@@ -37,8 +38,8 @@ object ConfigurationLogger {
             "suppressLeaveEvents" to configuration.suppressLeaveEvents,
             "maintainPresenceState" to configuration.maintainPresenceState,
             // Authentication
-            "authKey" to (configuration.authKey.takeIf { it.isNotBlank() }?.let { "(@Deprecated) set: *****" } ?: NOT_SET),
-            "authToken" to (configuration.authToken?.takeIf { it.isNotBlank() }?.let { "set: *****" } ?: NOT_SET),
+            "authKey" to (configuration.authKey.takeIf { it.isNotBlank() }?.let { "(@Deprecated) ***" } ?: NOT_SET),
+            "authToken" to (configuration.authToken?.takeIf { it.isNotBlank() }?.let { redactWithPrefix(it) } ?: NOT_SET),
             // Filtering and subscriptions
             "filterExpression" to (configuration.filterExpression.takeIf { it.isNotBlank() } ?: NOT_SET),
             "dedupOnSubscribe" to configuration.dedupOnSubscribe,
@@ -98,6 +99,13 @@ object ConfigurationLogger {
             )
         )
     }
+
+    private fun redactWithPrefix(value: String): String =
+        if (value.length > REDACTION_PREFIX_LENGTH) {
+            "${value.take(REDACTION_PREFIX_LENGTH)}… (len=${value.length})"
+        } else {
+            "… (len=${value.length})"
+        }
 
     private fun formatLogByteCap(value: Int): String =
         when (value) {

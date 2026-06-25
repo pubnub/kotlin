@@ -25,7 +25,7 @@ public class ConfigurationApp {
         configBuilder.secure(true);
         configBuilder.filterExpression("such=wow");
         configBuilder.retryConfiguration(new RetryConfiguration.Linear());
-        configBuilder.cryptoModule(CryptoModule.createAesCbcCryptoModule("enigma", true));
+        configBuilder.cryptoModule(CryptoModule.createAesCbcCryptoModule("pn-9F3kQ7zR2xV8mB1tD6wL4yH0sN5cJ", true));
 
         PNConfiguration pnConfiguration = configBuilder.build();
         PubNub pubnub = PubNub.create(pnConfiguration);

@@ -17,6 +17,7 @@ import javax.crypto.spec.SecretKeySpec
 
 private const val CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding"
 private const val RANDOM_IV_SIZE = 16
+private const val DECRYPTION_ERROR_MESSAGE = "Decryption failed"
 
 class AesCbcCryptor(val cipherKey: String) : Cryptor {
     private val newKey: SecretKeySpec = createNewKey()
@@ -46,8 +47,10 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
             val decryptedData = cipher.doFinal(encryptedData.data)
             decryptedData
+        } catch (e: PubNubException) {
+            throw e
         } catch (e: Exception) {
-            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+            throw PubNubException(errorMessage = DECRYPTION_ERROR_MESSAGE, pubnubError = PubNubError.CRYPTO_ERROR)
         }
     }
 
@@ -74,9 +77,11 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
                 encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE }
                     ?: throw PubNubException(errorMessage = "Invalid random IV", pubnubError = PubNubError.CRYPTO_ERROR)
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
-            return CipherInputStream(bufferedInputStream, cipher)
+            return DecryptingInputStream(CipherInputStream(bufferedInputStream, cipher), DECRYPTION_ERROR_MESSAGE)
+        } catch (e: PubNubException) {
+            throw e
         } catch (e: Exception) {
-            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+            throw PubNubException(errorMessage = DECRYPTION_ERROR_MESSAGE, pubnubError = PubNubError.CRYPTO_ERROR)
         }
     }
 
