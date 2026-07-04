@@ -93,6 +93,7 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNAbstractGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
@@ -500,8 +501,11 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
-        uuids: List<UUIDGrant>
+        uuids: List<UUIDGrant>,
+        datasync: List<DataSyncGrantType>
     ): GrantToken {
+        // NOTE: DataSync (App Context v4) grants are not yet supported by the underlying `pubnub` npm package, so the
+        // `datasync` list is intentionally not forwarded on the JS target. The Kotlin/JVM and Java/GSON SDKs carry it.
         return GrantTokenImpl(
             jsPubNub,
             createJsObject {

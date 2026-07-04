@@ -62,6 +62,7 @@ import com.pubnub.api.models.consumer.access_manager.sum.toChannelGrant
 import com.pubnub.api.models.consumer.access_manager.sum.toUuidGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -749,6 +750,7 @@ open class PubNubImpl(
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
+        datasync: List<DataSyncGrantType>,
     ): GrantToken {
         return GrantTokenEndpoint(
             pubnub = this,
@@ -758,6 +760,7 @@ open class PubNubImpl(
             channels = channels,
             channelGroups = channelGroups,
             uuids = uuids,
+            datasync = datasync,
         )
     }
 

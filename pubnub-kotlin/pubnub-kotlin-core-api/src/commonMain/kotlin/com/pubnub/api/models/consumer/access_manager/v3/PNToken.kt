@@ -1,6 +1,7 @@
 package com.pubnub.api.models.consumer.access_manager.v3
 
 import com.pubnub.api.models.TokenBitmask
+import kotlin.jvm.JvmOverloads
 
 data class PNToken(
     val version: Int = 0,
@@ -15,25 +16,32 @@ data class PNToken(
         val channels: Map<String, PNResourcePermissions> = emptyMap(),
         val channelGroups: Map<String, PNResourcePermissions> = emptyMap(),
         val uuids: Map<String, PNResourcePermissions> = emptyMap(),
+        val datasyncEntities: Map<String, PNResourcePermissions> = emptyMap(),
+        val datasyncRelationships: Map<String, PNResourcePermissions> = emptyMap(),
+        val datasyncMemberships: Map<String, PNResourcePermissions> = emptyMap(),
     )
 
-    data class PNResourcePermissions(
-        val read: Boolean = false,
-        val write: Boolean = false,
-        val manage: Boolean = false,
-        val delete: Boolean = false,
-        val get: Boolean = false,
-        val update: Boolean = false,
-        val join: Boolean = false,
-    ) {
-        constructor(grant: Int) : this(
-            grant and TokenBitmask.READ != 0,
-            grant and TokenBitmask.WRITE != 0,
-            grant and TokenBitmask.MANAGE != 0,
-            grant and TokenBitmask.DELETE != 0,
-            grant and TokenBitmask.GET != 0,
-            grant and TokenBitmask.UPDATE != 0,
-            grant and TokenBitmask.JOIN != 0,
-        )
-    }
+    data class PNResourcePermissions
+        @JvmOverloads
+        constructor(
+            val read: Boolean = false,
+            val write: Boolean = false,
+            val manage: Boolean = false,
+            val delete: Boolean = false,
+            val get: Boolean = false,
+            val update: Boolean = false,
+            val join: Boolean = false,
+            val create: Boolean = false,
+        ) {
+            constructor(grant: Int) : this(
+                grant and TokenBitmask.READ != 0,
+                grant and TokenBitmask.WRITE != 0,
+                grant and TokenBitmask.MANAGE != 0,
+                grant and TokenBitmask.DELETE != 0,
+                grant and TokenBitmask.GET != 0,
+                grant and TokenBitmask.UPDATE != 0,
+                grant and TokenBitmask.JOIN != 0,
+                grant and TokenBitmask.CREATE != 0,
+            )
+        }
 }
