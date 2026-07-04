@@ -13,7 +13,9 @@ import com.pubnub.api.java.models.consumer.access_manager.sum.SpacePermissions;
 import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
@@ -34,6 +36,7 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
     private List<ChannelGrant> channels = Collections.emptyList();
     private List<ChannelGroupGrant> channelGroups = Collections.emptyList();
     private List<UUIDGrant> uuids = Collections.emptyList();
+    private List<DataSyncGrant> datasync = Collections.emptyList();
 
     public GrantTokenImpl(PubNub pubnub) {
         super(pubnub);
@@ -55,7 +58,8 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                 authorizedUUID,
                 toInternalChannels(channels),
                 toInternalChannelGroups(channelGroups),
-                toInternalUuids(uuids)
+                toInternalUuids(uuids),
+                toInternalDataSync(datasync)
         );
     }
 
@@ -194,6 +198,36 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isRead(),
                     grant.isManage()
             );
+        }
+    }
+
+    private List<? extends DataSyncGrantType> toInternalDataSync(List<DataSyncGrant> datasync) {
+        ArrayList<DataSyncGrantType> list = new ArrayList<>(datasync.size());
+        for (DataSyncGrant grant : datasync) {
+            list.add(toInternal(grant));
+        }
+        return list;
+    }
+
+    static DataSyncGrantType toInternal(DataSyncGrant grant) {
+        boolean pattern = grant.isPatternResource();
+        com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant factory =
+                com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.INSTANCE;
+        switch (grant.getNamespace()) {
+            case DataSyncGrant.DATASYNC_ENTITIES:
+                return pattern
+                        ? factory.entityPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete())
+                        : factory.entity(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete());
+            case DataSyncGrant.DATASYNC_RELATIONSHIPS:
+                return pattern
+                        ? factory.relationshipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete())
+                        : factory.relationship(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete());
+            case DataSyncGrant.DATASYNC_MEMBERSHIPS:
+                return pattern
+                        ? factory.membershipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete())
+                        : factory.membership(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete());
+            default:
+                throw new IllegalArgumentException("unknown datasync namespace: " + grant.getNamespace());
         }
     }
 

@@ -8,6 +8,7 @@ import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.retry.RetryableEndpointGroup
@@ -29,6 +30,7 @@ class GrantTokenEndpoint(
     private val channels: List<ChannelGrant>,
     private val channelGroups: List<ChannelGroupGrant>,
     private val uuids: List<UUIDGrant>,
+    private val datasync: List<DataSyncGrantType> = emptyList(),
 ) : EndpointCore<GrantTokenResponse, PNGrantTokenResult>(pubnub), GrantToken {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
@@ -43,7 +45,7 @@ class GrantTokenEndpoint(
         if (!configuration.subscribeKey.isValid()) {
             throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
         }
-        if ((channels + channelGroups + uuids).isEmpty()) {
+        if ((channels + channelGroups + uuids + datasync).isEmpty()) {
             throw PubNubException(
                 pubnubError = PubNubError.RESOURCES_MISSING,
                 errorMessage = "At least one grant required",
@@ -63,7 +65,10 @@ class GrantTokenEndpoint(
                             mapOf("id" to it.id, "read" to it.read, "write" to it.write, "manage" to it.manage, "delete" to it.delete, "get" to it.get, "update" to it.update, "join" to it.join)
                         },
                         "channelGroups" to channelGroups.map { mapOf("id" to it.id, "read" to it.read, "write" to it.write, "manage" to it.manage) },
-                        "uuids" to uuids.map { mapOf("id" to it.id, "get" to it.get, "update" to it.update, "delete" to it.delete) }
+                        "uuids" to uuids.map { mapOf("id" to it.id, "get" to it.get, "update" to it.update, "delete" to it.delete) },
+                        "datasync" to datasync.map {
+                            mapOf("namespace" to it.namespace, "id" to it.id, "get" to it.get, "create" to it.create, "update" to it.update, "delete" to it.delete)
+                        }
                     ),
                     operation = this::class.simpleName
                 ),
@@ -77,6 +82,7 @@ class GrantTokenEndpoint(
                 channels = channels,
                 groups = channelGroups,
                 uuids = uuids,
+                datasync = datasync,
                 meta = meta,
                 uuid = authorizedUUID,
             )

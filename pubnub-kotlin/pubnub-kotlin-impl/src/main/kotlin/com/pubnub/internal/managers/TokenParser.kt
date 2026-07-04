@@ -6,6 +6,7 @@ import co.nstant.`in`.cbor.model.NegativeInteger
 import co.nstant.`in`.cbor.model.UnsignedInteger
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
@@ -110,11 +111,17 @@ internal class TokenParser {
         val channels = (this[CHANNELS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
         val groups = (this[GROUPS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
         val uuids = (this[UUIDS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
+        val datasyncEntities = (this[DATASYNC_ENTITIES_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
+        val datasyncRelationships = (this[DATASYNC_RELATIONSHIPS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
+        val datasyncMemberships = (this[DATASYNC_MEMBERSHIPS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
 
         return PNToken.PNTokenResources(
             channels = channels.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
             channelGroups = groups.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
             uuids = uuids.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
+            datasyncEntities = datasyncEntities.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
+            datasyncRelationships = datasyncRelationships.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
+            datasyncMemberships = datasyncMemberships.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
         )
     }
 
@@ -129,5 +136,8 @@ internal class TokenParser {
         private const val CHANNELS_KEY = "chan"
         private const val GROUPS_KEY = "grp"
         private const val UUIDS_KEY = "uuid"
+        private const val DATASYNC_ENTITIES_KEY = DataSyncNamespace.ENTITIES
+        private const val DATASYNC_RELATIONSHIPS_KEY = DataSyncNamespace.RELATIONSHIPS
+        private const val DATASYNC_MEMBERSHIPS_KEY = DataSyncNamespace.MEMBERSHIPS
     }
 }

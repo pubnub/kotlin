@@ -52,6 +52,7 @@ import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.history.PNHistoryResult
@@ -1078,6 +1079,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param channels List of all channel grants
      * @param channelGroups List of all channel group grants
      * @param uuids List of all uuid grants
+     * @param datasync List of all DataSync resource grants
      */
 
     actual fun grantToken(
@@ -1087,6 +1089,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
+        datasync: List<DataSyncGrantType>,
     ): GrantToken
 
     /**

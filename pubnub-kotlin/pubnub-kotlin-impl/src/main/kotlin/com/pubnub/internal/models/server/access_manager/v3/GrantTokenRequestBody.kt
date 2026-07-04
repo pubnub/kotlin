@@ -1,9 +1,12 @@
 package com.pubnub.internal.models.server.access_manager.v3
 
+import com.google.gson.annotations.SerializedName
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.TokenBitmask
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
@@ -25,6 +28,12 @@ data class GrantTokenRequestBody(
         val uuids: Map<String, Int> = emptyMap(),
         val spaces: Map<String, Int> = emptyMap(),
         val users: Map<String, Int> = emptyMap(),
+        @SerializedName(DataSyncNamespace.ENTITIES)
+        val datasyncEntities: Map<String, Int> = emptyMap(),
+        @SerializedName(DataSyncNamespace.RELATIONSHIPS)
+        val datasyncRelationships: Map<String, Int> = emptyMap(),
+        @SerializedName(DataSyncNamespace.MEMBERSHIPS)
+        val datasyncMemberships: Map<String, Int> = emptyMap(),
     )
 
     companion object {
@@ -36,18 +45,29 @@ data class GrantTokenRequestBody(
             uuids: List<UUIDGrant>,
             meta: Any?,
             uuid: String?,
+            datasync: List<DataSyncGrantType> = emptyList(),
         ): GrantTokenRequestBody {
+            val entities = datasync.filter { it.namespace == DataSyncNamespace.ENTITIES }
+            val relationships = datasync.filter { it.namespace == DataSyncNamespace.RELATIONSHIPS }
+            val memberships = datasync.filter { it.namespace == DataSyncNamespace.MEMBERSHIPS }
+
             val resources =
                 GrantTokenPermission(
-                    getResources(channels),
-                    getResources(groups),
-                    getResources(uuids),
+                    channels = getResources(channels),
+                    groups = getResources(groups),
+                    uuids = getResources(uuids),
+                    datasyncEntities = getResources(entities),
+                    datasyncRelationships = getResources(relationships),
+                    datasyncMemberships = getResources(memberships),
                 )
             val patterns =
                 GrantTokenPermission(
-                    getPatterns(channels),
-                    getPatterns(groups),
-                    getPatterns(uuids),
+                    channels = getPatterns(channels),
+                    groups = getPatterns(groups),
+                    uuids = getPatterns(uuids),
+                    datasyncEntities = getPatterns(entities),
+                    datasyncRelationships = getPatterns(relationships),
+                    datasyncMemberships = getPatterns(memberships),
                 )
             val permissions = GrantTokenPermissions(resources, patterns, meta ?: emptyMap<Any, Any>(), uuid)
             return GrantTokenRequestBody(ttl, permissions)
