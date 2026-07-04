@@ -1,6 +1,6 @@
 package com.pubnub.api.java.models.consumer.access_manager.v3;
 
-public class UUIDGrant extends PNResource<UUIDGrant> {
+public class UUIDGrant extends PNAppContextResource<UUIDGrant> {
 
     private UUIDGrant() {
     }
