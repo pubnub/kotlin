@@ -153,3 +153,42 @@ internal data class PNUserPatternPermissionsGrant(
     override val update: Boolean = false,
     override val delete: Boolean = false,
 ) : PNPatternGrant(), UserPermissions
+
+/**
+ * The three DataSync PAM v3 resource namespaces. They appear literally as keys under the
+ * token's `res`/`pat` blocks, as siblings of `chan`/`grp`/`uuid`.
+ */
+object DataSyncNamespace {
+    const val ENTITIES = "datasync:entities"
+    const val RELATIONSHIPS = "datasync:relationships"
+    const val MEMBERSHIPS = "datasync:memberships"
+}
+
+/**
+ * Marker type accepted by the `datasync` parameter of [com.pubnub.api.PubNub.grantToken].
+ *
+ * This interface is `sealed`: only the SDK's own concrete grant classes may implement it. External callers create
+ * instances through the [DataSyncGrant] factory. Sealing prevents a caller from supplying a grant with an unknown
+ * [namespace] (e.g. a typo) that the serializer would otherwise silently drop from the minted token.
+ */
+sealed interface DataSyncGrantType : PNGrant {
+    val namespace: String
+}
+
+internal data class PNDataSyncResourceGrant(
+    override val namespace: String,
+    override val id: String,
+    override val get: Boolean = false,
+    override val create: Boolean = false,
+    override val update: Boolean = false,
+    override val delete: Boolean = false,
+) : PNResourceGrant(), DataSyncGrantType
+
+internal data class PNDataSyncPatternGrant(
+    override val namespace: String,
+    override val id: String,
+    override val get: Boolean = false,
+    override val create: Boolean = false,
+    override val update: Boolean = false,
+    override val delete: Boolean = false,
+) : PNPatternGrant(), DataSyncGrantType
