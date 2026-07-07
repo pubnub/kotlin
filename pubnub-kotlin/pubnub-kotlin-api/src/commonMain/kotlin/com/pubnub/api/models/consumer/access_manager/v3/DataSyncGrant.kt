@@ -28,6 +28,7 @@ package com.pubnub.api.models.consumer.access_manager.v3
  */
 object DataSyncGrant {
     // entities
+
     /**
      * @param projection the single projection the token holder looks *through* for this resource, or `null` for the
      * implicit `__default__` projection. When set, the SDK emits the matching `pn-projections` entry into the token
@@ -59,6 +60,7 @@ object DataSyncGrant {
         PNDataSyncPatternGrant(DataSyncNamespace.ENTITIES, pattern, get, create, update, delete, projection)
 
     // relationships
+
     /**
      * @param projection the single projection the token holder looks *through* for this resource, or `null` for the
      * implicit `__default__` projection. When set, the SDK emits the matching `pn-projections` entry into the token
@@ -90,6 +92,7 @@ object DataSyncGrant {
         PNDataSyncPatternGrant(DataSyncNamespace.RELATIONSHIPS, pattern, get, create, update, delete, projection)
 
     // memberships
+
     /**
      * @param projection the single projection the token holder looks *through* for this resource, or `null` for the
      * implicit `__default__` projection. When set, the SDK emits the matching `pn-projections` entry into the token

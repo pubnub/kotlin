@@ -81,7 +81,12 @@ data class GrantTokenRequestBody(
          * pattern grants land under `pat`, exact grants under `res`. If the caller already supplied a
          * `pn-projections` entry inside their own [meta] map it is preserved and the grant-derived entries are merged
          * on top of it. Returns the original meta untouched when no grant carries a projection.
+         *
+         * @throws PubNubException if a grant carries a projection but [meta] is a non-null, non-map value. Projections
+         * must live inside a map-shaped meta, so the SDK cannot merge them into an arbitrary object without silently
+         * discarding it — pass `null` or a map (e.g. via `createCustomObject(mapOf(...))`) instead.
          */
+        @Throws(PubNubException::class)
         private fun mergeProjectionsIntoMeta(meta: Any?, datasync: List<DataSyncGrantType>): Any {
             val withProjection = datasync.filter { it.projection != null }
             if (withProjection.isEmpty()) {
@@ -109,8 +114,16 @@ data class GrantTokenRequestBody(
                 generatedBlock["pat"] = pat
             }
 
-            // Merge with caller-supplied meta. If it is a map, overlay pn-projections onto a copy; otherwise the
-            // generated projection meta wins (a non-map meta cannot carry pn-projections anyway).
+            // Merge with caller-supplied meta. A null meta simply becomes the generated pn-projections block. A
+            // non-map meta cannot carry pn-projections, so rather than silently discard the caller's object we fail
+            // loudly — the caller must pass a map (e.g. createCustomObject(mapOf(...))) when using projections.
+            if (meta != null && meta !is Map<*, *>) {
+                throw PubNubException(
+                    "DataSync projections require `meta` to be null or a map " +
+                        "got a non-map meta of type ${meta::class.simpleName}, which cannot carry pn-projections.",
+                )
+            }
+
             @Suppress("UNCHECKED_CAST")
             val callerMeta = meta as? Map<String, Any?>
                 ?: return mapOf(DataSyncNamespace.PN_PROJECTIONS to generatedBlock)

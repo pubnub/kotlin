@@ -2,8 +2,11 @@ package com.pubnub.internal.models.server.access_manager.v3
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GrantTokenRequestBodyTest {
@@ -123,6 +126,49 @@ class GrantTokenRequestBodyTest {
         assertEquals("keep-me", meta["custom"].asString)
         assertEquals("reader", res["datasync:entities:pre.existing"].asString)
         assertEquals("admin", res["datasync:entities:user.A"].asString)
+    }
+
+    @Test
+    fun throwsWhenProjectionUsedWithNonMapMeta() {
+        // given a non-map (POJO) meta that cannot carry pn-projections, and a grant that does carry a projection
+        val nonMapMeta = "just-a-string-meta"
+
+        // when / then — the SDK must fail loudly rather than silently discard the caller's meta
+        val exception =
+            assertThrows(PubNubException::class.java) {
+                GrantTokenRequestBody.of(
+                    ttl = 60,
+                    channels = emptyList(),
+                    groups = emptyList(),
+                    uuids = emptyList(),
+                    meta = nonMapMeta,
+                    uuid = null,
+                    datasync = listOf(DataSyncGrant.entity("user.A", get = true, projection = "admin")),
+                )
+            }
+        assertTrue(exception.errorMessage!!.contains("pn-projections"))
+    }
+
+    @Test
+    fun leavesNonMapMetaUntouchedWhenNoGrantCarriesProjection() {
+        // given a non-map meta but NO grant carrying a projection — the guard must not fire
+        val nonMapMeta = "just-a-string-meta"
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels = emptyList(),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = nonMapMeta,
+                uuid = null,
+                datasync = listOf(DataSyncGrant.entity("capy-001", get = true)),
+            )
+
+        // when
+        val json = gson.toJsonTree(body).asJsonObject
+
+        // then — the caller's non-map meta is passed through verbatim
+        assertEquals(nonMapMeta, json["permissions"].asJsonObject["meta"].asString)
     }
 
     private fun intAt(

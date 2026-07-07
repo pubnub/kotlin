@@ -371,7 +371,6 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
 
         // then
         val parsed = pubNubUnderTest.parseToken(token)
-        println("token: $token")
         assertEquals(expectedTTL.toLong(), parsed.ttl)
 
         @Suppress("UNCHECKED_CAST")
