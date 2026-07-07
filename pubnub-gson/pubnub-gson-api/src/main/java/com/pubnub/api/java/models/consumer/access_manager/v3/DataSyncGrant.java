@@ -9,12 +9,18 @@ package com.pubnub.api.java.models.consumer.access_manager.v3;
  * ({@code get}/{@code create}/{@code update}/{@code delete}) are exposed — the PubSub-only bits
  * ({@code read}/{@code write}/{@code manage}/{@code join}) are not part of the DataSync permission model.
  *
+ * <p>Each grant can also carry an optional {@code projection}: when this client uses the token to access this
+ * resource, they see it <em>through</em> this projection. A projection is a named, filtered view of a resource's
+ * fields, defined in the entity/relationship class schema under {@code projections}. When set, the SDK emits the
+ * matching {@code pn-projections} entry into the token meta automatically. Leave it unset to use the implicit
+ * {@code __default__} projection.
+ *
  * <pre>{@code
  * pubnub.grantToken(60)
  *     .datasync(Arrays.asList(
- *         DataSyncGrant.entity("capy-001").get().update(),
+ *         DataSyncGrant.entity("capy-001").get().update().projection("admin"),
  *         DataSyncGrant.entityPattern(".*").get(),
- *         DataSyncGrant.relationshipPattern(".*").get(),
+ *         DataSyncGrant.relationship("user.A:channel.X").get().projection("admin"),
  *         DataSyncGrant.membership("user-123:channel-X").get()
  *     ))
  *     .sync();
@@ -30,6 +36,7 @@ public class DataSyncGrant extends PNDataSyncResource<DataSyncGrant> {
     public static final String DATASYNC_MEMBERSHIPS = "datasync:memberships";
 
     private final String namespace;
+    private String projection;
 
     private DataSyncGrant(String namespace) {
         this.namespace = namespace;
@@ -37,6 +44,22 @@ public class DataSyncGrant extends PNDataSyncResource<DataSyncGrant> {
 
     public String getNamespace() {
         return namespace;
+    }
+
+    /**
+     * The projection the token holder looks through for this resource, or {@code null} for the implicit
+     * {@code __default__} projection.
+     */
+    public String getProjection() {
+        return projection;
+    }
+
+    /**
+     * Sets the projection the token holder looks through for this resource. Fluent; returns {@code this}.
+     */
+    public DataSyncGrant projection(String projection) {
+        this.projection = projection;
+        return this;
     }
 
     // entities

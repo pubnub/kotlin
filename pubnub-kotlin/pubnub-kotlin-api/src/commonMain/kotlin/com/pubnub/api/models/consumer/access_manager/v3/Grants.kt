@@ -162,6 +162,15 @@ object DataSyncNamespace {
     const val ENTITIES = "datasync:entities"
     const val RELATIONSHIPS = "datasync:relationships"
     const val MEMBERSHIPS = "datasync:memberships"
+
+    /**
+     * The projection a resource uses when its [DataSyncGrantType.projection] is left unset. Pass this explicitly
+     * to a grant's `projection` when you want the entry written out rather than left implicit.
+     */
+    const val DEFAULT_PROJECTION = "__default__"
+
+    /** The `meta` key the DataSync backend reads per-resource projection assignments from. */
+    const val PN_PROJECTIONS = "pn-projections"
 }
 
 /**
@@ -173,6 +182,16 @@ object DataSyncNamespace {
  */
 sealed interface DataSyncGrantType : PNGrant {
     val namespace: String
+
+    /**
+     * The single DataSync projection the token holder looks *through* for this resource, or `null` for the implicit
+     * `__default__` projection. This is the token-level viewing projection (the ADR's `pn-projections` value is a
+     * single projection name); it is distinct from the schema-level field→projections mapping.
+     *
+     * When set, the SDK adds a `pn-projections` entry to the token meta keyed by `"$namespace:$id"`. The [id] is
+     * passed through verbatim — the SDK imposes no separator convention on it.
+     */
+    val projection: String?
 }
 
 internal data class PNDataSyncResourceGrant(
@@ -182,6 +201,7 @@ internal data class PNDataSyncResourceGrant(
     override val create: Boolean = false,
     override val update: Boolean = false,
     override val delete: Boolean = false,
+    override val projection: String? = null,
 ) : PNResourceGrant(), DataSyncGrantType
 
 internal data class PNDataSyncPatternGrant(
@@ -191,4 +211,5 @@ internal data class PNDataSyncPatternGrant(
     override val create: Boolean = false,
     override val update: Boolean = false,
     override val delete: Boolean = false,
+    override val projection: String? = null,
 ) : PNPatternGrant(), DataSyncGrantType

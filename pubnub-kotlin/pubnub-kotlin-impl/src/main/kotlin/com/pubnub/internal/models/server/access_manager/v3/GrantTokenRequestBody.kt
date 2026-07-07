@@ -69,8 +69,84 @@ data class GrantTokenRequestBody(
                     datasyncRelationships = getPatterns(relationships),
                     datasyncMemberships = getPatterns(memberships),
                 )
-            val permissions = GrantTokenPermissions(resources, patterns, meta ?: emptyMap<Any, Any>(), uuid)
+            val metaWithProjections = mergeProjectionsIntoMeta(meta, datasync)
+            val permissions = GrantTokenPermissions(resources, patterns, metaWithProjections, uuid)
             return GrantTokenRequestBody(ttl, permissions)
+        }
+
+        /**
+         * Fold any per-grant [DataSyncGrantType.projection] into the token [meta] as a `pn-projections` block.
+         *
+         * The composite key is `"$namespace:$id"` with the id passed through verbatim (no separator normalization);
+         * pattern grants land under `pat`, exact grants under `res`. If the caller already supplied a
+         * `pn-projections` entry inside their own [meta] map it is preserved and the grant-derived entries are merged
+         * on top of it. Returns the original meta untouched when no grant carries a projection.
+         */
+        private fun mergeProjectionsIntoMeta(meta: Any?, datasync: List<DataSyncGrantType>): Any {
+            val withProjection = datasync.filter { it.projection != null }
+            if (withProjection.isEmpty()) {
+                return meta ?: emptyMap<Any, Any>()
+            }
+
+            // Build { "res": { key -> projection }, "pat": { key -> projection } } with the composite key
+            // "$namespace:$id" and the id passed through verbatim (no separator normalization).
+            val res = LinkedHashMap<String, String>()
+            val pat = LinkedHashMap<String, String>()
+            withProjection.forEach { grant ->
+                val key = "${grant.namespace}:${grant.id}"
+                val target = if (grant is PNPatternGrant) {
+                    pat
+                } else {
+                    res
+                }
+                target[key] = grant.projection!!
+            }
+            val generatedBlock = LinkedHashMap<String, Any?>()
+            if (res.isNotEmpty()) {
+                generatedBlock["res"] = res
+            }
+            if (pat.isNotEmpty()) {
+                generatedBlock["pat"] = pat
+            }
+
+            // Merge with caller-supplied meta. If it is a map, overlay pn-projections onto a copy; otherwise the
+            // generated projection meta wins (a non-map meta cannot carry pn-projections anyway).
+            @Suppress("UNCHECKED_CAST")
+            val callerMeta = meta as? Map<String, Any?>
+                ?: return mapOf(DataSyncNamespace.PN_PROJECTIONS to generatedBlock)
+
+            val merged = LinkedHashMap<String, Any?>(callerMeta)
+            val existing = callerMeta[DataSyncNamespace.PN_PROJECTIONS]
+            merged[DataSyncNamespace.PN_PROJECTIONS] = deepMergeProjectionBlocks(existing, generatedBlock)
+            return merged
+        }
+
+        /**
+         * Merge two `pn-projections` blocks (each `{ "res": {...}, "pat": {...} }`), with [generated] grant-derived
+         * entries overriding any colliding key in the caller's [existing] block.
+         */
+        private fun deepMergeProjectionBlocks(existing: Any?, generated: Any?): Any? {
+            @Suppress("UNCHECKED_CAST")
+            val existingBlock = existing as? Map<String, Any?> ?: return generated
+
+            @Suppress("UNCHECKED_CAST")
+            val generatedBlock = generated as? Map<String, Any?> ?: return existing
+
+            val result = LinkedHashMap<String, Any?>(existingBlock)
+            for (subKey in listOf("res", "pat")) {
+                @Suppress("UNCHECKED_CAST")
+                val existingSub = existingBlock[subKey] as? Map<String, Any?>
+
+                @Suppress("UNCHECKED_CAST")
+                val generatedSub = generatedBlock[subKey] as? Map<String, Any?> ?: continue
+                val mergedSub = LinkedHashMap<String, Any?>()
+                if (existingSub != null) {
+                    mergedSub.putAll(existingSub)
+                }
+                mergedSub.putAll(generatedSub)
+                result[subKey] = mergedSub
+            }
+            return result
         }
 
         private fun <T : PNGrant> getResources(resources: List<T>): Map<String, Int> {
