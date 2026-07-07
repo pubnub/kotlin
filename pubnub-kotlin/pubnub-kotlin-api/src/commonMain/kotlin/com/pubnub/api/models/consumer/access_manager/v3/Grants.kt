@@ -190,6 +190,10 @@ sealed interface DataSyncGrantType : PNGrant {
      *
      * When set, the SDK adds a `pn-projections` entry to the token meta keyed by `"$namespace:$id"`. The [id] is
      * passed through verbatim — the SDK imposes no separator convention on it.
+     *
+     * Because projections are folded into the token meta, the `meta` passed to `grantToken` must be `null` or a
+     * map whenever any grant carries a projection. Passing a non-map meta
+     * alongside a projection throws a `PubNubException` rather than silently dropping the meta.
      */
     val projection: String?
 }
