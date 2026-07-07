@@ -213,19 +213,20 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
         boolean pattern = grant.isPatternResource();
         com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant factory =
                 com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.INSTANCE;
+        String projection = grant.getProjection();
         switch (grant.getNamespace()) {
             case DataSyncGrant.DATASYNC_ENTITIES:
                 return pattern
-                        ? factory.entityPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete())
-                        : factory.entity(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete());
+                        ? factory.entityPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
+                        : factory.entity(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
             case DataSyncGrant.DATASYNC_RELATIONSHIPS:
                 return pattern
-                        ? factory.relationshipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete())
-                        : factory.relationship(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete());
+                        ? factory.relationshipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
+                        : factory.relationship(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
             case DataSyncGrant.DATASYNC_MEMBERSHIPS:
                 return pattern
-                        ? factory.membershipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete())
-                        : factory.membership(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete());
+                        ? factory.membershipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
+                        : factory.membership(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
             default:
                 throw new IllegalArgumentException("unknown datasync namespace: " + grant.getNamespace());
         }

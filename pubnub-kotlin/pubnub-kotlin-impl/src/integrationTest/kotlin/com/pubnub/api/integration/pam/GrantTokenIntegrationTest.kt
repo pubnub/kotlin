@@ -10,7 +10,9 @@ import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
+import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.CommonUtils
 import com.pubnub.test.Keys
 import org.junit.Assert
@@ -252,5 +254,138 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             Assert.assertTrue(channels.contains(channel03))
             assertEquals(3, channels.size)
         }
+    }
+
+    @Test
+    fun grantToken_carriesDataSyncProjectionsInMeta() {
+        // given — projections are declared inline on the DataSync grants; the SDK derives the pn-projections meta.
+        val pubNubUnderTest = server
+        val expectedTTL = 1337
+        val adminProjection = "admin"
+        val entityId = "user.A"
+        val entityPatternId = "user.*"
+        // relationship id keeps its natural colon separator — the SDK must pass it through verbatim into the key.
+        val relationshipId = "user.A:channel.X"
+        val relationshipPatternId = "rel.*"
+        val membershipId = "user-123:channel-X"
+        val membershipPatternId = "mem.*"
+
+        // composite keys the SDK is expected to build: "$namespace:$id"
+        val entityKey = "${DataSyncNamespace.ENTITIES}:$entityId"
+        val entityPatternKey = "${DataSyncNamespace.ENTITIES}:$entityPatternId"
+        val relationshipKey = "${DataSyncNamespace.RELATIONSHIPS}:$relationshipId"
+        val relationshipPatternKey = "${DataSyncNamespace.RELATIONSHIPS}:$relationshipPatternId"
+        val membershipKey = "${DataSyncNamespace.MEMBERSHIPS}:$membershipId"
+        val membershipPatternKey = "${DataSyncNamespace.MEMBERSHIPS}:$membershipPatternId"
+
+        // when
+        val token =
+            pubNubUnderTest.grantToken(
+                ttl = expectedTTL,
+                datasync =
+                    listOf(
+                        DataSyncGrant.entity(entityId, get = true, update = true, projection = adminProjection),
+                        DataSyncGrant.entityPattern(entityPatternId, get = true, projection = DataSyncNamespace.DEFAULT_PROJECTION),
+                        DataSyncGrant.relationship(relationshipId, get = true, projection = adminProjection),
+                        DataSyncGrant.relationshipPattern(
+                            relationshipPatternId,
+                            get = true,
+                            projection = DataSyncNamespace.DEFAULT_PROJECTION,
+                        ),
+                        DataSyncGrant.membership(membershipId, get = true, projection = adminProjection),
+                        DataSyncGrant.membershipPattern(
+                            membershipPatternId,
+                            get = true,
+                            projection = DataSyncNamespace.DEFAULT_PROJECTION,
+                        ),
+                    ),
+                channels = listOf(ChannelGrant.name(name = "anyChannel", read = true)),
+            ).sync().token
+
+        // then — the pn-projections block must survive the round-trip through the grant body and token.
+        val parsed = pubNubUnderTest.parseToken(token)
+        println("token: $token")
+        assertEquals(expectedTTL.toLong(), parsed.ttl)
+
+        @Suppress("UNCHECKED_CAST")
+        val projections = (parsed.meta as Map<String, Any?>)[DataSyncNamespace.PN_PROJECTIONS] as Map<String, Any?>
+
+        // every value is a flat composite key -> single projection-name string (entities, relationships, memberships alike)
+        @Suppress("UNCHECKED_CAST")
+        val res = projections["res"] as Map<String, Any?>
+        assertEquals(adminProjection, res[entityKey])
+        assertEquals(adminProjection, res[relationshipKey]) // colon in the relationship id survives verbatim
+        assertEquals(adminProjection, res[membershipKey]) // colon in the membership id survives verbatim
+
+        @Suppress("UNCHECKED_CAST")
+        val pat = projections["pat"] as Map<String, Any?>
+        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[entityPatternKey])
+        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[relationshipPatternKey])
+        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[membershipPatternKey])
+    }
+
+    @Test
+    fun grantToken_mergesCallerSuppliedProjectionsIntoMeta() {
+        // given — the caller supplies their own meta carrying both a plain value and a pn-projections block. The SDK
+        // must overlay the grant-derived projections onto that meta: the plain value survives, a caller projection for
+        // a key no grant carries survives verbatim, and a caller projection colliding with a grant loses to the grant.
+        val pubNubUnderTest = server
+        val expectedTTL = 1337
+        val adminProjection = "admin"
+        val entityId = "user.A"
+
+        val entityKey = "${DataSyncNamespace.ENTITIES}:$entityId"
+
+        // a projection the caller injects directly into meta for a resource NO grant carries — it must survive verbatim.
+        val callerOnlyKey = "${DataSyncNamespace.MEMBERSHIPS}:user-123:channel-X"
+        val callerOnlyProjection = "caller-only"
+        // a projection the caller sets for the SAME key a grant also generates — the grant-derived value must win.
+        val callerColliding = "caller-should-lose"
+
+        val callerMeta =
+            createCustomObject(
+                mapOf(
+                    "caller-key" to "caller-value",
+                    DataSyncNamespace.PN_PROJECTIONS to
+                        mapOf(
+                            "res" to
+                                mapOf(
+                                    callerOnlyKey to callerOnlyProjection,
+                                    entityKey to callerColliding,
+                                ),
+                        ),
+                ),
+            )
+
+        // when
+        val token =
+            pubNubUnderTest.grantToken(
+                ttl = expectedTTL,
+                meta = callerMeta,
+                datasync =
+                    listOf(
+                        DataSyncGrant.entity(entityId, get = true, update = true, projection = adminProjection),
+                    ),
+                channels = listOf(ChannelGrant.name(name = "anyChannel", read = true)),
+            ).sync().token
+
+        // then
+        val parsed = pubNubUnderTest.parseToken(token)
+        println("token: $token")
+        assertEquals(expectedTTL.toLong(), parsed.ttl)
+
+        @Suppress("UNCHECKED_CAST")
+        val meta = parsed.meta as Map<String, Any?>
+
+        // caller-supplied plain meta must survive the merge alongside the generated pn-projections block
+        assertEquals("caller-value", meta["caller-key"])
+
+        @Suppress("UNCHECKED_CAST")
+        val projections = meta[DataSyncNamespace.PN_PROJECTIONS] as Map<String, Any?>
+
+        @Suppress("UNCHECKED_CAST")
+        val res = projections["res"] as Map<String, Any?>
+        assertEquals(adminProjection, res[entityKey]) // grant-derived value wins over the caller's colliding entry
+        assertEquals(callerOnlyProjection, res[callerOnlyKey]) // caller projection for a key no grant carries survives
     }
 }

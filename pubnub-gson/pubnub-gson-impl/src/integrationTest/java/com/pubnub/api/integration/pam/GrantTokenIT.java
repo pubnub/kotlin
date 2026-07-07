@@ -15,6 +15,8 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -124,6 +126,113 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNToken.PNResourcePermissions relGeneralPerms = pnToken.getPatterns().getDatasyncRelationships().get(".*");
         assertTrue(relPerms.getGet());
         assertTrue(relGeneralPerms.getCreate());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void grantToken_carriesDataSyncProjectionsInMeta() throws PubNubException {
+        // given — projections declared inline on the DataSync grants; the SDK derives the pn-projections meta.
+        PubNub pubNubUnderTest = getServer();
+        final int expectedTTL = 1337;
+        final String adminProjection = "admin";
+        final String defaultProjection = "__default__";
+        final String entityId = "user.A";
+        final String entityPatternId = "user.*";
+        // relationship id keeps its natural colon separator — the SDK must pass it through verbatim into the key.
+        final String relationshipId = "user.A:channel.X";
+        final String relationshipPatternId = "rel.*";
+        final String membershipId = "user-123:channel-X";
+        final String membershipPatternId = "mem.*";
+
+        // composite keys the SDK is expected to build: "<namespace>:<id>"
+        final String entityKey = DataSyncGrant.DATASYNC_ENTITIES + ":" + entityId;
+        final String entityPatternKey = DataSyncGrant.DATASYNC_ENTITIES + ":" + entityPatternId;
+        final String relationshipKey = DataSyncGrant.DATASYNC_RELATIONSHIPS + ":" + relationshipId;
+        final String relationshipPatternKey = DataSyncGrant.DATASYNC_RELATIONSHIPS + ":" + relationshipPatternId;
+        final String membershipKey = DataSyncGrant.DATASYNC_MEMBERSHIPS + ":" + membershipId;
+        final String membershipPatternKey = DataSyncGrant.DATASYNC_MEMBERSHIPS + ":" + membershipPatternId;
+
+        // when
+        final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
+                .grantToken(expectedTTL)
+                .channels(Arrays.asList(ChannelGrant.name("anyChannel").read()))
+                .datasync(Arrays.asList(
+                        DataSyncGrant.entity(entityId).get().update().projection(adminProjection),
+                        DataSyncGrant.entityPattern(entityPatternId).get().projection(defaultProjection),
+                        DataSyncGrant.relationship(relationshipId).get().projection(adminProjection),
+                        DataSyncGrant.relationshipPattern(relationshipPatternId).get().projection(defaultProjection),
+                        DataSyncGrant.membership(membershipId).get().projection(adminProjection),
+                        DataSyncGrant.membershipPattern(membershipPatternId).get().projection(defaultProjection)))
+                .sync();
+
+        // then — the pn-projections block must survive the round-trip through the grant body and token.
+        final PNToken pnToken = pubNubUnderTest.parseToken(grantTokenResponse.getToken());
+        assertEquals(expectedTTL, pnToken.getTtl());
+
+        final Map<String, Object> meta = (Map<String, Object>) pnToken.getMeta();
+        final Map<String, Object> projections = (Map<String, Object>) meta.get("pn-projections");
+
+        // every value is a flat composite key -> single projection-name string (entities, relationships, memberships alike)
+        final Map<String, Object> res = (Map<String, Object>) projections.get("res");
+        assertEquals(adminProjection, res.get(entityKey));
+        assertEquals(adminProjection, res.get(relationshipKey)); // colon in the relationship id survives verbatim
+        assertEquals(adminProjection, res.get(membershipKey)); // colon in the membership id survives verbatim
+
+        final Map<String, Object> pat = (Map<String, Object>) projections.get("pat");
+        assertEquals(defaultProjection, pat.get(entityPatternKey));
+        assertEquals(defaultProjection, pat.get(relationshipPatternKey));
+        assertEquals(defaultProjection, pat.get(membershipPatternKey));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void grantToken_mergesCallerSuppliedProjectionsIntoMeta() throws PubNubException {
+        // given — the caller supplies their own meta carrying both a plain value and a pn-projections block. The SDK
+        // must overlay the grant-derived projections onto that meta: the plain value survives, a caller projection for
+        // a key no grant carries survives verbatim, and a caller projection colliding with a grant loses to the grant.
+        PubNub pubNubUnderTest = getServer();
+        final int expectedTTL = 1337;
+        final String adminProjection = "admin";
+        final String entityId = "user.A";
+
+        final String entityKey = DataSyncGrant.DATASYNC_ENTITIES + ":" + entityId;
+
+        // a projection the caller injects directly into meta for a resource NO grant carries — it must survive verbatim.
+        final String callerOnlyKey = DataSyncGrant.DATASYNC_MEMBERSHIPS + ":user-123:channel-X";
+        final String callerOnlyProjection = "caller-only";
+        // a projection the caller sets for the SAME key a grant also generates — the grant-derived value must win.
+        final String callerColliding = "caller-should-lose";
+
+        final Map<String, Object> callerRes = new HashMap<>();
+        callerRes.put(callerOnlyKey, callerOnlyProjection);
+        callerRes.put(entityKey, callerColliding);
+        final Map<String, Object> callerProjections = new HashMap<>();
+        callerProjections.put("res", callerRes);
+        final Map<String, Object> callerMeta = new HashMap<>();
+        callerMeta.put("caller-key", "caller-value");
+        callerMeta.put("pn-projections", callerProjections);
+
+        // when
+        final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
+                .grantToken(expectedTTL)
+                .meta(callerMeta)
+                .channels(Arrays.asList(ChannelGrant.name("anyChannel").read()))
+                .datasync(Arrays.asList(
+                        DataSyncGrant.entity(entityId).get().update().projection(adminProjection)))
+                .sync();
+
+        // then
+        final PNToken pnToken = pubNubUnderTest.parseToken(grantTokenResponse.getToken());
+        assertEquals(expectedTTL, pnToken.getTtl());
+
+        final Map<String, Object> meta = (Map<String, Object>) pnToken.getMeta();
+        // caller-supplied plain meta must survive the merge alongside the generated pn-projections block
+        assertEquals("caller-value", meta.get("caller-key"));
+
+        final Map<String, Object> projections = (Map<String, Object>) meta.get("pn-projections");
+        final Map<String, Object> res = (Map<String, Object>) projections.get("res");
+        assertEquals(adminProjection, res.get(entityKey)); // grant-derived value wins over the caller's colliding entry
+        assertEquals(callerOnlyProjection, res.get(callerOnlyKey)); // caller projection for a key no grant carries survives
     }
 
 }
