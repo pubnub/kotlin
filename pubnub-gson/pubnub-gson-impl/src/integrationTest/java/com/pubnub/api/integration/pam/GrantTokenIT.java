@@ -10,6 +10,8 @@ import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
+import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScope;
+import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjections;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import org.junit.Test;
@@ -165,20 +167,33 @@ public class GrantTokenIT extends BaseIntegrationTest {
                         DataSyncGrant.membershipPattern(membershipPatternId).get().projection(defaultProjection)))
                 .sync();
 
-        // then — the pn-projections block must survive the round-trip through the grant body and token.
+        // then — the pn-projections block must survive the round-trip and surface on the typed projections field.
         final PNToken pnToken = pubNubUnderTest.parseToken(grantTokenResponse.getToken());
         assertEquals(expectedTTL, pnToken.getTtl());
 
+        // the parser lifts pn-projections into the typed field, split by namespace with bare ids as keys.
+        final PNDataSyncProjections projections = pnToken.getProjections();
+        final PNDataSyncProjectionScope typedRes = projections.getResources();
+        assertEquals(adminProjection, typedRes.getEntities().get(entityId));
+        assertEquals(adminProjection, typedRes.getRelationships().get(relationshipId)); // colon in id survives verbatim
+        assertEquals(adminProjection, typedRes.getMemberships().get(membershipId)); // colon in id survives verbatim
+
+        final PNDataSyncProjectionScope typedPat = projections.getPatterns();
+        assertEquals(defaultProjection, typedPat.getEntities().get(entityPatternId));
+        assertEquals(defaultProjection, typedPat.getRelationships().get(relationshipPatternId));
+        assertEquals(defaultProjection, typedPat.getMemberships().get(membershipPatternId));
+
+        // the raw block also remains available under meta (additive, non-breaking).
         final Map<String, Object> meta = (Map<String, Object>) pnToken.getMeta();
-        final Map<String, Object> projections = (Map<String, Object>) meta.get("pn-projections");
+        final Map<String, Object> rawProjections = (Map<String, Object>) meta.get("pn-projections");
 
         // every value is a flat composite key -> single projection-name string (entities, relationships, memberships alike)
-        final Map<String, Object> res = (Map<String, Object>) projections.get("res");
+        final Map<String, Object> res = (Map<String, Object>) rawProjections.get("res");
         assertEquals(adminProjection, res.get(entityKey));
         assertEquals(adminProjection, res.get(relationshipKey)); // colon in the relationship id survives verbatim
         assertEquals(adminProjection, res.get(membershipKey)); // colon in the membership id survives verbatim
 
-        final Map<String, Object> pat = (Map<String, Object>) projections.get("pat");
+        final Map<String, Object> pat = (Map<String, Object>) rawProjections.get("pat");
         assertEquals(defaultProjection, pat.get(entityPatternKey));
         assertEquals(defaultProjection, pat.get(relationshipPatternKey));
         assertEquals(defaultProjection, pat.get(membershipPatternKey));
@@ -233,6 +248,12 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final Map<String, Object> res = (Map<String, Object>) projections.get("res");
         assertEquals(adminProjection, res.get(entityKey)); // grant-derived value wins over the caller's colliding entry
         assertEquals(callerOnlyProjection, res.get(callerOnlyKey)); // caller projection for a key no grant carries survives
+
+        // the merged block also surfaces on the typed field, split by namespace with bare ids as keys.
+        final PNDataSyncProjectionScope typedRes = pnToken.getProjections().getResources();
+        assertEquals(adminProjection, typedRes.getEntities().get(entityId)); // grant wins over caller's colliding entry
+        // callerOnlyKey = "datasync:memberships:user-123:channel-X" -> membership bare id "user-123:channel-X"
+        assertEquals(callerOnlyProjection, typedRes.getMemberships().get("user-123:channel-X"));
     }
 
 }
