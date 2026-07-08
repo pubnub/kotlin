@@ -11,6 +11,12 @@ data class PNToken(
     val resources: PNTokenResources,
     val patterns: PNTokenResources,
     val meta: Any? = null,
+    /**
+     * The DataSync projections carried by this token, split by namespace, or `null` when the token has no
+     * `pn-projections` block. Each grant's projection is the single named view the token holder looks *through* for
+     * that resource. The same data also remains available in raw form under [meta] (key `pn-projections`).
+     */
+    val projections: PNDataSyncProjections? = null,
 ) {
     data class PNTokenResources(
         val channels: Map<String, PNResourcePermissions> = emptyMap(),
@@ -45,3 +51,24 @@ data class PNToken(
             )
         }
 }
+
+/**
+ * DataSync projections decoded from a token's `pn-projections` meta block, split into exact-resource and pattern
+ * grants. Each value is the single projection name the token holder looks *through* for that resource; `__default__`
+ * denotes the implicit base projection.
+ */
+data class PNDataSyncProjections(
+    val resources: PNDataSyncProjectionScope = PNDataSyncProjectionScope(),
+    val patterns: PNDataSyncProjectionScope = PNDataSyncProjectionScope(),
+)
+
+/**
+ * Per-namespace projection assignments (resource id -> projection name) for one side (`res` or `pat`) of a token's
+ * `pn-projections` block. Keys are the bare resource ids (e.g. `user.A`, `user.A:channel.X`), not the composite
+ * `datasync:<type>:<id>` wire keys.
+ */
+data class PNDataSyncProjectionScope(
+    val entities: Map<String, String> = emptyMap(),
+    val relationships: Map<String, String> = emptyMap(),
+    val memberships: Map<String, String> = emptyMap(),
+)
