@@ -302,23 +302,33 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                 channels = listOf(ChannelGrant.name(name = "anyChannel", read = true)),
             ).sync().token
 
-        // then — the pn-projections block must survive the round-trip through the grant body and token.
+        // then — the pn-projections block must survive the round-trip and surface on the typed projections field.
         val parsed = pubNubUnderTest.parseToken(token)
         println("token: $token")
         assertEquals(expectedTTL.toLong(), parsed.ttl)
 
+        // the parser lifts pn-projections into the typed field, split by namespace with bare ids as keys.
+        val projections = parsed.projections!!
+        assertEquals(adminProjection, projections.resources.entities[entityId])
+        assertEquals(adminProjection, projections.resources.relationships[relationshipId]) // colon in id survives verbatim
+        assertEquals(adminProjection, projections.resources.memberships[membershipId]) // colon in id survives verbatim
+        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, projections.patterns.entities[entityPatternId])
+        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, projections.patterns.relationships[relationshipPatternId])
+        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, projections.patterns.memberships[membershipPatternId])
+
+        // the raw block also remains available under meta (additive, non-breaking).
         @Suppress("UNCHECKED_CAST")
-        val projections = (parsed.meta as Map<String, Any?>)[DataSyncNamespace.PN_PROJECTIONS] as Map<String, Any?>
+        val rawProjections = (parsed.meta as Map<String, Any?>)[DataSyncNamespace.PN_PROJECTIONS] as Map<String, Any?>
 
         // every value is a flat composite key -> single projection-name string (entities, relationships, memberships alike)
         @Suppress("UNCHECKED_CAST")
-        val res = projections["res"] as Map<String, Any?>
+        val res = rawProjections["res"] as Map<String, Any?>
         assertEquals(adminProjection, res[entityKey])
         assertEquals(adminProjection, res[relationshipKey]) // colon in the relationship id survives verbatim
         assertEquals(adminProjection, res[membershipKey]) // colon in the membership id survives verbatim
 
         @Suppress("UNCHECKED_CAST")
-        val pat = projections["pat"] as Map<String, Any?>
+        val pat = rawProjections["pat"] as Map<String, Any?>
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[entityPatternKey])
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[relationshipPatternKey])
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[membershipPatternKey])
@@ -386,5 +396,11 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val res = projections["res"] as Map<String, Any?>
         assertEquals(adminProjection, res[entityKey]) // grant-derived value wins over the caller's colliding entry
         assertEquals(callerOnlyProjection, res[callerOnlyKey]) // caller projection for a key no grant carries survives
+
+        // the merged block also surfaces on the typed field, split by namespace with bare ids as keys.
+        val typedProjections = parsed.projections!!
+        assertEquals(adminProjection, typedProjections.resources.entities[entityId]) // grant wins over caller's colliding entry
+        // callerOnlyKey = "datasync:memberships:user-123:channel-X" -> membership bare id "user-123:channel-X"
+        assertEquals(callerOnlyProjection, typedProjections.resources.memberships["user-123:channel-X"])
     }
 }

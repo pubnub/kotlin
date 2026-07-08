@@ -6,6 +6,7 @@ import com.pubnub.api.models.TokenBitmask
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.io.ByteArrayOutputStream
 import java.math.BigInteger
@@ -126,6 +127,77 @@ class TokenParserTest {
             PNToken.PNResourcePermissions(get = true),
             parsed.patterns.datasyncEntities[".*"],
         )
+    }
+
+    /**
+     * The `pn-projections` meta block must be lifted into the typed [PNToken.projections] field, split by namespace,
+     * with each composite `datasync:<type>:<id>` key reduced to its bare id — including relationship ids that
+     * themselves contain a colon. The raw block must remain accessible inside [PNToken.meta] (additive, non-breaking).
+     */
+    @Test
+    fun parseTokenWithProjections() {
+        val token =
+            encodeToken { map ->
+                map.put("v", 2L)
+                map.put("t", 1632335843L)
+                map.put("ttl", 1440L)
+                map.put("uuid", "myauthuuid1")
+                map.putMap("res").end()
+                map.putMap("pat").end()
+                map.putMap("meta")
+                    .putMap("pn-projections")
+                    .putMap("res")
+                    .put("datasync:entities:user.A", "admin")
+                    .put("datasync:relationships:user.A:channel.X", "admin")
+                    .put("datasync:memberships:user-123:channel-X", "reader")
+                    .end()
+                    .putMap("pat")
+                    .put("datasync:entities:user.*", "__default__")
+                    .end()
+                    .end()
+                    .end()
+            }
+
+        val parsed = TokenParser().unwrapToken(token)
+
+        val projections = parsed.projections!!
+        assertEquals("admin", projections.resources.entities["user.A"])
+        assertEquals("admin", projections.resources.relationships["user.A:channel.X"])
+        assertEquals("reader", projections.resources.memberships["user-123:channel-X"])
+        assertEquals("__default__", projections.patterns.entities["user.*"])
+
+        // Raw block is still present in meta (non-breaking guarantee).
+        @Suppress("UNCHECKED_CAST")
+        val meta = parsed.meta as Map<String, Any>
+
+        @Suppress("UNCHECKED_CAST")
+        val rawBlock = meta["pn-projections"] as Map<String, Any>
+
+        @Suppress("UNCHECKED_CAST")
+        val rawRes = rawBlock["res"] as Map<String, Any>
+        assertEquals("admin", rawRes["datasync:entities:user.A"].toString())
+    }
+
+    /**
+     * A token whose meta carries no `pn-projections` block decodes to a `null` [PNToken.projections] (distinct from
+     * a present-but-empty block).
+     */
+    @Test
+    fun parseTokenWithoutProjections() {
+        val token =
+            encodeToken { map ->
+                map.put("v", 2L)
+                map.put("t", 1632335843L)
+                map.put("ttl", 1440L)
+                map.put("uuid", "myauthuuid1")
+                map.putMap("res").end()
+                map.putMap("pat").end()
+                map.putMap("meta").put("app_version", "2.0").end()
+            }
+
+        val parsed = TokenParser().unwrapToken(token)
+
+        assertNull(parsed.projections)
     }
 
     private fun encodeToken(build: (co.nstant.`in`.cbor.builder.MapBuilder<CborBuilder>) -> Unit): String {
