@@ -164,7 +164,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun happyPath_datasync() {
+    fun can_grantToken_for_datasync_elements() {
         // given
         val pubNubUnderTest = server
         val expectedTTL = 1337
@@ -177,7 +177,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                 .grantToken(
                     ttl = expectedTTL,
                     authorizedUUID = "pam-debug-admin",
-                    datasync =
+                    dataSync =
                         listOf(
                             DataSyncGrant.entity(entityName, get = true, update = true),
                             DataSyncGrant.entityPattern(".*", get = true),
@@ -282,7 +282,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val token =
             pubNubUnderTest.grantToken(
                 ttl = expectedTTL,
-                datasync =
+                dataSync =
                     listOf(
                         DataSyncGrant.entity(entityId, get = true, update = true, projection = adminProjection),
                         DataSyncGrant.entityPattern(entityPatternId, get = true, projection = DataSyncNamespace.DEFAULT_PROJECTION),
@@ -372,7 +372,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             pubNubUnderTest.grantToken(
                 ttl = expectedTTL,
                 meta = callerMeta,
-                datasync =
+                dataSync =
                     listOf(
                         DataSyncGrant.entity(entityId, get = true, update = true, projection = adminProjection),
                     ),

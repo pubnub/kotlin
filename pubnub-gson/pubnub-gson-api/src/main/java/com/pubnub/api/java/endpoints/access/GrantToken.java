@@ -22,5 +22,5 @@ public interface GrantToken extends Endpoint<PNGrantTokenResult> {
 
     GrantToken uuids(List<UUIDGrant> uuids);
 
-    GrantToken datasync(List<DataSyncGrant> datasync);
+    GrantToken dataSync(List<DataSyncGrant> dataSync);
 }

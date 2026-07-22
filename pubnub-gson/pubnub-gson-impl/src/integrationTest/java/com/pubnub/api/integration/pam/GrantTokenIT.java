@@ -90,7 +90,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
     }
 
     @Test
-    public void happyPath_datasync() throws PubNubException {
+    public void can_grantToken_for_datasync_resources_and_patterns() throws PubNubException {
         //given
         PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
@@ -101,7 +101,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
                 .grantToken(expectedTTL)
                 .authorizedUUID("pam-debug-admin")
-                .datasync(Arrays.asList(
+                .dataSync(Arrays.asList(
                         DataSyncGrant.entity(entityName).get().update(),
                         DataSyncGrant.entityPattern(".*").get(),
                         DataSyncGrant.relationship("rel-1").get(),
@@ -158,7 +158,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
                 .grantToken(expectedTTL)
                 .channels(Arrays.asList(ChannelGrant.name("anyChannel").read()))
-                .datasync(Arrays.asList(
+                .dataSync(Arrays.asList(
                         DataSyncGrant.entity(entityId).get().update().projection(adminProjection),
                         DataSyncGrant.entityPattern(entityPatternId).get().projection(defaultProjection),
                         DataSyncGrant.relationship(relationshipId).get().projection(adminProjection),
@@ -232,7 +232,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
                 .grantToken(expectedTTL)
                 .meta(callerMeta)
                 .channels(Arrays.asList(ChannelGrant.name("anyChannel").read()))
-                .datasync(Arrays.asList(
+                .dataSync(Arrays.asList(
                         DataSyncGrant.entity(entityId).get().update().projection(adminProjection)))
                 .sync();
 

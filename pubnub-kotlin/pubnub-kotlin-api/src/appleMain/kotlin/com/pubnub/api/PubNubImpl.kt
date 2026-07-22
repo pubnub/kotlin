@@ -485,7 +485,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
-        datasync: List<DataSyncGrantType>
+        dataSync: List<DataSyncGrantType>
     ): GrantToken {
         TODO("Not yet implemented")
     }

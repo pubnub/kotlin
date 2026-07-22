@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.access_manager.v3
 
 /**
- * Factory for DataSync (App Context v4) PAM v3 resource grants, passed to the `datasync` parameter of
+ * Factory for DataSync (App Context v4) PAM v3 resource grants, passed to the `dataSync` parameter of
  * [com.pubnub.api.PubNub.grantToken].
  *
  * DataSync introduces three resource namespaces — `entities`, `relationships` and `memberships` — each of which can
@@ -17,7 +17,7 @@ package com.pubnub.api.models.consumer.access_manager.v3
  * pubnub.grantToken(
  *     ttl = 60,
  *     authorizedUUID = "pam-debug-admin",
- *     datasync = listOf(
+ *     dataSync = listOf(
  *         DataSyncGrant.entity("capy-001", get = true, update = true, projection = "admin"),
  *         DataSyncGrant.entityPattern(".*", get = true),
  *         DataSyncGrant.relationship("user.A:channel.X", get = true, projection = "admin"),

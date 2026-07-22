@@ -29,7 +29,7 @@ public interface GrantTokenBuilder extends Endpoint<PNGrantTokenResult> {
 
     GrantTokenObjectsBuilder uuids(List<UUIDGrant> uuids);
 
-    GrantTokenObjectsBuilder datasync(List<DataSyncGrant> datasync);
+    GrantTokenObjectsBuilder dataSync(List<DataSyncGrant> dataSync);
 
     GrantTokenObjectsBuilder authorizedUUID(String authorizedUUID);
 
