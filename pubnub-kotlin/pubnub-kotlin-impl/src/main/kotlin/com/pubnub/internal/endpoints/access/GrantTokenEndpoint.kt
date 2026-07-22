@@ -30,7 +30,7 @@ class GrantTokenEndpoint(
     private val channels: List<ChannelGrant>,
     private val channelGroups: List<ChannelGroupGrant>,
     private val uuids: List<UUIDGrant>,
-    private val datasync: List<DataSyncGrantType> = emptyList(),
+    private val dataSync: List<DataSyncGrantType> = emptyList(),
 ) : EndpointCore<GrantTokenResponse, PNGrantTokenResult>(pubnub), GrantToken {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
@@ -45,7 +45,7 @@ class GrantTokenEndpoint(
         if (!configuration.subscribeKey.isValid()) {
             throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
         }
-        if ((channels + channelGroups + uuids + datasync).isEmpty()) {
+        if ((channels + channelGroups + uuids + dataSync).isEmpty()) {
             throw PubNubException(
                 pubnubError = PubNubError.RESOURCES_MISSING,
                 errorMessage = "At least one grant required",
@@ -66,7 +66,7 @@ class GrantTokenEndpoint(
                         },
                         "channelGroups" to channelGroups.map { mapOf("id" to it.id, "read" to it.read, "write" to it.write, "manage" to it.manage) },
                         "uuids" to uuids.map { mapOf("id" to it.id, "get" to it.get, "update" to it.update, "delete" to it.delete) },
-                        "datasync" to datasync.map {
+                        "dataSync" to dataSync.map {
                             mapOf("namespace" to it.namespace, "id" to it.id, "get" to it.get, "create" to it.create, "update" to it.update, "delete" to it.delete)
                         }
                     ),
@@ -82,7 +82,7 @@ class GrantTokenEndpoint(
                 channels = channels,
                 groups = channelGroups,
                 uuids = uuids,
-                datasync = datasync,
+                dataSync = dataSync,
                 meta = meta,
                 uuid = authorizedUUID,
             )

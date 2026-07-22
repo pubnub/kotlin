@@ -1079,7 +1079,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param channels List of all channel grants
      * @param channelGroups List of all channel group grants
      * @param uuids List of all uuid grants
-     * @param datasync List of all DataSync resource grants
+     * @param dataSync List of all DataSync resource grants
      */
 
     actual fun grantToken(
@@ -1089,7 +1089,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
-        datasync: List<DataSyncGrantType>,
+        dataSync: List<DataSyncGrantType>,
     ): GrantToken
 
     /**

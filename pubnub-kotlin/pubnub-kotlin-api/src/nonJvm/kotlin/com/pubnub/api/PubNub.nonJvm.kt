@@ -223,7 +223,7 @@ actual interface PubNub {
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
-        datasync: List<DataSyncGrantType>
+        dataSync: List<DataSyncGrantType>
     ): GrantToken
 
     actual fun revokeToken(token: String): RevokeToken

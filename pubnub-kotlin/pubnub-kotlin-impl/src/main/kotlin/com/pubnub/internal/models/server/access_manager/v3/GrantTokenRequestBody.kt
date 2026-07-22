@@ -45,11 +45,11 @@ data class GrantTokenRequestBody(
             uuids: List<UUIDGrant>,
             meta: Any?,
             uuid: String?,
-            datasync: List<DataSyncGrantType> = emptyList(),
+            dataSync: List<DataSyncGrantType> = emptyList(),
         ): GrantTokenRequestBody {
-            val entities = datasync.filter { it.namespace == DataSyncNamespace.ENTITIES }
-            val relationships = datasync.filter { it.namespace == DataSyncNamespace.RELATIONSHIPS }
-            val memberships = datasync.filter { it.namespace == DataSyncNamespace.MEMBERSHIPS }
+            val entities = dataSync.filter { it.namespace == DataSyncNamespace.ENTITIES }
+            val relationships = dataSync.filter { it.namespace == DataSyncNamespace.RELATIONSHIPS }
+            val memberships = dataSync.filter { it.namespace == DataSyncNamespace.MEMBERSHIPS }
 
             val resources =
                 GrantTokenPermission(
@@ -69,7 +69,7 @@ data class GrantTokenRequestBody(
                     datasyncRelationships = getPatterns(relationships),
                     datasyncMemberships = getPatterns(memberships),
                 )
-            val metaWithProjections = mergeProjectionsIntoMeta(meta, datasync)
+            val metaWithProjections = mergeProjectionsIntoMeta(meta, dataSync)
             val permissions = GrantTokenPermissions(resources, patterns, metaWithProjections, uuid)
             return GrantTokenRequestBody(ttl, permissions)
         }
@@ -87,8 +87,8 @@ data class GrantTokenRequestBody(
          * discarding it — pass `null` or a map (e.g. via `createCustomObject(mapOf(...))`) instead.
          */
         @Throws(PubNubException::class)
-        private fun mergeProjectionsIntoMeta(meta: Any?, datasync: List<DataSyncGrantType>): Any {
-            val withProjection = datasync.filter { it.projection != null }
+        private fun mergeProjectionsIntoMeta(meta: Any?, dataSync: List<DataSyncGrantType>): Any {
+            val withProjection = dataSync.filter { it.projection != null }
             if (withProjection.isEmpty()) {
                 return meta ?: emptyMap<Any, Any>()
             }
