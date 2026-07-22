@@ -243,7 +243,7 @@ expect interface PubNub {
         channels: List<ChannelGrant> = emptyList(),
         channelGroups: List<ChannelGroupGrant> = emptyList(),
         uuids: List<UUIDGrant> = emptyList(),
-        datasync: List<DataSyncGrantType> = emptyList(),
+        dataSync: List<DataSyncGrantType> = emptyList(),
     ): GrantToken
 
     fun revokeToken(token: String): RevokeToken

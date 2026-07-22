@@ -750,7 +750,7 @@ open class PubNubImpl(
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
-        datasync: List<DataSyncGrantType>,
+        dataSync: List<DataSyncGrantType>,
     ): GrantToken {
         return GrantTokenEndpoint(
             pubnub = this,
@@ -760,7 +760,7 @@ open class PubNubImpl(
             channels = channels,
             channelGroups = channelGroups,
             uuids = uuids,
-            datasync = datasync,
+            dataSync = dataSync,
         )
     }
 

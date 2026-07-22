@@ -174,7 +174,7 @@ object DataSyncNamespace {
 }
 
 /**
- * Marker type accepted by the `datasync` parameter of [com.pubnub.api.PubNub.grantToken].
+ * Marker type accepted by the `dataSync` parameter of [com.pubnub.api.PubNub.grantToken].
  *
  * This interface is `sealed`: only the SDK's own concrete grant classes may implement it. External callers create
  * instances through the [DataSyncGrant] factory. Sealing prevents a caller from supplying a grant with an unknown
