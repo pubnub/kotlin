@@ -23,7 +23,7 @@ class GrantTokenRequestBodyTest {
                 uuids = emptyList(),
                 meta = null,
                 uuid = "pam-debug-admin",
-                datasync =
+                dataSync =
                     listOf(
                         DataSyncGrant.entity("capy-001", get = true, update = true),
                         DataSyncGrant.entityPattern(".*", get = true, create = true),
@@ -55,7 +55,7 @@ class GrantTokenRequestBodyTest {
                 uuids = emptyList(),
                 meta = null,
                 uuid = "pam-debug-admin",
-                datasync =
+                dataSync =
                     listOf(
                         DataSyncGrant.entity("user.A", get = true, projection = "admin"),
                         DataSyncGrant.entityPattern("user.*", get = true, projection = "__default__"),
@@ -87,7 +87,7 @@ class GrantTokenRequestBodyTest {
                 uuids = emptyList(),
                 meta = null,
                 uuid = null,
-                datasync = listOf(DataSyncGrant.entity("capy-001", get = true)),
+                dataSync = listOf(DataSyncGrant.entity("capy-001", get = true)),
             )
 
         // when
@@ -114,7 +114,7 @@ class GrantTokenRequestBodyTest {
                 uuids = emptyList(),
                 meta = callerMeta,
                 uuid = null,
-                datasync = listOf(DataSyncGrant.entity("user.A", get = true, projection = "admin")),
+                dataSync = listOf(DataSyncGrant.entity("user.A", get = true, projection = "admin")),
             )
 
         // when
@@ -143,7 +143,7 @@ class GrantTokenRequestBodyTest {
                     uuids = emptyList(),
                     meta = nonMapMeta,
                     uuid = null,
-                    datasync = listOf(DataSyncGrant.entity("user.A", get = true, projection = "admin")),
+                    dataSync = listOf(DataSyncGrant.entity("user.A", get = true, projection = "admin")),
                 )
             }
         assertTrue(exception.errorMessage!!.contains("pn-projections"))
@@ -161,7 +161,7 @@ class GrantTokenRequestBodyTest {
                 uuids = emptyList(),
                 meta = nonMapMeta,
                 uuid = null,
-                datasync = listOf(DataSyncGrant.entity("capy-001", get = true)),
+                dataSync = listOf(DataSyncGrant.entity("capy-001", get = true)),
             )
 
         // when

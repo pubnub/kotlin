@@ -36,7 +36,7 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
     private List<ChannelGrant> channels = Collections.emptyList();
     private List<ChannelGroupGrant> channelGroups = Collections.emptyList();
     private List<UUIDGrant> uuids = Collections.emptyList();
-    private List<DataSyncGrant> datasync = Collections.emptyList();
+    private List<DataSyncGrant> dataSync = Collections.emptyList();
 
     public GrantTokenImpl(PubNub pubnub) {
         super(pubnub);
@@ -59,7 +59,7 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                 toInternalChannels(channels),
                 toInternalChannelGroups(channelGroups),
                 toInternalUuids(uuids),
-                toInternalDataSync(datasync)
+                toInternalDataSync(dataSync)
         );
     }
 
@@ -201,9 +201,9 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
         }
     }
 
-    private List<? extends DataSyncGrantType> toInternalDataSync(List<DataSyncGrant> datasync) {
-        ArrayList<DataSyncGrantType> list = new ArrayList<>(datasync.size());
-        for (DataSyncGrant grant : datasync) {
+    private List<? extends DataSyncGrantType> toInternalDataSync(List<DataSyncGrant> dataSync) {
+        ArrayList<DataSyncGrantType> list = new ArrayList<>(dataSync.size());
+        for (DataSyncGrant grant : dataSync) {
             list.add(toInternal(grant));
         }
         return list;
