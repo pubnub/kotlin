@@ -7,6 +7,7 @@ import com.pubnub.api.java.builder.PresenceBuilder
 import com.pubnub.api.java.builder.SubscribeBuilder
 import com.pubnub.api.java.builder.UnsubscribeBuilder
 import com.pubnub.api.java.callbacks.SubscribeCallback
+import com.pubnub.api.java.datasync.DataSync
 import com.pubnub.api.java.endpoints.DeleteMessages
 import com.pubnub.api.java.endpoints.FetchMessages
 import com.pubnub.api.java.endpoints.History
@@ -73,6 +74,7 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.java.builder.PresenceBuilderImpl
 import com.pubnub.internal.java.builder.SubscribeBuilderImpl
 import com.pubnub.internal.java.builder.UnsubscribeBuilderImpl
+import com.pubnub.internal.java.datasync.DataSyncImpl
 import com.pubnub.internal.java.endpoints.DeleteMessagesImpl
 import com.pubnub.internal.java.endpoints.FetchMessagesImpl
 import com.pubnub.internal.java.endpoints.HistoryImpl
@@ -317,6 +319,10 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
 
     override fun removeChannelMetadata(): RemoveChannelMetadata.Builder {
         return RemoveChannelMetadataImpl.Builder(this)
+    }
+
+    override fun dataSync(): DataSync {
+        return DataSyncImpl(this)
     }
 
     override fun getMemberships(): GetMemberships {

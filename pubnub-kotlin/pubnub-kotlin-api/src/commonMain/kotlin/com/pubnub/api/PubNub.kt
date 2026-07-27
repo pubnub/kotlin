@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.datasync.DataSync
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.MessageCounts
@@ -79,6 +80,11 @@ import com.pubnub.kmp.Uploadable
 
 expect interface PubNub {
     val configuration: PNConfiguration
+
+    /**
+     * Entry point for the DataSync (App Context v4) API.
+     */
+    val dataSync: DataSync
 
     fun addListener(listener: EventListener)
 

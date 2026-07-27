@@ -64,4 +64,9 @@ enum class RetryableEndpointGroup {
      * Represents the group of operations related to access management like [PubNub.grant], [PubNub.grantToken], [PubNub.revokeToken]
      */
     ACCESS_MANAGER,
+
+    /**
+     * Represents the group of operations related to DataSync (App Context v4) like entity get/create/delete.
+     */
+    DATASYNC,
 }

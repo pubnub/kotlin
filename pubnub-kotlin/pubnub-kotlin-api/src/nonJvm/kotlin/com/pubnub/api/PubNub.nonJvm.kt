@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.datasync.DataSync
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.MessageCounts
@@ -82,6 +83,8 @@ import kotlin.native.ObjCName
 @ObjCName("PubNubInterface")
 actual interface PubNub {
     actual val configuration: PNConfiguration
+
+    actual val dataSync: DataSync
 
     actual fun addListener(listener: EventListener)
 

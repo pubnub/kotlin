@@ -112,7 +112,16 @@ class CustomPnHttpLoggingInterceptor(
                         (totalBytes < 0 && peeked.contentLength() == maxLoggedBodyBytes)
                 )
 
-                val text = if (contentType.contains("application/json") || contentType.startsWith("text/")) {
+                // Log as readable text for JSON and text bodies. `contains("+json")` covers RFC 6839
+                // structured-syntax-suffix vendor types such as PubNub's Objects/DataSync responses
+                // (e.g. "application/vnd.pubnub.objects.entity+json"), which are plain JSON but do not
+                // contain the literal "application/json". Everything else falls back to Base64 so
+                // binary/unknown bodies can't corrupt the log envelope.
+                val text = if (
+                    contentType.contains("application/json") ||
+                    contentType.contains("+json") ||
+                    contentType.startsWith("text/")
+                ) {
                     val charset = responseBody.contentType()?.charset() ?: Charsets.UTF_8
                     peeked.source().readString(charset)
                 } else {
@@ -160,14 +169,20 @@ class CustomPnHttpLoggingInterceptor(
         return response
     }
 
-    // Returns a metadata-only descriptor for the request body — never reads body bytes. The interceptor
-    // is global and shared by sendFile / S3 multipart uploads, so reading bodies here would risk
-    // memory blowups. Publish/signal content is captured at the endpoint layer instead.
+    // Describes the request body for logging. For textual bodies (JSON / +json vendor types / text/*)
+    // that fit within maxLoggedBodyBytes and are known not to be one-shot streams, the actual content
+    // is buffered and logged so request payloads (e.g. DataSync create) are visible. Everything else
+    // — binary bodies, oversized bodies, one-shot streams, unknown-length bodies — keeps a metadata-only
+    // descriptor and never reads bytes.
+    //
+    // The interceptor is global and shared by sendFile / S3 multipart uploads, so unconditionally
+    // reading bodies here would risk memory blowups; the content-type + size + one-shot guards keep
+    // those on the metadata-only path.
     //
     // contentLength() can throw on custom RequestBody subclasses (e.g. multipart bodies that lazily
     // measure their parts), and logRequest runs before chain.proceed(), so a throw here would abort
     // the HTTP request purely because logging tried to describe it. Catch Throwable to also contain
-    // unchecked errors from custom subclasses.
+    // unchecked errors from custom subclasses / body reads.
     private fun describeRequestBody(body: RequestBody?): String? {
         if (body == null) {
             return null
@@ -178,6 +193,26 @@ class CustomPnHttpLoggingInterceptor(
         } catch (_: Throwable) {
             -1L
         }
+
+        val isTextual = contentType.contains("application/json") ||
+            contentType.contains("+json") ||
+            contentType.startsWith("text/")
+        val loggable = isTextual &&
+            maxLoggedBodyBytes > 0L &&
+            !body.isOneShot() &&
+            length in 0..maxLoggedBodyBytes
+
+        if (loggable) {
+            try {
+                val buffer = okio.Buffer()
+                body.writeTo(buffer)
+                val charset = body.contentType()?.charset() ?: Charsets.UTF_8
+                return buffer.readString(charset)
+            } catch (_: Throwable) {
+                // Fall through to the metadata-only descriptor below.
+            }
+        }
+
         return if (length >= 0) {
             "[body not logged: $length bytes, contentType=$contentType]"
         } else {

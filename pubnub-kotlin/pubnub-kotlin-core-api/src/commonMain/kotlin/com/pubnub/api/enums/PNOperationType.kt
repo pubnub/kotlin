@@ -118,4 +118,12 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     object PNDeleteMessageAction : MessageActionsOperation()
 
     object PNTimeOperation : TimeOperation()
+
+    open class DataSyncOperation : PNOperationType("datasync")
+
+    object PNGetEntityOperation : DataSyncOperation()
+
+    object PNCreateEntityOperation : DataSyncOperation()
+
+    object PNRemoveEntityOperation : DataSyncOperation()
 }
