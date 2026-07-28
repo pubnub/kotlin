@@ -263,6 +263,11 @@ enum class PubNubError(private val code: Int, val message: String) {
     ENTITY_CLASS_MISSING(
         code = 186,
         message = "Entity Class Missing",
+    ),
+
+    JSON_PATCH_OPERATIONS_MISSING(
+        code = 187,
+        message = "JSON Patch operations must contain at least one operation.",
     )
 
     ;

@@ -2,40 +2,40 @@ package com.pubnub.internal.endpoints.datasync.entity
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.datasync.entity.CreateEntity
+import com.pubnub.api.endpoints.datasync.entity.UpdateEntity
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.entity.PNCreateEntityResult
 import com.pubnub.api.models.consumer.datasync.entity.PNEntity
+import com.pubnub.api.models.consumer.datasync.entity.PNUpdateEntityResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
-import com.pubnub.internal.models.server.datasync.CreateEntityRequest
-import com.pubnub.internal.models.server.datasync.CreateEntityRequestData
+import com.pubnub.internal.models.server.datasync.UpdateEntityRequest
+import com.pubnub.internal.models.server.datasync.UpdateEntityRequestData
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [com.pubnub.api.datasync.EntityApi.create]
+ * @see [com.pubnub.api.datasync.EntityApi.update]
  */
-class CreateEntityEndpoint internal constructor(
+class UpdateEntityEndpoint internal constructor(
     pubnub: PubNubImpl,
-    private val entityClass: String,
+    private val entityId: String,
     private val entityClassVersion: Int,
-    private val entityId: String?,
     private val status: String?,
     private val payload: Any?,
-) : EndpointCore<EntityEnvelope<PNEntity>, PNCreateEntityResult>(pubnub), CreateEntity {
+    private val ifMatch: String?,
+) : EndpointCore<EntityEnvelope<PNEntity>, PNUpdateEntityResult>(pubnub), UpdateEntity {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
         super.validateParams()
-        if (entityClass.isBlank()) {
-            throw PubNubException(PubNubError.ENTITY_CLASS_MISSING)
+        if (entityId.isBlank()) {
+            throw PubNubException(PubNubError.ENTITY_ID_MISSING)
         }
     }
 
@@ -44,44 +44,44 @@ class CreateEntityEndpoint internal constructor(
             LogMessage(
                 message = LogMessageContent.Object(
                     arguments = mapOf(
-                        "entityClass" to entityClass,
+                        "entityId" to entityId,
                         "entityClassVersion" to entityClassVersion,
-                        "entityId" to (entityId ?: ""),
                         "status" to (status ?: ""),
-                        "payload" to (payload ?: "")
+                        "payload" to (payload ?: ""),
+                        "ifMatch" to (ifMatch ?: "")
                     ),
                     operation = this::class.simpleName
                 ),
-                details = "CreateEntity API call",
+                details = "UpdateEntity API call",
             )
         )
-        return retrofitManager.dataSyncService.createEntity(
+        return retrofitManager.dataSyncService.updateEntity(
             subKey = configuration.subscribeKey,
+            entityId = entityId,
             body =
-                CreateEntityRequest(
+                UpdateEntityRequest(
                     data =
-                        CreateEntityRequestData(
-                            id = entityId,
-                            entityClass = entityClass,
+                        UpdateEntityRequestData(
                             entityClassVersion = entityClassVersion,
                             status = status,
                             payload = payload,
                         ),
                 ),
+            ifMatch = ifMatch,
             options = queryParams,
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNEntity>>): PNCreateEntityResult {
+    override fun createResponse(input: Response<EntityEnvelope<PNEntity>>): PNUpdateEntityResult {
         return input.body()!!.let {
-            PNCreateEntityResult(
+            PNUpdateEntityResult(
                 status = it.status,
                 data = it.data,
             )
         }
     }
 
-    override fun operationType(): PNOperationType = PNOperationType.PNCreateEntityOperation
+    override fun operationType(): PNOperationType = PNOperationType.PNUpdateEntityOperation
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.DATASYNC
 }

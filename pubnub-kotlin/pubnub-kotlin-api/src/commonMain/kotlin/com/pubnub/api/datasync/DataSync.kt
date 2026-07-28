@@ -5,7 +5,7 @@ package com.pubnub.api.datasync
  */
 interface DataSync {
     /**
-     * Entity operations (`get` / `create` / `delete`).
+     * Entity operations (`get` / `getAll` / `create` / `update` / `patch` / `delete`).
      */
     val entity: EntityApi
 }
