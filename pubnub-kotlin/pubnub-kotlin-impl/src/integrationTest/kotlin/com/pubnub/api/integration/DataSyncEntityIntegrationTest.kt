@@ -3,9 +3,11 @@ package com.pubnub.api.integration
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
+import com.pubnub.api.models.consumer.datasync.entity.PNCreateEntityResult
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.test.CommonUtils.randomValue
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
@@ -32,7 +34,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             hobby = "poetry",
             custom = "value",
         )
-        val createResult = server.dataSync.entity.create(
+        val createResult: PNCreateEntityResult = server.dataSync.entity.create(
             entityClass = entityClass,
             entityClassVersion = entityClassVersion,
             entityId = entityId,
@@ -46,6 +48,20 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         assertNotNull(createResult.data.eTag)
         assertEquals(payload.username, createResult.data.payload?.get("username"))
         assertEquals(payload.email, createResult.data.payload?.get("email"))
+
+        // create again with the same id -> 409 (create is create-only)
+        try {
+            server.dataSync.entity.create(
+                entityClass = entityClass,
+                entityClassVersion = entityClassVersion,
+                entityId = entityId,
+                status = "active",
+                payload = payload,
+            ).sync()
+            fail("Expected a 409 when creating an entity with an existing id")
+        } catch (e: PubNubException) {
+            assertEquals(409, e.statusCode)
+        }
 
         // get
         val getResult = server.dataSync.entity.get(entityId).sync()
@@ -206,6 +222,55 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             val afterUpdate = server.dataSync.entity.get(entityId).sync()
             assertEquals("archived", afterUpdate.data.status)
             assertEquals("Bob", afterUpdate.data.payload?.get("username"))
+        } finally {
+            server.dataSync.entity.delete(entityId).sync()
+        }
+    }
+
+    @Test
+    fun patchWithIfMatchAndStaleETagThrows412() {
+        // create
+        val payload = TestUserPayload(
+            username = "Alice",
+            email = "alice@example.com",
+        )
+        val createResult = server.dataSync.entity.create(
+            entityClass = entityClass,
+            entityClassVersion = entityClassVersion,
+            entityId = entityId,
+            status = "active",
+            payload = payload,
+        ).sync()
+
+        try {
+            val originalETag = createResult.data.eTag
+            assertNotNull(originalETag)
+
+            // patch #1 with a matching ifMatch -> succeeds and bumps the eTag
+            val patch1 = server.dataSync.entity.patch(
+                entityId = entityId,
+                operations = listOf(
+                    PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
+                ),
+                ifMatch = originalETag,
+            ).sync()
+            assertEquals("inactive", patch1.data.status)
+            val newETag = patch1.data.eTag
+            assertNotEquals(originalETag, newETag)
+
+            // patch #2 with the now-stale ifMatch -> 412 (optimistic concurrency conflict)
+            try {
+                server.dataSync.entity.patch(
+                    entityId = entityId,
+                    operations = listOf(
+                        PNJsonPatchOperation(op = "replace", path = "/status", value = "archived"),
+                    ),
+                    ifMatch = originalETag,
+                ).sync()
+                fail("Expected a 412 when patching with a stale ifMatch eTag")
+            } catch (e: PubNubException) {
+                assertEquals(412, e.statusCode)
+            }
         } finally {
             server.dataSync.entity.delete(entityId).sync()
         }

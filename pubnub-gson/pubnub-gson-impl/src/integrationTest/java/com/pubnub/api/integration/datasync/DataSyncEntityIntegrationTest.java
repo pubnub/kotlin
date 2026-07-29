@@ -18,12 +18,13 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
-    private final static String entityClass = "User";
+    private final static String entityClass = "TestUser";
     private final static int entityClassVersion = 1;
     private final String entityId = "entity-" + RandomStringUtils.random(8, "abcdefgh");
 
@@ -46,6 +47,19 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         assertEquals(entityClass, createResult.getData().getEntityClass());
         assertEquals(entityClassVersion, createResult.getData().getEntityClassVersion());
         assertNotNull(createResult.getData().getETag());
+
+        // create again with the same id -> 409 (create is create-only)
+        try {
+            pubNub.dataSync().entity()
+                    .create(entityClass, entityClassVersion)
+                    .entityId(entityId)
+                    .status("active")
+                    .payload(payload)
+                    .sync();
+            fail("Expected a 409 when creating an entity with an existing id");
+        } catch (PubNubException e) {
+            assertEquals(409, e.getStatusCode());
+        }
 
         // get
         final PNGetEntityResult getResult = pubNub.dataSync().entity().get(entityId).sync();
@@ -127,6 +141,52 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             final PNGetEntityResult afterUpdate = pubNub.dataSync().entity().get(entityId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("updated", afterUpdate.getData().getPayload().get("custom"));
+        } finally {
+            pubNub.dataSync().entity().delete(entityId).sync();
+        }
+    }
+
+    @Test
+    public void patchWithIfMatchAndStaleETagThrows412() throws PubNubException {
+        final Map<String, Object> payload = new HashMap<>();
+        payload.put("custom", "value");
+
+        // create
+        final PNCreateEntityResult createResult = pubNub.dataSync().entity()
+                .create(entityClass, entityClassVersion)
+                .entityId(entityId)
+                .status("active")
+                .payload(payload)
+                .sync();
+
+        try {
+            final String originalETag = createResult.getData().getETag();
+            assertNotNull(originalETag);
+
+            // patch #1 with a matching ifMatch -> succeeds and bumps the eTag
+            final List<PNJsonPatchOperation> inactiveOps = Collections.singletonList(
+                    PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
+            );
+            final PNPatchEntityResult patch1 = pubNub.dataSync().entity()
+                    .patch(entityId, inactiveOps)
+                    .ifMatch(originalETag)
+                    .sync();
+            assertEquals("inactive", patch1.getData().getStatus());
+            assertNotEquals(originalETag, patch1.getData().getETag());
+
+            // patch #2 with the now-stale ifMatch -> 412 (optimistic concurrency conflict)
+            final List<PNJsonPatchOperation> archivedOps = Collections.singletonList(
+                    PNJsonPatchOperation.builder().op("replace").path("/status").value("archived").build()
+            );
+            try {
+                pubNub.dataSync().entity()
+                        .patch(entityId, archivedOps)
+                        .ifMatch(originalETag)
+                        .sync();
+                fail("Expected a 412 when patching with a stale ifMatch eTag");
+            } catch (PubNubException e) {
+                assertEquals(412, e.getStatusCode());
+            }
         } finally {
             pubNub.dataSync().entity().delete(entityId).sync();
         }
