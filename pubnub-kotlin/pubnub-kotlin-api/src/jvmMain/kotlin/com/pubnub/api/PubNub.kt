@@ -331,7 +331,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     actual val configuration: PNConfiguration
 
     /**
-     * Entry point for the DataSync (App Context v4) API.
+     * Entry point for the DataSync API.
      */
     actual val dataSync: com.pubnub.api.datasync.DataSync
 

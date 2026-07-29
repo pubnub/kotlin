@@ -24,7 +24,6 @@ public class PNEntity {
 
     /**
      * The level at which the entity class is defined (e.g. {@code SubKey} / {@code Global}).
-     * Modeled as a nullable {@link String} rather than an enum to stay source-compatible with future values.
      */
     @Nullable
     private String entityClassLevel;

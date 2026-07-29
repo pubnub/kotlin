@@ -486,7 +486,7 @@ interface PubNub : EventEmitter, StatusEmitter {
     fun removeChannelMetadata(): RemoveChannelMetadata.Builder
 
     /**
-     * Entry point for the DataSync (App Context v4) API.
+     * Entry point for the DataSync API.
      */
     fun dataSync(): DataSync
 

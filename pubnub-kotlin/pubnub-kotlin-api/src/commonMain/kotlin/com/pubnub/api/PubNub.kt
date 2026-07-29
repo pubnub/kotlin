@@ -82,7 +82,7 @@ expect interface PubNub {
     val configuration: PNConfiguration
 
     /**
-     * Entry point for the DataSync (App Context v4) API.
+     * Entry point for the DataSync API.
      */
     val dataSync: DataSync
 

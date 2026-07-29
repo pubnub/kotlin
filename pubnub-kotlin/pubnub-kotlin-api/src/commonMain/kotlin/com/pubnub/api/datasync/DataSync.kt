@@ -1,7 +1,7 @@
 package com.pubnub.api.datasync
 
 /**
- * Entry point for the DataSync (App Context v4) API, reached via `pubnub.dataSync`.
+ * Entry point for the DataSync API, reached via `pubnub.dataSync`.
  */
 interface DataSync {
     /**

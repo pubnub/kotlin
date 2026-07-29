@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class EntityIT extends BaseIntegrationTest {
+public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
     private final static String entityClass = "User";
     private final static int entityClassVersion = 1;
     private final String entityId = "entity-" + RandomStringUtils.random(8, "abcdefgh");
