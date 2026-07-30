@@ -212,6 +212,10 @@ open class PubNubImpl(
 
     val mapper = MapperManager(logConfig)
 
+    override val dataSync: com.pubnub.api.datasync.DataSync by lazy {
+        com.pubnub.internal.datasync.DataSyncImpl(this)
+    }
+
     private val numberOfThreadsInPool = Integer.min(Runtime.getRuntime().availableProcessors(), 8)
     internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)
     val listenerManager: ListenerManager = ListenerManager(this)

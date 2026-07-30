@@ -155,6 +155,8 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
 class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
+    override val dataSync: com.pubnub.api.datasync.DataSync = com.pubnub.api.datasync.DataSyncImpl()
+
     constructor(configuration: PNConfiguration) : this(
         KMPPubNub(
             user = configuration.userId.value,
