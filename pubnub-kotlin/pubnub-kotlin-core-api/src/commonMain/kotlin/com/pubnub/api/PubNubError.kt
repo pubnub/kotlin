@@ -253,6 +253,21 @@ enum class PubNubError(private val code: Int, val message: String) {
     MESSAGE_TOO_LARGE(
         code = 184,
         message = "Message payload exceeds the maximum allowed size of 2 MiB.",
+    ),
+
+    ENTITY_ID_MISSING(
+        code = 185,
+        message = "Entity Id Missing",
+    ),
+
+    ENTITY_CLASS_MISSING(
+        code = 186,
+        message = "Entity Class Missing",
+    ),
+
+    JSON_PATCH_OPERATIONS_MISSING(
+        code = 187,
+        message = "JSON Patch operations must contain at least one operation.",
     )
 
     ;

@@ -71,6 +71,7 @@ class PNConfigurationImpl(
             RetryableEndpointGroup.APP_CONTEXT,
             RetryableEndpointGroup.MESSAGE_REACTION,
             RetryableEndpointGroup.ACCESS_MANAGER,
+            RetryableEndpointGroup.DATASYNC,
         )
     ),
     override val managePresenceListManually: Boolean = false,

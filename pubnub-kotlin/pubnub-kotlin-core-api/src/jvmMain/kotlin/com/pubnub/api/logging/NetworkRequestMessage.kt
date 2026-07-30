@@ -27,6 +27,7 @@ enum class HttpMethod(val value: String) {
     GET("get"),
     POST("post"),
     PATCH("patch"),
+    PUT("put"),
     DELETE("delete");
 
     companion object {
@@ -35,6 +36,7 @@ enum class HttpMethod(val value: String) {
                 "get" -> GET
                 "post" -> POST
                 "patch" -> PATCH
+                "put" -> PUT
                 "delete" -> DELETE
                 else -> throw IllegalStateException("Unknown HTTP method: $method")
             }
