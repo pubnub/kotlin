@@ -331,6 +331,11 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     actual val configuration: PNConfiguration
 
     /**
+     * Entry point for the DataSync API.
+     */
+    actual val dataSync: com.pubnub.api.datasync.DataSync
+
+    /**
      * Add a legacy listener for both client status and events.
      * Prefer `addListener(EventListener)` and `addListener(StatusListener)` if possible.
      *

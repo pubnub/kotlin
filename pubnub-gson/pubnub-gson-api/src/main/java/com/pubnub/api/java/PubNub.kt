@@ -7,6 +7,7 @@ import com.pubnub.api.java.builder.PresenceBuilder
 import com.pubnub.api.java.builder.SubscribeBuilder
 import com.pubnub.api.java.builder.UnsubscribeBuilder
 import com.pubnub.api.java.callbacks.SubscribeCallback
+import com.pubnub.api.java.datasync.DataSync
 import com.pubnub.api.java.endpoints.DeleteMessages
 import com.pubnub.api.java.endpoints.FetchMessages
 import com.pubnub.api.java.endpoints.History
@@ -483,6 +484,11 @@ interface PubNub : EventEmitter, StatusEmitter {
      * Removes the metadata from a specified channel.
      */
     fun removeChannelMetadata(): RemoveChannelMetadata.Builder
+
+    /**
+     * Entry point for the DataSync API.
+     */
+    fun dataSync(): DataSync
 
     /**
      * The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.

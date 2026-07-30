@@ -4,9 +4,10 @@ package com.pubnub.api.models.consumer.access_manager.v3
  * Factory for DataSync (App Context v4) PAM v3 resource grants, passed to the `dataSync` parameter of
  * [com.pubnub.api.PubNub.grantToken].
  *
- * DataSync introduces three resource namespaces — `entities`, `relationships` and `memberships` — each of which can
- * be granted on an exact resource id or on a regex pattern. Only the four DataSync-relevant permission flags are
- * exposed: `get`, `create`, `update` and `delete`.
+ * DataSync introduces three resource namespaces — `datasync:entities`, `datasync:relationships` and
+ * `datasync:memberships` (the keys emitted into the token's `res`/`pat` maps) — each of which can be granted on an
+ * exact resource id or on a regex pattern. Only the four DataSync-relevant permission flags are exposed: `get`,
+ * `create`, `update` and `delete`.
  *
  * Each grant can also carry an optional `projection`: when this client uses the token to access this resource, they
  * see it through this projection. A projection is a named, filtered view of a resource's fields, defined in the
