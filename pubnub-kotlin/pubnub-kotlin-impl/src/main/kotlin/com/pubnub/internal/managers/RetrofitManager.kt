@@ -7,6 +7,7 @@ import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.networkLogging.CustomPnHttpLoggingInterceptor
 import com.pubnub.internal.services.AccessManagerService
 import com.pubnub.internal.services.ChannelGroupService
+import com.pubnub.internal.services.DataSyncService
 import com.pubnub.internal.services.FilesService
 import com.pubnub.internal.services.HeartbeatService
 import com.pubnub.internal.services.HistoryService
@@ -52,6 +53,7 @@ class RetrofitManager(
 
     internal val subscribeService: SubscribeService
     internal val objectsService: ObjectsService
+    internal val dataSyncService: DataSyncService
     internal val filesService: FilesService
     internal val s3Service: S3Service
 
@@ -92,6 +94,7 @@ class RetrofitManager(
         pushService = transactionInstance.create(PushService::class.java)
         accessManagerService = transactionInstance.create(AccessManagerService::class.java)
         objectsService = transactionInstance.create(ObjectsService::class.java)
+        dataSyncService = transactionInstance.create(DataSyncService::class.java)
         filesService = transactionInstance.create(FilesService::class.java)
         s3Service = noSignatureInstance.create(S3Service::class.java)
 

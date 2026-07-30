@@ -141,6 +141,8 @@ import PubNub as PubNubJs
 class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     constructor(configuration: PNConfiguration) : this(PubNubJs(configuration.toJs()))
 
+    override val dataSync: com.pubnub.api.datasync.DataSync = com.pubnub.api.datasync.DataSyncImpl()
+
     override val configuration: PNConfiguration
         get() = createPNConfiguration( // todo test this!
             userId = UserId(jsPubNub.getUUID()),
