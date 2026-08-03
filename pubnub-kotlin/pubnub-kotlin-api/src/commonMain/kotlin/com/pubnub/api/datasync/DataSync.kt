@@ -8,4 +8,9 @@ interface DataSync {
      * Entity operations (`get` / `getAll` / `create` / `update` / `patch` / `delete`).
      */
     val entity: EntityApi
+
+    /**
+     * User operations (`get` / `getAll` / `create` / `update` / `patch` / `delete`).
+     */
+    val user: UserApi
 }

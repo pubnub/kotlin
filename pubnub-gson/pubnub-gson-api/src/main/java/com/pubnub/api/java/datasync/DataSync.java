@@ -5,7 +5,12 @@ package com.pubnub.api.java.datasync;
  */
 public interface DataSync {
     /**
-     * Entity operations ({@code get} / {@code create} / {@code delete}).
+     * Entity operations ({@code get} / {@code getAll} / {@code create} / {@code update} / {@code patch} / {@code delete}).
      */
     EntityApi entity();
+
+    /**
+     * User operations ({@code get} / {@code getAll} / {@code create} / {@code update} / {@code patch} / {@code delete}).
+     */
+    UserApi user();
 }
