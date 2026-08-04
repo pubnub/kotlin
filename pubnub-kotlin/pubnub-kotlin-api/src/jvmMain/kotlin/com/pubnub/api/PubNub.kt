@@ -55,6 +55,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -1086,7 +1087,14 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param uuids List of all uuid grants
      * @param dataSync List of all DataSync resource grants
      */
-
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This overload grants App Context permissions into the `uuids` bucket. Use the overload with " +
+            "`authorizedUserId: UserId?` and `users: List<UserGrant>` which grants into the `users` bucket.",
+        replaceWith = ReplaceWith(
+            "grantToken(ttl, authorizedUserId, meta, channels, channelGroups, users, dataSync)"
+        )
+    )
     actual fun grantToken(
         ttl: Int,
         meta: Any?,
@@ -1094,6 +1102,37 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
+        dataSync: List<DataSyncGrantType>,
+    ): GrantToken
+
+    /**
+     * This function generates a grant token for PubNub Access Manager (PAM).
+     *
+     * Permissions can be applied to any of the four type of resources:
+     * - channels
+     * - channel groups
+     * - users
+     * - dataSync
+     *
+     * Each type of resource have different set of permissions. To know what's possible for each of them
+     * check ChannelGrant, ChannelGroupGrant and UserGrant.
+     *
+     * @param ttl Time in minutes for which granted permissions are valid.
+     * @param authorizedUserId Single userId which is authorized to use the token to make API requests to PubNub.
+     * Pass `null` to mint a token not bound to a specific authorized userId.
+     * @param meta Additional metadata
+     * @param channels List of all channel grants
+     * @param channelGroups List of all channel group grants
+     * @param users List of all userId grants (App Context User entities)
+     * @param dataSync List of all DataSync resource grants
+     */
+    actual fun grantToken(
+        ttl: Int,
+        authorizedUserId: UserId?,
+        meta: Any?,
+        channels: List<ChannelGrant>,
+        channelGroups: List<ChannelGroupGrant>,
+        users: List<UserGrant>,
         dataSync: List<DataSyncGrantType>,
     ): GrantToken
 

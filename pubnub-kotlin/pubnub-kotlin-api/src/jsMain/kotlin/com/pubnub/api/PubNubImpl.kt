@@ -100,6 +100,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -497,6 +498,14 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         )
     }
 
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This overload grants App Context permissions. For DataSync operation use the overload with " +
+            "`authorizedUserId: UserId?` and `users: List<UserGrant>`.",
+        replaceWith = ReplaceWith(
+            "grantToken(ttl, authorizedUserId, meta, channels, channelGroups, users, dataSync)"
+        )
+    )
     override fun grantToken(
         ttl: Int,
         meta: CustomObject?,
@@ -525,6 +534,38 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     this.channels = getGrantTokenPermissions<PNPatternGrant>(channels)
                     this.groups = getGrantTokenPermissions<PNPatternGrant>(channelGroups)
                     this.uuids = getGrantTokenPermissions<PNPatternGrant>(uuids)
+                }
+            }
+        )
+    }
+
+    override fun grantToken(
+        ttl: Int,
+        authorizedUserId: UserId?,
+        meta: CustomObject?,
+        channels: List<ChannelGrant>,
+        channelGroups: List<ChannelGroupGrant>,
+        users: List<UserGrant>,
+        dataSync: List<DataSyncGrantType>
+    ): GrantToken {
+        // NOTE: The underlying `pubnub` npm package exposes only the `uuids` bucket (and no DataSync), so neither the
+        // `users` bucket nor the `dataSync` list can be forwarded on the JS target. The Kotlin/JVM and Java/GSON SDKs
+        // carry both. Only channel/channel-group grants and the authorized principal are forwarded here.
+        return GrantTokenImpl(
+            jsPubNub,
+            createJsObject {
+                this.meta = meta?.let { metaNotNull ->
+                    json(*metaNotNull.entries.map { Pair(it.key, it.value) }.toTypedArray())
+                }
+                this.ttl = ttl
+                this.authorized_uuid = authorizedUserId?.value
+                this.resources = createJsObject<PubNubJs.PatternsOrResources> {
+                    this.channels = getGrantTokenPermissions<PNResourceGrant>(channels)
+                    this.groups = getGrantTokenPermissions<PNResourceGrant>(channelGroups)
+                }
+                this.patterns = createJsObject<PubNubJs.PatternsOrResources> {
+                    this.channels = getGrantTokenPermissions<PNPatternGrant>(channels)
+                    this.groups = getGrantTokenPermissions<PNPatternGrant>(channelGroups)
                 }
             }
         )

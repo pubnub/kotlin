@@ -1,8 +1,10 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubException
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
@@ -31,6 +33,7 @@ import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Test
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME
@@ -157,6 +160,52 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val getAllAfterRemovalResult = pubnub.getAllUUIDMetadata(filter = "id == \"$testUserId01\"").sync()
 
         assertTrue(getAllAfterRemovalResult.data.none { it.id == testUserId01 })
+    }
+
+    @Test
+    fun setGetAndRemoveUUIDMetadataWithServerGrantedToken() {
+        val authorizedUUID = pubnub.configuration.userId.value
+
+        // set -> token scoped to `update` on this specific uuid (set/update maps to `update`)
+        grantAndAuthenticate(authorizedUUID, UUIDGrant.id(id = testUserId01, update = true))
+        val setResult =
+            pubnub.setUUIDMetadata(
+                uuid = testUserId01,
+                name = randomValue(15),
+                status = status01,
+                type = type01,
+            ).sync()
+
+        assertEquals(testUserId01, setResult.data?.id)
+        assertEquals(status01, setResult.data?.status?.value)
+        assertEquals(type01, setResult.data?.type?.value)
+
+        // get -> token scoped to `get` on this specific uuid
+        grantAndAuthenticate(authorizedUUID, UUIDGrant.id(id = testUserId01, get = true))
+        val getSingleResult = pubnub.getUUIDMetadata(uuid = testUserId01).sync()
+        assertEquals(setResult, getSingleResult)
+
+        // remove -> token scoped to `delete` on this specific uuid
+        grantAndAuthenticate(authorizedUUID, UUIDGrant.id(id = testUserId01, delete = true))
+        pubnub.removeUUIDMetadata(uuid = testUserId01).sync()
+
+        // get after remove -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
+        grantAndAuthenticate(authorizedUUID, UUIDGrant.id(id = testUserId01, get = true))
+        try {
+            pubnub.getUUIDMetadata(uuid = testUserId01).sync()
+            fail("Expected a 404 after removing the uuid metadata")
+        } catch (e: PubNubException) {
+            assertEquals(404, e.statusCode)
+        }
+    }
+
+    private fun grantAndAuthenticate(authorizedUUID: String, vararg uuids: UUIDGrant) {
+        val token = server.grantToken(
+            ttl = 60,
+            authorizedUUID = authorizedUUID,
+            uuids = uuids.toList(),
+        ).sync().token
+        pubnub.setToken(token)
     }
 
     @Test

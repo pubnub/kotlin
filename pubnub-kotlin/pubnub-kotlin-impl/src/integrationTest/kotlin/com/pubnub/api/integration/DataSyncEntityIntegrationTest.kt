@@ -83,7 +83,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun createGetAndDeleteEntityWithServerGrantedToken() {
+    fun createGetDeletePatchUpdateGetAllEntityWithServerGrantedToken() {
         val authorizedUUID = pubnub.configuration.userId.value
 
         // create -> token scoped to `create` on this specific entity id

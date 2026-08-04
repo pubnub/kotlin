@@ -22,6 +22,7 @@ data class PNToken(
         val channels: Map<String, PNResourcePermissions> = emptyMap(),
         val channelGroups: Map<String, PNResourcePermissions> = emptyMap(),
         val uuids: Map<String, PNResourcePermissions> = emptyMap(),
+        val users: Map<String, PNResourcePermissions> = emptyMap(),
         val datasyncEntities: Map<String, PNResourcePermissions> = emptyMap(),
         val datasyncRelationships: Map<String, PNResourcePermissions> = emptyMap(),
         val datasyncMemberships: Map<String, PNResourcePermissions> = emptyMap(),

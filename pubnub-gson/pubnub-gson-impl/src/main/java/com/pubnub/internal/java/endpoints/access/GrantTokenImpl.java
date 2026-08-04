@@ -15,6 +15,7 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
@@ -36,6 +37,7 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
     private List<ChannelGrant> channels = Collections.emptyList();
     private List<ChannelGroupGrant> channelGroups = Collections.emptyList();
     private List<UUIDGrant> uuids = Collections.emptyList();
+    private List<UserGrant> users = Collections.emptyList();
     private List<DataSyncGrant> dataSync = Collections.emptyList();
 
     public GrantTokenImpl(PubNub pubnub) {
@@ -52,6 +54,26 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
     @Override
     @NotNull
     protected Endpoint<PNGrantTokenResult> createRemoteAction() {
+        // The `users` bucket (App Context User entities) and the legacy `uuids` bucket are served by two distinct
+        // kotlin overloads. Route through the new `users` overload whenever any user grant is present; otherwise fall
+        // back to the deprecated `uuids` overload. The authorized principal maps to the same wire field in both.
+        if (!users.isEmpty()) {
+            final UserId authorizedUserId;
+            try {
+                authorizedUserId = authorizedUUID == null ? null : new UserId(authorizedUUID);
+            } catch (PubNubException e) {
+                throw new RuntimeException(e);
+            }
+            return pubnub.grantToken(
+                    ttl,
+                    authorizedUserId,
+                    meta,
+                    toInternalChannels(channels),
+                    toInternalChannelGroups(channelGroups),
+                    toInternalUsers(users),
+                    toInternalDataSync(dataSync)
+            );
+        }
         return pubnub.grantToken(
                 ttl,
                 meta,
@@ -157,6 +179,14 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
         return list;
     }
 
+    private List<? extends com.pubnub.api.models.consumer.access_manager.v3.UserGrant> toInternalUsers(List<UserGrant> users) {
+        ArrayList<com.pubnub.api.models.consumer.access_manager.v3.UserGrant> list = new ArrayList<>(users.size());
+        for (UserGrant user : users) {
+            list.add(toInternal(user));
+        }
+        return list;
+    }
+
     static com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant toInternal(ChannelGrant grant) {
         if (grant.isPatternResource()) {
             return com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant.Companion.pattern(
@@ -246,6 +276,26 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isGet(),
                     grant.isUpdate(),
                     grant.isDelete()
+            );
+        }
+    }
+
+    static com.pubnub.api.models.consumer.access_manager.v3.UserGrant toInternal(UserGrant grant) {
+        if (grant.isPatternResource()) {
+            return com.pubnub.api.models.consumer.access_manager.v3.UserGrant.Companion.pattern(
+                    grant.getId(),
+                    grant.isGet(),
+                    grant.isUpdate(),
+                    grant.isDelete(),
+                    grant.isCreate()
+            );
+        } else {
+            return com.pubnub.api.models.consumer.access_manager.v3.UserGrant.Companion.id(
+                    grant.getId(),
+                    grant.isGet(),
+                    grant.isUpdate(),
+                    grant.isDelete(),
+                    grant.isCreate()
             );
         }
     }

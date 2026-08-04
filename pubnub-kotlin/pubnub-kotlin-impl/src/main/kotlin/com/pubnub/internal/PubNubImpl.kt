@@ -65,6 +65,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -747,6 +748,14 @@ open class PubNubImpl(
             uuids = uuids,
         )
 
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This overload grants App Context permissions. For DataSync operation use the overload with " +
+            "`authorizedUserId: UserId?` and `users: List<UserGrant>`.",
+        replaceWith = ReplaceWith(
+            "grantToken(ttl, authorizedUserId, meta, channels, channelGroups, users, dataSync)"
+        )
+    )
     override fun grantToken(
         ttl: Int,
         meta: Any?,
@@ -764,6 +773,29 @@ open class PubNubImpl(
             channels = channels,
             channelGroups = channelGroups,
             uuids = uuids,
+            users = emptyList(),
+            dataSync = dataSync,
+        )
+    }
+
+    override fun grantToken(
+        ttl: Int,
+        authorizedUserId: UserId?,
+        meta: Any?,
+        channels: List<ChannelGrant>,
+        channelGroups: List<ChannelGroupGrant>,
+        users: List<UserGrant>,
+        dataSync: List<DataSyncGrantType>,
+    ): GrantToken {
+        return GrantTokenEndpoint(
+            pubnub = this,
+            ttl = ttl,
+            meta = meta,
+            authorizedUUID = authorizedUserId?.value,
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = emptyList(),
+            users = users,
             dataSync = dataSync,
         )
     }

@@ -87,7 +87,7 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
     }
 
      @Test
-    public void createGetAndDeleteEntityWithServerGrantedToken() throws PubNubException {
+    public void createGetDeletePatchUpdateGetAllEntityWithServerGrantedToken() throws PubNubException {
         final String authorizedUUID = pubNub.getConfiguration().getUserId().getValue();
 
         final Map<String, Object> payload = new HashMap<>();

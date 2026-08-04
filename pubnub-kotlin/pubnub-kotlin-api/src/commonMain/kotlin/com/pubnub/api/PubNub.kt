@@ -52,6 +52,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -242,6 +243,14 @@ expect interface PubNub {
 
     fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This overload grants App Context permissions into the `uuids` bucket. Use the overload with " +
+            "`authorizedUserId: UserId?` and `users: List<UserGrant>` which grants into the `users` bucket.",
+        replaceWith = ReplaceWith(
+            "grantToken(ttl, authorizedUserId, meta, channels, channelGroups, users, dataSync)"
+        )
+    )
     fun grantToken(
         ttl: Int,
         meta: CustomObject? = null,
@@ -249,6 +258,16 @@ expect interface PubNub {
         channels: List<ChannelGrant> = emptyList(),
         channelGroups: List<ChannelGroupGrant> = emptyList(),
         uuids: List<UUIDGrant> = emptyList(),
+        dataSync: List<DataSyncGrantType> = emptyList(),
+    ): GrantToken
+
+    fun grantToken(
+        ttl: Int,
+        authorizedUserId: UserId?,
+        meta: CustomObject? = null,
+        channels: List<ChannelGrant> = emptyList(),
+        channelGroups: List<ChannelGroupGrant> = emptyList(),
+        users: List<UserGrant> = emptyList(),
         dataSync: List<DataSyncGrantType> = emptyList(),
     ): GrantToken
 

@@ -31,9 +31,9 @@ public interface GrantTokenBuilder extends Endpoint<PNGrantTokenResult> {
 
     GrantTokenObjectsBuilder dataSync(List<DataSyncGrant> dataSync);
 
+    @Deprecated
     GrantTokenObjectsBuilder authorizedUUID(String authorizedUUID);
 
-    @Deprecated
     GrantTokenEntitiesBuilder authorizedUserId(UserId userId);
 
     @Deprecated

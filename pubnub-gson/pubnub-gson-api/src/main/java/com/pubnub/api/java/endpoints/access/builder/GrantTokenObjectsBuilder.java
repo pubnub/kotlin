@@ -6,6 +6,7 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
 
 import java.util.List;
 
@@ -25,6 +26,8 @@ public interface GrantTokenObjectsBuilder extends Endpoint<PNGrantTokenResult> {
     GrantTokenObjectsBuilder channelGroups(List<ChannelGroupGrant> channelGroups);
 
     GrantTokenObjectsBuilder uuids(List<UUIDGrant> uuids);
+
+    GrantTokenObjectsBuilder users(List<UserGrant> users);
 
     GrantTokenObjectsBuilder dataSync(List<DataSyncGrant> dataSync);
 
