@@ -243,14 +243,10 @@ expect interface PubNub {
 
     fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
-    @Deprecated(
-        level = DeprecationLevel.WARNING,
-        message = "This overload grants App Context permissions into the `uuids` bucket. Use the overload with " +
-            "`authorizedUserId: UserId?` and `users: List<UserGrant>` which grants into the `users` bucket.",
-        replaceWith = ReplaceWith(
-            "grantToken(ttl, authorizedUserId, meta, channels, channelGroups, users, dataSync)"
-        )
-    )
+    /**
+     * Use this overload for legacy App Context (grants into the `uuids` bucket). For DataSync operations, use the
+     * overload that takes `authorizedUserId`, `users` and `dataSync`.
+     */
     fun grantToken(
         ttl: Int,
         meta: CustomObject? = null,
@@ -258,7 +254,6 @@ expect interface PubNub {
         channels: List<ChannelGrant> = emptyList(),
         channelGroups: List<ChannelGroupGrant> = emptyList(),
         uuids: List<UUIDGrant> = emptyList(),
-        dataSync: List<DataSyncGrantType> = emptyList(),
     ): GrantToken
 
     fun grantToken(

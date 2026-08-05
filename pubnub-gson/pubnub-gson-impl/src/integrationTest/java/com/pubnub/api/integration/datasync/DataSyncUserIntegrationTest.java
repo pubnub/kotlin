@@ -184,17 +184,11 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
 
     private void grantAndAuthenticate(String authorizedUUID, UserGrant... grants) throws PubNubException {
         final String token = server.grantToken(60)
-                .authorizedUserId(new UserId(authorizedUUID))
                 .users(Arrays.asList(grants))
+                .authorizedUserId(new UserId(authorizedUUID))
                 .sync()
                 .getToken();
         pubNub.setToken(token);
-
-
-        UserId userId = new UserId("dfada");
-        server.grantToken(60)
-                .authorizedUserId(userId)
-                .authorizedUserId()
     }
 
     @Test

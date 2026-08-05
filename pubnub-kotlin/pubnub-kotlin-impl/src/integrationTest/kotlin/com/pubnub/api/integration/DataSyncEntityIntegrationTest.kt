@@ -2,6 +2,7 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.datasync.entity.PNCreateEntityResult
@@ -163,7 +164,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     private fun grantAndAuthenticate(authorizedUUID: String, vararg grants: DataSyncGrantType) {
         val token = server.grantToken(
             ttl = 60,
-            authorizedUUID = authorizedUUID,
+            authorizedUserId = UserId(authorizedUUID),
             dataSync = grants.toList(),
         ).sync().token
         pubnub.setToken(token)

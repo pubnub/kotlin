@@ -481,22 +481,13 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         )
     }
 
-    @Deprecated(
-        level = DeprecationLevel.WARNING,
-        message = "This overload grants App Context permissions. For DataSync operation use the overload with " +
-            "`authorizedUserId: UserId?` and `users: List<UserGrant>`.",
-        replaceWith = ReplaceWith(
-            "grantToken(ttl, authorizedUserId, meta, channels, channelGroups, users, dataSync)"
-        )
-    )
     override fun grantToken(
         ttl: Int,
         meta: CustomObject?,
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
-        uuids: List<UUIDGrant>,
-        dataSync: List<DataSyncGrantType>
+        uuids: List<UUIDGrant>
     ): GrantToken {
         TODO("Not yet implemented")
     }

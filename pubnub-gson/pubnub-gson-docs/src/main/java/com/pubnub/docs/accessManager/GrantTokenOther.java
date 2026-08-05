@@ -1,11 +1,7 @@
 package com.pubnub.docs.accessManager;
 
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.UserId;
 import com.pubnub.api.java.PubNub;
-import com.pubnub.api.java.SpaceId;
-import com.pubnub.api.java.models.consumer.access_manager.sum.SpacePermissions;
-import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
@@ -84,8 +80,8 @@ public class GrantTokenOther extends SnippetBase {
 
         // snippet.grantTokenUsersAndSpacesBasic
         PNGrantTokenResult pnGrantTokenResult = pubnub.grantToken(15)
-                .authorizedUserId(new UserId("my-authorized-userId"))
-                .spacesPermissions(Arrays.asList(SpacePermissions.id(new SpaceId("space-id")).read()))
+                .authorizedUUID("my-authorized-userId")
+                .channels(Arrays.asList(ChannelGrant.name("space-id").read()))
                 .sync();
 
         String token = pnGrantTokenResult.getToken();
@@ -99,15 +95,15 @@ public class GrantTokenOther extends SnippetBase {
 
         // snippet.grantTokenUsersAndSpacesDifferentLevels
         pubnub.grantToken(15)
-                .authorizedUserId(new UserId("my-authorized-userId"))
-                .spacesPermissions(Arrays.asList(
-                        SpacePermissions.id(new SpaceId("space-a")).read(),
-                        SpacePermissions.id(new SpaceId("space-b")).read().write(),
-                        SpacePermissions.id(new SpaceId("space-c")).read().write(),
-                        SpacePermissions.id(new SpaceId("space-d")).read().write()))
-                .usersPermissions(Arrays.asList(
-                        UserPermissions.id(new UserId("userId-c")).get(),
-                        UserPermissions.id(new UserId("userId-d")).get().update()))
+                .authorizedUUID("my-authorized-userId")
+                .channels(Arrays.asList(
+                        ChannelGrant.name("space-a").read(),
+                        ChannelGrant.name("space-b").read().write(),
+                        ChannelGrant.name("space-c").read().write(),
+                        ChannelGrant.name("space-d").read().write()))
+                .uuids(Arrays.asList(
+                        UUIDGrant.id("userId-c").get(),
+                        UUIDGrant.id("userId-d").get().update()))
                 .async(result -> { /* check result */ });
         // snippet.end
     }
@@ -119,9 +115,9 @@ public class GrantTokenOther extends SnippetBase {
 
         // snippet.grantTokenUsersAndSpacesWithRegEx
         pubnub.grantToken(15)
-                .authorizedUserId(new UserId("my-authorized-userId"))
-                .spacesPermissions(Collections.singletonList(
-                        SpacePermissions.pattern("^space-[A-Za-z0-9]*$").read()))
+                .authorizedUUID("my-authorized-userId")
+                .channels(Collections.singletonList(
+                        ChannelGrant.pattern("^space-[A-Za-z0-9]*$").read()))
                 .async(result -> { /* check result */ });
         // snippet.end
     }
@@ -132,16 +128,16 @@ public class GrantTokenOther extends SnippetBase {
 
         // snippet.grantTokenUsersAndSpacesDifferentLevelsWithRegEx
         PNGrantTokenResult pnGrantTokenResult = pubnub.grantToken(15)
-                .authorizedUserId(new UserId("my-authorized-userId"))
-                .spacesPermissions(Arrays.asList(
-                        SpacePermissions.id(new SpaceId("space-a")).read(),
-                        SpacePermissions.id(new SpaceId("space-b")).read().write(),
-                        SpacePermissions.id(new SpaceId("space-c")).read().write(),
-                        SpacePermissions.id(new SpaceId("space-d")).read().write(),
-                        SpacePermissions.pattern("^space-[A-Za-z0-9]*$").read()))
-                .usersPermissions(Arrays.asList(
-                        UserPermissions.id(new UserId("userId-c")).get(),
-                        UserPermissions.id(new UserId("userId-d")).get().update()))
+                .authorizedUUID("my-authorized-userId")
+                .channels(Arrays.asList(
+                        ChannelGrant.name("space-a").read(),
+                        ChannelGrant.name("space-b").read().write(),
+                        ChannelGrant.name("space-c").read().write(),
+                        ChannelGrant.name("space-d").read().write(),
+                        ChannelGrant.pattern("^space-[A-Za-z0-9]*$").read()))
+                .uuids(Arrays.asList(
+                        UUIDGrant.id("userId-c").get(),
+                        UUIDGrant.id("userId-d").get().update()))
                 .sync();
 
         String token = pnGrantTokenResult.getToken();

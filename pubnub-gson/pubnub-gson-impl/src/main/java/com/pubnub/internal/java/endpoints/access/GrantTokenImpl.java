@@ -7,10 +7,8 @@ import com.pubnub.api.UserId;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.access.GrantToken;
 import com.pubnub.api.java.endpoints.access.builder.GrantTokenBuilder;
-import com.pubnub.api.java.endpoints.access.builder.GrantTokenEntitiesBuilder;
+import com.pubnub.api.java.endpoints.access.builder.GrantTokenDataSyncBuilder;
 import com.pubnub.api.java.endpoints.access.builder.GrantTokenObjectsBuilder;
-import com.pubnub.api.java.models.consumer.access_manager.sum.SpacePermissions;
-import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
@@ -29,7 +27,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> implements GrantToken, GrantTokenBuilder, GrantTokenEntitiesBuilder, GrantTokenObjectsBuilder {
+public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> implements GrantToken, GrantTokenBuilder, GrantTokenObjectsBuilder, GrantTokenDataSyncBuilder {
 
     private Integer ttl;
     private Object meta;
@@ -49,15 +47,23 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
         if (this.ttl == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_TTL_MISSING);
         }
+        // The legacy `uuids` bucket and the DataSync `users`/`dataSync` buckets map to distinct wire
+        // buckets and cannot be combined in a single grant. Reject the mix explicitly instead of silently dropping
+        // one of them during routing.
+        if (!uuids.isEmpty() && (!users.isEmpty() || !dataSync.isEmpty())) {
+            throw new PubNubException("The legacy `uuids` grants can not be combined with `users` or `dataSync` grants.");
+        }
     }
 
     @Override
     @NotNull
     protected Endpoint<PNGrantTokenResult> createRemoteAction() {
-        // The `users` bucket (App Context User entities) and the legacy `uuids` bucket are served by two distinct
-        // kotlin overloads. Route through the new `users` overload whenever any user grant is present; otherwise fall
-        // back to the deprecated `uuids` overload. The authorized principal maps to the same wire field in both.
-        if (!users.isEmpty()) {
+        // The DataSync `users`/`dataSync` buckets and the legacy `uuids` bucket are served by two distinct
+        // kotlin overloads. Route through the new overload whenever any `users` or `dataSync` grant is present so a
+        // caller supplying `dataSync` without `users` still reaches the overload that carries `dataSync`; otherwise
+        // fall back to the legacy `uuids` overload (which no longer accepts `dataSync`). The authorized principal maps
+        // to the same wire field in both.
+        if (!users.isEmpty() || !dataSync.isEmpty()) {
             final UserId authorizedUserId;
             try {
                 authorizedUserId = authorizedUUID == null ? null : new UserId(authorizedUUID);
@@ -80,77 +86,12 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                 authorizedUUID,
                 toInternalChannels(channels),
                 toInternalChannelGroups(channelGroups),
-                toInternalUuids(uuids),
-                toInternalDataSync(dataSync)
+                toInternalUuids(uuids)
         );
     }
 
     @Override
-    public GrantTokenEntitiesBuilder spacesPermissions(List<SpacePermissions> spacesPermissions) {
-        List<ChannelGrant> channelGrants = new ArrayList<>();
-        for (SpacePermissions spacePermission : spacesPermissions) {
-            final ChannelGrant channelGrant;
-            if (spacePermission.isPatternResource()) {
-                channelGrant = ChannelGrant.pattern(spacePermission.getId());
-            } else {
-                channelGrant = ChannelGrant.name(spacePermission.getId());
-            }
-            if (spacePermission.isRead()) {
-                channelGrant.read();
-            }
-            if (spacePermission.isWrite()) {
-                channelGrant.write();
-            }
-            if (spacePermission.isManage()) {
-                channelGrant.manage();
-            }
-            if (spacePermission.isDelete()) {
-                channelGrant.delete();
-            }
-            if (spacePermission.isUpdate()) {
-                channelGrant.update();
-            }
-            if (spacePermission.isJoin()) {
-                channelGrant.join();
-            }
-            if (spacePermission.isGet()) {
-                channelGrant.get();
-            }
-            channelGrants.add(channelGrant);
-        }
-
-        channels(channelGrants);
-        return this;
-    }
-
-    @Override
-    public GrantTokenEntitiesBuilder usersPermissions(List<UserPermissions> usersPermissions) {
-        List<UUIDGrant> uuidsGrants = new ArrayList<>();
-        for (UserPermissions userPermissions : usersPermissions) {
-            final UUIDGrant channelGrant;
-            if (userPermissions.isPatternResource()) {
-                channelGrant = UUIDGrant.pattern(userPermissions.getId());
-            } else {
-                channelGrant = UUIDGrant.id(userPermissions.getId());
-            }
-            if (userPermissions.isDelete()) {
-                channelGrant.delete();
-            }
-            if (userPermissions.isUpdate()) {
-                channelGrant.update();
-            }
-            if (userPermissions.isGet()) {
-                channelGrant.get();
-            }
-            uuidsGrants.add(channelGrant);
-        }
-
-        uuids(uuidsGrants);
-        return this;
-    }
-
-    @Override
-    public GrantTokenEntitiesBuilder authorizedUserId(UserId userId) {
+    public GrantTokenDataSyncBuilder authorizedUserId(UserId userId) {
         authorizedUUID(userId.getValue());
         return this;
     }

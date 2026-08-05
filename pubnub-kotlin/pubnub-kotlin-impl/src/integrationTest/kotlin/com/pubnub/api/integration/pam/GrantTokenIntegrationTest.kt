@@ -1,17 +1,15 @@
 package com.pubnub.api.integration.pam
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.integration.BaseIntegrationTest
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
+import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.CommonUtils
 import com.pubnub.test.Keys
@@ -56,7 +54,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         // given
         val pubNubUnderTest = server
         val expectedTTL = 1337
-        val expectedAuthorizedUserId = UserId("authorizedUser01")
+        val expectedAuthorizedUUID = "authorizedUser01"
         val expectedSpaceIdValue = "mySpace01"
         val expectedSpaceIdPattern = "mySpace.*"
         val expectedUserIdValue = "myUser01"
@@ -66,16 +64,16 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val grantTokenEndpoint =
             pubNubUnderTest.grantToken(
                 ttl = expectedTTL,
-                authorizedUserId = expectedAuthorizedUserId,
-                spacesPermissions =
+                authorizedUUID = expectedAuthorizedUUID,
+                channels =
                     listOf(
-                        SpacePermissions.id(spaceId = SpaceId(expectedSpaceIdValue), read = true, delete = true),
-                        SpacePermissions.pattern(pattern = expectedSpaceIdPattern, write = true, manage = true),
+                        ChannelGrant.name(name = expectedSpaceIdValue, read = true, delete = true),
+                        ChannelGrant.pattern(pattern = expectedSpaceIdPattern, write = true, manage = true),
                     ),
-                usersPermissions =
+                uuids =
                     listOf(
-                        UserPermissions.id(userId = UserId(expectedUserIdValue), delete = true),
-                        UserPermissions.pattern(pattern = expectedUserIdPattern, update = true),
+                        UUIDGrant.id(id = expectedUserIdValue, delete = true),
+                        UUIDGrant.pattern(pattern = expectedUserIdPattern, update = true),
                     ),
             )
 
@@ -176,7 +174,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             pubNubUnderTest
                 .grantToken(
                     ttl = expectedTTL,
-                    authorizedUUID = "pam-debug-admin",
+                    authorizedUserId = UserId("pam-debug-admin"),
                     dataSync =
                         listOf(
                             DataSyncGrant.entity(entityName, get = true, update = true),
@@ -282,6 +280,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val token =
             pubNubUnderTest.grantToken(
                 ttl = expectedTTL,
+                authorizedUserId = null,
                 dataSync =
                     listOf(
                         DataSyncGrant.entity(entityId, get = true, update = true, projection = adminProjection),
@@ -371,6 +370,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val token =
             pubNubUnderTest.grantToken(
                 ttl = expectedTTL,
+                authorizedUserId = null,
                 meta = callerMeta,
                 dataSync =
                     listOf(

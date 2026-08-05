@@ -56,10 +56,6 @@ import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
-import com.pubnub.api.models.consumer.access_manager.sum.toChannelGrant
-import com.pubnub.api.models.consumer.access_manager.sum.toUuidGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
@@ -748,14 +744,6 @@ open class PubNubImpl(
             uuids = uuids,
         )
 
-    @Deprecated(
-        level = DeprecationLevel.WARNING,
-        message = "This overload grants App Context permissions. For DataSync operation use the overload with " +
-            "`authorizedUserId: UserId?` and `users: List<UserGrant>`.",
-        replaceWith = ReplaceWith(
-            "grantToken(ttl, authorizedUserId, meta, channels, channelGroups, users, dataSync)"
-        )
-    )
     override fun grantToken(
         ttl: Int,
         meta: Any?,
@@ -763,7 +751,6 @@ open class PubNubImpl(
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
-        dataSync: List<DataSyncGrantType>,
     ): GrantToken {
         return GrantTokenEndpoint(
             pubnub = this,
@@ -774,7 +761,7 @@ open class PubNubImpl(
             channelGroups = channelGroups,
             uuids = uuids,
             users = emptyList(),
-            dataSync = dataSync,
+            dataSync = emptyList(),
         )
     }
 
@@ -797,24 +784,6 @@ open class PubNubImpl(
             uuids = emptyList(),
             users = users,
             dataSync = dataSync,
-        )
-    }
-
-    override fun grantToken(
-        ttl: Int,
-        meta: Any?,
-        authorizedUserId: UserId?,
-        spacesPermissions: List<SpacePermissions>,
-        usersPermissions: List<UserPermissions>,
-    ): GrantToken {
-        return GrantTokenEndpoint(
-            pubnub = this,
-            ttl = ttl,
-            meta = meta,
-            authorizedUUID = authorizedUserId?.value,
-            channels = spacesPermissions.map { spacePermissions -> spacePermissions.toChannelGrant() },
-            channelGroups = emptyList(),
-            uuids = usersPermissions.map { userPermissions -> userPermissions.toUuidGrant() },
         )
     }
 

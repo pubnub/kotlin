@@ -498,25 +498,14 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         )
     }
 
-    @Deprecated(
-        level = DeprecationLevel.WARNING,
-        message = "This overload grants App Context permissions. For DataSync operation use the overload with " +
-            "`authorizedUserId: UserId?` and `users: List<UserGrant>`.",
-        replaceWith = ReplaceWith(
-            "grantToken(ttl, authorizedUserId, meta, channels, channelGroups, users, dataSync)"
-        )
-    )
     override fun grantToken(
         ttl: Int,
         meta: CustomObject?,
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
-        uuids: List<UUIDGrant>,
-        dataSync: List<DataSyncGrantType>
+        uuids: List<UUIDGrant>
     ): GrantToken {
-        // NOTE: DataSync (App Context v4) grants are not yet supported by the underlying `pubnub` npm package, so the
-        // `dataSync` list is intentionally not forwarded on the JS target. The Kotlin/JVM and Java/GSON SDKs carry it.
         return GrantTokenImpl(
             jsPubNub,
             createJsObject {
