@@ -37,7 +37,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         )
         // todo add entityClass to test
         // add test with class that inherits from User
-        val createResult: PNCreateUserResult = server.dataSync.user.create(
+        val createResult: PNCreateUserResult = server.dataSync.createUser(
             entityClassVersion = entityClassVersion,
             userId = userId,
             status = "active",
@@ -53,7 +53,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
             // create again with the same id -> 409 (create is create-only)
             try {
-                server.dataSync.user.create(
+                server.dataSync.createUser(
                     entityClassVersion = entityClassVersion,
                     userId = userId,
                     status = "active",
@@ -65,16 +65,16 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             }
 
             // get
-            val getResult = server.dataSync.user.get(userId).sync()
+            val getResult = server.dataSync.getUser(userId).sync()
             assertEquals(userId, getResult.data.id)
             assertEquals("active", getResult.data.status)
 
             // delete
-            server.dataSync.user.delete(userId).sync()
+            server.dataSync.removeUser(userId).sync()
 
             // get after delete -> 404
             try {
-                server.dataSync.user.get(userId).sync()
+                server.dataSync.getUser(userId).sync()
                 fail("Expected a 404 after deleting the user")
             } catch (e: PubNubException) {
                 assertEquals(404, e.statusCode)
@@ -82,7 +82,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         } finally {
             // best-effort cleanup: the happy path already deleted the user, so a 404 here is expected
             try {
-                server.dataSync.user.delete(userId).sync()
+                server.dataSync.removeUser(userId).sync()
             } catch (ignored: PubNubException) {
             }
         }
@@ -103,7 +103,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             hobby = "poetry",
             custom = "value",
         )
-        val createResult = client.dataSync.user.create(
+        val createResult = client.dataSync.createUser(
             entityClassVersion = entityClassVersion,
             userId = userId,
             status = "active",
@@ -118,20 +118,20 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
         // get -> token scoped to `get` on this specific user
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, get = true))
-        val getResult = client.dataSync.user.get(userId).sync()
+        val getResult = client.dataSync.getUser(userId).sync()
         assertEquals(userId, getResult.data.id)
         assertEquals("active", getResult.data.status)
 
         // getAll -> token scoped to `get` on this specific user id
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, get = true))
-        val getAllResult = client.dataSync.user.getAll(
+        val getAllResult = client.dataSync.getUsers(
             limit = 100,
         ).sync()
         assertTrue(getAllResult.data.any { it.id == userId })
 
         // patch -> token scoped to `update` on this specific user (PATCH maps to `update`)
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, update = true))
-        val patchResult = client.dataSync.user.patch(
+        val patchResult = client.dataSync.patchUser(
             userId = userId,
             operations = listOf(
                 PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
@@ -142,7 +142,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         // update -> token scoped to `update` on this specific user (PUT maps to `update`)
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, update = true))
         val newPayload = TestUserPayload(username = "Bob", email = "bob@example.com")
-        val updateResult = client.dataSync.user.update(
+        val updateResult = client.dataSync.updateUser(
             userId = userId,
             entityClassVersion = entityClassVersion,
             status = "archived",
@@ -153,12 +153,12 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
         // delete -> token scoped to `delete` on this specific user
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, delete = true))
-        client.dataSync.user.delete(userId).sync()
+        client.dataSync.removeUser(userId).sync()
 
         // get after delete -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, get = true))
         try {
-            client.dataSync.user.get(userId).sync()
+            client.dataSync.getUser(userId).sync()
             fail("Expected a 404 after deleting the user")
         } catch (e: PubNubException) {
             assertEquals(404, e.statusCode)
@@ -176,7 +176,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun createWithServerGeneratedId() {
-        val createResult = server.dataSync.user.create(
+        val createResult = server.dataSync.createUser(
             entityClassVersion = entityClassVersion,
             payload = mapOf("username" to "Bob"),
         ).sync()
@@ -186,14 +186,14 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             assertTrue(generatedId.isNotBlank())
         } finally {
             // cleanup
-            server.dataSync.user.delete(generatedId).sync()
+            server.dataSync.removeUser(generatedId).sync()
         }
     }
 
     @Test
     fun getBlankUserIdThrows() {
         try {
-            server.dataSync.user.get("").sync()
+            server.dataSync.getUser("").sync()
             fail("Expected validation to reject a blank userId")
         } catch (e: PubNubException) {
             assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
@@ -208,7 +208,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             email = "alice@example.com",
             hobby = "poetry",
         )
-        server.dataSync.user.create(
+        server.dataSync.createUser(
             entityClassVersion = entityClassVersion,
             userId = userId,
             status = "active",
@@ -217,13 +217,13 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
         try {
             // getAll -> the created user is present
-            val getAllResult = server.dataSync.user.getAll(
+            val getAllResult = server.dataSync.getUsers(
                 limit = 100,
             ).sync()
             assertTrue(getAllResult.data.any { it.id == userId })
 
             // patch -> replace /status
-            val patchResult = server.dataSync.user.patch(
+            val patchResult = server.dataSync.patchUser(
                 userId = userId,
                 operations = listOf(
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
@@ -232,11 +232,11 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             assertEquals("inactive", patchResult.data.status)
 
             // get reflects the patched status
-            assertEquals("inactive", server.dataSync.user.get(userId).sync().data.status)
+            assertEquals("inactive", server.dataSync.getUser(userId).sync().data.status)
 
             // update -> full replace of status + payload
             val newPayload = TestUserPayload(username = "Bob", email = "bob@example.com")
-            val updateResult = server.dataSync.user.update(
+            val updateResult = server.dataSync.updateUser(
                 userId = userId,
                 entityClassVersion = entityClassVersion,
                 status = "archived",
@@ -246,11 +246,11 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             assertEquals("Bob", updateResult.data.payload?.get("username"))
 
             // get reflects the full replacement
-            val afterUpdate = server.dataSync.user.get(userId).sync()
+            val afterUpdate = server.dataSync.getUser(userId).sync()
             assertEquals("archived", afterUpdate.data.status)
             assertEquals("Bob", afterUpdate.data.payload?.get("username"))
         } finally {
-            server.dataSync.user.delete(userId).sync()
+            server.dataSync.removeUser(userId).sync()
         }
     }
 
@@ -261,7 +261,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             username = "Alice",
             email = "alice@example.com",
         )
-        val createResult = server.dataSync.user.create(
+        val createResult = server.dataSync.createUser(
             entityClassVersion = entityClassVersion,
             userId = userId,
             status = "active",
@@ -273,7 +273,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             assertNotNull(originalETag)
 
             // patch #1 with a matching ifMatch -> succeeds and bumps the eTag
-            val patch1 = server.dataSync.user.patch(
+            val patch1 = server.dataSync.patchUser(
                 userId = userId,
                 operations = listOf(
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
@@ -286,7 +286,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
             // patch #2 with the now-stale ifMatch -> 412 (optimistic concurrency conflict)
             try {
-                server.dataSync.user.patch(
+                server.dataSync.patchUser(
                     userId = userId,
                     operations = listOf(
                         PNJsonPatchOperation(op = "replace", path = "/status", value = "archived"),
@@ -298,14 +298,14 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 assertEquals(412, e.statusCode)
             }
         } finally {
-            server.dataSync.user.delete(userId).sync()
+            server.dataSync.removeUser(userId).sync()
         }
     }
 
     @Test
     fun patchEmptyOperationsThrows() {
         try {
-            server.dataSync.user.patch(userId, emptyList()).sync()
+            server.dataSync.patchUser(userId, emptyList()).sync()
             fail("Expected validation to reject an empty patch operations list")
         } catch (e: PubNubException) {
             assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)

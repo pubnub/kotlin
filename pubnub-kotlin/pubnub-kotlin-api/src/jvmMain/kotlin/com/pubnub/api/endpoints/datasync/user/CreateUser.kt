@@ -4,6 +4,6 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.models.consumer.datasync.user.PNCreateUserResult
 
 /**
- * @see [UserApi.create]
+ * @see [com.pubnub.api.datasync.DataSync.createUser]
  */
 actual interface CreateUser : Endpoint<PNCreateUserResult>

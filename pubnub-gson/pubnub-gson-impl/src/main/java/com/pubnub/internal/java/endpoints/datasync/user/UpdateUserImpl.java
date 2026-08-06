@@ -56,7 +56,7 @@ public class UpdateUserImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.user.PNUpdateUserResult> createRemoteAction() {
-        return pubnub.getDataSync().getUser().update(
+        return pubnub.getDataSync().updateUser(
                 userId,
                 entityClassVersion,
                 status,

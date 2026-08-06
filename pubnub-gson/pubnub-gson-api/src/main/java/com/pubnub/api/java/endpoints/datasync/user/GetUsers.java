@@ -5,7 +5,7 @@ import com.pubnub.api.java.models.consumer.datasync.user.PNGetUsersResult;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @see com.pubnub.api.java.datasync.UserApi#getAll()
+ * @see com.pubnub.api.java.datasync.DataSync#getUsers()
  */
 public interface GetUsers extends Endpoint<PNGetUsersResult> {
     /**

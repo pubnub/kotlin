@@ -4,6 +4,6 @@ import com.pubnub.api.models.consumer.datasync.user.PNCreateUserResult
 import com.pubnub.kmp.PNFuture
 
 /**
- * @see [UserApi.create]
+ * @see [com.pubnub.api.datasync.DataSync.createUser]
  */
 expect interface CreateUser : PNFuture<PNCreateUserResult>

@@ -16,7 +16,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [com.pubnub.api.datasync.UserApi.getAll]
+ * @see [com.pubnub.api.datasync.DataSync.getUsers]
  */
 class GetUsersEndpoint internal constructor(
     pubnub: PubNubImpl,

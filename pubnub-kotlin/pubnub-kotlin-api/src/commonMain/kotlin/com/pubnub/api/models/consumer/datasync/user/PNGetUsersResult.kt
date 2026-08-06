@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.datasync.user
 
 /**
- * Result of `pubnub.dataSync.user.getAll`.
+ * Result of `pubnub.dataSync.getUsers`.
  *
  * DataSync list endpoints are **cursor-based** (unlike App Context's page-based `PNPage`).
  *

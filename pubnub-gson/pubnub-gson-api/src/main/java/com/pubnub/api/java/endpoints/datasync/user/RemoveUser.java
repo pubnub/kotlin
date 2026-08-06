@@ -5,7 +5,7 @@ import com.pubnub.api.java.models.consumer.datasync.user.PNRemoveUserResult;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @see com.pubnub.api.java.datasync.UserApi#delete(String)
+ * @see com.pubnub.api.java.datasync.DataSync#removeUser(String)
  */
 public interface RemoveUser extends Endpoint<PNRemoveUserResult> {
     /**

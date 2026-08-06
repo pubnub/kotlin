@@ -16,7 +16,44 @@ import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 
 internal class DataSyncImpl : DataSync {
     override val entity: EntityApi = EntityApiImpl()
-    override val user: UserApi = UserApiImpl()
+
+    override fun getUser(userId: String): GetUser = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun createUser(
+        entityClassVersion: Int,
+        userId: String?,
+        entityClass: String?,
+        status: String?,
+        payload: Any?,
+    ): CreateUser = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun removeUser(userId: String, ifMatch: String?): RemoveUser =
+        throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun getUsers(
+        entityClass: String?,
+        entityClassVersion: Int?,
+        entityClassLevel: String?,
+        filter: String?,
+        filterAdvanced: String?,
+        sort: String?,
+        limit: Int?,
+        cursor: String?,
+    ): GetUsers = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun patchUser(
+        userId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String?,
+    ): PatchUser = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun updateUser(
+        userId: String,
+        entityClassVersion: Int,
+        status: String?,
+        payload: Any?,
+        ifMatch: String?,
+    ): UpdateUser = throw NotImplementedError(NOT_IMPLEMENTED)
 }
 
 private const val NOT_IMPLEMENTED = "DataSync is not implemented on the Apple target"
@@ -58,44 +95,4 @@ internal class EntityApiImpl : EntityApi {
         payload: Any?,
         ifMatch: String?,
     ): UpdateEntity = throw NotImplementedError(NOT_IMPLEMENTED)
-}
-
-internal class UserApiImpl : UserApi {
-    override fun get(userId: String): GetUser = throw NotImplementedError(NOT_IMPLEMENTED)
-
-    override fun create(
-        entityClassVersion: Int,
-        userId: String?,
-        entityClass: String?,
-        status: String?,
-        payload: Any?,
-    ): CreateUser = throw NotImplementedError(NOT_IMPLEMENTED)
-
-    override fun delete(userId: String, ifMatch: String?): RemoveUser =
-        throw NotImplementedError(NOT_IMPLEMENTED)
-
-    override fun getAll(
-        entityClass: String?,
-        entityClassVersion: Int?,
-        entityClassLevel: String?,
-        filter: String?,
-        filterAdvanced: String?,
-        sort: String?,
-        limit: Int?,
-        cursor: String?,
-    ): GetUsers = throw NotImplementedError(NOT_IMPLEMENTED)
-
-    override fun patch(
-        userId: String,
-        operations: List<PNJsonPatchOperation>,
-        ifMatch: String?,
-    ): PatchUser = throw NotImplementedError(NOT_IMPLEMENTED)
-
-    override fun update(
-        userId: String,
-        entityClassVersion: Int,
-        status: String?,
-        payload: Any?,
-        ifMatch: String?,
-    ): UpdateUser = throw NotImplementedError(NOT_IMPLEMENTED)
 }

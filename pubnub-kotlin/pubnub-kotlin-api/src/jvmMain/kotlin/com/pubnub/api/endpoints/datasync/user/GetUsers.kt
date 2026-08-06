@@ -4,6 +4,6 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.models.consumer.datasync.user.PNGetUsersResult
 
 /**
- * @see [UserApi.getAll]
+ * @see [com.pubnub.api.datasync.DataSync.getUsers]
  */
 actual interface GetUsers : Endpoint<PNGetUsersResult>

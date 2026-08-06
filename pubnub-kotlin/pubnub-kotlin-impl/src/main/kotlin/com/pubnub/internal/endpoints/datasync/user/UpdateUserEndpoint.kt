@@ -20,7 +20,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [com.pubnub.api.datasync.UserApi.update]
+ * @see [com.pubnub.api.datasync.DataSync.updateUser]
  */
 class UpdateUserEndpoint internal constructor(
     pubnub: PubNubImpl,

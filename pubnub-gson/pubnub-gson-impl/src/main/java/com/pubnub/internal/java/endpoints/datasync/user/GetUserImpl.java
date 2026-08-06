@@ -36,6 +36,6 @@ public class GetUserImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.user.PNGetUserResult> createRemoteAction() {
-        return pubnub.getDataSync().getUser().get(userId);
+        return pubnub.getDataSync().getUser(userId);
     }
 }

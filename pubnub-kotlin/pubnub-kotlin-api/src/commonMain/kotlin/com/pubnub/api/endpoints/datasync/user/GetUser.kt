@@ -4,6 +4,6 @@ import com.pubnub.api.models.consumer.datasync.user.PNGetUserResult
 import com.pubnub.kmp.PNFuture
 
 /**
- * @see [UserApi.get]
+ * @see [com.pubnub.api.datasync.DataSync.getUser]
  */
 expect interface GetUser : PNFuture<PNGetUserResult>

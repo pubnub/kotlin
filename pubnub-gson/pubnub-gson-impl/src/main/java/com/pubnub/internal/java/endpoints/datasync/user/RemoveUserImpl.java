@@ -40,6 +40,6 @@ public class RemoveUserImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.user.PNRemoveUserResult> createRemoteAction() {
-        return pubnub.getDataSync().getUser().delete(userId, ifMatch);
+        return pubnub.getDataSync().removeUser(userId, ifMatch);
     }
 }

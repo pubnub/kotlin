@@ -59,6 +59,6 @@ public class PatchUserImpl
                                 op.getFrom()
                         ))
                         .collect(Collectors.toList());
-        return pubnub.getDataSync().getUser().patch(userId, mapped, ifMatch);
+        return pubnub.getDataSync().patchUser(userId, mapped, ifMatch);
     }
 }

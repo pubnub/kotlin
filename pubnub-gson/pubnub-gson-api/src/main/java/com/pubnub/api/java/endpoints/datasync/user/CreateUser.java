@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
- * @see com.pubnub.api.java.datasync.UserApi#create(int)
+ * @see com.pubnub.api.java.datasync.DataSync#createUser(int)
  */
 public interface CreateUser extends Endpoint<PNCreateUserResult> {
     /**

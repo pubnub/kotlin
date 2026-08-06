@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * Result of {@code pubnub.dataSync().user().getAll()}.
+ * Result of {@code pubnub.dataSync().getUsers()}.
  * DataSync list endpoints are cursor-based (unlike App Context's page-based paging).
  */
 @Getter

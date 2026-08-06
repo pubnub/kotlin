@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.datasync.user
 
 /**
- * DataSync User resource returned by `pubnub.dataSync.user.get`, `create` and referenced by
+ * DataSync User resource returned by `pubnub.dataSync.getUser`, `createUser` and referenced by
  * remove operations. A User is a specialized DataSync entity of class `User`.
  *
  * @property id User identifier.

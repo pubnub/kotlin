@@ -4,6 +4,6 @@ import com.pubnub.api.models.consumer.datasync.user.PNRemoveUserResult
 import com.pubnub.kmp.PNFuture
 
 /**
- * @see [UserApi.delete]
+ * @see [com.pubnub.api.datasync.DataSync.removeUser]
  */
 actual interface RemoveUser : PNFuture<PNRemoveUserResult>

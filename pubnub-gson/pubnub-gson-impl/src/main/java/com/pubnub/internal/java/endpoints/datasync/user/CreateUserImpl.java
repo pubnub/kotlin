@@ -58,7 +58,7 @@ public class CreateUserImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.user.PNCreateUserResult> createRemoteAction() {
-        return pubnub.getDataSync().getUser().create(
+        return pubnub.getDataSync().createUser(
                 entityClassVersion,
                 userId,
                 entityClass,

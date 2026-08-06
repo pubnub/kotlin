@@ -5,7 +5,7 @@ import com.pubnub.api.java.models.consumer.datasync.user.PNPatchUserResult;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @see com.pubnub.api.java.datasync.UserApi#patch(String, java.util.List)
+ * @see com.pubnub.api.java.datasync.DataSync#patchUser(String, java.util.List)
  */
 public interface PatchUser extends Endpoint<PNPatchUserResult> {
     /**

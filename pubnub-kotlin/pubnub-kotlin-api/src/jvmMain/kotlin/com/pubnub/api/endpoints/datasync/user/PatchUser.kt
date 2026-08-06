@@ -4,6 +4,6 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.models.consumer.datasync.user.PNPatchUserResult
 
 /**
- * @see [UserApi.patch]
+ * @see [com.pubnub.api.datasync.DataSync.patchUser]
  */
 actual interface PatchUser : Endpoint<PNPatchUserResult>

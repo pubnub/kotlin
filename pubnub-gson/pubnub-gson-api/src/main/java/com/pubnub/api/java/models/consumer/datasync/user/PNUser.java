@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
- * DataSync User resource returned by {@code pubnub.dataSync().user().get()} / {@code create()}.
+ * DataSync User resource returned by {@code pubnub.dataSync().getUser()} / {@code createUser()}.
  *
  * <p>A User is a specialized DataSync entity of class {@code User}.
  */
