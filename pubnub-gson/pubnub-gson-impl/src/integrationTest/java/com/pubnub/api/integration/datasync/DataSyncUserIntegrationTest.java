@@ -108,15 +108,17 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void createGetAndDeleteUpdatePathGetAllUsersWithServerGrantedToken() throws PubNubException {
-        final String authorizedUUID = pubNub.getConfiguration().getUserId().getValue();
+        // A client on the same keyset as `server` but without the secretKey, so it can only authenticate via setToken.
+        final com.pubnub.api.java.PubNub client = getAuthorizedClient();
+        final String authorizedUUID = client.getConfiguration().getUserId().getValue();
 
         final Map<String, Object> payload = new HashMap<>();
         payload.put("username", "Alice");
         payload.put("email", "alice@example.com");
 
         // create -> token scoped to `create` on this specific user id
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(userId).create());
-        final PNCreateUserResult createResult = pubNub.dataSync().user()
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).create());
+        final PNCreateUserResult createResult = client.dataSync().user()
                 .create(entityClassVersion)
                 .userId(userId)
                 .status("active")
@@ -131,14 +133,14 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         assertEquals("alice@example.com", createResult.getData().getPayload().get("email"));
 
         // get -> token scoped to `get` on this specific user
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(userId).get());
-        final PNGetUserResult getResult = pubNub.dataSync().user().get(userId).sync();
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).get());
+        final PNGetUserResult getResult = client.dataSync().user().get(userId).sync();
         assertEquals(userId, getResult.getData().getId());
         assertEquals("active", getResult.getData().getStatus());
 
         // getAll -> token scoped to `get` on this specific user id
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(userId).get());
-        final PNGetUsersResult getAllResult = pubNub.dataSync().user()
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).get());
+        final PNGetUsersResult getAllResult = client.dataSync().user()
                 .getAll()
                 .limit(100)
                 .sync();
@@ -146,21 +148,21 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         assertTrue(getAllResult.getData().stream().anyMatch(u -> userId.equals(u.getId())));
 
         // patch -> token scoped to `update` on this specific user (PATCH maps to `update`)
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(userId).update());
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).update());
         final List<PNJsonPatchOperation> operations = Collections.singletonList(
                 PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
         );
-        final PNPatchUserResult patchResult = pubNub.dataSync().user()
+        final PNPatchUserResult patchResult = client.dataSync().user()
                 .patch(userId, operations)
                 .sync();
         assertEquals("inactive", patchResult.getData().getStatus());
 
         // update -> token scoped to `update` on this specific user (PUT maps to `update`)
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(userId).update());
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).update());
         final Map<String, Object> newPayload = new HashMap<>();
         newPayload.put("username", "Bob");
         newPayload.put("email", "bob@example.com");
-        final PNUpdateUserResult updateResult = pubNub.dataSync().user()
+        final PNUpdateUserResult updateResult = client.dataSync().user()
                 .update(userId, entityClassVersion)
                 .status("archived")
                 .payload(newPayload)
@@ -169,26 +171,26 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         assertEquals("Bob", updateResult.getData().getPayload().get("username"));
 
         // delete -> token scoped to `delete` on this specific user
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(userId).delete());
-        pubNub.dataSync().user().delete(userId).sync();
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).delete());
+        client.dataSync().user().delete(userId).sync();
 
         // get after delete -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(userId).get());
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).get());
         try {
-            pubNub.dataSync().user().get(userId).sync();
+            client.dataSync().user().get(userId).sync();
             fail("Expected a 404 after deleting the user");
         } catch (PubNubException e) {
             assertEquals(404, e.getStatusCode());
         }
     }
 
-    private void grantAndAuthenticate(String authorizedUUID, UserGrant... grants) throws PubNubException {
+    private void grantAndAuthenticate(com.pubnub.api.java.PubNub client, String authorizedUUID, UserGrant... grants) throws PubNubException {
         final String token = server.grantToken(60)
                 .users(Arrays.asList(grants))
                 .authorizedUserId(new UserId(authorizedUUID))
                 .sync()
                 .getToken();
-        pubNub.setToken(token);
+        client.setToken(token);
     }
 
     @Test

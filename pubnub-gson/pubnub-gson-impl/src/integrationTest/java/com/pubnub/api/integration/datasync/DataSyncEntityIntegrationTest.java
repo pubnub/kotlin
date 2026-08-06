@@ -89,14 +89,16 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
 
      @Test
     public void createGetDeletePatchUpdateGetAllEntityWithServerGrantedToken() throws PubNubException {
-        final String authorizedUUID = pubNub.getConfiguration().getUserId().getValue();
+        // A client on the same keyset as `server` but without the secretKey, so it can only authenticate via setToken.
+        final com.pubnub.api.java.PubNub client = getAuthorizedClient();
+        final String authorizedUUID = client.getConfiguration().getUserId().getValue();
 
         final Map<String, Object> payload = new HashMap<>();
         payload.put("custom", "value");
 
         // create -> token scoped to `create` on this specific entity id
-        grantAndAuthenticate(authorizedUUID, DataSyncGrant.entity(entityId).create());
-        final PNCreateEntityResult createResult = pubNub.dataSync().entity()
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).create());
+        final PNCreateEntityResult createResult = client.dataSync().entity()
                 .create(entityClass, entityClassVersion)
                 .entityId(entityId)
                 .status("active")
@@ -110,15 +112,15 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         assertNotNull(createResult.getData().getETag());
 
         // get -> token scoped to `get` on this specific entity
-        grantAndAuthenticate(authorizedUUID, DataSyncGrant.entity(entityId).get());
-        final PNGetEntityResult getResult = pubNub.dataSync().entity().get(entityId).sync();
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).get());
+        final PNGetEntityResult getResult = client.dataSync().entity().get(entityId).sync();
         assertEquals(entityId, getResult.getData().getId());
         assertEquals(entityClass, getResult.getData().getEntityClass());
         assertEquals("active", getResult.getData().getStatus());
 
         // getAll -> token scoped to `get` on this specific entity id
-        grantAndAuthenticate(authorizedUUID, DataSyncGrant.entity(entityId).get());
-        final PNGetEntitiesResult getAllResult = pubNub.dataSync().entity()
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).get());
+        final PNGetEntitiesResult getAllResult = client.dataSync().entity()
                 .getAll(entityClass)
                 .limit(100)
                 .sync();
@@ -126,20 +128,20 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         assertTrue(getAllResult.getData().stream().anyMatch(e -> entityId.equals(e.getId())));
 
         // patch -> token scoped to `update` on this specific entity (PATCH maps to `update`)
-        grantAndAuthenticate(authorizedUUID, DataSyncGrant.entity(entityId).update());
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).update());
         final List<PNJsonPatchOperation> operations = Collections.singletonList(
                 PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
         );
-        final PNPatchEntityResult patchResult = pubNub.dataSync().entity()
+        final PNPatchEntityResult patchResult = client.dataSync().entity()
                 .patch(entityId, operations)
                 .sync();
         assertEquals("inactive", patchResult.getData().getStatus());
 
         // update -> token scoped to `update` on this specific entity (PUT maps to `update`)
-        grantAndAuthenticate(authorizedUUID, DataSyncGrant.entity(entityId).update());
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).update());
         final Map<String, Object> newPayload = new HashMap<>();
         newPayload.put("custom", "updated");
-        final PNUpdateEntityResult updateResult = pubNub.dataSync().entity()
+        final PNUpdateEntityResult updateResult = client.dataSync().entity()
                 .update(entityId, entityClassVersion)
                 .status("archived")
                 .payload(newPayload)
@@ -148,26 +150,26 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         assertEquals("updated", updateResult.getData().getPayload().get("custom"));
 
         // delete -> token scoped to `delete` on this specific entity
-        grantAndAuthenticate(authorizedUUID, DataSyncGrant.entity(entityId).delete());
-        pubNub.dataSync().entity().delete(entityId).sync();
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).delete());
+        client.dataSync().entity().delete(entityId).sync();
 
         // get after delete -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
-        grantAndAuthenticate(authorizedUUID, DataSyncGrant.entity(entityId).get());
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).get());
         try {
-            pubNub.dataSync().entity().get(entityId).sync();
+            client.dataSync().entity().get(entityId).sync();
             fail("Expected a 404 after deleting the entity");
         } catch (PubNubException e) {
             assertEquals(404, e.getStatusCode());
         }
     }
 
-    private void grantAndAuthenticate(String authorizedUUID, DataSyncGrant... grants) throws PubNubException {
+    private void grantAndAuthenticate(com.pubnub.api.java.PubNub client, String authorizedUUID, DataSyncGrant... grants) throws PubNubException {
         final String token = server.grantToken(60)
                 .authorizedUserId(new UserId(authorizedUUID))
                 .dataSync(Arrays.asList(grants))
                 .sync()
                 .getToken();
-        pubNub.setToken(token);
+        client.setToken(token);
     }
 
     @Test

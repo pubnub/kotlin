@@ -1,5 +1,6 @@
 package com.pubnub.api.integration
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
@@ -89,10 +90,12 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun createGetAndDeleteUpdatePatchGetAllUsersWithServerGrantedToken() {
-        val authorizedUUID = pubnub.configuration.userId.value
+        // A client on the same keyset as `server` but without the secretKey, so it can only authenticate via setToken.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
 
         // create -> token scoped to `create` on this specific user id
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(id = userId, create = true))
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, create = true))
 
         val payload = TestUserPayload(
             username = "Alice",
@@ -100,7 +103,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             hobby = "poetry",
             custom = "value",
         )
-        val createResult = pubnub.dataSync.user.create(
+        val createResult = client.dataSync.user.create(
             entityClassVersion = entityClassVersion,
             userId = userId,
             status = "active",
@@ -114,21 +117,21 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         assertEquals(payload.email, createResult.data.payload?.get("email"))
 
         // get -> token scoped to `get` on this specific user
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(id = userId, get = true))
-        val getResult = pubnub.dataSync.user.get(userId).sync()
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, get = true))
+        val getResult = client.dataSync.user.get(userId).sync()
         assertEquals(userId, getResult.data.id)
         assertEquals("active", getResult.data.status)
 
         // getAll -> token scoped to `get` on this specific user id
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(id = userId, get = true))
-        val getAllResult = pubnub.dataSync.user.getAll(
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, get = true))
+        val getAllResult = client.dataSync.user.getAll(
             limit = 100,
         ).sync()
         assertTrue(getAllResult.data.any { it.id == userId })
 
         // patch -> token scoped to `update` on this specific user (PATCH maps to `update`)
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(id = userId, update = true))
-        val patchResult = pubnub.dataSync.user.patch(
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, update = true))
+        val patchResult = client.dataSync.user.patch(
             userId = userId,
             operations = listOf(
                 PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
@@ -137,9 +140,9 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         assertEquals("inactive", patchResult.data.status)
 
         // update -> token scoped to `update` on this specific user (PUT maps to `update`)
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(id = userId, update = true))
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, update = true))
         val newPayload = TestUserPayload(username = "Bob", email = "bob@example.com")
-        val updateResult = pubnub.dataSync.user.update(
+        val updateResult = client.dataSync.user.update(
             userId = userId,
             entityClassVersion = entityClassVersion,
             status = "archived",
@@ -149,26 +152,26 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         assertEquals("Bob", updateResult.data.payload?.get("username"))
 
         // delete -> token scoped to `delete` on this specific user
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(id = userId, delete = true))
-        pubnub.dataSync.user.delete(userId).sync()
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, delete = true))
+        client.dataSync.user.delete(userId).sync()
 
         // get after delete -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
-        grantAndAuthenticate(authorizedUUID, UserGrant.id(id = userId, get = true))
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, get = true))
         try {
-            pubnub.dataSync.user.get(userId).sync()
+            client.dataSync.user.get(userId).sync()
             fail("Expected a 404 after deleting the user")
         } catch (e: PubNubException) {
             assertEquals(404, e.statusCode)
         }
     }
 
-    private fun grantAndAuthenticate(authorizedUUID: String, vararg grants: UserGrant) {
+    private fun grantAndAuthenticate(client: PubNub, authorizedUUID: String, vararg grants: UserGrant) {
         val token = server.grantToken(
             ttl = 60,
             authorizedUserId = UserId(authorizedUUID),
             users = grants.toList(),
         ).sync().token
-        pubnub.setToken(token)
+        client.setToken(token)
     }
 
     @Test
