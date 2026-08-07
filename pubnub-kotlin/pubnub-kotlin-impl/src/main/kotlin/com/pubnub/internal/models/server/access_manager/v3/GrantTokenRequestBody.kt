@@ -10,6 +10,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 
 data class GrantTokenRequestBody(
     val ttl: Int,
@@ -45,6 +46,7 @@ data class GrantTokenRequestBody(
             uuids: List<UUIDGrant>,
             meta: Any?,
             uuid: String?,
+            users: List<UserGrant> = emptyList(),
             dataSync: List<DataSyncGrantType> = emptyList(),
         ): GrantTokenRequestBody {
             val entities = dataSync.filter { it.namespace == DataSyncNamespace.ENTITIES }
@@ -56,6 +58,7 @@ data class GrantTokenRequestBody(
                     channels = getResources(channels),
                     groups = getResources(groups),
                     uuids = getResources(uuids),
+                    users = getResources(users),
                     datasyncEntities = getResources(entities),
                     datasyncRelationships = getResources(relationships),
                     datasyncMemberships = getResources(memberships),
@@ -65,6 +68,7 @@ data class GrantTokenRequestBody(
                     channels = getPatterns(channels),
                     groups = getPatterns(groups),
                     uuids = getPatterns(uuids),
+                    users = getPatterns(users),
                     datasyncEntities = getPatterns(entities),
                     datasyncRelationships = getPatterns(relationships),
                     datasyncMemberships = getPatterns(memberships),
