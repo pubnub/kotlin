@@ -36,6 +36,6 @@ public class GetEntityImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNGetEntityResult> createRemoteAction() {
-        return pubnub.getDataSync().getEntity().get(entityId);
+        return pubnub.getDataSync().getEntity(entityId);
     }
 }

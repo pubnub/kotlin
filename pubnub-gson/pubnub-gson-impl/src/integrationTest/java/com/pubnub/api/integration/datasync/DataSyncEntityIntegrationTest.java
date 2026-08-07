@@ -42,8 +42,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         payload.put("custom", "value");
 
         // create
-        final PNCreateEntityResult createResult = server.dataSync().entity()
-                .create(entityClass, entityClassVersion)
+        final PNCreateEntityResult createResult = server.dataSync()
+                .createEntity(entityClass, entityClassVersion)
                 .entityId(entityId)
                 .status("active")
                 .payload(payload)
@@ -58,8 +58,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
 
         // create again with the same id -> 409 (create is create-only)
         try {
-            server.dataSync().entity()
-                    .create(entityClass, entityClassVersion)
+            server.dataSync()
+                    .createEntity(entityClass, entityClassVersion)
                     .entityId(entityId)
                     .status("active")
                     .payload(payload)
@@ -70,17 +70,17 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         }
 
         // get
-        final PNGetEntityResult getResult = server.dataSync().entity().get(entityId).sync();
+        final PNGetEntityResult getResult = server.dataSync().getEntity(entityId).sync();
         assertEquals(entityId, getResult.getData().getId());
         assertEquals(entityClass, getResult.getData().getEntityClass());
         assertEquals("active", getResult.getData().getStatus());
 
         // delete
-        server.dataSync().entity().delete(entityId).sync();
+        server.dataSync().removeEntity(entityId).sync();
 
         // get after delete -> 404
         try {
-            server.dataSync().entity().get(entityId).sync();
+            server.dataSync().getEntity(entityId).sync();
             fail("Expected a 404 after deleting the entity");
         } catch (PubNubException e) {
             assertEquals(404, e.getStatusCode());
@@ -98,8 +98,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
 
         // create -> token scoped to `create` on this specific entity id
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).create());
-        final PNCreateEntityResult createResult = client.dataSync().entity()
-                .create(entityClass, entityClassVersion)
+        final PNCreateEntityResult createResult = client.dataSync()
+                .createEntity(entityClass, entityClassVersion)
                 .entityId(entityId)
                 .status("active")
                 .payload(payload)
@@ -113,15 +113,16 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
 
         // get -> token scoped to `get` on this specific entity
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).get());
-        final PNGetEntityResult getResult = client.dataSync().entity().get(entityId).sync();
+        final PNGetEntityResult getResult = client.dataSync().getEntity(entityId).sync();
         assertEquals(entityId, getResult.getData().getId());
         assertEquals(entityClass, getResult.getData().getEntityClass());
         assertEquals("active", getResult.getData().getStatus());
 
         // getAll -> token scoped to `get` on this specific entity id
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).get());
-        final PNGetEntitiesResult getAllResult = client.dataSync().entity()
-                .getAll(entityClass)
+        final PNGetEntitiesResult getAllResult = client.dataSync()
+                .getEntities(entityClass)
+                .entityClassLevel("SubKey")
                 .limit(100)
                 .sync();
         assertNotNull(getAllResult);
@@ -132,8 +133,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         final List<PNJsonPatchOperation> operations = Collections.singletonList(
                 PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
         );
-        final PNPatchEntityResult patchResult = client.dataSync().entity()
-                .patch(entityId, operations)
+        final PNPatchEntityResult patchResult = client.dataSync()
+                .patchEntity(entityId, operations)
                 .sync();
         assertEquals("inactive", patchResult.getData().getStatus());
 
@@ -141,8 +142,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).update());
         final Map<String, Object> newPayload = new HashMap<>();
         newPayload.put("custom", "updated");
-        final PNUpdateEntityResult updateResult = client.dataSync().entity()
-                .update(entityId, entityClassVersion)
+        final PNUpdateEntityResult updateResult = client.dataSync()
+                .updateEntity(entityId, entityClassVersion)
                 .status("archived")
                 .payload(newPayload)
                 .sync();
@@ -151,12 +152,12 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
 
         // delete -> token scoped to `delete` on this specific entity
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).delete());
-        client.dataSync().entity().delete(entityId).sync();
+        client.dataSync().removeEntity(entityId).sync();
 
         // get after delete -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).get());
         try {
-            client.dataSync().entity().get(entityId).sync();
+            client.dataSync().getEntity(entityId).sync();
             fail("Expected a 404 after deleting the entity");
         } catch (PubNubException e) {
             assertEquals(404, e.getStatusCode());
@@ -174,15 +175,15 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void createWithServerGeneratedId() throws PubNubException {
-        final PNCreateEntityResult createResult = server.dataSync().entity()
-                .create(entityClass, entityClassVersion)
+        final PNCreateEntityResult createResult = server.dataSync()
+                .createEntity(entityClass, entityClassVersion)
                 .sync();
 
         final String generatedId = createResult.getData().getId();
         assertFalse(generatedId.trim().isEmpty());
 
         // cleanup
-        server.dataSync().entity().delete(generatedId).sync();
+        server.dataSync().removeEntity(generatedId).sync();
     }
 
     @Test
@@ -191,8 +192,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         payload.put("custom", "value");
 
         // create
-        server.dataSync().entity()
-                .create(entityClass, entityClassVersion)
+        server.dataSync()
+                .createEntity(entityClass, entityClassVersion)
                 .entityId(entityId)
                 .status("active")
                 .payload(payload)
@@ -200,8 +201,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
 
         try {
             // getAll -> the created entity is present
-            final PNGetEntitiesResult getAllResult = server.dataSync().entity()
-                    .getAll(entityClass)
+            final PNGetEntitiesResult getAllResult = server.dataSync()
+                    .getEntities(entityClass)
                     .limit(100)
                     .sync();
             assertNotNull(getAllResult);
@@ -211,19 +212,19 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> operations = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final PNPatchEntityResult patchResult = server.dataSync().entity()
-                    .patch(entityId, operations)
+            final PNPatchEntityResult patchResult = server.dataSync()
+                    .patchEntity(entityId, operations)
                     .sync();
             assertEquals("inactive", patchResult.getData().getStatus());
 
             // get reflects the patched status
-            assertEquals("inactive", server.dataSync().entity().get(entityId).sync().getData().getStatus());
+            assertEquals("inactive", server.dataSync().getEntity(entityId).sync().getData().getStatus());
 
             // update -> full replace of status + payload
             final Map<String, Object> newPayload = new HashMap<>();
             newPayload.put("custom", "updated");
-            final PNUpdateEntityResult updateResult = server.dataSync().entity()
-                    .update(entityId, entityClassVersion)
+            final PNUpdateEntityResult updateResult = server.dataSync()
+                    .updateEntity(entityId, entityClassVersion)
                     .status("archived")
                     .payload(newPayload)
                     .sync();
@@ -231,11 +232,11 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             assertEquals("updated", updateResult.getData().getPayload().get("custom"));
 
             // get reflects the full replacement
-            final PNGetEntityResult afterUpdate = server.dataSync().entity().get(entityId).sync();
+            final PNGetEntityResult afterUpdate = server.dataSync().getEntity(entityId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("updated", afterUpdate.getData().getPayload().get("custom"));
         } finally {
-            server.dataSync().entity().delete(entityId).sync();
+            server.dataSync().removeEntity(entityId).sync();
         }
     }
 
@@ -245,8 +246,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         payload.put("custom", "value");
 
         // create
-        final PNCreateEntityResult createResult = server.dataSync().entity()
-                .create(entityClass, entityClassVersion)
+        final PNCreateEntityResult createResult = server.dataSync()
+                .createEntity(entityClass, entityClassVersion)
                 .entityId(entityId)
                 .status("active")
                 .payload(payload)
@@ -260,8 +261,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> inactiveOps = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final PNPatchEntityResult patch1 = server.dataSync().entity()
-                    .patch(entityId, inactiveOps)
+            final PNPatchEntityResult patch1 = server.dataSync()
+                    .patchEntity(entityId, inactiveOps)
                     .ifMatch(originalETag)
                     .sync();
             assertEquals("inactive", patch1.getData().getStatus());
@@ -272,8 +273,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("archived").build()
             );
             try {
-                server.dataSync().entity()
-                        .patch(entityId, archivedOps)
+                server.dataSync()
+                        .patchEntity(entityId, archivedOps)
                         .ifMatch(originalETag)
                         .sync();
                 fail("Expected a 412 when patching with a stale ifMatch eTag");
@@ -281,7 +282,7 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
                 assertEquals(412, e.getStatusCode());
             }
         } finally {
-            server.dataSync().entity().delete(entityId).sync();
+            server.dataSync().removeEntity(entityId).sync();
         }
     }
 }

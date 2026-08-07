@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.datasync.entity
 
 /**
- * A single JSON Patch (RFC-6902) operation used by `pubnub.dataSync.entity.patch`.
+ * A single JSON Patch (RFC-6902) operation used by `pubnub.dataSync.patchEntity`.
  *
  * @property op The operation to perform (e.g. `add`, `remove`, `replace`, `move`, `copy`, `test`).
  *   Modeled as a [String] rather than an enum to stay source-compatible with future values.
