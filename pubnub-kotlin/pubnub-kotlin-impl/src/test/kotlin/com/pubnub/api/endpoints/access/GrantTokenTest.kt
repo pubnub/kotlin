@@ -1,8 +1,7 @@
 package com.pubnub.api.endpoints.access
 
-import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.access.GrantTokenEndpoint
@@ -45,15 +44,17 @@ internal class GrantTokenTest {
     @Test
     fun can_createGrantTokenSimple() {
         val expectedTTL = 1337
-        val authorizedUserId = UserId("authorizedUserId")
+        val authorizedUUID = "authorizedUserId"
         val expectedToken = "token_value"
         val grantTokenResult = PNGrantTokenResult(token = expectedToken)
         every {
             pubnub.grantToken(
                 ttl = any(),
-                authorizedUserId = any(),
-                spacesPermissions = any(),
-                usersPermissions = any(),
+                meta = any(),
+                authorizedUUID = any(),
+                channels = any(),
+                channelGroups = any(),
+                uuids = any(),
             )
         } returns grantTokenEndpointMock
         every { grantTokenEndpointMock.sync() } returns grantTokenResult
@@ -61,8 +62,8 @@ internal class GrantTokenTest {
         val grantTokenEndpoint =
             pubnub.grantToken(
                 ttl = expectedTTL,
-                authorizedUserId = authorizedUserId,
-                spacesPermissions = listOf(SpacePermissions.id(spaceId = SpaceId("mySpaceId"), read = true, delete = true)),
+                authorizedUUID = authorizedUUID,
+                channels = listOf(ChannelGrant.name(name = "mySpaceId", read = true, delete = true)),
             )
         val actualGrantTokenResult: PNGrantTokenResult? = grantTokenEndpoint.sync()
         val token = actualGrantTokenResult!!.token
@@ -73,9 +74,9 @@ internal class GrantTokenTest {
     @Test
     fun can_createGrantToken() {
         val expectedTTL = 1337
-        val authorizedUserId = UserId("authorizedUserId")
+        val authorizedUUID = "authorizedUserId"
         val expectedToken = "token_value"
-        val spaceIdValue = "mySpaceId"
+        val channelValue = "mySpaceId"
 
         val retrofitManager = mockk<RetrofitManager>(relaxed = true)
         val accessManagerService = mockk<AccessManagerService>(relaxed = true)
@@ -90,11 +91,11 @@ internal class GrantTokenTest {
         val actualGrantTokenResult: PNGrantTokenResult? =
             pubnub.grantToken(
                 ttl = expectedTTL,
-                authorizedUserId = authorizedUserId,
-                spacesPermissions =
+                authorizedUUID = authorizedUUID,
+                channels =
                     listOf(
-                        SpacePermissions.id(
-                            spaceId = SpaceId(spaceIdValue),
+                        ChannelGrant.name(
+                            name = channelValue,
                             read = true,
                             delete = true,
                         ),
@@ -109,7 +110,7 @@ internal class GrantTokenTest {
         val permissions = capturedBody.permissions
 
         assertEquals(expectedTTL, ttl)
-        assertTrue(permissions.resources.channels.containsKey(spaceIdValue))
-        assertEquals(authorizedUserId.value, permissions.uuid)
+        assertTrue(permissions.resources.channels.containsKey(channelValue))
+        assertEquals(authorizedUUID, permissions.uuid)
     }
 }

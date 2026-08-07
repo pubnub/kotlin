@@ -1,7 +1,7 @@
 package com.pubnub.api.java.models.consumer.access_manager.v3;
 
 /**
- * Fluent DataSync (App Context v4) PAM v3 resource grant, passed to {@code grantToken(...).dataSync(...)}.
+ * Fluent DataSync PAM v3 resource grant, passed to {@code grantToken(...).authorizedUserId(...).dataSync(...)}.
  *
  * <p>Mirrors {@link ChannelGrant}/{@link UUIDGrant} but each instance also carries a {@code namespace} identifying
  * which of the three DataSync resource types it targets. It extends {@link PNDataSyncResource} rather than
@@ -17,6 +17,7 @@ package com.pubnub.api.java.models.consumer.access_manager.v3;
  *
  * <pre>{@code
  * pubnub.grantToken(60)
+ *     .authorizedUserId(new UserId("my-authorized-user"))
  *     .dataSync(Arrays.asList(
  *         DataSyncGrant.entity("capy-001").get().update().projection("admin"),
  *         DataSyncGrant.entityPattern(".*").get(),

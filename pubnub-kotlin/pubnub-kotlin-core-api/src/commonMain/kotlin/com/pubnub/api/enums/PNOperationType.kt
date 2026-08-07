@@ -132,4 +132,16 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     object PNPatchEntityOperation : DataSyncOperation()
 
     object PNUpdateEntityOperation : DataSyncOperation()
+
+    object PNGetUserOperation : DataSyncOperation()
+
+    object PNCreateUserOperation : DataSyncOperation()
+
+    object PNRemoveUserOperation : DataSyncOperation()
+
+    object PNGetUsersOperation : DataSyncOperation()
+
+    object PNPatchUserOperation : DataSyncOperation()
+
+    object PNUpdateUserOperation : DataSyncOperation()
 }

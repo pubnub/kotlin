@@ -114,6 +114,7 @@ internal class TokenParser {
         val channels = (this[CHANNELS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
         val groups = (this[GROUPS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
         val uuids = (this[UUIDS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
+        val users = (this[USERS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
         val datasyncEntities = (this[DATASYNC_ENTITIES_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
         val datasyncRelationships = (this[DATASYNC_RELATIONSHIPS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
         val datasyncMemberships = (this[DATASYNC_MEMBERSHIPS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
@@ -122,6 +123,7 @@ internal class TokenParser {
             channels = channels.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
             channelGroups = groups.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
             uuids = uuids.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
+            users = users.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
             datasyncEntities = datasyncEntities.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
             datasyncRelationships = datasyncRelationships.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
             datasyncMemberships = datasyncMemberships.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
@@ -187,6 +189,7 @@ internal class TokenParser {
         private const val CHANNELS_KEY = "chan"
         private const val GROUPS_KEY = "grp"
         private const val UUIDS_KEY = "uuid"
+        private const val USERS_KEY = "usr"
         private const val DATASYNC_ENTITIES_KEY = DataSyncNamespace.ENTITIES
         private const val DATASYNC_RELATIONSHIPS_KEY = DataSyncNamespace.RELATIONSHIPS
         private const val DATASYNC_MEMBERSHIPS_KEY = DataSyncNamespace.MEMBERSHIPS

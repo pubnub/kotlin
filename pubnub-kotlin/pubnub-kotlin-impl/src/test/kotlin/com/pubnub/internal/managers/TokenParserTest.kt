@@ -130,6 +130,81 @@ class TokenParserTest {
     }
 
     /**
+     * Offline coverage for the User (App Context v4) decode path: the parser must read the literal `usr` CBOR key
+     * under both `res` and `pat`, and expose it as [PNToken.PNTokenResources.users]. Guards against the `usr`
+     * grants being silently dropped (the pre-change behavior).
+     */
+    @Test
+    fun parseTokenWithUserResourcesAndPatterns() {
+        val getUpdate = TokenBitmask.GET or TokenBitmask.UPDATE // 96
+        val getDelete = TokenBitmask.GET or TokenBitmask.DELETE // 40
+        val getOnly = TokenBitmask.GET // 32
+
+        val token =
+            encodeToken { map ->
+                map.put("v", 2L)
+                map.put("t", 1632335843L)
+                map.put("ttl", 1440L)
+                map.put("uuid", "myauthuuid1")
+                // res: exact-resource grants
+                map.putMap("res")
+                    .putMap("chan").end()
+                    .putMap("grp").end()
+                    .putMap("uuid").end()
+                    .putMap("usr")
+                    .put("user-A", getUpdate.toLong())
+                    .put("user-B", getDelete.toLong())
+                    .end()
+                    .end()
+                // pat: pattern grants
+                map.putMap("pat")
+                    .putMap("usr").put("user-.*", getOnly.toLong()).end()
+                    .end()
+                map.putMap("meta").end()
+            }
+
+        val parsed = TokenParser().unwrapToken(token)
+
+        // resources
+        assertEquals(
+            PNToken.PNResourcePermissions(get = true, update = true),
+            parsed.resources.users["user-A"],
+        )
+        assertEquals(
+            PNToken.PNResourcePermissions(get = true, delete = true),
+            parsed.resources.users["user-B"],
+        )
+        // patterns
+        assertEquals(
+            PNToken.PNResourcePermissions(get = true),
+            parsed.patterns.users["user-.*"],
+        )
+    }
+
+    /**
+     * A token that carries no `usr` grants decodes to an empty [PNToken.PNTokenResources.users] map (never null),
+     * so existing tokens without the User namespace remain safe to consume.
+     */
+    @Test
+    fun parseTokenWithoutUserResources() {
+        val token =
+            encodeToken { map ->
+                map.put("v", 2L)
+                map.put("t", 1632335843L)
+                map.put("ttl", 1440L)
+                map.put("uuid", "myauthuuid1")
+                map.putMap("res").putMap("chan").end().end()
+                map.putMap("pat").end()
+                map.putMap("meta").end()
+            }
+
+        val parsed = TokenParser().unwrapToken(token)
+
+        assertTrue(parsed.resources.users.isEmpty())
+        assertTrue(parsed.patterns.users.isEmpty())
+    }
+
+    /**
      * The `pn-projections` meta block must be lifted into the typed [PNToken.projections] field, split by namespace,
      * with each composite `datasync:<type>:<id>` key reduced to its bare id — including relationship ids that
      * themselves contain a colon. The raw block must remain accessible inside [PNToken.meta] (additive, non-breaking).
