@@ -154,6 +154,22 @@ internal data class PNUserPatternPermissionsGrant(
     override val delete: Boolean = false,
 ) : PNPatternGrant(), UserPermissions
 
+internal data class PNUserResourceGrant(
+    override val id: String,
+    override val get: Boolean = false,
+    override val update: Boolean = false,
+    override val delete: Boolean = false,
+    override val create: Boolean = false,
+) : PNResourceGrant(), UserGrant
+
+internal data class PNUserPatternGrant(
+    override val id: String,
+    override val get: Boolean = false,
+    override val update: Boolean = false,
+    override val delete: Boolean = false,
+    override val create: Boolean = false,
+) : PNPatternGrant(), UserGrant
+
 /**
  * The three DataSync PAM v3 resource namespaces. They appear literally as keys under the
  * token's `res`/`pat` blocks, as siblings of `chan`/`grp`/`uuid`.

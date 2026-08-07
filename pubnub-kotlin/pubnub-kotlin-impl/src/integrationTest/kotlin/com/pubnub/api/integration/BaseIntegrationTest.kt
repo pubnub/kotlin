@@ -70,6 +70,18 @@ abstract class BaseIntegrationTest {
         return pubNub
     }
 
+    /**
+     * A client that lives on the same keyset as [server] (the PAM keyset) but holds no secretKey, so it can only
+     * authenticate via [PubNub.setToken]. Use this for server-granted-token tests: PAM v3 tokens are keyset-scoped,
+     * so a token minted by [server] is only valid for a client on that same keyset.
+     */
+    protected fun createAuthorizedClient(): PubNub = createPubNub {
+        userId = UserId("authorized-client-${UUID.randomUUID()}")
+        subscribeKey = Keys.pamSubKey
+        publishKey = Keys.pamPubKey
+        // no secretKey — the client authenticates only via setToken(...)
+    }
+
     protected fun registerGuestClient(guestClient: PubNub) {
         mGuestClients.add(guestClient)
     }
