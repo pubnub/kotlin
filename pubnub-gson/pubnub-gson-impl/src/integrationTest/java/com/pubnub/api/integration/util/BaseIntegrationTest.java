@@ -109,6 +109,22 @@ public abstract class BaseIntegrationTest {
         return getServer(null);
     }
 
+    /**
+     * A client that lives on the same keyset as {@link #getServer()} (the PAM keyset) but holds no secretKey, so it
+     * can only authenticate via {@link com.pubnub.api.java.PubNub#setToken(String)}. Use this for server-granted-token
+     * tests: PAM v3 tokens are keyset-scoped, so a token minted by the server is only valid for a client on that same
+     * keyset.
+     */
+    public com.pubnub.api.java.PubNub getAuthorizedClient() {
+        return getPubNub(builder -> {
+            builder.subscribeKey(PAM_SUB_KEY);
+            builder.publishKey(PAM_PUB_KEY);
+            builder.origin("ingress-tcp-pub-pdx-int.pubnub.net");
+            builder.secure(false);
+            // no secretKey — the client authenticates only via setToken(...)
+        });
+    }
+
 //    public PubNub getPubNub(PNConfiguration pnConfiguration) {
 //        final PubNub pubNub = PubNub.create(pnConfiguration);
 //        registerGuestClient(pubNub);

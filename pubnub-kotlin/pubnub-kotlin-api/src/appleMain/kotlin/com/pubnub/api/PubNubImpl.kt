@@ -119,6 +119,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -486,7 +487,18 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
-        uuids: List<UUIDGrant>,
+        uuids: List<UUIDGrant>
+    ): GrantToken {
+        TODO("Not yet implemented")
+    }
+
+    override fun grantToken(
+        ttl: Int,
+        authorizedUserId: UserId?,
+        meta: CustomObject?,
+        channels: List<ChannelGrant>,
+        channelGroups: List<ChannelGroupGrant>,
+        users: List<UserGrant>,
         dataSync: List<DataSyncGrantType>
     ): GrantToken {
         TODO("Not yet implemented")

@@ -4,12 +4,10 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.java.PubNub;
-import com.pubnub.api.java.SpaceId;
-import com.pubnub.api.java.models.consumer.access_manager.sum.SpacePermissions;
-import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScope;
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjections;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
@@ -37,9 +35,9 @@ public class GrantTokenIT extends BaseIntegrationTest {
         String expectedAuthorizedUser = "authorizedUser";
         PNGrantTokenResult grantTokenResult = pubNubUnderTest
                 .grantToken(expectedTTL)
-                .spacesPermissions(Arrays.asList(SpacePermissions.id(new SpaceId(expectedSpaceIdValue)).delete(), SpacePermissions.pattern(expectedSpaceIdPattern).read()))
-                .usersPermissions(Arrays.asList(UserPermissions.id(new UserId(expectedUser01Value)).get(), UserPermissions.pattern(expectedUserIdPattern).get()))
-                .authorizedUserId(new UserId(expectedAuthorizedUser))
+                .channels(Arrays.asList(ChannelGrant.name(expectedSpaceIdValue).delete(), ChannelGrant.pattern(expectedSpaceIdPattern).read()))
+                .uuids(Arrays.asList(UUIDGrant.id(expectedUser01Value).get(), UUIDGrant.pattern(expectedUserIdPattern).get()))
+                .authorizedUUID(expectedAuthorizedUser)
                 .sync();
         PNToken pnToken = pubNubUnderTest.parseToken(grantTokenResult.getToken());
 
@@ -100,7 +98,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
         //when — full fluent Java-facing DataSync grant chain
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
                 .grantToken(expectedTTL)
-                .authorizedUUID("pam-debug-admin")
+                .authorizedUserId(new UserId("pam-debug-admin"))
                 .dataSync(Arrays.asList(
                         DataSyncGrant.entity(entityName).get().update(),
                         DataSyncGrant.entityPattern(".*").get(),
@@ -231,9 +229,10 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
                 .grantToken(expectedTTL)
                 .meta(callerMeta)
-                .channels(Arrays.asList(ChannelGrant.name("anyChannel").read()))
                 .dataSync(Arrays.asList(
                         DataSyncGrant.entity(entityId).get().update().projection(adminProjection)))
+                .authorizedUserId(new UserId("pam-debug-admin"))
+                .channels(Arrays.asList(ChannelGrant.name("anyChannel").read()))
                 .sync();
 
         // then

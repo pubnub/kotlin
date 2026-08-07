@@ -52,6 +52,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -242,6 +243,10 @@ expect interface PubNub {
 
     fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
+    /**
+     * Use this overload for legacy App Context (grants into the `uuids` bucket). For DataSync operations, use the
+     * overload that takes `authorizedUserId`, `users` and `dataSync`.
+     */
     fun grantToken(
         ttl: Int,
         meta: CustomObject? = null,
@@ -249,6 +254,15 @@ expect interface PubNub {
         channels: List<ChannelGrant> = emptyList(),
         channelGroups: List<ChannelGroupGrant> = emptyList(),
         uuids: List<UUIDGrant> = emptyList(),
+    ): GrantToken
+
+    fun grantToken(
+        ttl: Int,
+        authorizedUserId: UserId?,
+        meta: CustomObject? = null,
+        channels: List<ChannelGrant> = emptyList(),
+        channelGroups: List<ChannelGroupGrant> = emptyList(),
+        users: List<UserGrant> = emptyList(),
         dataSync: List<DataSyncGrantType> = emptyList(),
     ): GrantToken
 

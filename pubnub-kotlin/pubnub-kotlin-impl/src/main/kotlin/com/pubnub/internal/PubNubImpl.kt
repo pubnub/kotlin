@@ -56,15 +56,12 @@ import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
-import com.pubnub.api.models.consumer.access_manager.sum.toChannelGrant
-import com.pubnub.api.models.consumer.access_manager.sum.toUuidGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -754,7 +751,6 @@ open class PubNubImpl(
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
-        dataSync: List<DataSyncGrantType>,
     ): GrantToken {
         return GrantTokenEndpoint(
             pubnub = this,
@@ -764,25 +760,30 @@ open class PubNubImpl(
             channels = channels,
             channelGroups = channelGroups,
             uuids = uuids,
-            dataSync = dataSync,
+            users = emptyList(),
+            dataSync = emptyList(),
         )
     }
 
     override fun grantToken(
         ttl: Int,
-        meta: Any?,
         authorizedUserId: UserId?,
-        spacesPermissions: List<SpacePermissions>,
-        usersPermissions: List<UserPermissions>,
+        meta: Any?,
+        channels: List<ChannelGrant>,
+        channelGroups: List<ChannelGroupGrant>,
+        users: List<UserGrant>,
+        dataSync: List<DataSyncGrantType>,
     ): GrantToken {
         return GrantTokenEndpoint(
             pubnub = this,
             ttl = ttl,
             meta = meta,
             authorizedUUID = authorizedUserId?.value,
-            channels = spacesPermissions.map { spacePermissions -> spacePermissions.toChannelGrant() },
-            channelGroups = emptyList(),
-            uuids = usersPermissions.map { userPermissions -> userPermissions.toUuidGrant() },
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = emptyList(),
+            users = users,
+            dataSync = dataSync,
         )
     }
 

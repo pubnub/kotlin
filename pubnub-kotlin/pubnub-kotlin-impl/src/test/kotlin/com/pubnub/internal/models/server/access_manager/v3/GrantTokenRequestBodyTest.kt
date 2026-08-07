@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
@@ -169,6 +170,37 @@ class GrantTokenRequestBodyTest {
 
         // then — the caller's non-map meta is passed through verbatim
         assertEquals(nonMapMeta, json["permissions"].asJsonObject["meta"].asString)
+    }
+
+    @Test
+    fun userGrantLandsInUsersBucketNotUuids() {
+        // given an exact-resource user grant and a user pattern grant
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels = emptyList(),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = null,
+                uuid = "pam-debug-admin",
+                users =
+                    listOf(
+                        UserGrant.id("user-A", get = true, update = true, delete = true),
+                        UserGrant.pattern("user-.*", get = true),
+                    ),
+            )
+
+        // when
+        val json = gson.toJsonTree(body).asJsonObject
+        val resources = json["permissions"].asJsonObject["resources"].asJsonObject
+        val patterns = json["permissions"].asJsonObject["patterns"].asJsonObject
+
+        // then — the exact grant lands in resources.users (get=32, update=64, delete=8) and NOT in resources.uuids
+        assertEquals(32 + 64 + 8, resources["users"].asJsonObject["user-A"].asInt)
+        assertEquals(false, resources["uuids"].asJsonObject.has("user-A"))
+        // and the pattern grant lands in patterns.users (get=32)
+        assertEquals(32, patterns["users"].asJsonObject["user-.*"].asInt)
+        assertEquals(false, patterns["uuids"].asJsonObject.has("user-.*"))
     }
 
     private fun intAt(
