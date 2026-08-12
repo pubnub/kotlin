@@ -1,3 +1,9 @@
+## v13.4.2
+August 12 2026
+
+#### Fixed
+- Internal fixes.
+
 ## v13.4.1
 June 25 2026
 
