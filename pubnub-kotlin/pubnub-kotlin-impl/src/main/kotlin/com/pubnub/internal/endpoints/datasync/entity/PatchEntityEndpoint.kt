@@ -20,7 +20,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [com.pubnub.api.datasync.EntityApi.patch]
+ * @see [com.pubnub.api.datasync.DataSync.patchEntity]
  */
 class PatchEntityEndpoint internal constructor(
     pubnub: PubNubImpl,

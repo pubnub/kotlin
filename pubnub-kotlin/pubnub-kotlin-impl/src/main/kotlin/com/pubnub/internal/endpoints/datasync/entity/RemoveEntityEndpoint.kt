@@ -16,7 +16,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [com.pubnub.api.datasync.EntityApi.delete]
+ * @see [com.pubnub.api.datasync.DataSync.removeEntity]
  */
 class RemoveEntityEndpoint internal constructor(
     pubnub: PubNubImpl,

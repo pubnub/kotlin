@@ -4,6 +4,6 @@ import com.pubnub.api.models.consumer.datasync.entity.PNCreateEntityResult
 import com.pubnub.kmp.PNFuture
 
 /**
- * @see [EntityApi.create]
+ * @see [com.pubnub.api.datasync.DataSync.createEntity]
  */
 expect interface CreateEntity : PNFuture<PNCreateEntityResult>

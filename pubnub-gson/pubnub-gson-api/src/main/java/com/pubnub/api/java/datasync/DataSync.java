@@ -1,5 +1,11 @@
 package com.pubnub.api.java.datasync;
 
+import com.pubnub.api.java.endpoints.datasync.entity.CreateEntity;
+import com.pubnub.api.java.endpoints.datasync.entity.GetEntities;
+import com.pubnub.api.java.endpoints.datasync.entity.GetEntity;
+import com.pubnub.api.java.endpoints.datasync.entity.PatchEntity;
+import com.pubnub.api.java.endpoints.datasync.entity.RemoveEntity;
+import com.pubnub.api.java.endpoints.datasync.entity.UpdateEntity;
 import com.pubnub.api.java.endpoints.datasync.user.CreateUser;
 import com.pubnub.api.java.endpoints.datasync.user.GetUser;
 import com.pubnub.api.java.endpoints.datasync.user.GetUsers;
@@ -15,9 +21,50 @@ import java.util.List;
  */
 public interface DataSync {
     /**
-     * Entity operations ({@code get} / {@code getAll} / {@code create} / {@code update} / {@code patch} / {@code delete}).
+     * Get a DataSync entity by its id.
+     *
+     * @param entityId Identifier of the entity to fetch.
      */
-    EntityApi entity();
+    GetEntity getEntity(String entityId);
+
+    /**
+     * Create a DataSync entity. Optional fields are set via the returned builder.
+     *
+     * @param entityClass        Entity class identifier.
+     * @param entityClassVersion Version of the entity class.
+     */
+    CreateEntity createEntity(String entityClass, int entityClassVersion);
+
+    /**
+     * Remove a DataSync entity by its id.
+     *
+     * @param entityId Identifier of the entity to remove.
+     */
+    RemoveEntity removeEntity(String entityId);
+
+    /**
+     * List DataSync entities of a class. Optional filters/paging are set via the returned builder.
+     *
+     * @param entityClass Entity class identifier (required).
+     */
+    GetEntities getEntities(String entityClass);
+
+    /**
+     * Partially update a DataSync entity via JSON Patch (RFC-6902). Optional {@code ifMatch} is set via the returned builder.
+     *
+     * @param entityId   Identifier of the entity to patch.
+     * @param operations Non-empty list of JSON Patch operations to apply.
+     */
+    PatchEntity patchEntity(String entityId, List<PNJsonPatchOperation> operations);
+
+    /**
+     * Fully replace a DataSync entity. Optional fields are set via the returned builder.
+     * {@code entityClass} is immutable and cannot be updated.
+     *
+     * @param entityId           Identifier of the entity to update.
+     * @param entityClassVersion Version of the entity class.
+     */
+    UpdateEntity updateEntity(String entityId, int entityClassVersion);
 
     /**
      * Get a DataSync user by its id.

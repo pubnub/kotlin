@@ -5,7 +5,7 @@ import com.pubnub.api.java.models.consumer.datasync.entity.PNPatchEntityResult;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @see com.pubnub.api.java.datasync.EntityApi#patch(String, List)
+ * @see com.pubnub.api.java.datasync.DataSync#patchEntity(String, List)
  */
 public interface PatchEntity extends Endpoint<PNPatchEntityResult> {
     /**
