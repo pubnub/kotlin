@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
- * DataSync Entity resource returned by {@code pubnub.dataSync().entity().get()} / {@code create()}.
+ * DataSync Entity resource returned by {@code pubnub.dataSync().getEntity()} / {@code createEntity()}.
  */
 @Getter
 @Setter

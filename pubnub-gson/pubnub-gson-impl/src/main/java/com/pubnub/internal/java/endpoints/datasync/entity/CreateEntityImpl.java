@@ -56,7 +56,7 @@ public class CreateEntityImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNCreateEntityResult> createRemoteAction() {
-        return pubnub.getDataSync().getEntity().create(
+        return pubnub.getDataSync().createEntity(
                 entityClass,
                 entityClassVersion,
                 entityId,

@@ -4,6 +4,6 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.models.consumer.datasync.entity.PNRemoveEntityResult
 
 /**
- * @see [EntityApi.delete]
+ * @see [com.pubnub.api.datasync.DataSync.removeEntity]
  */
 actual interface RemoveEntity : Endpoint<PNRemoveEntityResult>

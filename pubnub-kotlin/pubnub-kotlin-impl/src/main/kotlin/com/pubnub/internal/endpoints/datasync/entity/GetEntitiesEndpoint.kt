@@ -18,12 +18,13 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [com.pubnub.api.datasync.EntityApi.getAll]
+ * @see [com.pubnub.api.datasync.DataSync.getEntities]
  */
 class GetEntitiesEndpoint internal constructor(
     pubnub: PubNubImpl,
     private val entityClass: String,
     private val entityClassVersion: Int?,
+    private val entityClassLevel: String?,
     private val filter: String?,
     private val filterAdvanced: String?,
     private val sort: String?,
@@ -46,6 +47,7 @@ class GetEntitiesEndpoint internal constructor(
                     arguments = mapOf(
                         "entityClass" to entityClass,
                         "entityClassVersion" to (entityClassVersion ?: ""),
+                        "entityClassLevel" to (entityClassLevel ?: ""),
                         "filter" to (filter ?: ""),
                         "filterAdvanced" to (filterAdvanced ?: ""),
                         "sort" to (sort ?: ""),
@@ -59,6 +61,7 @@ class GetEntitiesEndpoint internal constructor(
         )
         queryParams["entity_class"] = entityClass
         entityClassVersion?.let { queryParams["entity_class_version"] = it.toString() }
+        entityClassLevel?.let { queryParams["entity_class_level"] = it }
         filter?.let { queryParams["filter"] = it }
         filterAdvanced?.let { queryParams["filter_advanced"] = it }
         sort?.let { queryParams["sort"] = it }

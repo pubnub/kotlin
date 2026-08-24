@@ -40,6 +40,6 @@ public class RemoveEntityImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNRemoveEntityResult> createRemoteAction() {
-        return pubnub.getDataSync().getEntity().delete(entityId, ifMatch);
+        return pubnub.getDataSync().removeEntity(entityId, ifMatch);
     }
 }

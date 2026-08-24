@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.datasync.entity
 
 /**
- * DataSync Entity resource returned by `pubnub.dataSync.entity.get`, `create` and referenced by
+ * DataSync Entity resource returned by `pubnub.dataSync.getEntity`, `createEntity` and referenced by
  * remove operations.
  *
  * @property id Entity identifier.

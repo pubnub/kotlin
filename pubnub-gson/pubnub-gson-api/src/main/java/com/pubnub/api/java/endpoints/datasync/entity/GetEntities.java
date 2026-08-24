@@ -5,13 +5,18 @@ import com.pubnub.api.java.models.consumer.datasync.entity.PNGetEntitiesResult;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @see com.pubnub.api.java.datasync.EntityApi#getAll(String)
+ * @see com.pubnub.api.java.datasync.DataSync#getEntities(String)
  */
 public interface GetEntities extends Endpoint<PNGetEntitiesResult> {
     /**
      * Optional entity class version. When not set the server uses the latest.
      */
     GetEntities entityClassVersion(@Nullable Integer entityClassVersion);
+
+    /**
+     * Optional level at which the entity class is defined (e.g. {@code SubKey} / {@code Global}).
+     */
+    GetEntities entityClassLevel(@Nullable String entityClassLevel);
 
     /**
      * Optional filter expression.
