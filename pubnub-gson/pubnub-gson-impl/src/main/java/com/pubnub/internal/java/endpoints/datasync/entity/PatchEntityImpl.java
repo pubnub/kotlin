@@ -59,6 +59,6 @@ public class PatchEntityImpl
                                 op.getFrom()
                         ))
                         .collect(Collectors.toList());
-        return pubnub.getDataSync().getEntity().patch(entityId, mapped, ifMatch);
+        return pubnub.getDataSync().patchEntity(entityId, mapped, ifMatch);
     }
 }

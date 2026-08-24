@@ -5,7 +5,7 @@ import com.pubnub.api.java.models.consumer.datasync.entity.PNRemoveEntityResult;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @see com.pubnub.api.java.datasync.EntityApi#delete(String)
+ * @see com.pubnub.api.java.datasync.DataSync#removeEntity(String)
  */
 public interface RemoveEntity extends Endpoint<PNRemoveEntityResult> {
     /**

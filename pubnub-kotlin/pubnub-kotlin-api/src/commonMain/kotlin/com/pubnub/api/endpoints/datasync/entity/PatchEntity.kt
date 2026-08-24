@@ -4,6 +4,6 @@ import com.pubnub.api.models.consumer.datasync.entity.PNPatchEntityResult
 import com.pubnub.kmp.PNFuture
 
 /**
- * @see [EntityApi.patch]
+ * @see [com.pubnub.api.datasync.DataSync.patchEntity]
  */
 expect interface PatchEntity : PNFuture<PNPatchEntityResult>

@@ -28,6 +28,10 @@ public class GetEntitiesImpl
 
     @Setter
     @Nullable
+    private String entityClassLevel;
+
+    @Setter
+    @Nullable
     private String filter;
 
     @Setter
@@ -69,9 +73,10 @@ public class GetEntitiesImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNGetEntitiesResult> createRemoteAction() {
-        return pubnub.getDataSync().getEntity().getAll(
+        return pubnub.getDataSync().getEntities(
                 entityClass,
                 entityClassVersion,
+                entityClassLevel,
                 filter,
                 filterAdvanced,
                 sort,
