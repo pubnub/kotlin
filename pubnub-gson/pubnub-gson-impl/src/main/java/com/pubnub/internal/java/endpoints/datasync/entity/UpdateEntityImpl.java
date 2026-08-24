@@ -56,7 +56,7 @@ public class UpdateEntityImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNUpdateEntityResult> createRemoteAction() {
-        return pubnub.getDataSync().getEntity().update(
+        return pubnub.getDataSync().updateEntity(
                 entityId,
                 entityClassVersion,
                 status,

@@ -4,6 +4,6 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.models.consumer.datasync.entity.PNGetEntitiesResult
 
 /**
- * @see [EntityApi.getAll]
+ * @see [com.pubnub.api.datasync.DataSync.getEntities]
  */
 actual interface GetEntities : Endpoint<PNGetEntitiesResult>

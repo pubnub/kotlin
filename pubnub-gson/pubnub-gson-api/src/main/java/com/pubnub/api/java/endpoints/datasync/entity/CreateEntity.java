@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
- * @see com.pubnub.api.java.datasync.EntityApi#create(String, int)
+ * @see com.pubnub.api.java.datasync.DataSync#createEntity(String, int)
  */
 public interface CreateEntity extends Endpoint<PNCreateEntityResult> {
     /**
