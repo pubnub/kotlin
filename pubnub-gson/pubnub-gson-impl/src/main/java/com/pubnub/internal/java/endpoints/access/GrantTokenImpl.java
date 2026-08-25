@@ -7,11 +7,11 @@ import com.pubnub.api.UserId;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.access.GrantToken;
 import com.pubnub.api.java.endpoints.access.builder.GrantTokenBuilder;
-import com.pubnub.api.java.endpoints.access.builder.GrantTokenDataSyncBuilder;
 import com.pubnub.api.java.endpoints.access.builder.GrantTokenObjectsBuilder;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType;
@@ -27,7 +27,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> implements GrantToken, GrantTokenBuilder, GrantTokenObjectsBuilder, GrantTokenDataSyncBuilder {
+public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> implements GrantToken, GrantTokenBuilder, GrantTokenObjectsBuilder {
 
     private Integer ttl;
     private Object meta;
@@ -35,8 +35,7 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
     private List<ChannelGrant> channels = Collections.emptyList();
     private List<ChannelGroupGrant> channelGroups = Collections.emptyList();
     private List<UUIDGrant> uuids = Collections.emptyList();
-    private List<UserGrant> users = Collections.emptyList();
-    private List<DataSyncGrant> dataSync = Collections.emptyList();
+    private List<TokenGrant> grants = Collections.emptyList();
 
     public GrantTokenImpl(PubNub pubnub) {
         super(pubnub);
@@ -47,23 +46,22 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
         if (this.ttl == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_TTL_MISSING);
         }
-        // The legacy `uuids` bucket and the DataSync `users`/`dataSync` buckets map to distinct wire
-        // buckets and cannot be combined in a single grant. Reject the mix explicitly instead of silently dropping
-        // one of them during routing.
-        if (!uuids.isEmpty() && (!users.isEmpty() || !dataSync.isEmpty())) {
-            throw new PubNubException("The legacy `uuids` grants can not be combined with `users` or `dataSync` grants.");
+        // The legacy `uuids` bucket and the modern flat-list `grants` cannot be combined in a single grant — they
+        // enter through mutually-exclusive builder paths. Reject the mix explicitly instead of silently dropping one
+        // of them during routing.
+        if (!uuids.isEmpty() && !grants.isEmpty()) {
+            throw new PubNubException("The legacy `uuids` grants can not be combined with `grants`.");
         }
     }
 
     @Override
     @NotNull
     protected Endpoint<PNGrantTokenResult> createRemoteAction() {
-        // The DataSync `users`/`dataSync` buckets and the legacy `uuids` bucket are served by two distinct
-        // kotlin overloads. Route through the new overload whenever any `users` or `dataSync` grant is present so a
-        // caller supplying `dataSync` without `users` still reaches the overload that carries `dataSync`; otherwise
-        // fall back to the legacy `uuids` overload (which no longer accepts `dataSync`). The authorized principal maps
-        // to the same wire field in both.
-        if (!users.isEmpty() || !dataSync.isEmpty()) {
+        // The modern flat-list `grants` and the legacy `uuids` bucket are served by two distinct kotlin overloads.
+        // Route through the new overload whenever any `grants` entry is present; otherwise fall back to the legacy
+        // `uuids` overload. The authorized principal maps to the same wire field in both. `channels`/`channelGroups`
+        // supplied via the shared setters are additive with the flat list (prepended so their order is preserved).
+        if (!grants.isEmpty()) {
             final UserId authorizedUserId;
             try {
                 authorizedUserId = authorizedUUID == null ? null : new UserId(authorizedUUID);
@@ -74,10 +72,7 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     ttl,
                     authorizedUserId,
                     meta,
-                    toInternalChannels(channels),
-                    toInternalChannelGroups(channelGroups),
-                    toInternalUsers(users),
-                    toInternalDataSync(dataSync)
+                    toInternalGrants(grants)
             );
         }
         return pubnub.grantToken(
@@ -91,9 +86,35 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
     }
 
     @Override
-    public GrantTokenDataSyncBuilder authorizedUserId(UserId userId) {
+    public GrantTokenBuilder authorizedUserId(UserId userId) {
         authorizedUUID(userId.getValue());
         return this;
+    }
+
+    private List<? extends com.pubnub.api.models.consumer.access_manager.v3.TokenGrant> toInternalGrants(List<TokenGrant> grants) {
+        // Prepend the channels/channelGroups supplied via the shared setters so they are additive with the flat list.
+        ArrayList<com.pubnub.api.models.consumer.access_manager.v3.TokenGrant> list =
+                new ArrayList<>(channels.size() + channelGroups.size() + grants.size());
+        for (ChannelGrant channel : channels) {
+            list.add(toInternal(channel));
+        }
+        for (ChannelGroupGrant channelGroup : channelGroups) {
+            list.add(toInternal(channelGroup));
+        }
+        for (TokenGrant grant : grants) {
+            if (grant instanceof ChannelGrant) {
+                list.add(toInternal((ChannelGrant) grant));
+            } else if (grant instanceof ChannelGroupGrant) {
+                list.add(toInternal((ChannelGroupGrant) grant));
+            } else if (grant instanceof UserGrant) {
+                list.add(toInternal((UserGrant) grant));
+            } else if (grant instanceof DataSyncGrant) {
+                list.add(toInternal((DataSyncGrant) grant));
+            } else {
+                throw new IllegalArgumentException("Unsupported TokenGrant type: " + grant.getClass().getName());
+            }
+        }
+        return list;
     }
 
     private List<? extends com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant> toInternalChannels(List<ChannelGrant> channels) {
@@ -120,14 +141,6 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
         return list;
     }
 
-    private List<? extends com.pubnub.api.models.consumer.access_manager.v3.UserGrant> toInternalUsers(List<UserGrant> users) {
-        ArrayList<com.pubnub.api.models.consumer.access_manager.v3.UserGrant> list = new ArrayList<>(users.size());
-        for (UserGrant user : users) {
-            list.add(toInternal(user));
-        }
-        return list;
-    }
-
     static com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant toInternal(ChannelGrant grant) {
         if (grant.isPatternResource()) {
             return com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant.Companion.pattern(
@@ -139,7 +152,8 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isCreate(),
                     grant.isGet(),
                     grant.isJoin(),
-                    grant.isUpdate()
+                    grant.isUpdate(),
+                    grant.getProjection()
             );
         } else {
             return com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant.Companion.name(
@@ -151,7 +165,8 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isCreate(),
                     grant.isGet(),
                     grant.isJoin(),
-                    grant.isUpdate()
+                    grant.isUpdate(),
+                    grant.getProjection()
             );
         }
     }
@@ -170,14 +185,6 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isManage()
             );
         }
-    }
-
-    private List<? extends DataSyncGrantType> toInternalDataSync(List<DataSyncGrant> dataSync) {
-        ArrayList<DataSyncGrantType> list = new ArrayList<>(dataSync.size());
-        for (DataSyncGrant grant : dataSync) {
-            list.add(toInternal(grant));
-        }
-        return list;
     }
 
     static DataSyncGrantType toInternal(DataSyncGrant grant) {
@@ -228,7 +235,8 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isGet(),
                     grant.isUpdate(),
                     grant.isDelete(),
-                    grant.isCreate()
+                    grant.isCreate(),
+                    grant.getProjection()
             );
         } else {
             return com.pubnub.api.models.consumer.access_manager.v3.UserGrant.Companion.id(
@@ -236,7 +244,8 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isGet(),
                     grant.isUpdate(),
                     grant.isDelete(),
-                    grant.isCreate()
+                    grant.isCreate(),
+                    grant.getProjection()
             );
         }
     }

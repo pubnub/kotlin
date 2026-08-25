@@ -40,6 +40,7 @@ internal data class PNChannelResourceGrant(
     override val get: Boolean = false,
     override val join: Boolean = false,
     override val update: Boolean = false,
+    override val projection: String? = null,
 ) : PNResourceGrant(), ChannelGrant {
     constructor(spacePermissions: SpacePermissions) : this(
         id = spacePermissions.id,
@@ -75,6 +76,7 @@ internal data class PNChannelPatternGrant(
     override val get: Boolean = false,
     override val join: Boolean = false,
     override val update: Boolean = false,
+    override val projection: String? = null,
 ) : PNPatternGrant(), ChannelGrant {
     constructor(spacePermissions: SpacePermissions) : this(
         id = spacePermissions.id,
@@ -160,6 +162,7 @@ internal data class PNUserResourceGrant(
     override val update: Boolean = false,
     override val delete: Boolean = false,
     override val create: Boolean = false,
+    override val projection: String? = null,
 ) : PNResourceGrant(), UserGrant
 
 internal data class PNUserPatternGrant(
@@ -168,6 +171,7 @@ internal data class PNUserPatternGrant(
     override val update: Boolean = false,
     override val delete: Boolean = false,
     override val create: Boolean = false,
+    override val projection: String? = null,
 ) : PNPatternGrant(), UserGrant
 
 /**
@@ -178,6 +182,22 @@ object DataSyncNamespace {
     const val ENTITIES = "datasync:entities"
     const val RELATIONSHIPS = "datasync:relationships"
     const val MEMBERSHIPS = "datasync:memberships"
+
+    /**
+     * Projection-key namespace for User instances. This prefix is used **only** to build the `pn-projections`
+     * composite key (`datasync:users:<id>`) for a [UserGrant] that carries a projection — it is **not** a permission
+     * bucket. A user's permission continues to live in the plain `users` bucket (server team, 2026-08-07). Note this
+     * contradicts the ADR examples, which key every projection under `datasync:entities:<id>`; the server team
+     * confirmed `datasync:users` / `datasync:channels` for User/Channel instances.
+     */
+    const val USERS_PROJECTION = "datasync:users"
+
+    /**
+     * Projection-key namespace for Channel instances. Projection-key-only, like [USERS_PROJECTION]: a channel's
+     * permission stays in the plain `channels` bucket; only its `pn-projections` composite key uses the
+     * `datasync:channels:<id>` prefix (server team, 2026-08-07).
+     */
+    const val CHANNELS_PROJECTION = "datasync:channels"
 
     /**
      * The projection a resource uses when its [DataSyncGrantType.projection] is left unset. Pass this explicitly
@@ -196,7 +216,7 @@ object DataSyncNamespace {
  * instances through the [DataSyncGrant] factory. Sealing prevents a caller from supplying a grant with an unknown
  * [namespace] (e.g. a typo) that the serializer would otherwise silently drop from the minted token.
  */
-sealed interface DataSyncGrantType : PNGrant {
+sealed interface DataSyncGrantType : TokenGrant {
     val namespace: String
 
     /**

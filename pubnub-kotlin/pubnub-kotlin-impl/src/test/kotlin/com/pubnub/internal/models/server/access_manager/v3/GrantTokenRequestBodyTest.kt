@@ -3,6 +3,7 @@ package com.pubnub.internal.models.server.access_manager.v3
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNubException
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import org.junit.Assert.assertEquals
@@ -201,6 +202,128 @@ class GrantTokenRequestBodyTest {
         // and the pattern grant lands in patterns.users (get=32)
         assertEquals(32, patterns["users"].asJsonObject["user-.*"].asInt)
         assertEquals(false, patterns["uuids"].asJsonObject.has("user-.*"))
+    }
+
+    @Test
+    fun orMergesBitmasksForDuplicateResourceIds() {
+        // given two channel grants for the same id, each carrying a different permission bit
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels =
+                    listOf(
+                        ChannelGrant.name("x", read = true),
+                        ChannelGrant.name("x", get = true),
+                        ChannelGrant.name("other", write = true),
+                    ),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = null,
+                uuid = null,
+            )
+
+        // when
+        val json = gson.toJsonTree(body).asJsonObject
+        val channels = json["permissions"].asJsonObject["resources"].asJsonObject["channels"].asJsonObject
+
+        // then — the duplicate id is OR-merged (READ=1 or GET=32), not last-wins; distinct ids stay separate
+        assertEquals(1 + 32, channels["x"].asInt)
+        assertEquals(2, channels["other"].asInt)
+    }
+
+    @Test
+    fun orMergesBitmasksForDuplicatePatternIds() {
+        // given two channel pattern grants for the same pattern, each with a different bit
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels =
+                    listOf(
+                        ChannelGrant.pattern("chan-.*", read = true),
+                        ChannelGrant.pattern("chan-.*", get = true),
+                    ),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = null,
+                uuid = null,
+            )
+
+        // when
+        val json = gson.toJsonTree(body).asJsonObject
+        val channels = json["permissions"].asJsonObject["patterns"].asJsonObject["channels"].asJsonObject
+
+        // then — the pattern pair is OR-merged (READ=1 or GET=32)
+        assertEquals(1 + 32, channels["chan-.*"].asInt)
+    }
+
+    @Test
+    fun foldsUserGrantProjectionUnderDatasyncUsersKey() {
+        // given a user grant (exact) and a user pattern grant, both carrying a projection
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels = emptyList(),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = null,
+                uuid = null,
+                users =
+                    listOf(
+                        UserGrant.id("user-123", get = true, projection = "private"),
+                        UserGrant.pattern("user-.*", get = true, projection = "admin"),
+                    ),
+            )
+
+        // when
+        val json = gson.toJsonTree(body).asJsonObject
+        val projections = json["permissions"].asJsonObject["meta"].asJsonObject["pn-projections"].asJsonObject
+
+        // then — the user's projection key uses the datasync:users namespace (permission stays in the users bucket)
+        assertEquals("private", projections["res"].asJsonObject["datasync:users:user-123"].asString)
+        assertEquals("admin", projections["pat"].asJsonObject["datasync:users:user-.*"].asString)
+    }
+
+    @Test
+    fun foldsChannelGrantProjectionUnderDatasyncChannelsKey() {
+        // given a channel grant carrying a projection
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels = listOf(ChannelGrant.name("chan-A", get = true, projection = "admin")),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = null,
+                uuid = null,
+            )
+
+        // when
+        val json = gson.toJsonTree(body).asJsonObject
+        val projections = json["permissions"].asJsonObject["meta"].asJsonObject["pn-projections"].asJsonObject
+
+        // then — the channel's projection key uses the datasync:channels namespace
+        assertEquals("admin", projections["res"].asJsonObject["datasync:channels:chan-A"].asString)
+    }
+
+    @Test
+    fun omitsPnProjectionsWhenUserAndChannelGrantsHaveNoProjection() {
+        // given user/channel grants without any projection
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels = listOf(ChannelGrant.name("chan-A", read = true)),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = null,
+                uuid = null,
+                users = listOf(UserGrant.id("user-123", get = true)),
+            )
+
+        // when
+        val json = gson.toJsonTree(body).asJsonObject
+        val meta = json["permissions"].asJsonObject["meta"].asJsonObject
+
+        // then — no pn-projections block is emitted
+        assertEquals(false, meta.has("pn-projections"))
     }
 
     private fun intAt(
