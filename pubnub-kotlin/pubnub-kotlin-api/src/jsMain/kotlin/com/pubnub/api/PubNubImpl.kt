@@ -93,14 +93,13 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
-import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNAbstractGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -532,14 +531,24 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         ttl: Int,
         authorizedUserId: UserId?,
         meta: CustomObject?,
-        channels: List<ChannelGrant>,
-        channelGroups: List<ChannelGroupGrant>,
-        users: List<UserGrant>,
-        dataSync: List<DataSyncGrantType>
+        grants: List<TokenGrant>
     ): GrantToken {
-        // NOTE: The underlying `pubnub` npm package exposes only the `uuids` bucket (and no DataSync), so neither the
-        // `users` bucket nor the `dataSync` list can be forwarded on the JS target. The Kotlin/JVM and Java/GSON SDKs
-        // carry both. Only channel/channel-group grants and the authorized principal are forwarded here.
+        // The underlying `pubnub` npm package exposes only the `channels`/`groups`/`uuids` buckets and no DataSync.
+        // Only ChannelGrant/ChannelGroupGrant can be forwarded here. Rather than silently drop a UserGrant or a
+        // DataSyncGrantType — which would mint a *weaker token than requested*, a security footgun — throw so the
+        // caller learns the JS target can't honor the request. (The Kotlin/JVM and Java/GSON SDKs carry every bucket.)
+        val channels = ArrayList<ChannelGrant>()
+        val channelGroups = ArrayList<ChannelGroupGrant>()
+        grants.forEach { grant ->
+            when (grant) {
+                is ChannelGrant -> channels.add(grant)
+                is ChannelGroupGrant -> channelGroups.add(grant)
+                else -> throw UnsupportedOperationException(
+                    "The JS target's grantToken only supports ChannelGrant and ChannelGroupGrant; " +
+                        "got ${grant::class.simpleName}."
+                )
+            }
+        }
         return GrantTokenImpl(
             jsPubNub,
             createJsObject {

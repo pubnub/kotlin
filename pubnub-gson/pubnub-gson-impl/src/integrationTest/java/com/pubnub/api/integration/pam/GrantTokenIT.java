@@ -7,7 +7,9 @@ import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScope;
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjections;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
@@ -99,7 +101,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
                 .grantToken(expectedTTL)
                 .authorizedUserId(new UserId("pam-debug-admin"))
-                .dataSync(Arrays.asList(
+                .grants(Arrays.<TokenGrant>asList(
                         DataSyncGrant.entity(entityName).get().update(),
                         DataSyncGrant.entityPattern(".*").get(),
                         DataSyncGrant.relationship("rel-1").get(),
@@ -126,6 +128,81 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNToken.PNResourcePermissions relGeneralPerms = pnToken.getPatterns().getDatasyncRelationships().get(".*");
         assertTrue(relPerms.getGet());
         assertTrue(relGeneralPerms.getCreate());
+    }
+
+    @Test
+    public void grantToken_withAllGrantTypes_viaFlatList() throws PubNubException {
+        // given — mint a single token through the new flat `.grants(...)` overload carrying EVERY grant type that
+        // implements TokenGrant: ChannelGrant, ChannelGroupGrant, UserGrant and DataSyncGrant. Each grant type is
+        // exercised in both exact and pattern form, and DataSync covers all three namespaces (entities,
+        // relationships, memberships).
+        PubNub pubNubUnderTest = getServer();
+        final int expectedTTL = 1337;
+        final String channelId = "channelResource";
+        final String channelPattern = "channel.*";
+        final String channelGroupId = "channelGroup";
+        final String channelGroupPattern = "channelGroup.*";
+        final String userId = "user01";
+        final String userPattern = "user.*";
+        final String entityId = "capy-001";
+        final String entityPattern = "capy.*";
+        final String relationshipId = "user.A:channel.X";
+        final String relationshipPattern = "rel.*";
+        final String membershipId = "user-123:channel-X";
+        final String membershipPattern = "mem.*";
+
+        // when
+        final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
+                .grantToken(expectedTTL)
+                .authorizedUserId(new UserId("pam-debug-admin"))
+                .grants(Arrays.<TokenGrant>asList(
+                        ChannelGrant.name(channelId).read().write(),
+                        ChannelGrant.pattern(channelPattern).read(),
+                        ChannelGroupGrant.id(channelGroupId).read().manage(),
+                        ChannelGroupGrant.pattern(channelGroupPattern).read(),
+                        UserGrant.id(userId).get().update(),
+                        UserGrant.pattern(userPattern).get().create(),
+                        DataSyncGrant.entity(entityId).get().update(),
+                        DataSyncGrant.entityPattern(entityPattern).get(),
+                        DataSyncGrant.relationship(relationshipId).get(),
+                        DataSyncGrant.relationshipPattern(relationshipPattern).get(),
+                        DataSyncGrant.membership(membershipId).get(),
+                        DataSyncGrant.membershipPattern(membershipPattern).get()))
+                .sync();
+
+        // then — every grant survives the grant -> PAM -> parseToken round-trip in its own bucket.
+        // PNResourcePermissions(read, write, manage, delete, get, update, join, create)
+        final PNToken pnToken = pubNubUnderTest.parseToken(grantTokenResponse.getToken());
+        assertEquals(expectedTTL, pnToken.getTtl());
+
+        assertEquals(new PNToken.PNResourcePermissions(true, true, false, false, false, false, false, false),
+                pnToken.getResources().getChannels().get(channelId));
+        assertEquals(new PNToken.PNResourcePermissions(true, false, false, false, false, false, false, false),
+                pnToken.getPatterns().getChannels().get(channelPattern));
+
+        assertEquals(new PNToken.PNResourcePermissions(true, false, true, false, false, false, false, false),
+                pnToken.getResources().getChannelGroups().get(channelGroupId));
+        assertEquals(new PNToken.PNResourcePermissions(true, false, false, false, false, false, false, false),
+                pnToken.getPatterns().getChannelGroups().get(channelGroupPattern));
+
+        // UserGrant permissions land in the plain `users` bucket (not `uuids`).
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, true, false, false),
+                pnToken.getResources().getUsers().get(userId));
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, true),
+                pnToken.getPatterns().getUsers().get(userPattern));
+
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, true, false, false),
+                pnToken.getResources().getDatasyncEntities().get(entityId));
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, false),
+                pnToken.getPatterns().getDatasyncEntities().get(entityPattern));
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, false),
+                pnToken.getResources().getDatasyncRelationships().get(relationshipId));
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, false),
+                pnToken.getPatterns().getDatasyncRelationships().get(relationshipPattern));
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, false),
+                pnToken.getResources().getDatasyncMemberships().get(membershipId));
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, false),
+                pnToken.getPatterns().getDatasyncMemberships().get(membershipPattern));
     }
 
     @Test
@@ -156,7 +233,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
                 .grantToken(expectedTTL)
                 .channels(Arrays.asList(ChannelGrant.name("anyChannel").read()))
-                .dataSync(Arrays.asList(
+                .grants(Arrays.<TokenGrant>asList(
                         DataSyncGrant.entity(entityId).get().update().projection(adminProjection),
                         DataSyncGrant.entityPattern(entityPatternId).get().projection(defaultProjection),
                         DataSyncGrant.relationship(relationshipId).get().projection(adminProjection),
@@ -229,7 +306,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
                 .grantToken(expectedTTL)
                 .meta(callerMeta)
-                .dataSync(Arrays.asList(
+                .grants(Arrays.<TokenGrant>asList(
                         DataSyncGrant.entity(entityId).get().update().projection(adminProjection)))
                 .authorizedUserId(new UserId("pam-debug-admin"))
                 .channels(Arrays.asList(ChannelGrant.name("anyChannel").read()))

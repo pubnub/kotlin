@@ -10,6 +10,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.CommonUtils
 import com.pubnub.test.Keys
@@ -175,7 +176,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                 .grantToken(
                     ttl = expectedTTL,
                     authorizedUserId = UserId("pam-debug-admin"),
-                    dataSync =
+                    grants =
                         listOf(
                             DataSyncGrant.entity(entityName, get = true, update = true),
                             DataSyncGrant.entityPattern(".*", get = true),
@@ -206,6 +207,71 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             PNResourcePermissions(get = true),
             patterns.datasyncRelationships[".*"],
         )
+    }
+
+    @Test
+    fun grantToken_withAllGrantTypes_viaFlatList() {
+        // given — mint a single token through the new flat `grants` overload carrying EVERY grant type that
+        // implements TokenGrant: ChannelGrant, ChannelGroupGrant, UserGrant and DataSyncGrant. Each grant type is
+        // exercised in both exact and pattern form, and DataSync covers all three namespaces (entities,
+        // relationships, memberships).
+        val pubNubUnderTest = server
+        val expectedTTL = 1337
+        val channelId = "channelResource"
+        val channelPattern = "channel.*"
+        val channelGroupId = "channelGroup"
+        val channelGroupPattern = "channelGroup.*"
+        val userId = "user01"
+        val userPattern = "user.*"
+        val entityId = "capy-001"
+        val entityPattern = "capy.*"
+        val relationshipId = "user.A:channel.X"
+        val relationshipPattern = "rel.*"
+        val membershipId = "user-123:channel-X"
+        val membershipPattern = "mem.*"
+
+        // when
+        val token =
+            pubNubUnderTest.grantToken(
+                ttl = expectedTTL,
+                authorizedUserId = UserId("pam-debug-admin"),
+                grants =
+                    listOf(
+                        ChannelGrant.name(name = channelId, read = true, write = true),
+                        ChannelGrant.pattern(pattern = channelPattern, read = true),
+                        ChannelGroupGrant.id(id = channelGroupId, read = true, manage = true),
+                        ChannelGroupGrant.pattern(pattern = channelGroupPattern, read = true),
+                        UserGrant.id(id = userId, get = true, update = true),
+                        UserGrant.pattern(pattern = userPattern, get = true, create = true),
+                        DataSyncGrant.entity(entityId, get = true, update = true),
+                        DataSyncGrant.entityPattern(entityPattern, get = true),
+                        DataSyncGrant.relationship(relationshipId, get = true),
+                        DataSyncGrant.relationshipPattern(relationshipPattern, get = true),
+                        DataSyncGrant.membership(membershipId, get = true),
+                        DataSyncGrant.membershipPattern(membershipPattern, get = true),
+                    ),
+            ).sync().token
+
+        // then — every grant survives the grant -> PAM -> parseToken round-trip in its own bucket.
+        val (_, _, ttl, _, resources, patterns) = pubNubUnderTest.parseToken(token)
+        assertEquals(expectedTTL.toLong(), ttl)
+
+        assertEquals(PNResourcePermissions(read = true, write = true), resources.channels[channelId])
+        assertEquals(PNResourcePermissions(read = true), patterns.channels[channelPattern])
+
+        assertEquals(PNResourcePermissions(read = true, manage = true), resources.channelGroups[channelGroupId])
+        assertEquals(PNResourcePermissions(read = true), patterns.channelGroups[channelGroupPattern])
+
+        // UserGrant permissions land in the plain `users` bucket (not `uuids`).
+        assertEquals(PNResourcePermissions(get = true, update = true), resources.users[userId])
+        assertEquals(PNResourcePermissions(get = true, create = true), patterns.users[userPattern])
+
+        assertEquals(PNResourcePermissions(get = true, update = true), resources.datasyncEntities[entityId])
+        assertEquals(PNResourcePermissions(get = true), patterns.datasyncEntities[entityPattern])
+        assertEquals(PNResourcePermissions(get = true), resources.datasyncRelationships[relationshipId])
+        assertEquals(PNResourcePermissions(get = true), patterns.datasyncRelationships[relationshipPattern])
+        assertEquals(PNResourcePermissions(get = true), resources.datasyncMemberships[membershipId])
+        assertEquals(PNResourcePermissions(get = true), patterns.datasyncMemberships[membershipPattern])
     }
 
     @Test
@@ -281,7 +347,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             pubNubUnderTest.grantToken(
                 ttl = expectedTTL,
                 authorizedUserId = null,
-                dataSync =
+                grants =
                     listOf(
                         DataSyncGrant.entity(entityId, get = true, update = true, projection = adminProjection),
                         DataSyncGrant.entityPattern(entityPatternId, get = true, projection = DataSyncNamespace.DEFAULT_PROJECTION),
@@ -297,8 +363,8 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                             get = true,
                             projection = DataSyncNamespace.DEFAULT_PROJECTION,
                         ),
+                        ChannelGrant.name(name = "anyChannel", read = true),
                     ),
-                channels = listOf(ChannelGrant.name(name = "anyChannel", read = true)),
             ).sync().token
 
         // then — the pn-projections block must survive the round-trip and surface on the typed projections field.
@@ -372,11 +438,11 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                 ttl = expectedTTL,
                 authorizedUserId = null,
                 meta = callerMeta,
-                dataSync =
+                grants =
                     listOf(
                         DataSyncGrant.entity(entityId, get = true, update = true, projection = adminProjection),
+                        ChannelGrant.name(name = "anyChannel", read = true),
                     ),
-                channels = listOf(ChannelGrant.name(name = "anyChannel", read = true)),
             ).sync().token
 
         // then

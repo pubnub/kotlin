@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNCreateEntityResult;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNGetEntitiesResult;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNGetEntityResult;
@@ -164,10 +165,10 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         }
     }
 
-    private void grantAndAuthenticate(com.pubnub.api.java.PubNub client, String authorizedUUID, DataSyncGrant... grants) throws PubNubException {
+    private void grantAndAuthenticate(com.pubnub.api.java.PubNub client, String authorizedUUID, TokenGrant... grants) throws PubNubException {
         final String token = server.grantToken(60)
                 .authorizedUserId(new UserId(authorizedUUID))
-                .dataSync(Arrays.asList(grants))
+                .grants(Arrays.asList(grants))
                 .sync()
                 .getToken();
         client.setToken(token);

@@ -8,13 +8,13 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import java.util.List;
 
 /**
- * Shared base for the grant-token builders. Carries the setters common to every grant world — {@code ttl},
+ * Shared base for the grant-token builders. Carries the setters common to every grant path — {@code ttl},
  * {@code meta}, and the {@code channels}/{@code channelGroups} PubSub buckets — so a fluent chain can start with any
- * of them and still resolve into either the legacy (App Context v3) world ({@link GrantTokenObjectsBuilder}) or the
- * DataSync world ({@link GrantTokenDataSyncBuilder}).
+ * of them and still resolve into either the modern flat-list path (the neutral {@link GrantTokenBuilder}) or the
+ * legacy (App Context v2 UUID) path ({@link GrantTokenObjectsBuilder}).
  *
  * <p>Each concrete builder covariantly narrows these setters' return type to itself, keeping the chain fluent within a
- * single world.
+ * single path.
  */
 public interface AbstractGrantTokenBuilder extends Endpoint<PNGrantTokenResult> {
 

@@ -7,10 +7,10 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
 import java.util.List;
 
 /**
- * Legacy (App Context v3) grant world. Adds the {@code uuids(...)} bucket and the {@code authorizedUUID(...)}
- * principal on top of the shared {@link AbstractGrantTokenBuilder} setters. DataSync
- * {@code users(...)}/{@code dataSync(...)} buckets are intentionally absent here — they live on
- * {@link GrantTokenDataSyncBuilder}, reached from {@link GrantTokenBuilder} via {@code users(...)}/{@code dataSync(...)}.
+ * Legacy (App Context v2 UUID) grant path. Adds the {@code uuids(...)} bucket and the {@code authorizedUUID(...)}
+ * principal on top of the shared {@link AbstractGrantTokenBuilder} setters. The modern flat-list {@code grants(...)}
+ * path is intentionally absent here — it stays on the neutral {@link GrantTokenBuilder}, and the two cannot be
+ * combined.
  */
 public interface GrantTokenObjectsBuilder extends AbstractGrantTokenBuilder {
 

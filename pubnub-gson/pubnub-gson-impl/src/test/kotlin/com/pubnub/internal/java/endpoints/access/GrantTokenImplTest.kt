@@ -7,7 +7,9 @@ import com.pubnub.api.java.endpoints.access.builder.GrantTokenBuilder
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant
+import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.internal.endpoints.access.GrantTokenEndpoint
 import io.mockk.CapturingSlot
 import io.mockk.every
@@ -16,7 +18,6 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class GrantTokenImplTest {
@@ -36,14 +37,12 @@ class GrantTokenImplTest {
         slot()
     private val uuidsCapture: CapturingSlot<List<com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant>> =
         slot()
-    private val usersCapture: CapturingSlot<List<com.pubnub.api.models.consumer.access_manager.v3.UserGrant>> =
-        slot()
-    private val dataSyncCapture: CapturingSlot<List<com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType>> =
+    private val grantsCapture: CapturingSlot<List<com.pubnub.api.models.consumer.access_manager.v3.TokenGrant>> =
         slot()
 
     @Test
     fun createGrantTokenImplActionShouldGetAllNecessaryParams() {
-        // given
+        // given — the legacy `uuids` path is untouched and still delegates to the legacy kotlin overload.
         objectUnderTest = GrantTokenImpl(pubNubCore)
         objectUnderTest.ttl(ttl)
         objectUnderTest.meta(meta)
@@ -63,123 +62,128 @@ class GrantTokenImplTest {
         } returns grantTokenEndpoint
 
         // when
-        val action = objectUnderTest.createRemoteAction()
+        objectUnderTest.createRemoteAction()
 
         // then
         verify { pubNubCore.grantToken(ttl, meta, authorizedUUID, any(), any(), any()) }
-        val capturedChannels: List<com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant> =
-            channelsCapture.captured
-        val capturedChannelGroups: List<com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant> =
-            channelGroupsCapture.captured
-        val capturedUUIDs: List<com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant> = uuidsCapture.captured
-        assertEquals(2, capturedChannels.size)
-        assertEquals(1, capturedChannelGroups.size)
-        assertEquals(1, capturedUUIDs.size)
+        assertEquals(2, channelsCapture.captured.size)
+        assertEquals(1, channelGroupsCapture.captured.size)
+        assertEquals(1, uuidsCapture.captured.size)
     }
 
     @Test
-    fun dataSyncWithoutUsersRoutesToUsersOverloadSoDataSyncIsNotDropped() {
-        // given — a caller supplies `dataSync` but NO `users`. Before the routing fix this fell into the legacy
-        // `uuids` overload, which no longer carries `dataSync`, silently dropping the grants. It must now reach the
-        // `authorizedUserId`/`users`/`dataSync` overload.
+    fun grantsRouteToTheFlatListOverload() {
+        // given — a caller supplies a flat `grants` list. It must reach the new single-list overload, not the legacy
+        // `uuids` overload.
         objectUnderTest = GrantTokenImpl(pubNubCore)
         objectUnderTest.ttl(ttl)
         objectUnderTest.meta(meta)
-        objectUnderTest.authorizedUUID(authorizedUUID)
-        objectUnderTest.dataSync(listOf(DataSyncGrant.entity("capy-001").get().update()))
+        objectUnderTest.authorizedUserId(UserId(authorizedUUID!!))
+        objectUnderTest.grants(listOf(DataSyncGrant.entity("capy-001").get().update()))
         every {
             pubNubCore.grantToken(
                 ttl,
                 any<UserId>(),
                 meta,
-                any(),
-                any(),
-                capture(usersCapture),
-                capture(dataSyncCapture),
+                capture(grantsCapture),
             )
         } returns grantTokenEndpoint
 
         // when
         objectUnderTest.createRemoteAction()
 
-        // then — delegated to overload B with empty users and the non-empty dataSync grant preserved.
-        verify { pubNubCore.grantToken(ttl, any<UserId>(), meta, any(), any(), any(), any()) }
-        assertTrue(usersCapture.captured.isEmpty())
-        assertEquals(1, dataSyncCapture.captured.size)
+        // then — delegated to the flat-list overload with the dataSync grant preserved.
+        verify { pubNubCore.grantToken(ttl, any<UserId>(), meta, any()) }
+        assertEquals(1, grantsCapture.captured.size)
     }
 
     @Test
-    fun authorizedUserIdGatewayCarriesDataSyncToV4Overload() {
-        // given — the fluent v4 entry point: authorizedUserId(...) opens the DataSync world where dataSync(...) lives.
-        // The authorized principal must reach the v4 overload as a UserId built from the same value.
+    fun authorizedUserIdCarriesToFlatListOverload() {
+        // given — authorizedUserId(...) sets the authorized principal, which must reach the flat-list overload as a
+        // UserId built from the same value.
         objectUnderTest = GrantTokenImpl(pubNubCore)
         val authorizedUser = "myUUID"
         val authorizedUserIdCapture: CapturingSlot<UserId> = slot()
         objectUnderTest.ttl(ttl)
             .authorizedUserId(UserId(authorizedUser))
-            .dataSync(listOf(DataSyncGrant.entity("capy-001").get().update()))
+            .grants(listOf(DataSyncGrant.entity("capy-001").get().update()))
         every {
             pubNubCore.grantToken(
                 ttl,
                 capture(authorizedUserIdCapture),
                 meta,
-                any(),
-                any(),
-                capture(usersCapture),
-                capture(dataSyncCapture),
+                capture(grantsCapture),
             )
         } returns grantTokenEndpoint
 
         // when
         objectUnderTest.createRemoteAction()
 
-        // then — routed to the v4 overload with the authorized user preserved and the dataSync grant carried through.
-        verify { pubNubCore.grantToken(ttl, any<UserId>(), meta, any(), any(), any(), any()) }
+        // then — routed to the flat-list overload with the authorized user preserved and the grant carried through.
+        verify { pubNubCore.grantToken(ttl, any<UserId>(), meta, any()) }
         assertEquals(authorizedUser, authorizedUserIdCapture.captured.value)
-        assertEquals(1, dataSyncCapture.captured.size)
+        assertEquals(1, grantsCapture.captured.size)
     }
 
     @Test
-    fun authorizedUserIdIsAv4EntryGateOnTheNeutralBuilder() {
-        // given — authorizedUserId(...) must be reachable as the FIRST v4-world call directly on the neutral
-        // GrantTokenBuilder returned by grantToken(...), mirroring the legacy authorizedUUID(...) gate. Binding the
-        // chain start to the GrantTokenBuilder interface type (not the impl) guards the interface method: removing it
-        // breaks compilation of this test.
+    fun authorizedUserIdIsAnEntryGateOnTheNeutralBuilder() {
+        // given — authorizedUserId(...) and grants(...) must be reachable directly on the neutral GrantTokenBuilder
+        // returned by grantToken(...), returning the same neutral builder (no separate type-state world). Binding the
+        // chain start to the GrantTokenBuilder interface type guards those interface methods: removing either breaks
+        // compilation of this test.
         objectUnderTest = GrantTokenImpl(pubNubCore)
         val entry: GrantTokenBuilder = objectUnderTest
         val authorizedUser = "myUUID"
         val authorizedUserIdCapture: CapturingSlot<UserId> = slot()
         entry.authorizedUserId(UserId(authorizedUser))
-            .dataSync(listOf(DataSyncGrant.entity("capy-001").get().update()))
+            .grants(listOf(DataSyncGrant.entity("capy-001").get().update()))
             .ttl(ttl)
         every {
             pubNubCore.grantToken(
                 ttl,
                 capture(authorizedUserIdCapture),
                 meta,
-                any(),
-                any(),
-                capture(usersCapture),
-                capture(dataSyncCapture),
+                capture(grantsCapture),
             )
         } returns grantTokenEndpoint
 
         // when
         objectUnderTest.createRemoteAction()
 
-        // then — the gate enters the v4 world and the authorized principal reaches the v4 overload.
-        verify { pubNubCore.grantToken(ttl, any<UserId>(), meta, any(), any(), any(), any()) }
+        // then — the gate reaches the flat-list overload and the authorized principal is preserved.
+        verify { pubNubCore.grantToken(ttl, any<UserId>(), meta, any()) }
         assertEquals(authorizedUser, authorizedUserIdCapture.captured.value)
-        assertEquals(1, dataSyncCapture.captured.size)
+        assertEquals(1, grantsCapture.captured.size)
     }
 
     @Test
-    fun combiningUuidsWithDataSyncThrows() {
-        // given — the legacy `uuids` bucket can not be mixed with the new `dataSync` bucket.
+    fun grantsAreAdditiveWithChannelsAndChannelGroups() {
+        // given — channels()/channelGroups() supplied via the shared setters must be prepended to the flat `grants`
+        // list (additive semantics), all funneled into the single flat-list overload.
+        objectUnderTest = GrantTokenImpl(pubNubCore)
+        objectUnderTest.ttl(ttl)
+            .channels(channels)
+            .channelGroups(channelGroups)
+            .grants(listOf<TokenGrant>(UserGrant.id("user-A").get(), DataSyncGrant.entity("capy-001").get()))
+        every {
+            pubNubCore.grantToken(ttl, any(), meta, capture(grantsCapture))
+        } returns grantTokenEndpoint
+
+        // when
+        objectUnderTest.createRemoteAction()
+
+        // then — 2 channels + 1 channelGroup + 2 flat grants = 5 grants forwarded
+        verify { pubNubCore.grantToken(ttl, any(), meta, any()) }
+        assertEquals(5, grantsCapture.captured.size)
+    }
+
+    @Test
+    fun combiningUuidsWithGrantsThrows() {
+        // given — the legacy `uuids` bucket can not be mixed with the flat `grants` list.
         objectUnderTest = GrantTokenImpl(pubNubCore)
         objectUnderTest.ttl(ttl)
         objectUnderTest.uuids(uuids)
-        objectUnderTest.dataSync(listOf(DataSyncGrant.entity("capy-001").get()))
+        objectUnderTest.grants(listOf(DataSyncGrant.entity("capy-001").get()))
 
         // when / then
         assertThrows(PubNubException::class.java) { objectUnderTest.sync() }

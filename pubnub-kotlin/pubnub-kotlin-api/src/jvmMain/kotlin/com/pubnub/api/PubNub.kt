@@ -50,8 +50,10 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.history.PNHistoryResult
@@ -1097,34 +1099,26 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     ): GrantToken
 
     /**
-     * This function generates a grant token for PubNub Access Manager (PAM).
+     * The modern `grantToken`: mint a token from a single flat list of grants for PubNub Access Manager (PAM).
      *
-     * Permissions can be applied to any of the four type of resources:
-     * - channels
-     * - channel groups
-     * - users
-     * - dataSync
+     * Every grant carries its own resource type ([ChannelGrant], [ChannelGroupGrant], [UserGrant] or a
+     * [DataSyncGrantType] from [DataSyncGrant]), so a pub/sub-only customer, an App Context customer and a DataSync
+     * customer all use the same product-neutral method. Each grant type exposes only the permissions relevant to it.
      *
-     * Each type of resource have different set of permissions. To know what's possible for each of them
-     * check ChannelGrant, ChannelGroupGrant and UserGrant.
+     * The legacy `uuids` bucket is intentionally not reachable here — [UUIDGrant] does not implement [TokenGrant].
+     * Use the legacy overload for `uuids`.
      *
      * @param ttl Time in minutes for which granted permissions are valid.
      * @param authorizedUserId Single userId which is authorized to use the token to make API requests to PubNub.
      * Pass `null` to mint a token not bound to a specific authorized userId.
-     * @param meta Additional metadata
-     * @param channels List of all channel grants
-     * @param channelGroups List of all channel group grants
-     * @param users List of all userId grants (App Context User entities)
-     * @param dataSync List of all DataSync resource grants
+     * @param meta Additional metadata. Must be `null` or a map when any grant carries a projection.
+     * @param grants Flat list of grants; each grant's type selects its wire bucket.
      */
     actual fun grantToken(
         ttl: Int,
         authorizedUserId: UserId?,
         meta: Any?,
-        channels: List<ChannelGrant>,
-        channelGroups: List<ChannelGroupGrant>,
-        users: List<UserGrant>,
-        dataSync: List<DataSyncGrantType>,
+        grants: List<TokenGrant>,
     ): GrantToken
 
     /**
