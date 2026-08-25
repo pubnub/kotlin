@@ -1,6 +1,6 @@
 package com.pubnub.api.java.models.consumer.access_manager.v3;
 
-public class UserGrant extends PNAppContextResource<UserGrant> {
+public class UserGrant extends PNAppContextResource<UserGrant> implements TokenGrant {
 
     /**
      * The DataSync {@code create} permission. Unlike {@code get}/{@code update}/{@code delete} (inherited from
@@ -10,7 +10,26 @@ public class UserGrant extends PNAppContextResource<UserGrant> {
      */
     protected boolean create;
 
+    private String projection;
+
     private UserGrant() {
+    }
+
+    /**
+     * The DataSync projection the token holder looks through when reading this user's DataSync schema, or
+     * {@code null} for the implicit {@code __default__} projection. The user's <em>permission</em> stays in the
+     * plain {@code users} bucket; only the projection entry uses the {@code datasync:users:<id>} composite key.
+     */
+    public String getProjection() {
+        return projection;
+    }
+
+    /**
+     * Sets the DataSync projection the token holder looks through for this user. Fluent; returns {@code this}.
+     */
+    public UserGrant projection(String projection) {
+        this.projection = projection;
+        return this;
     }
 
     public static UserGrant id(String userId) {

@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.access_manager.v3
 
-interface ChannelGroupGrant : PNGrant {
+interface ChannelGroupGrant : TokenGrant {
     companion object {
         fun id(
             id: String,

@@ -168,7 +168,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         val token = server.grantToken(
             ttl = 60,
             authorizedUserId = UserId(authorizedUUID),
-            dataSync = grants.toList(),
+            grants = grants.toList(),
         ).sync().token
         client.setToken(token)
     }

@@ -60,6 +60,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -769,11 +770,24 @@ open class PubNubImpl(
         ttl: Int,
         authorizedUserId: UserId?,
         meta: Any?,
-        channels: List<ChannelGrant>,
-        channelGroups: List<ChannelGroupGrant>,
-        users: List<UserGrant>,
-        dataSync: List<DataSyncGrantType>,
+        grants: List<TokenGrant>,
     ): GrantToken {
+        val channels = ArrayList<ChannelGrant>()
+        val channelGroups = ArrayList<ChannelGroupGrant>()
+        val users = ArrayList<UserGrant>()
+        val dataSync = ArrayList<DataSyncGrantType>()
+        grants.forEach { grant ->
+            when (grant) {
+                is DataSyncGrantType -> dataSync.add(grant)
+                is ChannelGrant -> channels.add(grant)
+                is ChannelGroupGrant -> channelGroups.add(grant)
+                is UserGrant -> users.add(grant)
+                else -> throw PubNubException(
+                    "Unsupported TokenGrant type: ${grant::class.simpleName}. " +
+                        "Use ChannelGrant, ChannelGroupGrant, UserGrant or a DataSyncGrant factory.",
+                )
+            }
+        }
         return GrantTokenEndpoint(
             pubnub = this,
             ttl = ttl,

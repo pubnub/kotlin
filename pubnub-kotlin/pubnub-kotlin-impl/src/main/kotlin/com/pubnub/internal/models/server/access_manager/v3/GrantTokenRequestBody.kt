@@ -73,42 +73,69 @@ data class GrantTokenRequestBody(
                     datasyncRelationships = getPatterns(relationships),
                     datasyncMemberships = getPatterns(memberships),
                 )
-            val metaWithProjections = mergeProjectionsIntoMeta(meta, dataSync)
+            val metaWithProjections = mergeProjectionsIntoMeta(meta, channels, users, dataSync)
             val permissions = GrantTokenPermissions(resources, patterns, metaWithProjections, uuid)
             return GrantTokenRequestBody(ttl, permissions)
         }
 
         /**
-         * Fold any per-grant [DataSyncGrantType.projection] into the token [meta] as a `pn-projections` block.
+         * Fold any per-grant projection into the token [meta] as a `pn-projections` block.
          *
-         * The composite key is `"$namespace:$id"` with the id passed through verbatim (no separator normalization);
-         * pattern grants land under `pat`, exact grants under `res`. If the caller already supplied a
-         * `pn-projections` entry inside their own [meta] map it is preserved and the grant-derived entries are merged
-         * on top of it. Returns the original meta untouched when no grant carries a projection.
+         * A projection can come from three grant types, each with its own composite-key namespace:
+         * - [DataSyncGrantType] → `"${grant.namespace}:${grant.id}"` (`datasync:entities`/`relationships`/`memberships`);
+         * - [UserGrant] with a projection → `"${DataSyncNamespace.USERS_PROJECTION}:${grant.id}"` (`datasync:users:<id>`);
+         * - [ChannelGrant] with a projection → `"${DataSyncNamespace.CHANNELS_PROJECTION}:${grant.id}"`
+         *   (`datasync:channels:<id>`).
+         *
+         * Note the User/Channel projection namespaces (`datasync:users`/`datasync:channels`) are projection-key-only:
+         * the *permissions* for those grants still land in the plain `users`/`channels` buckets. The id is passed
+         * through verbatim (no separator normalization); pattern grants land under `pat`, exact grants under `res`. If
+         * the caller already supplied a `pn-projections` entry inside their own [meta] map it is preserved and the
+         * grant-derived entries are merged on top of it (last-wins on a colliding composite key). Returns the original
+         * meta untouched when no grant carries a projection.
          *
          * @throws PubNubException if a grant carries a projection but [meta] is a non-null, non-map value. Projections
          * must live inside a map-shaped meta, so the SDK cannot merge them into an arbitrary object without silently
          * discarding it — pass `null` or a map (e.g. via `createCustomObject(mapOf(...))`) instead.
          */
         @Throws(PubNubException::class)
-        private fun mergeProjectionsIntoMeta(meta: Any?, dataSync: List<DataSyncGrantType>): Any {
-            val withProjection = dataSync.filter { it.projection != null }
-            if (withProjection.isEmpty()) {
+        private fun mergeProjectionsIntoMeta(
+            meta: Any?,
+            channels: List<ChannelGrant>,
+            users: List<UserGrant>,
+            dataSync: List<DataSyncGrantType>,
+        ): Any {
+            // Each entry pairs a composite key with its projection; pattern grants route to `pat`, the rest to `res`.
+            data class ProjectionEntry(val key: String, val projection: String, val isPattern: Boolean)
+
+            val entries = ArrayList<ProjectionEntry>()
+            dataSync.forEach { grant ->
+                grant.projection?.let { entries.add(ProjectionEntry("${grant.namespace}:${grant.id}", it, grant is PNPatternGrant)) }
+            }
+            users.forEach { grant ->
+                grant.projection?.let {
+                    entries.add(ProjectionEntry("${DataSyncNamespace.USERS_PROJECTION}:${grant.id}", it, grant is PNPatternGrant))
+                }
+            }
+            channels.forEach { grant ->
+                grant.projection?.let {
+                    entries.add(ProjectionEntry("${DataSyncNamespace.CHANNELS_PROJECTION}:${grant.id}", it, grant is PNPatternGrant))
+                }
+            }
+            if (entries.isEmpty()) {
                 return meta ?: emptyMap<Any, Any>()
             }
 
-            // Build { "res": { key -> projection }, "pat": { key -> projection } } with the composite key
-            // "$namespace:$id" and the id passed through verbatim (no separator normalization).
+            // Build { "res": { key -> projection }, "pat": { key -> projection } } with the id passed through verbatim.
             val res = LinkedHashMap<String, String>()
             val pat = LinkedHashMap<String, String>()
-            withProjection.forEach { grant ->
-                val key = "${grant.namespace}:${grant.id}"
-                val target = if (grant is PNPatternGrant) {
+            entries.forEach { entry ->
+                val target = if (entry.isPattern) {
                     pat
                 } else {
                     res
                 }
-                target[key] = grant.projection!!
+                target[entry.key] = entry.projection
             }
             val generatedBlock = LinkedHashMap<String, Any?>()
             if (res.isNotEmpty()) {
@@ -166,17 +193,19 @@ data class GrantTokenRequestBody(
             return result
         }
 
-        private fun <T : PNGrant> getResources(resources: List<T>): Map<String, Int> {
-            return resources
+        // Duplicate ids are OR-merged (not last-wins): a caller may naturally append two grants for the same id from
+        // a flat `grants` list, and each is expected to contribute its bits to the single token entry.
+        private fun <T : PNGrant> getResources(resources: List<T>): Map<String, Int> =
+            resources
                 .filter { it !is PNPatternGrant }
-                .associate { it.id to calculateBitmask(it) }
-        }
+                .groupingBy { it.id }
+                .fold(0) { acc, grant -> acc or calculateBitmask(grant) }
 
-        private fun <T : PNGrant> getPatterns(resources: List<T>): Map<String, Int> {
-            return resources
+        private fun <T : PNGrant> getPatterns(resources: List<T>): Map<String, Int> =
+            resources
                 .filterIsInstance<PNPatternGrant>()
-                .associate { it.id to calculateBitmask(it) }
-        }
+                .groupingBy { it.id }
+                .fold(0) { acc, grant -> acc or calculateBitmask(grant) }
 
         private fun calculateBitmask(resource: PNGrant): Int {
             var sum = 0

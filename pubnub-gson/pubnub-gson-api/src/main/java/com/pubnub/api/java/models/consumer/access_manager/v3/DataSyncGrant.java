@@ -1,7 +1,7 @@
 package com.pubnub.api.java.models.consumer.access_manager.v3;
 
 /**
- * Fluent DataSync PAM v3 resource grant, passed to {@code grantToken(...).authorizedUserId(...).dataSync(...)}.
+ * Fluent DataSync PAM v3 resource grant, passed to {@code grantToken(...).authorizedUserId(...).grants(...)}.
  *
  * <p>Mirrors {@link ChannelGrant}/{@link UUIDGrant} but each instance also carries a {@code namespace} identifying
  * which of the three DataSync resource types it targets. It extends {@link PNDataSyncResource} rather than
@@ -18,7 +18,7 @@ package com.pubnub.api.java.models.consumer.access_manager.v3;
  * <pre>{@code
  * pubnub.grantToken(60)
  *     .authorizedUserId(new UserId("my-authorized-user"))
- *     .dataSync(Arrays.asList(
+ *     .grants(Arrays.asList(
  *         DataSyncGrant.entity("capy-001").get().update().projection("admin"),
  *         DataSyncGrant.entityPattern(".*").get(),
  *         DataSyncGrant.relationship("user.A:channel.X").get().projection("admin"),
@@ -27,7 +27,7 @@ package com.pubnub.api.java.models.consumer.access_manager.v3;
  *     .sync();
  * }</pre>
  */
-public class DataSyncGrant extends PNDataSyncResource<DataSyncGrant> {
+public class DataSyncGrant extends PNDataSyncResource<DataSyncGrant> implements TokenGrant {
 
     // Duplicated from com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace, which is the single
     // source of truth but lives in pubnub-kotlin-api (not on this module's compile classpath). Kept in lockstep by
