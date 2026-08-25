@@ -10,7 +10,10 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.logging.CustomLogger
 import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.v2.PNConfiguration
@@ -23,6 +26,7 @@ import com.pubnub.internal.v2.PNConfigurationImpl
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.isA
+import org.hamcrest.Matchers.nullValue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -184,6 +188,34 @@ class SubscribeMessageProcessorTest(
     }
 
     @Test
+    fun unrecognizedEntityIdIsDroppedAndLoggedAtDebug() {
+        // given
+        val capturingLogger = CapturingLogger()
+        val configuration = config()
+        val subscribeMessage = subscribeMessage().copy(type = 99)
+
+        // when
+        val result = messageProcessor(configuration, listOf(capturingLogger))
+            .processIncomingPayload(subscribeMessage)
+
+        // then: delivery behavior unchanged — unknown type is still dropped
+        assertThat(result, iz(nullValue()))
+        // and: the drop is now diagnosable via a debug log line mentioning the entity id
+        val logged = capturingLogger.debugMessages.mapNotNull {
+            (it.message as? LogMessageContent.Text)?.message
+        }
+        assertThat(logged.any { it.contains("e=99") }, iz(true))
+    }
+
+    private class CapturingLogger : CustomLogger {
+        val debugMessages = mutableListOf<LogMessage>()
+
+        override fun debug(logMessage: LogMessage) {
+            debugMessages.add(logMessage)
+        }
+    }
+
+    @Test
     fun pnMessageResultWillContainTypeIfItsSetInSubscribeMessage() {
         val expectedCustomMessageType = "myCustomType"
         val configuration = config()
@@ -201,11 +233,14 @@ class SubscribeMessageProcessorTest(
         },
     ) = PNConfigurationImpl.Builder(userId = UserId("test"), "").apply(action).build()
 
-    private fun messageProcessor(configuration: PNConfiguration) =
+    private fun messageProcessor(
+        configuration: PNConfiguration,
+        customLoggers: List<CustomLogger>? = null,
+    ) =
         SubscribeMessageProcessor(
             pubnub = PubNubImpl(configuration),
             duplicationManager = DuplicationManager(configuration),
-            logConfig = LogConfig("testPnInstanceId", "testUserId")
+            logConfig = LogConfig("testPnInstanceId", "testUserId", customLoggers)
         )
 
     private fun message(messageJson: JsonElement): String {
