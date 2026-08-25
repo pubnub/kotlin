@@ -49,8 +49,10 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -244,8 +246,15 @@ expect interface PubNub {
     fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
     /**
-     * Use this overload for legacy App Context (grants into the `uuids` bucket). For DataSync operations, use the
-     * overload that takes `authorizedUserId`, `users` and `dataSync`.
+     * Legacy `grantToken` overload having the `uuids` bucket (App Context v2 UUID metadata).
+     * New code should prefer the flat-list overload taking `grants: List<TokenGrant>`.
+     *
+     * @param ttl Time in minutes for which granted permissions are valid.
+     * @param meta Additional metadata.
+     * @param authorizedUUID Single uuid which is authorized to use the token to make API requests to PubNub.
+     * @param channels List of all channel grants.
+     * @param channelGroups List of all channel group grants.
+     * @param uuids List of all uuid grants.
      */
     fun grantToken(
         ttl: Int,
@@ -256,14 +265,28 @@ expect interface PubNub {
         uuids: List<UUIDGrant> = emptyList(),
     ): GrantToken
 
+    /**
+     * The modern `grantToken`: mint a token from a single flat list of grants. Every grant carries its own resource
+     * type ([ChannelGrant], [ChannelGroupGrant], [UserGrant] or a [DataSyncGrantType] from [DataSyncGrant]), so a
+     * pub/sub-only customer, an App Context customer and a DataSync customer all use the same product-neutral method.
+     *
+     * ```kotlin
+     * pubnub.grantToken(
+     *     ttl = 60,
+     *     grants = listOf(ChannelGrant.name("chat", read = true, write = true)),
+     * ).sync().token
+     * ```
+     *
+     * @param ttl Time in minutes for which granted permissions are valid.
+     * @param authorizedUserId Single userId which is authorized to use the token, or `null` for an unbound token.
+     * @param meta Additional metadata. Must be `null` or a map when any grant carries a projection.
+     * @param grants Flat list of grants; each grant's type selects its wire bucket.
+     */
     fun grantToken(
         ttl: Int,
-        authorizedUserId: UserId?,
+        authorizedUserId: UserId? = null,
         meta: CustomObject? = null,
-        channels: List<ChannelGrant> = emptyList(),
-        channelGroups: List<ChannelGroupGrant> = emptyList(),
-        users: List<UserGrant> = emptyList(),
-        dataSync: List<DataSyncGrantType> = emptyList(),
+        grants: List<TokenGrant>,
     ): GrantToken
 
     fun revokeToken(token: String): RevokeToken

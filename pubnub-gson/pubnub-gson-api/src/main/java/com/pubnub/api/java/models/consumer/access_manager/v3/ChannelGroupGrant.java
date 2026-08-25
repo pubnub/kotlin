@@ -1,6 +1,6 @@
 package com.pubnub.api.java.models.consumer.access_manager.v3;
 
-public class ChannelGroupGrant extends PNResource<ChannelGroupGrant> {
+public class ChannelGroupGrant extends PNResource<ChannelGroupGrant> implements TokenGrant {
 
     private ChannelGroupGrant() {
     }

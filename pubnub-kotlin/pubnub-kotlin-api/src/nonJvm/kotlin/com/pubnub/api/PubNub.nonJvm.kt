@@ -49,10 +49,9 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
-import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -237,10 +236,7 @@ actual interface PubNub {
         ttl: Int,
         authorizedUserId: UserId?,
         meta: CustomObject?,
-        channels: List<ChannelGrant>,
-        channelGroups: List<ChannelGroupGrant>,
-        users: List<UserGrant>,
-        dataSync: List<DataSyncGrantType>
+        grants: List<TokenGrant>
     ): GrantToken
 
     actual fun revokeToken(token: String): RevokeToken

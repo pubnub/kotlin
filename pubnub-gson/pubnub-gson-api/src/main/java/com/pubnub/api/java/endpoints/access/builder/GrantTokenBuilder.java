@@ -3,27 +3,28 @@ package com.pubnub.api.java.endpoints.access.builder;
 import com.pubnub.api.UserId;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
-import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
-import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
 
 import java.util.List;
 
 /**
  * Entry point for a {@code grantToken(...)} call. Inherits the shared {@code ttl}/{@code meta}/{@code channels}/
  * {@code channelGroups} setters from {@link AbstractGrantTokenBuilder} (returning this neutral builder so a chain can
- * start with any of them), then branches into one of two mutually-exclusive grant worlds:
+ * start with any of them).
+ *
+ * <p>From here two grant paths are available and cannot be combined:
  *
  * <ul>
- *   <li>the legacy (App Context v3) world via {@link #uuids(List)} or {@link #authorizedUUID(String)}, which returns
- *       {@link GrantTokenObjectsBuilder};</li>
- *   <li>the DataSync world via {@link #authorizedUserId(UserId)}, {@link #users(List)} or
- *       {@link #dataSync(List)}, which returns {@link GrantTokenDataSyncBuilder}.</li>
+ *   <li>the modern flat-list path via {@link #authorizedUserId(UserId)} and {@link #grants(List)}, which stays on this
+ *       neutral builder — each {@link TokenGrant} carries its own bucket. This path is additive with the shared
+ *       {@code channels(...)}/{@code channelGroups(...)} setters (they all funnel into the same wire buckets);</li>
+ *   <li>the legacy (App Context v2 UUID) path via {@link #uuids(List)} or {@link #authorizedUUID(String)}, which
+ *       returns {@link GrantTokenObjectsBuilder}.</li>
  * </ul>
  *
- * The two worlds cannot be combined: once a bucket from one world is supplied, the returned builder only exposes that
- * world's buckets, so the legacy {@code uuids} bucket can never be mixed with {@code users}/{@code dataSync}
- * buckets.
+ * The legacy {@code uuids} bucket cannot be mixed with {@code grants(...)}: {@link UUIDGrant} does not implement
+ * {@link TokenGrant}, and combining the two is rejected at request time.
  */
 public interface GrantTokenBuilder extends AbstractGrantTokenBuilder {
     /**
@@ -47,29 +48,24 @@ public interface GrantTokenBuilder extends AbstractGrantTokenBuilder {
     GrantTokenObjectsBuilder uuids(List<UUIDGrant> uuids);
 
     /**
-     * Sets the authorized principal for a legacy (App Context v3) grant and enters the v3 grant world,
+     * Sets the authorized principal for a legacy (App Context v2 UUID) grant and enters the legacy grant path,
      * where {@code uuids(...)} grants can be supplied.
      */
     GrantTokenObjectsBuilder authorizedUUID(String authorizedUUID);
 
     /**
-     * Sets the authorized principal for DataSync grant and enters DataSync world, where
-     * {@code users(...)}/{@code dataSync(...)} grants can be supplied. Mirrors the legacy {@link #authorizedUUID(String)}
-     * gate. The v4 buckets cannot be combined with the legacy {@code uuids(...)} bucket.
+     * Sets the authorized principal for the modern flat-list grant path. Stays on this neutral builder — the
+     * authorized principal maps to the same wire field as {@link #authorizedUUID(String)}. Cannot be combined with the
+     * legacy {@code uuids(...)} bucket.
      */
-    GrantTokenDataSyncBuilder authorizedUserId(UserId authorizedUserId);
+    GrantTokenBuilder authorizedUserId(UserId authorizedUserId);
 
     /**
-     * Enters the DataSync grant world with a {@code users(...)} grant. The authorized principal is optional in
-     * this world and can be set with {@link GrantTokenDataSyncBuilder#authorizedUserId(UserId)}. The v4 buckets cannot
-     * be combined with the legacy {@code uuids(...)} bucket.
+     * Supplies the flat list of grants for the modern grant path. Each {@link TokenGrant} carries its own resource
+     * bucket ({@link ChannelGrant}, {@link ChannelGroupGrant},
+     * {@link com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant} or
+     * {@link com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant}). Additive with
+     * {@code channels(...)}/{@code channelGroups(...)}; cannot be combined with the legacy {@code uuids(...)} bucket.
      */
-    GrantTokenDataSyncBuilder users(List<UserGrant> users);
-
-    /**
-     * Enters the DataSync grant world with a {@code dataSync(...)} grant. The authorized principal is optional in
-     * this world and can be set with {@link GrantTokenDataSyncBuilder#authorizedUserId(UserId)}. The v4 buckets cannot
-     * be combined with the legacy {@code uuids(...)} bucket.
-     */
-    GrantTokenDataSyncBuilder dataSync(List<DataSyncGrant> dataSync);
+    GrantTokenBuilder grants(List<TokenGrant> grants);
 }
