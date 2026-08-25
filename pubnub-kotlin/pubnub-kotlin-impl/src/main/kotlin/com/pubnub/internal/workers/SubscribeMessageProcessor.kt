@@ -191,7 +191,16 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                else -> null
+                else -> {
+                    log.debug(
+                        LogMessage(
+                            message = LogMessageContent.Text(
+                                "Received unrecognized entity id (e=${message.type}) on channel $channel; dropping event",
+                            ),
+                        )
+                    )
+                    null
+                }
             }
         }
     }
