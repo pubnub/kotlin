@@ -3,14 +3,14 @@ package com.pubnub.api.datasync
 import com.pubnub.api.endpoints.datasync.entity.CreateEntity
 import com.pubnub.api.endpoints.datasync.entity.GetEntities
 import com.pubnub.api.endpoints.datasync.entity.GetEntity
-import com.pubnub.api.endpoints.datasync.entity.PatchEntity
 import com.pubnub.api.endpoints.datasync.entity.RemoveEntity
+import com.pubnub.api.endpoints.datasync.entity.SetEntity
 import com.pubnub.api.endpoints.datasync.entity.UpdateEntity
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
-import com.pubnub.api.endpoints.datasync.user.PatchUser
 import com.pubnub.api.endpoints.datasync.user.RemoveUser
+import com.pubnub.api.endpoints.datasync.user.SetUser
 import com.pubnub.api.endpoints.datasync.user.UpdateUser
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 
@@ -81,11 +81,11 @@ interface DataSync {
      * @param operations Non-empty list of JSON Patch operations to apply.
      * @param ifMatch Optional eTag for optimistic concurrency (`If-Match` header).
      */
-    fun patchEntity(
+    fun updateEntity(
         entityId: String,
         operations: List<PNJsonPatchOperation>,
         ifMatch: String? = null,
-    ): PatchEntity
+    ): UpdateEntity
 
     /**
      * Fully replace a DataSync entity. `entityClass` is immutable and cannot be updated.
@@ -96,13 +96,13 @@ interface DataSync {
      * @param payload Optional arbitrary JSON object payload.
      * @param ifMatch Optional eTag for optimistic concurrency (`If-Match` header).
      */
-    fun updateEntity(
+    fun setEntity(
         entityId: String,
         entityClassVersion: Int,
         status: String? = null,
         payload: Any? = null,
         ifMatch: String? = null,
-    ): UpdateEntity
+    ): SetEntity
 
     /**
      * Get a DataSync user by its id.
@@ -171,11 +171,11 @@ interface DataSync {
      * @param operations Non-empty list of JSON Patch operations to apply.
      * @param ifMatch Optional eTag for optimistic concurrency (`If-Match` header).
      */
-    fun patchUser(
+    fun updateUser(
         userId: String,
         operations: List<PNJsonPatchOperation>,
         ifMatch: String? = null,
-    ): PatchUser
+    ): UpdateUser
 
     /**
      * Fully replace a DataSync user. `entityClass` is immutable and cannot be updated.
@@ -186,11 +186,11 @@ interface DataSync {
      * @param payload Optional arbitrary JSON object payload.
      * @param ifMatch Optional eTag for optimistic concurrency (`If-Match` header).
      */
-    fun updateUser(
+    fun setUser(
         userId: String,
         entityClassVersion: Int,
         status: String? = null,
         payload: Any? = null,
         ifMatch: String? = null,
-    ): UpdateUser
+    ): SetUser
 }

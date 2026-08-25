@@ -6,7 +6,7 @@ import com.pubnub.internal.models.server.datasync.CreateEntityRequest
 import com.pubnub.internal.models.server.datasync.CreateUserRequest
 import com.pubnub.internal.models.server.datasync.EntitiesEnvelope
 import com.pubnub.internal.models.server.datasync.JsonPatchOperation
-import com.pubnub.internal.models.server.datasync.UpdateEntityRequest
+import com.pubnub.internal.models.server.datasync.SetEntityRequest
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.http.Body
@@ -52,7 +52,7 @@ internal interface DataSyncService {
 
     @Headers("Content-Type: application/json-patch+json")
     @PATCH("v1/datasync/subkeys/{subKey}/entities/{entityId}")
-    fun patchEntity(
+    fun updateEntity(
         @Path("subKey") subKey: String,
         @Path("entityId") entityId: String,
         @Body body: List<JsonPatchOperation>,
@@ -62,10 +62,10 @@ internal interface DataSyncService {
 
     @Headers("Content-Type: application/vnd.pubnub.objects.entity+json;version=1")
     @PUT("v1/datasync/subkeys/{subKey}/entities/{entityId}")
-    fun updateEntity(
+    fun setEntity(
         @Path("subKey") subKey: String,
         @Path("entityId") entityId: String,
-        @Body body: UpdateEntityRequest,
+        @Body body: SetEntityRequest,
         @Header("If-Match") ifMatch: String?,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNEntity>>
@@ -101,7 +101,7 @@ internal interface DataSyncService {
 
     @Headers("Content-Type: application/json-patch+json")
     @PATCH("v1/datasync/subkeys/{subKey}/users/{userId}")
-    fun patchUser(
+    fun updateUser(
         @Path("subKey") subKey: String,
         @Path("userId") userId: String,
         @Body body: List<JsonPatchOperation>,
@@ -111,10 +111,10 @@ internal interface DataSyncService {
 
     @Headers("Content-Type: application/vnd.pubnub.objects.user+json;version=1")
     @PUT("v1/datasync/subkeys/{subKey}/users/{userId}")
-    fun updateUser(
+    fun setUser(
         @Path("subKey") subKey: String,
         @Path("userId") userId: String,
-        @Body body: UpdateEntityRequest,
+        @Body body: SetEntityRequest,
         @Header("If-Match") ifMatch: String?,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNUser>>

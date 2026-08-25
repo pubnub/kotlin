@@ -1,4 +1,4 @@
-package com.pubnub.api.java.models.consumer.datasync.entity;
+package com.pubnub.api.java.models.consumer.datasync.user;
 
 import com.pubnub.api.java.models.consumer.objects_api.EntityEnvelope;
 import lombok.Getter;
@@ -8,8 +8,8 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class PNPatchEntityResult extends EntityEnvelope<PNEntity> {
-    public PNPatchEntityResult(int status, PNEntity data) {
+public class PNSetUserResult extends EntityEnvelope<PNUser> {
+    public PNSetUserResult(int status, PNUser data) {
         this.status = status;
         this.data = data;
     }

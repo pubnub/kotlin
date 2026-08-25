@@ -69,8 +69,8 @@ internal class DataSyncEntityModelsTest {
     }
 
     @Test
-    fun updateEntityRequest_drops_null_status_and_payload() {
-        val json = mapper.toJson(UpdateEntityRequest(UpdateEntityRequestData(entityClassVersion = 2)))
+    fun setEntityRequest_drops_null_status_and_payload() {
+        val json = mapper.toJson(SetEntityRequest(SetEntityRequestData(entityClassVersion = 2)))
 
         assertEquals("""{"data":{"entityClassVersion":2}}""", json)
     }

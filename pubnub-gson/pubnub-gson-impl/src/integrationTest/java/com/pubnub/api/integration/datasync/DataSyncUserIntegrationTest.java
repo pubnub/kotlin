@@ -9,8 +9,8 @@ import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
 import com.pubnub.api.java.models.consumer.datasync.user.PNCreateUserResult;
 import com.pubnub.api.java.models.consumer.datasync.user.PNGetUserResult;
 import com.pubnub.api.java.models.consumer.datasync.user.PNGetUsersResult;
-import com.pubnub.api.java.models.consumer.datasync.user.PNPatchUserResult;
 import com.pubnub.api.java.models.consumer.datasync.user.PNUpdateUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNSetUserResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -149,7 +149,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         final List<PNJsonPatchOperation> operations = Collections.singletonList(
                 PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
         );
-        final PNPatchUserResult patchResult = client.dataSync().patchUser(userId, operations)
+        final PNUpdateUserResult patchResult = client.dataSync().updateUser(userId, operations)
                 .sync();
         assertEquals("inactive", patchResult.getData().getStatus());
 
@@ -158,7 +158,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         final Map<String, Object> newPayload = new HashMap<>();
         newPayload.put("username", "Bob");
         newPayload.put("email", "bob@example.com");
-        final PNUpdateUserResult updateResult = client.dataSync().updateUser(userId, entityClassVersion)
+        final PNSetUserResult updateResult = client.dataSync().setUser(userId, entityClassVersion)
                 .status("archived")
                 .payload(newPayload)
                 .sync();
@@ -231,7 +231,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> operations = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final PNPatchUserResult patchResult = server.dataSync().patchUser(userId, operations)
+            final PNUpdateUserResult patchResult = server.dataSync().updateUser(userId, operations)
                     .sync();
             assertEquals("inactive", patchResult.getData().getStatus());
 
@@ -242,7 +242,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             final Map<String, Object> newPayload = new HashMap<>();
             newPayload.put("username", "Bob");
             newPayload.put("email", "bob@example.com");
-            final PNUpdateUserResult updateResult = server.dataSync().updateUser(userId, entityClassVersion)
+            final PNSetUserResult updateResult = server.dataSync().setUser(userId, entityClassVersion)
                     .status("archived")
                     .payload(newPayload)
                     .sync();
@@ -279,7 +279,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> inactiveOps = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final PNPatchUserResult patch1 = server.dataSync().patchUser(userId, inactiveOps)
+            final PNUpdateUserResult patch1 = server.dataSync().updateUser(userId, inactiveOps)
                     .ifMatch(originalETag)
                     .sync();
             assertEquals("inactive", patch1.getData().getStatus());
@@ -290,7 +290,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("archived").build()
             );
             try {
-                server.dataSync().patchUser(userId, archivedOps)
+                server.dataSync().updateUser(userId, archivedOps)
                         .ifMatch(originalETag)
                         .sync();
                 fail("Expected a 412 when patching with a stale ifMatch eTag");

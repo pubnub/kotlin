@@ -4,28 +4,28 @@ import com.pubnub.api.datasync.DataSync
 import com.pubnub.api.endpoints.datasync.entity.CreateEntity
 import com.pubnub.api.endpoints.datasync.entity.GetEntities
 import com.pubnub.api.endpoints.datasync.entity.GetEntity
-import com.pubnub.api.endpoints.datasync.entity.PatchEntity
 import com.pubnub.api.endpoints.datasync.entity.RemoveEntity
+import com.pubnub.api.endpoints.datasync.entity.SetEntity
 import com.pubnub.api.endpoints.datasync.entity.UpdateEntity
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
-import com.pubnub.api.endpoints.datasync.user.PatchUser
 import com.pubnub.api.endpoints.datasync.user.RemoveUser
+import com.pubnub.api.endpoints.datasync.user.SetUser
 import com.pubnub.api.endpoints.datasync.user.UpdateUser
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.datasync.entity.CreateEntityEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.GetEntitiesEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.GetEntityEndpoint
-import com.pubnub.internal.endpoints.datasync.entity.PatchEntityEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.RemoveEntityEndpoint
+import com.pubnub.internal.endpoints.datasync.entity.SetEntityEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.UpdateEntityEndpoint
 import com.pubnub.internal.endpoints.datasync.user.CreateUserEndpoint
 import com.pubnub.internal.endpoints.datasync.user.GetUserEndpoint
 import com.pubnub.internal.endpoints.datasync.user.GetUsersEndpoint
-import com.pubnub.internal.endpoints.datasync.user.PatchUserEndpoint
 import com.pubnub.internal.endpoints.datasync.user.RemoveUserEndpoint
+import com.pubnub.internal.endpoints.datasync.user.SetUserEndpoint
 import com.pubnub.internal.endpoints.datasync.user.UpdateUserEndpoint
 
 class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
@@ -77,22 +77,22 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
         )
     }
 
-    override fun patchEntity(
+    override fun updateEntity(
         entityId: String,
         operations: List<PNJsonPatchOperation>,
         ifMatch: String?,
-    ): PatchEntity {
-        return PatchEntityEndpoint(pubnub, entityId, operations, ifMatch)
+    ): UpdateEntity {
+        return UpdateEntityEndpoint(pubnub, entityId, operations, ifMatch)
     }
 
-    override fun updateEntity(
+    override fun setEntity(
         entityId: String,
         entityClassVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,
-    ): UpdateEntity {
-        return UpdateEntityEndpoint(
+    ): SetEntity {
+        return SetEntityEndpoint(
             pubnub = pubnub,
             entityId = entityId,
             entityClassVersion = entityClassVersion,
@@ -150,22 +150,22 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
         )
     }
 
-    override fun patchUser(
+    override fun updateUser(
         userId: String,
         operations: List<PNJsonPatchOperation>,
         ifMatch: String?,
-    ): PatchUser {
-        return PatchUserEndpoint(pubnub, userId, operations, ifMatch)
+    ): UpdateUser {
+        return UpdateUserEndpoint(pubnub, userId, operations, ifMatch)
     }
 
-    override fun updateUser(
+    override fun setUser(
         userId: String,
         entityClassVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,
-    ): UpdateUser {
-        return UpdateUserEndpoint(
+    ): SetUser {
+        return SetUserEndpoint(
             pubnub = pubnub,
             userId = userId,
             entityClassVersion = entityClassVersion,

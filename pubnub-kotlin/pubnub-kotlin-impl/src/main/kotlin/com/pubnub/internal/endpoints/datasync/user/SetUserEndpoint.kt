@@ -2,41 +2,40 @@ package com.pubnub.internal.endpoints.datasync.user
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.datasync.user.PatchUser
+import com.pubnub.api.endpoints.datasync.user.SetUser
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
-import com.pubnub.api.models.consumer.datasync.user.PNPatchUserResult
+import com.pubnub.api.models.consumer.datasync.user.PNSetUserResult
 import com.pubnub.api.models.consumer.datasync.user.PNUser
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
-import com.pubnub.internal.models.server.datasync.JsonPatchOperation
+import com.pubnub.internal.models.server.datasync.SetEntityRequest
+import com.pubnub.internal.models.server.datasync.SetEntityRequestData
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [com.pubnub.api.datasync.DataSync.patchUser]
+ * @see [com.pubnub.api.datasync.DataSync.setUser]
  */
-class PatchUserEndpoint internal constructor(
+class SetUserEndpoint internal constructor(
     pubnub: PubNubImpl,
     private val userId: String,
-    private val operations: List<PNJsonPatchOperation>,
+    private val entityClassVersion: Int,
+    private val status: String?,
+    private val payload: Any?,
     private val ifMatch: String?,
-) : EndpointCore<EntityEnvelope<PNUser>, PNPatchUserResult>(pubnub), PatchUser {
+) : EndpointCore<EntityEnvelope<PNUser>, PNSetUserResult>(pubnub), SetUser {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
         super.validateParams()
         if (userId.isBlank()) {
             throw PubNubException(PubNubError.ENTITY_ID_MISSING)
-        }
-        if (operations.isEmpty()) {
-            throw PubNubException(PubNubError.JSON_PATCH_OPERATIONS_MISSING)
         }
     }
 
@@ -46,33 +45,43 @@ class PatchUserEndpoint internal constructor(
                 message = LogMessageContent.Object(
                     arguments = mapOf(
                         "userId" to userId,
-                        "operations" to operations,
+                        "entityClassVersion" to entityClassVersion,
+                        "status" to (status ?: ""),
+                        "payload" to (payload ?: ""),
                         "ifMatch" to (ifMatch ?: "")
                     ),
                     operation = this::class.simpleName
                 ),
-                details = "PatchUser API call",
+                details = "SetUser API call",
             )
         )
-        return retrofitManager.dataSyncService.patchUser(
+        return retrofitManager.dataSyncService.setUser(
             subKey = configuration.subscribeKey,
             userId = userId,
-            body = operations.map { JsonPatchOperation(op = it.op, path = it.path, value = it.value, from = it.from) },
+            body =
+                SetEntityRequest(
+                    data =
+                        SetEntityRequestData(
+                            entityClassVersion = entityClassVersion,
+                            status = status,
+                            payload = payload,
+                        ),
+                ),
             ifMatch = ifMatch,
             options = queryParams,
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNUser>>): PNPatchUserResult {
+    override fun createResponse(input: Response<EntityEnvelope<PNUser>>): PNSetUserResult {
         return input.body()!!.let {
-            PNPatchUserResult(
+            PNSetUserResult(
                 status = it.status,
                 data = it.data,
             )
         }
     }
 
-    override fun operationType(): PNOperationType = PNOperationType.PNPatchUserOperation
+    override fun operationType(): PNOperationType = PNOperationType.PNSetUserOperation
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.DATASYNC
 }

@@ -5,28 +5,28 @@ import com.pubnub.api.java.datasync.DataSync;
 import com.pubnub.api.java.endpoints.datasync.entity.CreateEntity;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntities;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntity;
-import com.pubnub.api.java.endpoints.datasync.entity.PatchEntity;
-import com.pubnub.api.java.endpoints.datasync.entity.RemoveEntity;
 import com.pubnub.api.java.endpoints.datasync.entity.UpdateEntity;
+import com.pubnub.api.java.endpoints.datasync.entity.RemoveEntity;
+import com.pubnub.api.java.endpoints.datasync.entity.SetEntity;
 import com.pubnub.api.java.endpoints.datasync.user.CreateUser;
 import com.pubnub.api.java.endpoints.datasync.user.GetUser;
 import com.pubnub.api.java.endpoints.datasync.user.GetUsers;
-import com.pubnub.api.java.endpoints.datasync.user.PatchUser;
-import com.pubnub.api.java.endpoints.datasync.user.RemoveUser;
 import com.pubnub.api.java.endpoints.datasync.user.UpdateUser;
+import com.pubnub.api.java.endpoints.datasync.user.RemoveUser;
+import com.pubnub.api.java.endpoints.datasync.user.SetUser;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
 import com.pubnub.internal.java.endpoints.datasync.entity.CreateEntityImpl;
 import com.pubnub.internal.java.endpoints.datasync.entity.GetEntitiesImpl;
 import com.pubnub.internal.java.endpoints.datasync.entity.GetEntityImpl;
-import com.pubnub.internal.java.endpoints.datasync.entity.PatchEntityImpl;
-import com.pubnub.internal.java.endpoints.datasync.entity.RemoveEntityImpl;
 import com.pubnub.internal.java.endpoints.datasync.entity.UpdateEntityImpl;
+import com.pubnub.internal.java.endpoints.datasync.entity.RemoveEntityImpl;
+import com.pubnub.internal.java.endpoints.datasync.entity.SetEntityImpl;
 import com.pubnub.internal.java.endpoints.datasync.user.CreateUserImpl;
 import com.pubnub.internal.java.endpoints.datasync.user.GetUserImpl;
 import com.pubnub.internal.java.endpoints.datasync.user.GetUsersImpl;
-import com.pubnub.internal.java.endpoints.datasync.user.PatchUserImpl;
-import com.pubnub.internal.java.endpoints.datasync.user.RemoveUserImpl;
 import com.pubnub.internal.java.endpoints.datasync.user.UpdateUserImpl;
+import com.pubnub.internal.java.endpoints.datasync.user.RemoveUserImpl;
+import com.pubnub.internal.java.endpoints.datasync.user.SetUserImpl;
 
 import java.util.List;
 
@@ -58,13 +58,13 @@ public class DataSyncImpl implements DataSync {
     }
 
     @Override
-    public PatchEntity patchEntity(String entityId, List<PNJsonPatchOperation> operations) {
-        return new PatchEntityImpl(entityId, operations, pubnubInstance);
+    public UpdateEntity updateEntity(String entityId, List<PNJsonPatchOperation> operations) {
+        return new UpdateEntityImpl(entityId, operations, pubnubInstance);
     }
 
     @Override
-    public UpdateEntity updateEntity(String entityId, int entityClassVersion) {
-        return new UpdateEntityImpl(entityId, entityClassVersion, pubnubInstance);
+    public SetEntity setEntity(String entityId, int entityClassVersion) {
+        return new SetEntityImpl(entityId, entityClassVersion, pubnubInstance);
     }
 
     @Override
@@ -88,12 +88,12 @@ public class DataSyncImpl implements DataSync {
     }
 
     @Override
-    public PatchUser patchUser(String userId, List<PNJsonPatchOperation> operations) {
-        return new PatchUserImpl(userId, operations, pubnubInstance);
+    public UpdateUser updateUser(String userId, List<PNJsonPatchOperation> operations) {
+        return new UpdateUserImpl(userId, operations, pubnubInstance);
     }
 
     @Override
-    public UpdateUser updateUser(String userId, int entityClassVersion) {
-        return new UpdateUserImpl(userId, entityClassVersion, pubnubInstance);
+    public SetUser setUser(String userId, int entityClassVersion) {
+        return new SetUserImpl(userId, entityClassVersion, pubnubInstance);
     }
 }

@@ -9,8 +9,8 @@ import com.pubnub.api.java.models.consumer.datasync.entity.PNCreateEntityResult;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNGetEntitiesResult;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNGetEntityResult;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
-import com.pubnub.api.java.models.consumer.datasync.entity.PNPatchEntityResult;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNUpdateEntityResult;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNSetEntityResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -134,8 +134,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         final List<PNJsonPatchOperation> operations = Collections.singletonList(
                 PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
         );
-        final PNPatchEntityResult patchResult = client.dataSync()
-                .patchEntity(entityId, operations)
+        final PNUpdateEntityResult patchResult = client.dataSync()
+                .updateEntity(entityId, operations)
                 .sync();
         assertEquals("inactive", patchResult.getData().getStatus());
 
@@ -143,8 +143,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId).update());
         final Map<String, Object> newPayload = new HashMap<>();
         newPayload.put("custom", "updated");
-        final PNUpdateEntityResult updateResult = client.dataSync()
-                .updateEntity(entityId, entityClassVersion)
+        final PNSetEntityResult updateResult = client.dataSync()
+                .setEntity(entityId, entityClassVersion)
                 .status("archived")
                 .payload(newPayload)
                 .sync();
@@ -213,8 +213,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> operations = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final PNPatchEntityResult patchResult = server.dataSync()
-                    .patchEntity(entityId, operations)
+            final PNUpdateEntityResult patchResult = server.dataSync()
+                    .updateEntity(entityId, operations)
                     .sync();
             assertEquals("inactive", patchResult.getData().getStatus());
 
@@ -224,8 +224,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             // update -> full replace of status + payload
             final Map<String, Object> newPayload = new HashMap<>();
             newPayload.put("custom", "updated");
-            final PNUpdateEntityResult updateResult = server.dataSync()
-                    .updateEntity(entityId, entityClassVersion)
+            final PNSetEntityResult updateResult = server.dataSync()
+                    .setEntity(entityId, entityClassVersion)
                     .status("archived")
                     .payload(newPayload)
                     .sync();
@@ -262,8 +262,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> inactiveOps = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final PNPatchEntityResult patch1 = server.dataSync()
-                    .patchEntity(entityId, inactiveOps)
+            final PNUpdateEntityResult patch1 = server.dataSync()
+                    .updateEntity(entityId, inactiveOps)
                     .ifMatch(originalETag)
                     .sync();
             assertEquals("inactive", patch1.getData().getStatus());
@@ -275,7 +275,7 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             );
             try {
                 server.dataSync()
-                        .patchEntity(entityId, archivedOps)
+                        .updateEntity(entityId, archivedOps)
                         .ifMatch(originalETag)
                         .sync();
                 fail("Expected a 412 when patching with a stale ifMatch eTag");

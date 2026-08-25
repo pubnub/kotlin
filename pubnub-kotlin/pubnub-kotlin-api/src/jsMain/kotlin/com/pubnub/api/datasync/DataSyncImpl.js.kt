@@ -3,14 +3,14 @@ package com.pubnub.api.datasync
 import com.pubnub.api.endpoints.datasync.entity.CreateEntity
 import com.pubnub.api.endpoints.datasync.entity.GetEntities
 import com.pubnub.api.endpoints.datasync.entity.GetEntity
-import com.pubnub.api.endpoints.datasync.entity.PatchEntity
 import com.pubnub.api.endpoints.datasync.entity.RemoveEntity
+import com.pubnub.api.endpoints.datasync.entity.SetEntity
 import com.pubnub.api.endpoints.datasync.entity.UpdateEntity
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
-import com.pubnub.api.endpoints.datasync.user.PatchUser
 import com.pubnub.api.endpoints.datasync.user.RemoveUser
+import com.pubnub.api.endpoints.datasync.user.SetUser
 import com.pubnub.api.endpoints.datasync.user.UpdateUser
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 
@@ -39,19 +39,19 @@ internal class DataSyncImpl : DataSync {
         cursor: String?,
     ): GetEntities = throw NotImplementedError(NOT_IMPLEMENTED)
 
-    override fun patchEntity(
+    override fun updateEntity(
         entityId: String,
         operations: List<PNJsonPatchOperation>,
         ifMatch: String?,
-    ): PatchEntity = throw NotImplementedError(NOT_IMPLEMENTED)
+    ): UpdateEntity = throw NotImplementedError(NOT_IMPLEMENTED)
 
-    override fun updateEntity(
+    override fun setEntity(
         entityId: String,
         entityClassVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,
-    ): UpdateEntity = throw NotImplementedError(NOT_IMPLEMENTED)
+    ): SetEntity = throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun getUser(userId: String): GetUser = throw NotImplementedError(NOT_IMPLEMENTED)
 
@@ -77,19 +77,19 @@ internal class DataSyncImpl : DataSync {
         cursor: String?,
     ): GetUsers = throw NotImplementedError(NOT_IMPLEMENTED)
 
-    override fun patchUser(
+    override fun updateUser(
         userId: String,
         operations: List<PNJsonPatchOperation>,
         ifMatch: String?,
-    ): PatchUser = throw NotImplementedError(NOT_IMPLEMENTED)
+    ): UpdateUser = throw NotImplementedError(NOT_IMPLEMENTED)
 
-    override fun updateUser(
+    override fun setUser(
         userId: String,
         entityClassVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,
-    ): UpdateUser = throw NotImplementedError(NOT_IMPLEMENTED)
+    ): SetUser = throw NotImplementedError(NOT_IMPLEMENTED)
 }
 
 private const val NOT_IMPLEMENTED = "DataSync is not implemented on the JS target"

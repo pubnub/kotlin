@@ -3,15 +3,15 @@ package com.pubnub.api.java.datasync;
 import com.pubnub.api.java.endpoints.datasync.entity.CreateEntity;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntities;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntity;
-import com.pubnub.api.java.endpoints.datasync.entity.PatchEntity;
-import com.pubnub.api.java.endpoints.datasync.entity.RemoveEntity;
 import com.pubnub.api.java.endpoints.datasync.entity.UpdateEntity;
+import com.pubnub.api.java.endpoints.datasync.entity.RemoveEntity;
+import com.pubnub.api.java.endpoints.datasync.entity.SetEntity;
 import com.pubnub.api.java.endpoints.datasync.user.CreateUser;
 import com.pubnub.api.java.endpoints.datasync.user.GetUser;
 import com.pubnub.api.java.endpoints.datasync.user.GetUsers;
-import com.pubnub.api.java.endpoints.datasync.user.PatchUser;
-import com.pubnub.api.java.endpoints.datasync.user.RemoveUser;
 import com.pubnub.api.java.endpoints.datasync.user.UpdateUser;
+import com.pubnub.api.java.endpoints.datasync.user.RemoveUser;
+import com.pubnub.api.java.endpoints.datasync.user.SetUser;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public interface DataSync {
      * @param entityId   Identifier of the entity to patch.
      * @param operations Non-empty list of JSON Patch operations to apply.
      */
-    PatchEntity patchEntity(String entityId, List<PNJsonPatchOperation> operations);
+    UpdateEntity updateEntity(String entityId, List<PNJsonPatchOperation> operations);
 
     /**
      * Fully replace a DataSync entity. Optional fields are set via the returned builder.
@@ -64,7 +64,7 @@ public interface DataSync {
      * @param entityId           Identifier of the entity to update.
      * @param entityClassVersion Version of the entity class.
      */
-    UpdateEntity updateEntity(String entityId, int entityClassVersion);
+    SetEntity setEntity(String entityId, int entityClassVersion);
 
     /**
      * Get a DataSync user by its id.
@@ -100,7 +100,7 @@ public interface DataSync {
      * @param userId     Identifier of the user to patch.
      * @param operations Non-empty list of JSON Patch operations to apply.
      */
-    PatchUser patchUser(String userId, List<PNJsonPatchOperation> operations);
+    UpdateUser updateUser(String userId, List<PNJsonPatchOperation> operations);
 
     /**
      * Fully replace a DataSync user. Optional fields are set via the returned builder.
@@ -109,5 +109,5 @@ public interface DataSync {
      * @param userId             Identifier of the user to update.
      * @param entityClassVersion Version of the entity class.
      */
-    UpdateUser updateUser(String userId, int entityClassVersion);
+    SetUser setUser(String userId, int entityClassVersion);
 }

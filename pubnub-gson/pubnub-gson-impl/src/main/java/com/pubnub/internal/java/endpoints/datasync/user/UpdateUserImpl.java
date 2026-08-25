@@ -5,6 +5,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.datasync.user.UpdateUser;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
 import com.pubnub.api.java.models.consumer.datasync.user.PNUpdateUserResult;
 import com.pubnub.api.java.models.consumer.datasync.user.PNUserConverter;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
@@ -13,7 +14,8 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Accessors(chain = true, fluent = true)
 public class UpdateUserImpl
@@ -21,24 +23,16 @@ public class UpdateUserImpl
         implements UpdateUser {
 
     private final String userId;
-    private final int entityClassVersion;
-
-    @Setter
-    @Nullable
-    private String status;
-
-    @Setter
-    @Nullable
-    private Map<String, Object> payload;
+    private final List<PNJsonPatchOperation> operations;
 
     @Setter
     @Nullable
     private String ifMatch;
 
-    public UpdateUserImpl(String userId, int entityClassVersion, final PubNub pubnubInstance) {
+    public UpdateUserImpl(String userId, List<PNJsonPatchOperation> operations, final PubNub pubnubInstance) {
         super(pubnubInstance);
         this.userId = userId;
-        this.entityClassVersion = entityClassVersion;
+        this.operations = operations;
     }
 
     @NotNull
@@ -56,12 +50,15 @@ public class UpdateUserImpl
     @Override
     @NotNull
     protected Endpoint<com.pubnub.api.models.consumer.datasync.user.PNUpdateUserResult> createRemoteAction() {
-        return pubnub.getDataSync().updateUser(
-                userId,
-                entityClassVersion,
-                status,
-                payload,
-                ifMatch
-        );
+        final List<com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation> mapped =
+                operations.stream()
+                        .map(op -> new com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation(
+                                op.getOp(),
+                                op.getPath(),
+                                op.getValue(),
+                                op.getFrom()
+                        ))
+                        .collect(Collectors.toList());
+        return pubnub.getDataSync().updateUser(userId, mapped, ifMatch);
     }
 }

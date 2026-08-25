@@ -131,7 +131,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
         // patch -> token scoped to `update` on this specific user (PATCH maps to `update`)
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, update = true))
-        val patchResult = client.dataSync.patchUser(
+        val patchResult = client.dataSync.updateUser(
             userId = userId,
             operations = listOf(
                 PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
@@ -142,7 +142,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         // update -> token scoped to `update` on this specific user (PUT maps to `update`)
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = userId, update = true))
         val newPayload = TestUserPayload(username = "Bob", email = "bob@example.com")
-        val updateResult = client.dataSync.updateUser(
+        val updateResult = client.dataSync.setUser(
             userId = userId,
             entityClassVersion = entityClassVersion,
             status = "archived",
@@ -223,7 +223,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             assertTrue(getAllResult.data.any { it.id == userId })
 
             // patch -> replace /status
-            val patchResult = server.dataSync.patchUser(
+            val patchResult = server.dataSync.updateUser(
                 userId = userId,
                 operations = listOf(
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
@@ -236,7 +236,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
             // update -> full replace of status + payload
             val newPayload = TestUserPayload(username = "Bob", email = "bob@example.com")
-            val updateResult = server.dataSync.updateUser(
+            val updateResult = server.dataSync.setUser(
                 userId = userId,
                 entityClassVersion = entityClassVersion,
                 status = "archived",
@@ -273,7 +273,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             assertNotNull(originalETag)
 
             // patch #1 with a matching ifMatch -> succeeds and bumps the eTag
-            val patch1 = server.dataSync.patchUser(
+            val patch1 = server.dataSync.updateUser(
                 userId = userId,
                 operations = listOf(
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
@@ -286,7 +286,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
             // patch #2 with the now-stale ifMatch -> 412 (optimistic concurrency conflict)
             try {
-                server.dataSync.patchUser(
+                server.dataSync.updateUser(
                     userId = userId,
                     operations = listOf(
                         PNJsonPatchOperation(op = "replace", path = "/status", value = "archived"),
@@ -305,7 +305,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
     @Test
     fun patchEmptyOperationsThrows() {
         try {
-            server.dataSync.patchUser(userId, emptyList()).sync()
+            server.dataSync.updateUser(userId, emptyList()).sync()
             fail("Expected validation to reject an empty patch operations list")
         } catch (e: PubNubException) {
             assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)
