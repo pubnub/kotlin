@@ -2,6 +2,12 @@ package com.pubnub.internal.java.datasync;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.java.datasync.DataSync;
+import com.pubnub.api.java.endpoints.datasync.channel.CreateChannel;
+import com.pubnub.api.java.endpoints.datasync.channel.GetChannel;
+import com.pubnub.api.java.endpoints.datasync.channel.GetChannels;
+import com.pubnub.api.java.endpoints.datasync.channel.RemoveChannel;
+import com.pubnub.api.java.endpoints.datasync.channel.SetChannel;
+import com.pubnub.api.java.endpoints.datasync.channel.UpdateChannel;
 import com.pubnub.api.java.endpoints.datasync.entity.CreateEntity;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntities;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntity;
@@ -15,6 +21,12 @@ import com.pubnub.api.java.endpoints.datasync.user.UpdateUser;
 import com.pubnub.api.java.endpoints.datasync.user.RemoveUser;
 import com.pubnub.api.java.endpoints.datasync.user.SetUser;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
+import com.pubnub.internal.java.endpoints.datasync.channel.CreateChannelImpl;
+import com.pubnub.internal.java.endpoints.datasync.channel.GetChannelImpl;
+import com.pubnub.internal.java.endpoints.datasync.channel.GetChannelsImpl;
+import com.pubnub.internal.java.endpoints.datasync.channel.RemoveChannelImpl;
+import com.pubnub.internal.java.endpoints.datasync.channel.SetChannelImpl;
+import com.pubnub.internal.java.endpoints.datasync.channel.UpdateChannelImpl;
 import com.pubnub.internal.java.endpoints.datasync.entity.CreateEntityImpl;
 import com.pubnub.internal.java.endpoints.datasync.entity.GetEntitiesImpl;
 import com.pubnub.internal.java.endpoints.datasync.entity.GetEntityImpl;
@@ -95,5 +107,35 @@ public class DataSyncImpl implements DataSync {
     @Override
     public SetUser setUser(String userId, int entityClassVersion) {
         return new SetUserImpl(userId, entityClassVersion, pubnubInstance);
+    }
+
+    @Override
+    public GetChannel getChannel(String channelId) {
+        return new GetChannelImpl(channelId, pubnubInstance);
+    }
+
+    @Override
+    public CreateChannel createChannel(int classVersion) {
+        return new CreateChannelImpl(classVersion, pubnubInstance);
+    }
+
+    @Override
+    public RemoveChannel removeChannel(String channelId) {
+        return new RemoveChannelImpl(channelId, pubnubInstance);
+    }
+
+    @Override
+    public GetChannels getChannels() {
+        return new GetChannelsImpl(pubnubInstance);
+    }
+
+    @Override
+    public UpdateChannel updateChannel(String channelId, List<PNJsonPatchOperation> operations) {
+        return new UpdateChannelImpl(channelId, operations, pubnubInstance);
+    }
+
+    @Override
+    public SetChannel setChannel(String channelId, int classVersion) {
+        return new SetChannelImpl(channelId, classVersion, pubnubInstance);
     }
 }

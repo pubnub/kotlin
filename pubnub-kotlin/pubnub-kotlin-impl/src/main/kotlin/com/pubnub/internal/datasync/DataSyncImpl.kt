@@ -1,6 +1,12 @@
 package com.pubnub.internal.datasync
 
 import com.pubnub.api.datasync.DataSync
+import com.pubnub.api.endpoints.datasync.channel.CreateChannel
+import com.pubnub.api.endpoints.datasync.channel.GetChannel
+import com.pubnub.api.endpoints.datasync.channel.GetChannels
+import com.pubnub.api.endpoints.datasync.channel.RemoveChannel
+import com.pubnub.api.endpoints.datasync.channel.SetChannel
+import com.pubnub.api.endpoints.datasync.channel.UpdateChannel
 import com.pubnub.api.endpoints.datasync.entity.CreateEntity
 import com.pubnub.api.endpoints.datasync.entity.GetEntities
 import com.pubnub.api.endpoints.datasync.entity.GetEntity
@@ -13,8 +19,16 @@ import com.pubnub.api.endpoints.datasync.user.GetUsers
 import com.pubnub.api.endpoints.datasync.user.RemoveUser
 import com.pubnub.api.endpoints.datasync.user.SetUser
 import com.pubnub.api.endpoints.datasync.user.UpdateUser
+import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
+import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.endpoints.datasync.channel.CreateChannelEndpoint
+import com.pubnub.internal.endpoints.datasync.channel.GetChannelEndpoint
+import com.pubnub.internal.endpoints.datasync.channel.GetChannelsEndpoint
+import com.pubnub.internal.endpoints.datasync.channel.RemoveChannelEndpoint
+import com.pubnub.internal.endpoints.datasync.channel.SetChannelEndpoint
+import com.pubnub.internal.endpoints.datasync.channel.UpdateChannelEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.CreateEntityEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.GetEntitiesEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.GetEntityEndpoint
@@ -169,6 +183,81 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
             pubnub = pubnub,
             userId = userId,
             entityClassVersion = entityClassVersion,
+            status = status,
+            payload = payload,
+            ifMatch = ifMatch,
+        )
+    }
+
+    override fun getChannel(channelId: String): GetChannel {
+        return GetChannelEndpoint(pubnub, channelId)
+    }
+
+    override fun createChannel(
+        classVersion: Int,
+        channelId: String?,
+        className: String?,
+        classLevel: PNDataSyncClassLevel?,
+        status: String?,
+        payload: Any?,
+    ): CreateChannel {
+        return CreateChannelEndpoint(
+            pubnub = pubnub,
+            className = className,
+            classVersion = classVersion,
+            classLevel = classLevel,
+            channelId = channelId,
+            status = status,
+            payload = payload,
+        )
+    }
+
+    override fun removeChannel(channelId: String, ifMatch: String?): RemoveChannel {
+        return RemoveChannelEndpoint(pubnub, channelId, ifMatch)
+    }
+
+    override fun getChannels(
+        className: String?,
+        classVersion: Int?,
+        classLevel: PNDataSyncClassLevel?,
+        filter: String?,
+        filterAdvanced: String?,
+        sort: List<PNDataSyncSortField>,
+        limit: Int?,
+        cursor: String?,
+    ): GetChannels {
+        return GetChannelsEndpoint(
+            pubnub = pubnub,
+            className = className,
+            classVersion = classVersion,
+            classLevel = classLevel,
+            filter = filter,
+            filterAdvanced = filterAdvanced,
+            sort = sort,
+            limit = limit,
+            cursor = cursor,
+        )
+    }
+
+    override fun updateChannel(
+        channelId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String?,
+    ): UpdateChannel {
+        return UpdateChannelEndpoint(pubnub, channelId, operations, ifMatch)
+    }
+
+    override fun setChannel(
+        channelId: String,
+        classVersion: Int,
+        status: String?,
+        payload: Any?,
+        ifMatch: String?,
+    ): SetChannel {
+        return SetChannelEndpoint(
+            pubnub = pubnub,
+            channelId = channelId,
+            classVersion = classVersion,
             status = status,
             payload = payload,
             ifMatch = ifMatch,

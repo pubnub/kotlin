@@ -19,12 +19,17 @@ public interface GetEntities extends Endpoint<PNGetEntitiesResult> {
     GetEntities entityClassLevel(@Nullable String entityClassLevel);
 
     /**
-     * Optional filter expression.
+     * Optional filter expression. Strongly consistent (always reflects the latest writes) but limited in the
+     * number of conditionals per request — currently at most 10, which support may raise via keyset
+     * configuration. A {@code filter} with more conditionals than allowed is rejected with an error; use
+     * {@link #filterAdvanced(String)} for larger or more complex queries.
      */
     GetEntities filter(@Nullable String filter);
 
     /**
-     * Optional advanced filter expression.
+     * Optional advanced filter expression. Same syntax as {@link #filter(String)} but without the
+     * conditional-count limit, at the cost of consistency: {@code filterAdvanced} is eventually consistent
+     * (recent writes may not yet be reflected), whereas {@link #filter(String)} is strongly consistent.
      */
     GetEntities filterAdvanced(@Nullable String filterAdvanced);
 

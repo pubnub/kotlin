@@ -1,5 +1,11 @@
 package com.pubnub.api.datasync
 
+import com.pubnub.api.endpoints.datasync.channel.CreateChannel
+import com.pubnub.api.endpoints.datasync.channel.GetChannel
+import com.pubnub.api.endpoints.datasync.channel.GetChannels
+import com.pubnub.api.endpoints.datasync.channel.RemoveChannel
+import com.pubnub.api.endpoints.datasync.channel.SetChannel
+import com.pubnub.api.endpoints.datasync.channel.UpdateChannel
 import com.pubnub.api.endpoints.datasync.entity.CreateEntity
 import com.pubnub.api.endpoints.datasync.entity.GetEntities
 import com.pubnub.api.endpoints.datasync.entity.GetEntity
@@ -12,6 +18,8 @@ import com.pubnub.api.endpoints.datasync.user.GetUsers
 import com.pubnub.api.endpoints.datasync.user.RemoveUser
 import com.pubnub.api.endpoints.datasync.user.SetUser
 import com.pubnub.api.endpoints.datasync.user.UpdateUser
+import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
+import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 
 internal class DataSyncImpl : DataSync {
@@ -90,6 +98,45 @@ internal class DataSyncImpl : DataSync {
         payload: Any?,
         ifMatch: String?,
     ): SetUser = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun getChannel(channelId: String): GetChannel = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun createChannel(
+        classVersion: Int,
+        channelId: String?,
+        className: String?,
+        classLevel: PNDataSyncClassLevel?,
+        status: String?,
+        payload: Any?,
+    ): CreateChannel = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun removeChannel(channelId: String, ifMatch: String?): RemoveChannel =
+        throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun getChannels(
+        className: String?,
+        classVersion: Int?,
+        classLevel: PNDataSyncClassLevel?,
+        filter: String?,
+        filterAdvanced: String?,
+        sort: List<PNDataSyncSortField>,
+        limit: Int?,
+        cursor: String?,
+    ): GetChannels = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun updateChannel(
+        channelId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String?,
+    ): UpdateChannel = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun setChannel(
+        channelId: String,
+        classVersion: Int,
+        status: String?,
+        payload: Any?,
+        ifMatch: String?,
+    ): SetChannel = throw NotImplementedError(NOT_IMPLEMENTED)
 }
 
 private const val NOT_IMPLEMENTED = "DataSync is not implemented on the Apple target"
