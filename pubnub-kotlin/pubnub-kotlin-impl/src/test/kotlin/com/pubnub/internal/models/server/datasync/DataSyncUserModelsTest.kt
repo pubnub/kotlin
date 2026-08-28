@@ -1,7 +1,7 @@
 package com.pubnub.internal.models.server.datasync
 
 import com.pubnub.api.logging.LogConfig
-import com.pubnub.api.models.consumer.datasync.user.PNUser
+import com.pubnub.api.models.consumer.datasync.user.DataSyncUser
 import com.pubnub.internal.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -21,6 +21,7 @@ internal class DataSyncUserModelsTest {
         assertEquals("""{"data":{"entityClassVersion":1}}""", json)
         assertFalse(json.contains("\"entityClass\""))
         assertFalse(json.contains("\"id\""))
+        assertFalse(json.contains("\"entityClassLevel\""))
     }
 
     @Test
@@ -37,6 +38,24 @@ internal class DataSyncUserModelsTest {
     }
 
     @Test
+    fun createUserRequest_emits_entityClassLevel_when_set() {
+        // Regression guard: the create-only classLevel must reach the wire under the `entityClassLevel`
+        // body field. Without the field on CreateUserRequestData this assertion fails.
+        val json = mapper.toJson(
+            CreateUserRequest(
+                CreateUserRequestData(
+                    id = "u1",
+                    entityClass = "User.Admin",
+                    entityClassVersion = 2,
+                    entityClassLevel = "SubKey",
+                ),
+            ),
+        )
+
+        assertTrue(json.contains("\"entityClassLevel\":\"SubKey\""))
+    }
+
+    @Test
     fun usersEnvelope_maps_snake_case_meta_cursor() {
         val json = """
             {
@@ -46,9 +65,9 @@ internal class DataSyncUserModelsTest {
             }
         """.trimIndent()
 
-        val envelope: EntitiesEnvelope<PNUser> = mapper.fromJson(
+        val envelope: EntitiesEnvelope<DataSyncUser> = mapper.fromJson(
             json,
-            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<PNUser>>() {}.type,
+            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<DataSyncUser>>() {}.type,
         )
 
         assertEquals("TjQw", envelope.meta?.nextCursor)
@@ -60,11 +79,38 @@ internal class DataSyncUserModelsTest {
     fun usersMeta_defaults_when_missing() {
         val json = """{ "status": 200, "data": [] }"""
 
-        val envelope: EntitiesEnvelope<PNUser> = mapper.fromJson(
+        val envelope: EntitiesEnvelope<DataSyncUser> = mapper.fromJson(
             json,
-            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<PNUser>>() {}.type,
+            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<DataSyncUser>>() {}.type,
         )
 
         assertNull(envelope.meta)
+    }
+
+    @Test
+    fun dataSyncUser_deserializes_entityClass_wire_keys_into_class_fields() {
+        // Regression guard for the @field:SerializedName mappings: the server serializes the
+        // class-identity fields under the `entityClass*` wire keys, which must land on the public
+        // `class*` properties.
+        val json = """
+            {
+              "id": "u1",
+              "entityClass": "User",
+              "entityClassVersion": 3,
+              "entityClassLevel": "Global",
+              "createdAt": "2021-01-01T00:00:00.000Z",
+              "updatedAt": "2021-01-02T00:00:00.000Z",
+              "eTag": "etag123",
+              "payload": { "name": "alice" }
+            }
+        """.trimIndent()
+
+        val user: DataSyncUser = mapper.fromJson(json, DataSyncUser::class.java)
+
+        assertEquals("u1", user.id)
+        assertEquals("User", user.className)
+        assertEquals(3, user.classVersion)
+        assertEquals("Global", user.classLevel)
+        assertEquals("alice", user.payload?.get("name"))
     }
 }

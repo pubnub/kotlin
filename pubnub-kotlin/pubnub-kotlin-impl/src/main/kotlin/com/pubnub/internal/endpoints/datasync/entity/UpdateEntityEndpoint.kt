@@ -6,9 +6,9 @@ import com.pubnub.api.endpoints.datasync.entity.UpdateEntity
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.entity.PNEntity
+import com.pubnub.api.models.consumer.datasync.entity.DataSyncEntity
+import com.pubnub.api.models.consumer.datasync.entity.DataSyncUpdateEntityResult
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
-import com.pubnub.api.models.consumer.datasync.entity.PNUpdateEntityResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -27,7 +27,7 @@ class UpdateEntityEndpoint internal constructor(
     private val entityId: String,
     private val operations: List<PNJsonPatchOperation>,
     private val ifMatch: String?,
-) : EndpointCore<EntityEnvelope<PNEntity>, PNUpdateEntityResult>(pubnub), UpdateEntity {
+) : EndpointCore<EntityEnvelope<DataSyncEntity>, DataSyncUpdateEntityResult>(pubnub), UpdateEntity {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -40,7 +40,7 @@ class UpdateEntityEndpoint internal constructor(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNEntity>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<DataSyncEntity>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -63,9 +63,9 @@ class UpdateEntityEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNEntity>>): PNUpdateEntityResult {
+    override fun createResponse(input: Response<EntityEnvelope<DataSyncEntity>>): DataSyncUpdateEntityResult {
         return input.body()!!.let {
-            PNUpdateEntityResult(
+            DataSyncUpdateEntityResult(
                 status = it.status,
                 data = it.data,
             )

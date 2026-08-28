@@ -5,8 +5,8 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.datasync.user.SetUser;
-import com.pubnub.api.java.models.consumer.datasync.user.PNSetUserResult;
-import com.pubnub.api.java.models.consumer.datasync.user.PNUserConverter;
+import com.pubnub.api.java.models.consumer.datasync.user.DataSyncSetUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.DataSyncUserConverter;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,11 +17,11 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class SetUserImpl
-        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.user.PNSetUserResult, PNSetUserResult>
+        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.user.DataSyncSetUserResult, DataSyncSetUserResult>
         implements SetUser {
 
     private final String userId;
-    private final int entityClassVersion;
+    private final int classVersion;
 
     @Setter
     @Nullable
@@ -35,30 +35,30 @@ public class SetUserImpl
     @Nullable
     private String ifMatch;
 
-    public SetUserImpl(String userId, int entityClassVersion, final PubNub pubnubInstance) {
+    public SetUserImpl(String userId, int classVersion, final PubNub pubnubInstance) {
         super(pubnubInstance);
         this.userId = userId;
-        this.entityClassVersion = entityClassVersion;
+        this.classVersion = classVersion;
     }
 
     @NotNull
     @Override
-    protected ExtendedRemoteAction<PNSetUserResult> mapResult(
-            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.user.PNSetUserResult> action) {
+    protected ExtendedRemoteAction<DataSyncSetUserResult> mapResult(
+            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.user.DataSyncSetUserResult> action) {
         return new MappingRemoteAction<>(action, result ->
-                new PNSetUserResult(
+                new DataSyncSetUserResult(
                         result.getStatus(),
-                        PNUserConverter.from(result.getData())
+                        DataSyncUserConverter.from(result.getData())
                 )
         );
     }
 
     @Override
     @NotNull
-    protected Endpoint<com.pubnub.api.models.consumer.datasync.user.PNSetUserResult> createRemoteAction() {
+    protected Endpoint<com.pubnub.api.models.consumer.datasync.user.DataSyncSetUserResult> createRemoteAction() {
         return pubnub.getDataSync().setUser(
                 userId,
-                entityClassVersion,
+                classVersion,
                 status,
                 payload,
                 ifMatch

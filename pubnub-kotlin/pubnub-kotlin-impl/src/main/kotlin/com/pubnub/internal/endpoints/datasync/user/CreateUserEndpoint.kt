@@ -4,8 +4,9 @@ import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.user.PNCreateUserResult
-import com.pubnub.api.models.consumer.datasync.user.PNUser
+import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
+import com.pubnub.api.models.consumer.datasync.user.DataSyncCreateUserResult
+import com.pubnub.api.models.consumer.datasync.user.DataSyncUser
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -22,21 +23,23 @@ import retrofit2.Response
  */
 class CreateUserEndpoint internal constructor(
     pubnub: PubNubImpl,
-    private val entityClass: String?,
-    private val entityClassVersion: Int,
+    private val className: String?,
+    private val classVersion: Int,
+    private val classLevel: PNDataSyncClassLevel?,
     private val userId: String?,
     private val status: String?,
     private val payload: Any?,
-) : EndpointCore<EntityEnvelope<PNUser>, PNCreateUserResult>(pubnub), CreateUser {
+) : EndpointCore<EntityEnvelope<DataSyncUser>, DataSyncCreateUserResult>(pubnub), CreateUser {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUser>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<DataSyncUser>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     arguments = mapOf(
-                        "entityClass" to (entityClass ?: ""),
-                        "entityClassVersion" to entityClassVersion,
+                        "className" to (className ?: ""),
+                        "classVersion" to classVersion,
+                        "classLevel" to (classLevel?.value ?: ""),
                         "userId" to (userId ?: ""),
                         "status" to (status ?: ""),
                         "payload" to (payload ?: "")
@@ -53,8 +56,9 @@ class CreateUserEndpoint internal constructor(
                     data =
                         CreateUserRequestData(
                             id = userId,
-                            entityClass = entityClass,
-                            entityClassVersion = entityClassVersion,
+                            entityClass = className,
+                            entityClassVersion = classVersion,
+                            entityClassLevel = classLevel?.value,
                             status = status,
                             payload = payload,
                         ),
@@ -63,9 +67,9 @@ class CreateUserEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNUser>>): PNCreateUserResult {
+    override fun createResponse(input: Response<EntityEnvelope<DataSyncUser>>): DataSyncCreateUserResult {
         return input.body()!!.let {
-            PNCreateUserResult(
+            DataSyncCreateUserResult(
                 status = it.status,
                 data = it.data,
             )

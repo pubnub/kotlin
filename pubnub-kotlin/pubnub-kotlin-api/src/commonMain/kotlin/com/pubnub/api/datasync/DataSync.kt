@@ -36,15 +36,18 @@ interface DataSync {
     /**
      * Create a DataSync entity.
      *
-     * @param entityClass Entity class identifier.
-     * @param entityClassVersion Version of the entity class.
+     * @param className Entity class identifier.
+     * @param classVersion Version of the entity class.
+     * @param classLevel Optional level at which the entity class is defined. Disambiguates a class defined
+     *   at more than one level. Create-only — not accepted by [setEntity].
      * @param entityId Optional entity identifier. When `null` the server generates one.
      * @param status Optional entity status.
      * @param payload Optional arbitrary JSON object payload.
      */
     fun createEntity(
-        entityClass: String,
-        entityClassVersion: Int,
+        className: String,
+        classVersion: Int,
+        classLevel: PNDataSyncClassLevel? = null,
         entityId: String? = null,
         status: String? = null,
         payload: Any? = null,
@@ -61,28 +64,33 @@ interface DataSync {
     /**
      * List DataSync entities of a class.
      *
-     * @param entityClass Entity class identifier (required).
-     * @param entityClassVersion Optional entity class version. When `null` the server uses the latest.
-     * @param entityClassLevel Optional level at which the entity class is defined (e.g. `SubKey` / `Global`).
-     * @param filter Optional filter expression. Strongly consistent (always reflects the latest writes) but
-     *   limited in the number of conditionals per request — currently at most 10, which support may raise via
-     *   keyset configuration. A `filter` with more conditionals than allowed is rejected with an error; use
-     *   [filterAdvanced] for larger or more complex queries.
-     * @param filterAdvanced Optional advanced filter expression. Same syntax as [filter] but without the
-     *   conditional-count limit, at the cost of consistency: `filterAdvanced` is eventually consistent (recent
-     *   writes may not yet be reflected), whereas [filter] is strongly consistent.
-     * @param sort Optional comma-separated sort fields, each optionally suffixed with a direction
-     *   (`:asc` or `:desc`, default `:asc`), e.g. `username:desc,email:asc`.
+     * @param className Entity class identifier (required).
+     * @param classVersion Optional entity class version. When `null` the server uses the latest.
+     * @param classLevel Optional level at which the entity class is defined (e.g. `SubKey` / `Global`).
+     * @param filter Optional filter expression. Filtering is only allowed on the entity class's properties
+     *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
+     *   other property returns a server error. The filterable/sortable set has no fixed default — it is
+     *   whatever the (required) [className] declares. `filter` is strongly consistent (it always reflects
+     *   the latest writes) but limited in the number of conditionals per request — currently at most 10,
+     *   which support may raise via keyset configuration. A `filter` with more conditionals than allowed is
+     *   rejected with an error; use [filterAdvanced] for larger or more complex queries.
+     * @param filterAdvanced Optional advanced filter expression. Uses the same syntax and filterable-property
+     *   rules as [filter] but is not subject to the conditional-count limit, so use it for larger or more
+     *   complex queries. The trade-off is consistency: `filterAdvanced` is eventually consistent (recent writes
+     *   may not yet be reflected), whereas [filter] is strongly consistent.
+     * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
+     *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
+     *   rule as [filter] — the properties the (required) [className] marks as filterable.
      * @param limit Optional page size (1–100, server default 20).
-     * @param cursor Optional opaque cursor for pagination (from a previous result's `next`).
+     * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
     fun getEntities(
-        entityClass: String,
-        entityClassVersion: Int? = null,
-        entityClassLevel: String? = null,
+        className: String,
+        classVersion: Int? = null,
+        classLevel: PNDataSyncClassLevel? = null,
         filter: String? = null,
         filterAdvanced: String? = null,
-        sort: String? = null,
+        sort: List<PNDataSyncSortField> = emptyList(),
         limit: Int? = null,
         cursor: String? = null,
     ): GetEntities
@@ -101,17 +109,21 @@ interface DataSync {
     ): UpdateEntity
 
     /**
-     * Fully replace a DataSync entity. `entityClass` is immutable and cannot be updated.
+     * Replaces an entity in full.
      *
-     * @param entityId Identifier of the entity to update.
-     * @param entityClassVersion Version of the entity class.
-     * @param status Optional entity status.
-     * @param payload Optional arbitrary JSON object payload.
-     * @param ifMatch Optional eTag for optimistic concurrency (`If-Match` header).
+     * Every mutable field is overwritten. Omitting [status] or [payload] clears the stored value rather than
+     * preserving it, so a read-modify-write must send back every field it wants to keep. Use [updateEntity] to
+     * change part of an entity.
+     *
+     * @param entityId Identifier of the entity to replace.
+     * @param classVersion Version of the class the payload conforms to.
+     * @param status Optional status to store with the entity.
+     * @param payload Optional replacement entity fields (arbitrary JSON object).
+     * @param ifMatch Optional eTag last read, to fail the request when the entity changed since (`If-Match` header).
      */
     fun setEntity(
         entityId: String,
-        entityClassVersion: Int,
+        classVersion: Int,
         status: String? = null,
         payload: Any? = null,
         ifMatch: String? = null,
@@ -129,17 +141,21 @@ interface DataSync {
     /**
      * Create a DataSync user.
      *
-     * @param entityClassVersion Version of the entity class.
+     * @param classVersion Version of the entity class.
      * @param userId Optional user identifier. When `null` the server generates one.
-     * @param entityClass Optional entity class identifier. When `null` the server defaults it to `User`.
+     * @param className Optional entity class identifier. When `null` the server defaults it to `User`.
      *   When set it must be a `User` subclass.
+     * @param classLevel Optional level at which the entity class is defined. Disambiguates a class defined
+     *   at more than one level. Create-only — not accepted by [setUser]. The built-in `User` class is
+     *   defined at the `GLOBAL` level.
      * @param status Optional user status.
      * @param payload Optional arbitrary JSON object payload.
      */
     fun createUser(
-        entityClassVersion: Int,
+        classVersion: Int,
         userId: String? = null,
-        entityClass: String? = null,
+        className: String? = null,
+        classLevel: PNDataSyncClassLevel? = null,
         status: String? = null,
         payload: Any? = null,
     ): CreateUser
@@ -155,29 +171,36 @@ interface DataSync {
     /**
      * List DataSync users.
      *
-     * @param entityClass Optional entity class identifier. When `null` the whole User family is returned;
+     * @param className Optional entity class identifier. When `null` the whole User family is returned;
      *   when set it narrows the results to that `User` subclass.
-     * @param entityClassVersion Optional entity class version. When `null` the server uses the latest.
-     * @param entityClassLevel Optional level at which the entity class is defined (e.g. `SubKey` / `Global`).
-     * @param filter Optional filter expression. Strongly consistent (always reflects the latest writes) but
+     * @param classVersion Optional entity class version. When `null` the server uses the latest.
+     * @param classLevel Optional level at which the entity class is defined. The built-in `User` class is
+     *   defined at the `GLOBAL` level.
+     * @param filter Optional filter expression. Filtering is only allowed on the entity class's properties
+     *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
+     *   other property returns a server error. The built-in `User` class exposes `name` as its filterable
+     *   property (note `username` and `email` are properties of *custom* `User` subclasses, not of the
+     *   built-in `User` class). `filter` is strongly consistent (it always reflects the latest writes) but
      *   limited in the number of conditionals per request — currently at most 10, which support may raise via
      *   keyset configuration. A `filter` with more conditionals than allowed is rejected with an error; use
      *   [filterAdvanced] for larger or more complex queries.
-     * @param filterAdvanced Optional advanced filter expression. Same syntax as [filter] but without the
-     *   conditional-count limit, at the cost of consistency: `filterAdvanced` is eventually consistent (recent
-     *   writes may not yet be reflected), whereas [filter] is strongly consistent.
-     * @param sort Optional comma-separated sort fields, each optionally suffixed with a direction
-     *   (`:asc` or `:desc`, default `:asc`), e.g. `username:desc,email:asc`.
+     * @param filterAdvanced Optional advanced filter expression. Uses the same syntax and filterable-property
+     *   rules as [filter] but is not subject to the conditional-count limit, so use it for larger or more
+     *   complex queries. The trade-off is consistency: `filterAdvanced` is eventually consistent (recent writes
+     *   may not yet be reflected), whereas [filter] is strongly consistent.
+     * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
+     *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
+     *   rule as [filter] (built-in `User` class: `name`).
      * @param limit Optional page size (1–100, server default 20).
-     * @param cursor Optional opaque cursor for pagination (from a previous result's `next`).
+     * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
     fun getUsers(
-        entityClass: String? = null,
-        entityClassVersion: Int? = null,
-        entityClassLevel: String? = null,
+        className: String? = null,
+        classVersion: Int? = null,
+        classLevel: PNDataSyncClassLevel? = null,
         filter: String? = null,
         filterAdvanced: String? = null,
-        sort: String? = null,
+        sort: List<PNDataSyncSortField> = emptyList(),
         limit: Int? = null,
         cursor: String? = null,
     ): GetUsers
@@ -196,17 +219,21 @@ interface DataSync {
     ): UpdateUser
 
     /**
-     * Fully replace a DataSync user. `entityClass` is immutable and cannot be updated.
+     * Replaces a user in full.
      *
-     * @param userId Identifier of the user to update.
-     * @param entityClassVersion Version of the entity class.
-     * @param status Optional user status.
-     * @param payload Optional arbitrary JSON object payload.
-     * @param ifMatch Optional eTag for optimistic concurrency (`If-Match` header).
+     * Every mutable field is overwritten. Omitting [status] or [payload] clears the stored value rather than
+     * preserving it, so a read-modify-write must send back every field it wants to keep. Use [updateUser] to
+     * change part of a user.
+     *
+     * @param userId Identifier of the user to replace.
+     * @param classVersion Version of the class the payload conforms to.
+     * @param status Optional status to store with the user.
+     * @param payload Optional replacement user fields (arbitrary JSON object).
+     * @param ifMatch Optional eTag last read, to fail the request when the user changed since (`If-Match` header).
      */
     fun setUser(
         userId: String,
-        entityClassVersion: Int,
+        classVersion: Int,
         status: String? = null,
         payload: Any? = null,
         ifMatch: String? = null,
@@ -303,13 +330,17 @@ interface DataSync {
     ): UpdateChannel
 
     /**
-     * Fully replace a DataSync channel. The entity class is immutable and cannot be updated.
+     * Replaces a channel in full.
      *
-     * @param channelId Identifier of the channel to update.
-     * @param classVersion Version of the entity class.
-     * @param status Optional channel status.
-     * @param payload Optional arbitrary JSON object payload.
-     * @param ifMatch Optional eTag for optimistic concurrency (`If-Match` header).
+     * Every mutable field is overwritten. Omitting [status] or [payload] clears the stored value rather than
+     * preserving it, so a read-modify-write must send back every field it wants to keep. Use [updateChannel] to
+     * change part of a channel.
+     *
+     * @param channelId Identifier of the channel to replace.
+     * @param classVersion Version of the class the payload conforms to.
+     * @param status Optional status to store with the channel.
+     * @param payload Optional replacement channel fields (arbitrary JSON object).
+     * @param ifMatch Optional eTag last read, to fail the request when the channel changed since (`If-Match` header).
      */
     fun setChannel(
         channelId: String,

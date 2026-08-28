@@ -1,7 +1,7 @@
 package com.pubnub.internal.models.server.datasync
 
 import com.pubnub.api.logging.LogConfig
-import com.pubnub.api.models.consumer.datasync.entity.PNEntity
+import com.pubnub.api.models.consumer.datasync.entity.DataSyncEntity
 import com.pubnub.internal.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -22,9 +22,9 @@ internal class DataSyncEntityModelsTest {
             }
         """.trimIndent()
 
-        val envelope: EntitiesEnvelope<PNEntity> = mapper.fromJson(
+        val envelope: EntitiesEnvelope<DataSyncEntity> = mapper.fromJson(
             json,
-            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<PNEntity>>() {}.type,
+            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<DataSyncEntity>>() {}.type,
         )
 
         assertEquals("TjQw", envelope.meta?.nextCursor)
@@ -36,9 +36,9 @@ internal class DataSyncEntityModelsTest {
     fun entitiesMeta_defaults_when_missing() {
         val json = """{ "status": 200, "data": [] }"""
 
-        val envelope: EntitiesEnvelope<PNEntity> = mapper.fromJson(
+        val envelope: EntitiesEnvelope<DataSyncEntity> = mapper.fromJson(
             json,
-            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<PNEntity>>() {}.type,
+            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<DataSyncEntity>>() {}.type,
         )
 
         assertNull(envelope.meta)
@@ -73,5 +73,67 @@ internal class DataSyncEntityModelsTest {
         val json = mapper.toJson(SetEntityRequest(SetEntityRequestData(entityClassVersion = 2)))
 
         assertEquals("""{"data":{"entityClassVersion":2}}""", json)
+    }
+
+    @Test
+    fun createEntityRequest_drops_null_optionals() {
+        val json = mapper.toJson(
+            CreateEntityRequest(CreateEntityRequestData(entityClass = "TestUser", entityClassVersion = 1)),
+        )
+
+        assertEquals("""{"data":{"entityClass":"TestUser","entityClassVersion":1}}""", json)
+        assertFalse(json.contains("\"id\""))
+        assertFalse(json.contains("\"entityClassLevel\""))
+    }
+
+    @Test
+    fun createEntityRequest_emits_entityClassLevel_when_set() {
+        // Regression guard: the create-only classLevel must reach the wire under the `entityClassLevel`
+        // body field. Without the field on CreateEntityRequestData this assertion fails.
+        val json = mapper.toJson(
+            CreateEntityRequest(
+                CreateEntityRequestData(
+                    id = "e1",
+                    entityClass = "TestUser",
+                    entityClassVersion = 2,
+                    entityClassLevel = "SubKey",
+                ),
+            ),
+        )
+
+        assertTrue(json.contains("\"id\":\"e1\""))
+        assertTrue(json.contains("\"entityClass\":\"TestUser\""))
+        assertTrue(json.contains("\"entityClassVersion\":2"))
+        assertTrue(json.contains("\"entityClassLevel\":\"SubKey\""))
+    }
+
+    @Test
+    fun dataSyncEntity_deserializes_entityClass_wire_keys_into_class_fields() {
+        // Regression guard for the @field:SerializedName mappings: the server serializes the
+        // class-identity fields under the `entityClass*` wire keys, which must land on the public
+        // `class*` properties.
+        val json = """
+            {
+              "id": "e1",
+              "entityClass": "TestUser",
+              "entityClassVersion": 3,
+              "entityClassLevel": "SubKey",
+              "createdAt": "2021-01-01T00:00:00.000Z",
+              "updatedAt": "2021-01-02T00:00:00.000Z",
+              "eTag": "etag123",
+              "status": "active",
+              "expiresAt": "2022-01-01T00:00:00.000Z",
+              "payload": { "name": "alice" }
+            }
+        """.trimIndent()
+
+        val entity: DataSyncEntity = mapper.fromJson(json, DataSyncEntity::class.java)
+
+        assertEquals("e1", entity.id)
+        assertEquals("TestUser", entity.className)
+        assertEquals(3, entity.classVersion)
+        assertEquals("SubKey", entity.classLevel)
+        assertEquals("etag123", entity.eTag)
+        assertEquals("alice", entity.payload?.get("name"))
     }
 }

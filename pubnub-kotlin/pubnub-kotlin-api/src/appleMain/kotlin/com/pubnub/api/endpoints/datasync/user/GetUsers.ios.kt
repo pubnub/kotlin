@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints.datasync.user
 
-import com.pubnub.api.models.consumer.datasync.user.PNGetUsersResult
+import com.pubnub.api.models.consumer.datasync.user.DataSyncGetUsersResult
 import com.pubnub.kmp.PNFuture
 
 /**
  * @see [com.pubnub.api.datasync.DataSync.getUsers]
  */
-actual interface GetUsers : PNFuture<PNGetUsersResult>
+actual interface GetUsers : PNFuture<DataSyncGetUsersResult>

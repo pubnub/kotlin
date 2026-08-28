@@ -6,8 +6,8 @@ import com.pubnub.api.endpoints.datasync.user.SetUser
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.user.PNSetUserResult
-import com.pubnub.api.models.consumer.datasync.user.PNUser
+import com.pubnub.api.models.consumer.datasync.user.DataSyncSetUserResult
+import com.pubnub.api.models.consumer.datasync.user.DataSyncUser
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -25,11 +25,11 @@ import retrofit2.Response
 class SetUserEndpoint internal constructor(
     pubnub: PubNubImpl,
     private val userId: String,
-    private val entityClassVersion: Int,
+    private val classVersion: Int,
     private val status: String?,
     private val payload: Any?,
     private val ifMatch: String?,
-) : EndpointCore<EntityEnvelope<PNUser>, PNSetUserResult>(pubnub), SetUser {
+) : EndpointCore<EntityEnvelope<DataSyncUser>, DataSyncSetUserResult>(pubnub), SetUser {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -39,13 +39,13 @@ class SetUserEndpoint internal constructor(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUser>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<DataSyncUser>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     arguments = mapOf(
                         "userId" to userId,
-                        "entityClassVersion" to entityClassVersion,
+                        "classVersion" to classVersion,
                         "status" to (status ?: ""),
                         "payload" to (payload ?: ""),
                         "ifMatch" to (ifMatch ?: "")
@@ -62,7 +62,7 @@ class SetUserEndpoint internal constructor(
                 SetEntityRequest(
                     data =
                         SetEntityRequestData(
-                            entityClassVersion = entityClassVersion,
+                            entityClassVersion = classVersion,
                             status = status,
                             payload = payload,
                         ),
@@ -72,9 +72,9 @@ class SetUserEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNUser>>): PNSetUserResult {
+    override fun createResponse(input: Response<EntityEnvelope<DataSyncUser>>): DataSyncSetUserResult {
         return input.body()!!.let {
-            PNSetUserResult(
+            DataSyncSetUserResult(
                 status = it.status,
                 data = it.data,
             )

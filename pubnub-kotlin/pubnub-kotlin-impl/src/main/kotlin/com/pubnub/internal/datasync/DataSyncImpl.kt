@@ -48,16 +48,18 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
     }
 
     override fun createEntity(
-        entityClass: String,
-        entityClassVersion: Int,
+        className: String,
+        classVersion: Int,
+        classLevel: PNDataSyncClassLevel?,
         entityId: String?,
         status: String?,
         payload: Any?,
     ): CreateEntity {
         return CreateEntityEndpoint(
             pubnub = pubnub,
-            entityClass = entityClass,
-            entityClassVersion = entityClassVersion,
+            className = className,
+            classVersion = classVersion,
+            classLevel = classLevel,
             entityId = entityId,
             status = status,
             payload = payload,
@@ -69,20 +71,20 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
     }
 
     override fun getEntities(
-        entityClass: String,
-        entityClassVersion: Int?,
-        entityClassLevel: String?,
+        className: String,
+        classVersion: Int?,
+        classLevel: PNDataSyncClassLevel?,
         filter: String?,
         filterAdvanced: String?,
-        sort: String?,
+        sort: List<PNDataSyncSortField>,
         limit: Int?,
         cursor: String?,
     ): GetEntities {
         return GetEntitiesEndpoint(
             pubnub = pubnub,
-            entityClass = entityClass,
-            entityClassVersion = entityClassVersion,
-            entityClassLevel = entityClassLevel,
+            className = className,
+            classVersion = classVersion,
+            classLevel = classLevel,
             filter = filter,
             filterAdvanced = filterAdvanced,
             sort = sort,
@@ -101,7 +103,7 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
 
     override fun setEntity(
         entityId: String,
-        entityClassVersion: Int,
+        classVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,
@@ -109,7 +111,7 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
         return SetEntityEndpoint(
             pubnub = pubnub,
             entityId = entityId,
-            entityClassVersion = entityClassVersion,
+            classVersion = classVersion,
             status = status,
             payload = payload,
             ifMatch = ifMatch,
@@ -121,16 +123,18 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
     }
 
     override fun createUser(
-        entityClassVersion: Int,
+        classVersion: Int,
         userId: String?,
-        entityClass: String?,
+        className: String?,
+        classLevel: PNDataSyncClassLevel?,
         status: String?,
         payload: Any?,
     ): CreateUser {
         return CreateUserEndpoint(
             pubnub = pubnub,
-            entityClass = entityClass,
-            entityClassVersion = entityClassVersion,
+            className = className,
+            classVersion = classVersion,
+            classLevel = classLevel,
             userId = userId,
             status = status,
             payload = payload,
@@ -142,20 +146,20 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
     }
 
     override fun getUsers(
-        entityClass: String?,
-        entityClassVersion: Int?,
-        entityClassLevel: String?,
+        className: String?,
+        classVersion: Int?,
+        classLevel: PNDataSyncClassLevel?,
         filter: String?,
         filterAdvanced: String?,
-        sort: String?,
+        sort: List<PNDataSyncSortField>,
         limit: Int?,
         cursor: String?,
     ): GetUsers {
         return GetUsersEndpoint(
             pubnub = pubnub,
-            entityClass = entityClass,
-            entityClassVersion = entityClassVersion,
-            entityClassLevel = entityClassLevel,
+            className = className,
+            classVersion = classVersion,
+            classLevel = classLevel,
             filter = filter,
             filterAdvanced = filterAdvanced,
             sort = sort,
@@ -174,7 +178,7 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
 
     override fun setUser(
         userId: String,
-        entityClassVersion: Int,
+        classVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,
@@ -182,7 +186,7 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
         return SetUserEndpoint(
             pubnub = pubnub,
             userId = userId,
-            entityClassVersion = entityClassVersion,
+            classVersion = classVersion,
             status = status,
             payload = payload,
             ifMatch = ifMatch,

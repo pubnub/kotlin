@@ -6,7 +6,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
-import com.pubnub.api.models.consumer.datasync.user.PNCreateUserResult
+import com.pubnub.api.models.consumer.datasync.user.DataSyncCreateUserResult
 import com.pubnub.test.CommonUtils.randomValue
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -16,7 +16,7 @@ import org.junit.Assert.fail
 import org.junit.Test
 
 class DataSyncUserIntegrationTest : BaseIntegrationTest() {
-    private val entityClassVersion = 1
+    private val classVersion = 1
     private val userId = "user-" + randomValue()
 
     data class TestUserPayload(
@@ -37,8 +37,8 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         )
         // todo add entityClass to test
         // add test with class that inherits from User
-        val createResult: PNCreateUserResult = server.dataSync.createUser(
-            entityClassVersion = entityClassVersion,
+        val createResult: DataSyncCreateUserResult = server.dataSync.createUser(
+            classVersion = classVersion,
             userId = userId,
             status = "active",
             payload = payload,
@@ -46,7 +46,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
 
         try {
             assertEquals(userId, createResult.data.id)
-            assertEquals(entityClassVersion, createResult.data.entityClassVersion)
+            assertEquals(classVersion, createResult.data.classVersion)
             assertNotNull(createResult.data.eTag)
             assertEquals(payload.username, createResult.data.payload?.get("username"))
             assertEquals(payload.email, createResult.data.payload?.get("email"))
@@ -54,7 +54,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             // create again with the same id -> 409 (create is create-only)
             try {
                 server.dataSync.createUser(
-                    entityClassVersion = entityClassVersion,
+                    classVersion = classVersion,
                     userId = userId,
                     status = "active",
                     payload = payload,
@@ -104,14 +104,14 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             custom = "value",
         )
         val createResult = client.dataSync.createUser(
-            entityClassVersion = entityClassVersion,
+            classVersion = classVersion,
             userId = userId,
             status = "active",
             payload = payload,
         ).sync()
 
         assertEquals(userId, createResult.data.id)
-        assertEquals(entityClassVersion, createResult.data.entityClassVersion)
+        assertEquals(classVersion, createResult.data.classVersion)
         assertNotNull(createResult.data.eTag)
         assertEquals(payload.username, createResult.data.payload?.get("username"))
         assertEquals(payload.email, createResult.data.payload?.get("email"))
@@ -144,7 +144,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         val newPayload = TestUserPayload(username = "Bob", email = "bob@example.com")
         val updateResult = client.dataSync.setUser(
             userId = userId,
-            entityClassVersion = entityClassVersion,
+            classVersion = classVersion,
             status = "archived",
             payload = newPayload,
         ).sync()
@@ -177,7 +177,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
     @Test
     fun createWithServerGeneratedId() {
         val createResult = server.dataSync.createUser(
-            entityClassVersion = entityClassVersion,
+            classVersion = classVersion,
             payload = mapOf("username" to "Bob"),
         ).sync()
 
@@ -209,7 +209,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             hobby = "poetry",
         )
         server.dataSync.createUser(
-            entityClassVersion = entityClassVersion,
+            classVersion = classVersion,
             userId = userId,
             status = "active",
             payload = payload,
@@ -238,7 +238,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             val newPayload = TestUserPayload(username = "Bob", email = "bob@example.com")
             val updateResult = server.dataSync.setUser(
                 userId = userId,
-                entityClassVersion = entityClassVersion,
+                classVersion = classVersion,
                 status = "archived",
                 payload = newPayload,
             ).sync()
@@ -262,7 +262,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             email = "alice@example.com",
         )
         val createResult = server.dataSync.createUser(
-            entityClassVersion = entityClassVersion,
+            classVersion = classVersion,
             userId = userId,
             status = "active",
             payload = payload,

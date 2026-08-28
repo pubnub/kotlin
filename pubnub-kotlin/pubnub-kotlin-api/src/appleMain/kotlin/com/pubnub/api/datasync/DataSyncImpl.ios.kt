@@ -26,8 +26,9 @@ internal class DataSyncImpl : DataSync {
     override fun getEntity(entityId: String): GetEntity = throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun createEntity(
-        entityClass: String,
-        entityClassVersion: Int,
+        className: String,
+        classVersion: Int,
+        classLevel: PNDataSyncClassLevel?,
         entityId: String?,
         status: String?,
         payload: Any?,
@@ -37,12 +38,12 @@ internal class DataSyncImpl : DataSync {
         throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun getEntities(
-        entityClass: String,
-        entityClassVersion: Int?,
-        entityClassLevel: String?,
+        className: String,
+        classVersion: Int?,
+        classLevel: PNDataSyncClassLevel?,
         filter: String?,
         filterAdvanced: String?,
-        sort: String?,
+        sort: List<PNDataSyncSortField>,
         limit: Int?,
         cursor: String?,
     ): GetEntities = throw NotImplementedError(NOT_IMPLEMENTED)
@@ -55,7 +56,7 @@ internal class DataSyncImpl : DataSync {
 
     override fun setEntity(
         entityId: String,
-        entityClassVersion: Int,
+        classVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,
@@ -64,9 +65,10 @@ internal class DataSyncImpl : DataSync {
     override fun getUser(userId: String): GetUser = throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun createUser(
-        entityClassVersion: Int,
+        classVersion: Int,
         userId: String?,
-        entityClass: String?,
+        className: String?,
+        classLevel: PNDataSyncClassLevel?,
         status: String?,
         payload: Any?,
     ): CreateUser = throw NotImplementedError(NOT_IMPLEMENTED)
@@ -75,12 +77,12 @@ internal class DataSyncImpl : DataSync {
         throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun getUsers(
-        entityClass: String?,
-        entityClassVersion: Int?,
-        entityClassLevel: String?,
+        className: String?,
+        classVersion: Int?,
+        classLevel: PNDataSyncClassLevel?,
         filter: String?,
         filterAdvanced: String?,
-        sort: String?,
+        sort: List<PNDataSyncSortField>,
         limit: Int?,
         cursor: String?,
     ): GetUsers = throw NotImplementedError(NOT_IMPLEMENTED)
@@ -93,7 +95,7 @@ internal class DataSyncImpl : DataSync {
 
     override fun setUser(
         userId: String,
-        entityClassVersion: Int,
+        classVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,

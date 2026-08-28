@@ -6,11 +6,11 @@ import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
-import com.pubnub.api.java.models.consumer.datasync.user.PNCreateUserResult;
-import com.pubnub.api.java.models.consumer.datasync.user.PNGetUserResult;
-import com.pubnub.api.java.models.consumer.datasync.user.PNGetUsersResult;
-import com.pubnub.api.java.models.consumer.datasync.user.PNUpdateUserResult;
-import com.pubnub.api.java.models.consumer.datasync.user.PNSetUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.DataSyncCreateUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.DataSyncGetUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.DataSyncGetUsersResult;
+import com.pubnub.api.java.models.consumer.datasync.user.DataSyncUpdateUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.DataSyncSetUserResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         payload.put("email", "alice@example.com");
 
         // create (no entityClass -> server defaults it to "User")
-        final PNCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
+        final DataSyncCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
                 .userId(userId)
                 .status("active")
                 .payload(payload)
@@ -52,7 +52,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         try {
             assertNotNull(createResult);
             assertEquals(userId, createResult.getData().getId());
-            assertEquals(entityClassVersion, createResult.getData().getEntityClassVersion());
+            assertEquals(entityClassVersion, createResult.getData().getClassVersion());
             assertNotNull(createResult.getData().getETag());
             assertEquals("Alice", createResult.getData().getPayload().get("username"));
             assertEquals("alice@example.com", createResult.getData().getPayload().get("email"));
@@ -70,7 +70,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             }
 
             // get
-            final PNGetUserResult getResult = server.dataSync().getUser(userId).sync();
+            final DataSyncGetUserResult getResult = server.dataSync().getUser(userId).sync();
             assertEquals(userId, getResult.getData().getId());
             assertEquals("active", getResult.getData().getStatus());
 
@@ -117,7 +117,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
 
         // create -> token scoped to `create` on this specific user id
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).create());
-        final PNCreateUserResult createResult = client.dataSync().createUser(entityClassVersion)
+        final DataSyncCreateUserResult createResult = client.dataSync().createUser(entityClassVersion)
                 .userId(userId)
                 .status("active")
                 .payload(payload)
@@ -125,20 +125,20 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
 
         assertNotNull(createResult);
         assertEquals(userId, createResult.getData().getId());
-        assertEquals(entityClassVersion, createResult.getData().getEntityClassVersion());
+        assertEquals(entityClassVersion, createResult.getData().getClassVersion());
         assertNotNull(createResult.getData().getETag());
         assertEquals("Alice", createResult.getData().getPayload().get("username"));
         assertEquals("alice@example.com", createResult.getData().getPayload().get("email"));
 
         // get -> token scoped to `get` on this specific user
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).get());
-        final PNGetUserResult getResult = client.dataSync().getUser(userId).sync();
+        final DataSyncGetUserResult getResult = client.dataSync().getUser(userId).sync();
         assertEquals(userId, getResult.getData().getId());
         assertEquals("active", getResult.getData().getStatus());
 
         // getAll -> token scoped to `get` on this specific user id
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).get());
-        final PNGetUsersResult getAllResult = client.dataSync().getUsers()
+        final DataSyncGetUsersResult getAllResult = client.dataSync().getUsers()
                 .limit(100)
                 .sync();
         assertNotNull(getAllResult);
@@ -149,7 +149,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         final List<PNJsonPatchOperation> operations = Collections.singletonList(
                 PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
         );
-        final PNUpdateUserResult patchResult = client.dataSync().updateUser(userId, operations)
+        final DataSyncUpdateUserResult patchResult = client.dataSync().updateUser(userId, operations)
                 .sync();
         assertEquals("inactive", patchResult.getData().getStatus());
 
@@ -158,7 +158,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         final Map<String, Object> newPayload = new HashMap<>();
         newPayload.put("username", "Bob");
         newPayload.put("email", "bob@example.com");
-        final PNSetUserResult updateResult = client.dataSync().setUser(userId, entityClassVersion)
+        final DataSyncSetUserResult updateResult = client.dataSync().setUser(userId, entityClassVersion)
                 .status("archived")
                 .payload(newPayload)
                 .sync();
@@ -193,7 +193,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         final Map<String, Object> payload = new HashMap<>();
         payload.put("username", "Bob");
 
-        final PNCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
+        final DataSyncCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
                 .payload(payload)
                 .sync();
 
@@ -221,7 +221,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
 
         try {
             // getAll -> the created user is present
-            final PNGetUsersResult getAllResult = server.dataSync().getUsers()
+            final DataSyncGetUsersResult getAllResult = server.dataSync().getUsers()
                     .limit(100)
                     .sync();
             assertNotNull(getAllResult);
@@ -231,7 +231,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> operations = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final PNUpdateUserResult patchResult = server.dataSync().updateUser(userId, operations)
+            final DataSyncUpdateUserResult patchResult = server.dataSync().updateUser(userId, operations)
                     .sync();
             assertEquals("inactive", patchResult.getData().getStatus());
 
@@ -242,7 +242,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             final Map<String, Object> newPayload = new HashMap<>();
             newPayload.put("username", "Bob");
             newPayload.put("email", "bob@example.com");
-            final PNSetUserResult updateResult = server.dataSync().setUser(userId, entityClassVersion)
+            final DataSyncSetUserResult updateResult = server.dataSync().setUser(userId, entityClassVersion)
                     .status("archived")
                     .payload(newPayload)
                     .sync();
@@ -250,7 +250,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             assertEquals("Bob", updateResult.getData().getPayload().get("username"));
 
             // get reflects the full replacement
-            final PNGetUserResult afterUpdate = server.dataSync().getUser(userId).sync();
+            final DataSyncGetUserResult afterUpdate = server.dataSync().getUser(userId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("Bob", afterUpdate.getData().getPayload().get("username"));
         } finally {
@@ -265,7 +265,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         payload.put("email", "alice@example.com");
 
         // create
-        final PNCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
+        final DataSyncCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
                 .userId(userId)
                 .status("active")
                 .payload(payload)
@@ -279,7 +279,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> inactiveOps = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final PNUpdateUserResult patch1 = server.dataSync().updateUser(userId, inactiveOps)
+            final DataSyncUpdateUserResult patch1 = server.dataSync().updateUser(userId, inactiveOps)
                     .ifMatch(originalETag)
                     .sync();
             assertEquals("inactive", patch1.getData().getStatus());

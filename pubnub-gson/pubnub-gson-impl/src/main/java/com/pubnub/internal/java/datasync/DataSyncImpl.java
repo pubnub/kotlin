@@ -55,8 +55,8 @@ public class DataSyncImpl implements DataSync {
     }
 
     @Override
-    public CreateEntity createEntity(String entityClass, int entityClassVersion) {
-        return new CreateEntityImpl(entityClass, entityClassVersion, pubnubInstance);
+    public CreateEntity createEntity(String className, int classVersion) {
+        return new CreateEntityImpl(className, classVersion, pubnubInstance);
     }
 
     @Override
@@ -65,8 +65,8 @@ public class DataSyncImpl implements DataSync {
     }
 
     @Override
-    public GetEntities getEntities(String entityClass) {
-        return new GetEntitiesImpl(entityClass, pubnubInstance);
+    public GetEntities getEntities(String className) {
+        return new GetEntitiesImpl(className, pubnubInstance);
     }
 
     @Override
@@ -75,8 +75,8 @@ public class DataSyncImpl implements DataSync {
     }
 
     @Override
-    public SetEntity setEntity(String entityId, int entityClassVersion) {
-        return new SetEntityImpl(entityId, entityClassVersion, pubnubInstance);
+    public SetEntity setEntity(String entityId, int classVersion) {
+        return new SetEntityImpl(entityId, classVersion, pubnubInstance);
     }
 
     @Override
@@ -85,8 +85,8 @@ public class DataSyncImpl implements DataSync {
     }
 
     @Override
-    public CreateUser createUser(int entityClassVersion) {
-        return new CreateUserImpl(entityClassVersion, pubnubInstance);
+    public CreateUser createUser(int classVersion) {
+        return new CreateUserImpl(classVersion, pubnubInstance);
     }
 
     @Override
@@ -105,8 +105,8 @@ public class DataSyncImpl implements DataSync {
     }
 
     @Override
-    public SetUser setUser(String userId, int entityClassVersion) {
-        return new SetUserImpl(userId, entityClassVersion, pubnubInstance);
+    public SetUser setUser(String userId, int classVersion) {
+        return new SetUserImpl(userId, classVersion, pubnubInstance);
     }
 
     @Override
