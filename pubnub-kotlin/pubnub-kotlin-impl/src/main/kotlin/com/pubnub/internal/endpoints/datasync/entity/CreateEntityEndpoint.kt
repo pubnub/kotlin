@@ -6,8 +6,9 @@ import com.pubnub.api.endpoints.datasync.entity.CreateEntity
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.entity.PNCreateEntityResult
-import com.pubnub.api.models.consumer.datasync.entity.PNEntity
+import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
+import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult
+import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncEntity
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -24,28 +25,30 @@ import retrofit2.Response
  */
 class CreateEntityEndpoint internal constructor(
     pubnub: PubNubImpl,
-    private val entityClass: String,
-    private val entityClassVersion: Int,
+    private val className: String,
+    private val classVersion: Int,
+    private val classLevel: PNDataSyncClassLevel?,
     private val entityId: String?,
     private val status: String?,
     private val payload: Any?,
-) : EndpointCore<EntityEnvelope<PNEntity>, PNCreateEntityResult>(pubnub), CreateEntity {
+) : EndpointCore<EntityEnvelope<PNDataSyncEntity>, PNDataSyncCreateEntityResult>(pubnub), CreateEntity {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
         super.validateParams()
-        if (entityClass.isBlank()) {
+        if (className.isBlank()) {
             throw PubNubException(PubNubError.ENTITY_CLASS_MISSING)
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNEntity>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNDataSyncEntity>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     arguments = mapOf(
-                        "entityClass" to entityClass,
-                        "entityClassVersion" to entityClassVersion,
+                        "className" to className,
+                        "classVersion" to classVersion,
+                        "classLevel" to (classLevel?.value ?: ""),
                         "entityId" to (entityId ?: ""),
                         "status" to (status ?: ""),
                         "payload" to (payload ?: "")
@@ -62,8 +65,9 @@ class CreateEntityEndpoint internal constructor(
                     data =
                         CreateEntityRequestData(
                             id = entityId,
-                            entityClass = entityClass,
-                            entityClassVersion = entityClassVersion,
+                            entityClass = className,
+                            entityClassVersion = classVersion,
+                            entityClassLevel = classLevel?.value,
                             status = status,
                             payload = payload,
                         ),
@@ -72,9 +76,9 @@ class CreateEntityEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNEntity>>): PNCreateEntityResult {
+    override fun createResponse(input: Response<EntityEnvelope<PNDataSyncEntity>>): PNDataSyncCreateEntityResult {
         return input.body()!!.let {
-            PNCreateEntityResult(
+            PNDataSyncCreateEntityResult(
                 status = it.status,
                 data = it.data,
             )

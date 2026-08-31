@@ -1,12 +1,14 @@
 package com.pubnub.internal.services
 
-import com.pubnub.api.models.consumer.datasync.entity.PNEntity
-import com.pubnub.api.models.consumer.datasync.user.PNUser
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncChannel
+import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncEntity
+import com.pubnub.api.models.consumer.datasync.user.PNDataSyncUser
+import com.pubnub.internal.models.server.datasync.CreateChannelRequest
 import com.pubnub.internal.models.server.datasync.CreateEntityRequest
 import com.pubnub.internal.models.server.datasync.CreateUserRequest
 import com.pubnub.internal.models.server.datasync.EntitiesEnvelope
 import com.pubnub.internal.models.server.datasync.JsonPatchOperation
-import com.pubnub.internal.models.server.datasync.UpdateEntityRequest
+import com.pubnub.internal.models.server.datasync.SetEntityRequest
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.http.Body
@@ -26,7 +28,7 @@ internal interface DataSyncService {
         @Path("subKey") subKey: String,
         @Path("entityId") entityId: String,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<PNEntity>>
+    ): Call<EntityEnvelope<PNDataSyncEntity>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.entity+json;version=1")
     @POST("v1/datasync/subkeys/{subKey}/entities")
@@ -34,7 +36,7 @@ internal interface DataSyncService {
         @Path("subKey") subKey: String,
         @Body body: CreateEntityRequest,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<PNEntity>>
+    ): Call<EntityEnvelope<PNDataSyncEntity>>
 
     @DELETE("v1/datasync/subkeys/{subKey}/entities/{entityId}")
     fun deleteEntity(
@@ -48,34 +50,34 @@ internal interface DataSyncService {
     fun getEntities(
         @Path("subKey") subKey: String,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntitiesEnvelope<PNEntity>>
+    ): Call<EntitiesEnvelope<PNDataSyncEntity>>
 
     @Headers("Content-Type: application/json-patch+json")
     @PATCH("v1/datasync/subkeys/{subKey}/entities/{entityId}")
-    fun patchEntity(
+    fun updateEntity(
         @Path("subKey") subKey: String,
         @Path("entityId") entityId: String,
         @Body body: List<JsonPatchOperation>,
         @Header("If-Match") ifMatch: String?,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<PNEntity>>
+    ): Call<EntityEnvelope<PNDataSyncEntity>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.entity+json;version=1")
     @PUT("v1/datasync/subkeys/{subKey}/entities/{entityId}")
-    fun updateEntity(
+    fun setEntity(
         @Path("subKey") subKey: String,
         @Path("entityId") entityId: String,
-        @Body body: UpdateEntityRequest,
+        @Body body: SetEntityRequest,
         @Header("If-Match") ifMatch: String?,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<PNEntity>>
+    ): Call<EntityEnvelope<PNDataSyncEntity>>
 
     @GET("v1/datasync/subkeys/{subKey}/users/{userId}")
     fun getUser(
         @Path("subKey") subKey: String,
         @Path("userId") userId: String,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<PNUser>>
+    ): Call<EntityEnvelope<PNDataSyncUser>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.user+json;version=1")
     @POST("v1/datasync/subkeys/{subKey}/users")
@@ -83,7 +85,7 @@ internal interface DataSyncService {
         @Path("subKey") subKey: String,
         @Body body: CreateUserRequest,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<PNUser>>
+    ): Call<EntityEnvelope<PNDataSyncUser>>
 
     @DELETE("v1/datasync/subkeys/{subKey}/users/{userId}")
     fun deleteUser(
@@ -97,25 +99,74 @@ internal interface DataSyncService {
     fun getUsers(
         @Path("subKey") subKey: String,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntitiesEnvelope<PNUser>>
+    ): Call<EntitiesEnvelope<PNDataSyncUser>>
 
     @Headers("Content-Type: application/json-patch+json")
     @PATCH("v1/datasync/subkeys/{subKey}/users/{userId}")
-    fun patchUser(
+    fun updateUser(
         @Path("subKey") subKey: String,
         @Path("userId") userId: String,
         @Body body: List<JsonPatchOperation>,
         @Header("If-Match") ifMatch: String?,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<PNUser>>
+    ): Call<EntityEnvelope<PNDataSyncUser>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.user+json;version=1")
     @PUT("v1/datasync/subkeys/{subKey}/users/{userId}")
-    fun updateUser(
+    fun setUser(
         @Path("subKey") subKey: String,
         @Path("userId") userId: String,
-        @Body body: UpdateEntityRequest,
+        @Body body: SetEntityRequest,
         @Header("If-Match") ifMatch: String?,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<PNUser>>
+    ): Call<EntityEnvelope<PNDataSyncUser>>
+
+    @GET("v1/datasync/subkeys/{subKey}/channels/{channelId}")
+    fun getChannel(
+        @Path("subKey") subKey: String,
+        @Path("channelId") channelId: String,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntityEnvelope<PNDataSyncChannel>>
+
+    @Headers("Content-Type: application/vnd.pubnub.objects.channel+json;version=1")
+    @POST("v1/datasync/subkeys/{subKey}/channels")
+    fun createChannel(
+        @Path("subKey") subKey: String,
+        @Body body: CreateChannelRequest,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntityEnvelope<PNDataSyncChannel>>
+
+    @DELETE("v1/datasync/subkeys/{subKey}/channels/{channelId}")
+    fun deleteChannel(
+        @Path("subKey") subKey: String,
+        @Path("channelId") channelId: String,
+        @Header("If-Match") ifMatch: String?,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<Void>
+
+    @GET("v1/datasync/subkeys/{subKey}/channels")
+    fun getChannels(
+        @Path("subKey") subKey: String,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntitiesEnvelope<PNDataSyncChannel>>
+
+    @Headers("Content-Type: application/json-patch+json")
+    @PATCH("v1/datasync/subkeys/{subKey}/channels/{channelId}")
+    fun updateChannel(
+        @Path("subKey") subKey: String,
+        @Path("channelId") channelId: String,
+        @Body body: List<JsonPatchOperation>,
+        @Header("If-Match") ifMatch: String?,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntityEnvelope<PNDataSyncChannel>>
+
+    @Headers("Content-Type: application/vnd.pubnub.objects.channel+json;version=1")
+    @PUT("v1/datasync/subkeys/{subKey}/channels/{channelId}")
+    fun setChannel(
+        @Path("subKey") subKey: String,
+        @Path("channelId") channelId: String,
+        @Body body: SetEntityRequest,
+        @Header("If-Match") ifMatch: String?,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntityEnvelope<PNDataSyncChannel>>
 }

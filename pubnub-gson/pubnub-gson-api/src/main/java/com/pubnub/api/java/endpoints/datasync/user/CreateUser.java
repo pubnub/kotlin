@@ -1,7 +1,8 @@
- package com.pubnub.api.java.endpoints.datasync.user;
+package com.pubnub.api.java.endpoints.datasync.user;
 
 import com.pubnub.api.java.endpoints.Endpoint;
-import com.pubnub.api.java.models.consumer.datasync.user.PNCreateUserResult;
+import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncCreateUserResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -9,7 +10,7 @@ import java.util.Map;
 /**
  * @see com.pubnub.api.java.datasync.DataSync#createUser(int)
  */
-public interface CreateUser extends Endpoint<PNCreateUserResult> {
+public interface CreateUser extends Endpoint<PNDataSyncCreateUserResult> {
     /**
      * Optional user identifier. When not set the server generates one.
      */
@@ -19,7 +20,14 @@ public interface CreateUser extends Endpoint<PNCreateUserResult> {
      * Optional entity class identifier. When not set the server defaults it to {@code User}.
      * When set it must be a {@code User} subclass.
      */
-    CreateUser entityClass(@Nullable String entityClass);
+    CreateUser className(@Nullable String className);
+
+    /**
+     * Optional level at which the entity class is defined. Disambiguates a class defined at more than
+     * one level. Create-only — not accepted by {@code setUser}. The built-in {@code User} class is
+     * defined at the {@code GLOBAL} level.
+     */
+    CreateUser classLevel(@Nullable PNDataSyncClassLevel classLevel);
 
     /**
      * Optional user status.
