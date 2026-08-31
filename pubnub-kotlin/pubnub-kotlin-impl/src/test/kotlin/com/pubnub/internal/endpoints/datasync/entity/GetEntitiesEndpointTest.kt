@@ -63,4 +63,34 @@ class GetEntitiesEndpointTest : BaseTest() {
                 .withQueryParam("sort", equalTo("username,email:desc")),
         )
     }
+
+    @Test
+    fun filterFast_serializes_to_filter_fast_wire_param() {
+        stubList()
+
+        pubnub.dataSync.getEntities(
+            className = "TestUser",
+            filterFast = "username == \"alice\"",
+        ).sync()
+
+        verify(
+            getRequestedFor(urlPathEqualTo(path))
+                .withQueryParam("filter_fast", equalTo("username == \"alice\"")),
+        )
+    }
+
+    @Test
+    fun filter_serializes_to_filter_wire_param() {
+        stubList()
+
+        pubnub.dataSync.getEntities(
+            className = "TestUser",
+            filter = "username LIKE \"a*\"",
+        ).sync()
+
+        verify(
+            getRequestedFor(urlPathEqualTo(path))
+                .withQueryParam("filter", equalTo("username LIKE \"a*\"")),
+        )
+    }
 }

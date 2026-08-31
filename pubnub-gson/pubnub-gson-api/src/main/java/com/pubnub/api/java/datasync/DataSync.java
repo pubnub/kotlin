@@ -113,9 +113,8 @@ public interface DataSync {
      *
      * <p>Filtering and sorting are only allowed on the entity class's properties whose filtering mode is not
      * disabled (i.e. those the class marks as filterable); using any other property in a {@code filter}/
-     * {@code sort} returns a server error. For the built-in {@code User} class this set is {@code name}
-     * ({@code username} / {@code email} are custom-class properties, not built-in {@code User} fields). The
-     * built-in {@code User} class is defined at the {@code GLOBAL} class level.
+     * {@code sort} returns a server error. For the built-in {@code User} class this set is {@code name} and
+     * {@code type}. The built-in {@code User} class is defined at the {@code GLOBAL} class level.
      */
     GetUsers getUsers();
 

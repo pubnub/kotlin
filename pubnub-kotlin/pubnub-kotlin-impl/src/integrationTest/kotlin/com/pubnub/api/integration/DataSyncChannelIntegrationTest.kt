@@ -366,9 +366,9 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            // filter -> exact name equality (double-quoted string literal, per AppContext QL)
+            // filterFast -> exact name equality (double-quoted string literal, per AppContext QL)
             val filtered = server.dataSync.getChannels(
-                filter = "name == \"$nameA\"",
+                filterFast = "name == \"$nameA\"",
             ).sync()
             val filteredIds = filtered.data.map { it.id }
             assertEquals(setOf(idA), filteredIds.toSet())
@@ -378,39 +378,39 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             // it still returns the row
             val scoped = server.dataSync.getChannels(
                 classLevel = PNDataSyncClassLevel.GLOBAL,
-                filter = "name == \"$nameA\"",
+                filterFast = "name == \"$nameA\"",
             ).sync()
             assertEquals(setOf(idA), scoped.data.map { it.id }.toSet())
 
             // LIKE prefix match with a `*` wildcard, capturing all three rows
             val advanced = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
             ).sync()
             assertEquals(setOf(idA, idB, idC), advanced.data.map { it.id }.toSet())
 
             // sort -> ascending by name (default direction); this run's rows appear in a-b-c order
             val sortedDefault = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name")),
             ).sync()
             assertEquals(listOf(idA, idB, idC), sortedDefault.data.map { it.id })
 
             val sorted = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name", ascending = true)),
             ).sync()
             assertEquals(listOf(idA, idB, idC), sorted.data.map { it.id })
 
             // sort descending -> the same rows in reverse (c-b-a) order
             val sortedDesc = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name", ascending = false)),
             ).sync()
             assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
 
             // limit + cursor -> page through this run's rows one channel at a time
             val firstPage = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name")),
                 limit = 1,
             ).sync()
@@ -420,7 +420,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             assertNotNull(firstPage.next.cursor)
 
             val secondPage = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name")),
                 limit = 1,
                 cursor = firstPage.next.cursor,

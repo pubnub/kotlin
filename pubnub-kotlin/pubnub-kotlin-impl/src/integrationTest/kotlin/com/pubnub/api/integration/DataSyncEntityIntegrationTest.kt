@@ -355,10 +355,10 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            // filter -> exact username equality (double-quoted string literal, per AppContext QL)
+            // filterFast -> exact username equality (double-quoted string literal, per AppContext QL)
             val filtered = server.dataSync.getEntities(
                 className = className,
-                filter = "username == \"$userA\"",
+                filterFast = "username == \"$userA\"",
             ).sync()
             val filteredIds = filtered.data.map { it.id }
             assertEquals(setOf(idA), filteredIds.toSet())
@@ -368,28 +368,28 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             val scoped = server.dataSync.getEntities(
                 className = className,
                 classLevel = PNDataSyncClassLevel.SUBKEY,
-                filter = "username == \"$userA\"",
+                filterFast = "username == \"$userA\"",
             ).sync()
             assertEquals(setOf(idA), scoped.data.map { it.id }.toSet())
 
-            // filterAdvanced -> prefix match via LIKE with a `*` wildcard, capturing all three rows
+            // filterFast -> prefix match via LIKE with a `*` wildcard, capturing all three rows
             val advanced = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
             ).sync()
             assertEquals(setOf(idA, idB, idC), advanced.data.map { it.id }.toSet())
 
             // sort -> ascending by username (bare property, no direction suffix); a-b-c order
             val sortedDefault = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username")),
             ).sync()
             assertEquals(listOf(idA, idB, idC), sortedDefault.data.map { it.id })
 
             val sorted = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username", ascending = true)),
             ).sync()
             assertEquals(listOf(idA, idB, idC), sorted.data.map { it.id })
@@ -397,7 +397,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             // sort descending -> the same rows in reverse (c-b-a) order
             val sortedDesc = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username", ascending = false)),
             ).sync()
             assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
@@ -405,7 +405,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             // limit + cursor -> page through this run's rows one entity at a time
             val firstPage = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username")),
                 limit = 1,
             ).sync()
@@ -416,7 +416,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
 
             val secondPage = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username")),
                 limit = 1,
                 cursor = firstPage.next.cursor,

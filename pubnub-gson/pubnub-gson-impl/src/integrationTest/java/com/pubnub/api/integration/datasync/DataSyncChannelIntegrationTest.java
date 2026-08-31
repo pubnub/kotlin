@@ -335,9 +335,9 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
         createChannelWithNameAndEmail(idC, nameC, "carol@example.com");
 
         try {
-            // filter -> exact name equality
+            // filterFast -> exact name equality
             final PNDataSyncGetChannelsResult filtered = server.dataSync().getChannels()
-                    .filter("name == \"" + nameA + "\"")
+                    .filterFast("name == \"" + nameA + "\"")
                     .sync();
             final List<String> filteredIds = filtered.getData().stream()
                     .map(c -> c.getId()).collect(Collectors.toList());
@@ -346,14 +346,14 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             // classLevel -> the built-in Channel class is defined at the Global level
             final PNDataSyncGetChannelsResult scoped = server.dataSync().getChannels()
                     .classLevel(PNDataSyncClassLevel.GLOBAL)
-                    .filter("name == \"" + nameA + "\"")
+                    .filterFast("name == \"" + nameA + "\"")
                     .sync();
             assertEquals(Collections.singletonList(idA),
                     scoped.getData().stream().map(c -> c.getId()).collect(Collectors.toList()));
 
             // sort ascending (default direction)
             final PNDataSyncGetChannelsResult sortedAsc = server.dataSync().getChannels()
-                    .filter("name LIKE \"" + namePrefix + "*\"")
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
                     .sort(Collections.singletonList(new PNDataSyncSortField("name")))
                     .sync();
             assertEquals(Arrays.asList(idA, idB, idC),
@@ -361,7 +361,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
 
             // sort descending
             final PNDataSyncGetChannelsResult sortedDesc = server.dataSync().getChannels()
-                    .filter("name LIKE \"" + namePrefix + "*\"")
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
                     .sort(Collections.singletonList(new PNDataSyncSortField("name", false)))
                     .sync();
             assertEquals(Arrays.asList(idC, idB, idA),
@@ -369,7 +369,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
 
             // limit + cursor -> page one channel at a time; `next` is non-null
             final PNDataSyncGetChannelsResult firstPage = server.dataSync().getChannels()
-                    .filter("name LIKE \"" + namePrefix + "*\"")
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
                     .sort(Collections.singletonList(new PNDataSyncSortField("name")))
                     .limit(1)
                     .sync();
@@ -380,7 +380,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertNotNull(firstPage.getNext().getCursor());
 
             final PNDataSyncGetChannelsResult secondPage = server.dataSync().getChannels()
-                    .filter("name LIKE \"" + namePrefix + "*\"")
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
                     .sort(Collections.singletonList(new PNDataSyncSortField("name")))
                     .limit(1)
                     .cursor(firstPage.getNext().getCursor())
