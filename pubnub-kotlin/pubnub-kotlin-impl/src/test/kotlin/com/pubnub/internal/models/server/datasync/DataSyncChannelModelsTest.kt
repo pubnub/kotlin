@@ -1,7 +1,7 @@
 package com.pubnub.internal.models.server.datasync
 
 import com.pubnub.api.logging.LogConfig
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncChannel
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncChannel
 import com.pubnub.internal.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -63,7 +63,7 @@ internal class DataSyncChannelModelsTest {
             }
         """.trimIndent()
 
-        val channel: DataSyncChannel = mapper.fromJson(json, DataSyncChannel::class.java)
+        val channel: PNDataSyncChannel = mapper.fromJson(json, PNDataSyncChannel::class.java)
 
         assertEquals("c1", channel.id)
         assertEquals("Channel.Public", channel.className)
@@ -90,7 +90,7 @@ internal class DataSyncChannelModelsTest {
             }
         """.trimIndent()
 
-        val channel: DataSyncChannel = mapper.fromJson(json, DataSyncChannel::class.java)
+        val channel: PNDataSyncChannel = mapper.fromJson(json, PNDataSyncChannel::class.java)
 
         assertEquals("Channel", channel.className)
         assertEquals(1, channel.classVersion)

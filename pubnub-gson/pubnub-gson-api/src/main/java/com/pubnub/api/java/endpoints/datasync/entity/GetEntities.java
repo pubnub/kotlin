@@ -3,7 +3,7 @@ package com.pubnub.api.java.endpoints.datasync.entity;
 import com.pubnub.api.java.endpoints.Endpoint;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncSortField;
-import com.pubnub.api.java.models.consumer.datasync.entity.DataSyncGetEntitiesResult;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncGetEntitiesResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @see com.pubnub.api.java.datasync.DataSync#getEntities(String)
  */
-public interface GetEntities extends Endpoint<DataSyncGetEntitiesResult> {
+public interface GetEntities extends Endpoint<PNDataSyncGetEntitiesResult> {
     /**
      * Optional entity class version. When not set the server uses the latest.
      */

@@ -9,8 +9,8 @@ import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncPage
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
-import com.pubnub.api.models.consumer.datasync.entity.DataSyncEntity
-import com.pubnub.api.models.consumer.datasync.entity.DataSyncGetEntitiesResult
+import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncEntity
+import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncGetEntitiesResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -33,7 +33,7 @@ class GetEntitiesEndpoint internal constructor(
     private val sort: List<PNDataSyncSortField>,
     private val limit: Int?,
     private val cursor: String?,
-) : EndpointCore<EntitiesEnvelope<DataSyncEntity>, DataSyncGetEntitiesResult>(pubnub), GetEntities {
+) : EndpointCore<EntitiesEnvelope<PNDataSyncEntity>, PNDataSyncGetEntitiesResult>(pubnub), GetEntities {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -43,7 +43,7 @@ class GetEntitiesEndpoint internal constructor(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntitiesEnvelope<DataSyncEntity>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntitiesEnvelope<PNDataSyncEntity>> {
         val sortParam = sort.joinToString(",") {
             if (it.ascending) {
                 it.property
@@ -85,9 +85,9 @@ class GetEntitiesEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntitiesEnvelope<DataSyncEntity>>): DataSyncGetEntitiesResult {
+    override fun createResponse(input: Response<EntitiesEnvelope<PNDataSyncEntity>>): PNDataSyncGetEntitiesResult {
         return input.body()!!.let {
-            DataSyncGetEntitiesResult(
+            PNDataSyncGetEntitiesResult(
                 status = it.status,
                 data = it.data,
                 next = PNDataSyncPage(

@@ -7,8 +7,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
-import com.pubnub.api.models.consumer.datasync.user.DataSyncUpdateUserResult
-import com.pubnub.api.models.consumer.datasync.user.DataSyncUser
+import com.pubnub.api.models.consumer.datasync.user.PNDataSyncUpdateUserResult
+import com.pubnub.api.models.consumer.datasync.user.PNDataSyncUser
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -27,7 +27,7 @@ class UpdateUserEndpoint internal constructor(
     private val userId: String,
     private val operations: List<PNJsonPatchOperation>,
     private val ifMatch: String?,
-) : EndpointCore<EntityEnvelope<DataSyncUser>, DataSyncUpdateUserResult>(pubnub), UpdateUser {
+) : EndpointCore<EntityEnvelope<PNDataSyncUser>, PNDataSyncUpdateUserResult>(pubnub), UpdateUser {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -40,7 +40,7 @@ class UpdateUserEndpoint internal constructor(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<DataSyncUser>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNDataSyncUser>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -63,9 +63,9 @@ class UpdateUserEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<DataSyncUser>>): DataSyncUpdateUserResult {
+    override fun createResponse(input: Response<EntityEnvelope<PNDataSyncUser>>): PNDataSyncUpdateUserResult {
         return input.body()!!.let {
-            DataSyncUpdateUserResult(
+            PNDataSyncUpdateUserResult(
                 status = it.status,
                 data = it.data,
             )

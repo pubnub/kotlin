@@ -5,7 +5,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.datasync.user.RemoveUser;
-import com.pubnub.api.java.models.consumer.datasync.user.DataSyncRemoveUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncRemoveUserResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Accessors(chain = true, fluent = true)
 public class RemoveUserImpl
-        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.user.DataSyncRemoveUserResult, DataSyncRemoveUserResult>
+        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.user.PNDataSyncRemoveUserResult, PNDataSyncRemoveUserResult>
         implements RemoveUser {
 
     private final String userId;
@@ -30,16 +30,16 @@ public class RemoveUserImpl
 
     @NotNull
     @Override
-    protected ExtendedRemoteAction<DataSyncRemoveUserResult> mapResult(
-            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.user.DataSyncRemoveUserResult> action) {
+    protected ExtendedRemoteAction<PNDataSyncRemoveUserResult> mapResult(
+            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.user.PNDataSyncRemoveUserResult> action) {
         return new MappingRemoteAction<>(action, result ->
-                new DataSyncRemoveUserResult(result.getStatus())
+                new PNDataSyncRemoveUserResult(result.getStatus())
         );
     }
 
     @Override
     @NotNull
-    protected Endpoint<com.pubnub.api.models.consumer.datasync.user.DataSyncRemoveUserResult> createRemoteAction() {
+    protected Endpoint<com.pubnub.api.models.consumer.datasync.user.PNDataSyncRemoveUserResult> createRemoteAction() {
         return pubnub.getDataSync().removeUser(userId, ifMatch);
     }
 }

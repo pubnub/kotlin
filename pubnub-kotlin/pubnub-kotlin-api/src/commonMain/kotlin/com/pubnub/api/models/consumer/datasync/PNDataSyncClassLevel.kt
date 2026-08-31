@@ -5,7 +5,7 @@ package com.pubnub.api.models.consumer.datasync
  * (e.g. [com.pubnub.api.datasync.DataSync.createChannel] / [com.pubnub.api.datasync.DataSync.getChannels]);
  * the enum's [value] is written to the `entity_class_level` wire parameter.
  *
- * The read side (e.g. `DataSyncChannel.classLevel`) is modeled as a [String] rather than this enum, so a
+ * The read side (e.g. `PNDataSyncChannel.classLevel`) is modeled as a [String] rather than this enum, so a
  * future or unexpected server value never fails deserialization.
  *
  * @property value The wire string sent to the server.

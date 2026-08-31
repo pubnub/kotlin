@@ -6,8 +6,8 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.datasync.entity.CreateEntity;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
-import com.pubnub.api.java.models.consumer.datasync.entity.DataSyncCreateEntityResult;
-import com.pubnub.api.java.models.consumer.datasync.entity.DataSyncEntityConverter;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncCreateEntityResult;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncEntityConverter;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class CreateEntityImpl
-        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.entity.DataSyncCreateEntityResult, DataSyncCreateEntityResult>
+        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult, PNDataSyncCreateEntityResult>
         implements CreateEntity {
 
     private final String className;
@@ -48,19 +48,19 @@ public class CreateEntityImpl
 
     @NotNull
     @Override
-    protected ExtendedRemoteAction<DataSyncCreateEntityResult> mapResult(
-            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.entity.DataSyncCreateEntityResult> action) {
+    protected ExtendedRemoteAction<PNDataSyncCreateEntityResult> mapResult(
+            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult> action) {
         return new MappingRemoteAction<>(action, result ->
-                new DataSyncCreateEntityResult(
+                new PNDataSyncCreateEntityResult(
                         result.getStatus(),
-                        DataSyncEntityConverter.from(result.getData())
+                        PNDataSyncEntityConverter.from(result.getData())
                 )
         );
     }
 
     @Override
     @NotNull
-    protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.DataSyncCreateEntityResult> createRemoteAction() {
+    protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult> createRemoteAction() {
         return pubnub.getDataSync().createEntity(
                 className,
                 classVersion,

@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.datasync.channel.RemoveChannel
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncRemoveChannelResult
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncRemoveChannelResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -22,7 +22,7 @@ class RemoveChannelEndpoint internal constructor(
     pubnub: PubNubImpl,
     private val channelId: String,
     private val ifMatch: String?,
-) : EndpointCore<Void, DataSyncRemoveChannelResult>(pubnub), RemoveChannel {
+) : EndpointCore<Void, PNDataSyncRemoveChannelResult>(pubnub), RemoveChannel {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -53,9 +53,9 @@ class RemoveChannelEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<Void>): DataSyncRemoveChannelResult {
+    override fun createResponse(input: Response<Void>): PNDataSyncRemoveChannelResult {
         // DeleteSuccessResponse has an empty body, so surface the HTTP status code.
-        return DataSyncRemoveChannelResult(input.code())
+        return PNDataSyncRemoveChannelResult(input.code())
     }
 
     override fun operationType(): PNOperationType = PNOperationType.PNRemoveChannelOperation

@@ -1,7 +1,7 @@
 package com.pubnub.api.java.endpoints.datasync.user;
 
 import com.pubnub.api.java.endpoints.Endpoint;
-import com.pubnub.api.java.models.consumer.datasync.user.DataSyncSetUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncSetUserResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @see com.pubnub.api.java.datasync.DataSync#setUser(String, int)
  */
-public interface SetUser extends Endpoint<DataSyncSetUserResult> {
+public interface SetUser extends Endpoint<PNDataSyncSetUserResult> {
     /**
      * Optional user status.
      */

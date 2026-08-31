@@ -11,7 +11,7 @@ class DataSyncEntityTest {
         val id = randomString()
         val className = randomString()
         val eTag = randomString()
-        val entity = DataSyncEntity(
+        val entity = PNDataSyncEntity(
             id = id,
             className = className,
             classVersion = 2,
@@ -38,7 +38,7 @@ class DataSyncEntityTest {
 
     @Test
     fun optional_fields_default_to_null() {
-        val entity = DataSyncEntity(
+        val entity = PNDataSyncEntity(
             id = randomString(),
             className = randomString(),
             classVersion = 1,

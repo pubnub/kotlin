@@ -7,8 +7,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
-import com.pubnub.api.models.consumer.datasync.entity.DataSyncCreateEntityResult
-import com.pubnub.api.models.consumer.datasync.entity.DataSyncEntity
+import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult
+import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncEntity
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -31,7 +31,7 @@ class CreateEntityEndpoint internal constructor(
     private val entityId: String?,
     private val status: String?,
     private val payload: Any?,
-) : EndpointCore<EntityEnvelope<DataSyncEntity>, DataSyncCreateEntityResult>(pubnub), CreateEntity {
+) : EndpointCore<EntityEnvelope<PNDataSyncEntity>, PNDataSyncCreateEntityResult>(pubnub), CreateEntity {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -41,7 +41,7 @@ class CreateEntityEndpoint internal constructor(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<DataSyncEntity>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNDataSyncEntity>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -76,9 +76,9 @@ class CreateEntityEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<DataSyncEntity>>): DataSyncCreateEntityResult {
+    override fun createResponse(input: Response<EntityEnvelope<PNDataSyncEntity>>): PNDataSyncCreateEntityResult {
         return input.body()!!.let {
-            DataSyncCreateEntityResult(
+            PNDataSyncCreateEntityResult(
                 status = it.status,
                 data = it.data,
             )

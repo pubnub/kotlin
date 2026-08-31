@@ -5,9 +5,9 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.datasync.entity.UpdateEntity;
-import com.pubnub.api.java.models.consumer.datasync.entity.DataSyncEntityConverter;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncEntityConverter;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
-import com.pubnub.api.java.models.consumer.datasync.entity.DataSyncUpdateEntityResult;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncUpdateEntityResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Accessors(chain = true, fluent = true)
 public class UpdateEntityImpl
-        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.entity.DataSyncUpdateEntityResult, DataSyncUpdateEntityResult>
+        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncUpdateEntityResult, PNDataSyncUpdateEntityResult>
         implements UpdateEntity {
 
     private final String entityId;
@@ -37,19 +37,19 @@ public class UpdateEntityImpl
 
     @NotNull
     @Override
-    protected ExtendedRemoteAction<DataSyncUpdateEntityResult> mapResult(
-            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.entity.DataSyncUpdateEntityResult> action) {
+    protected ExtendedRemoteAction<PNDataSyncUpdateEntityResult> mapResult(
+            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncUpdateEntityResult> action) {
         return new MappingRemoteAction<>(action, result ->
-                new DataSyncUpdateEntityResult(
+                new PNDataSyncUpdateEntityResult(
                         result.getStatus(),
-                        DataSyncEntityConverter.from(result.getData())
+                        PNDataSyncEntityConverter.from(result.getData())
                 )
         );
     }
 
     @Override
     @NotNull
-    protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.DataSyncUpdateEntityResult> createRemoteAction() {
+    protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncUpdateEntityResult> createRemoteAction() {
         final List<com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation> mapped =
                 operations.stream()
                         .map(op -> new com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation(

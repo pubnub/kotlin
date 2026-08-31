@@ -7,7 +7,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncCreateChannelResult
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncCreateChannelResult
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.test.CommonUtils.randomValue
 import org.junit.Assert.assertEquals
@@ -38,7 +38,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             hobby = "poetry",
             custom = "value",
         )
-        val createResult: DataSyncCreateChannelResult = server.dataSync.createChannel(
+        val createResult: PNDataSyncCreateChannelResult = server.dataSync.createChannel(
             classVersion = classVersion,
             channelId = channelId,
             status = "active",

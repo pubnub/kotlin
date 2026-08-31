@@ -6,8 +6,8 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.datasync.channel.CreateChannel;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
-import com.pubnub.api.java.models.consumer.datasync.channel.DataSyncChannelConverter;
-import com.pubnub.api.java.models.consumer.datasync.channel.DataSyncCreateChannelResult;
+import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncChannelConverter;
+import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncCreateChannelResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class CreateChannelImpl
-        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.channel.DataSyncCreateChannelResult, DataSyncCreateChannelResult>
+        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.channel.PNDataSyncCreateChannelResult, PNDataSyncCreateChannelResult>
         implements CreateChannel {
 
     private final int classVersion;
@@ -50,19 +50,19 @@ public class CreateChannelImpl
 
     @NotNull
     @Override
-    protected ExtendedRemoteAction<DataSyncCreateChannelResult> mapResult(
-            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.channel.DataSyncCreateChannelResult> action) {
+    protected ExtendedRemoteAction<PNDataSyncCreateChannelResult> mapResult(
+            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.channel.PNDataSyncCreateChannelResult> action) {
         return new MappingRemoteAction<>(action, result ->
-                new DataSyncCreateChannelResult(
+                new PNDataSyncCreateChannelResult(
                         result.getStatus(),
-                        DataSyncChannelConverter.from(result.getData())
+                        PNDataSyncChannelConverter.from(result.getData())
                 )
         );
     }
 
     @Override
     @NotNull
-    protected Endpoint<com.pubnub.api.models.consumer.datasync.channel.DataSyncCreateChannelResult> createRemoteAction() {
+    protected Endpoint<com.pubnub.api.models.consumer.datasync.channel.PNDataSyncCreateChannelResult> createRemoteAction() {
         return pubnub.getDataSync().createChannel(
                 classVersion,
                 channelId,

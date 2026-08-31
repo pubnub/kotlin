@@ -11,7 +11,7 @@ class DataSyncUserTest {
         val id = randomString()
         val className = randomString()
         val eTag = randomString()
-        val user = DataSyncUser(
+        val user = PNDataSyncUser(
             id = id,
             className = className,
             classVersion = 2,
@@ -38,7 +38,7 @@ class DataSyncUserTest {
 
     @Test
     fun optional_fields_default_to_null() {
-        val user = DataSyncUser(
+        val user = PNDataSyncUser(
             id = randomString(),
             className = randomString(),
             classVersion = 1,

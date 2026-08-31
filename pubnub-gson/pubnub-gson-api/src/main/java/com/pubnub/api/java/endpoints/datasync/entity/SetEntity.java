@@ -1,7 +1,7 @@
 package com.pubnub.api.java.endpoints.datasync.entity;
 
 import com.pubnub.api.java.endpoints.Endpoint;
-import com.pubnub.api.java.models.consumer.datasync.entity.DataSyncSetEntityResult;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncSetEntityResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @see com.pubnub.api.java.datasync.DataSync#setEntity(String, int)
  */
-public interface SetEntity extends Endpoint<DataSyncSetEntityResult> {
+public interface SetEntity extends Endpoint<PNDataSyncSetEntityResult> {
     /**
      * Optional entity status.
      */

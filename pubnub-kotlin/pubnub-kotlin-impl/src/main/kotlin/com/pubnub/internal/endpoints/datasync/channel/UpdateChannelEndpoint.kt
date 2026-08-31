@@ -6,8 +6,8 @@ import com.pubnub.api.endpoints.datasync.channel.UpdateChannel
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncChannel
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncUpdateChannelResult
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncChannel
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncUpdateChannelResult
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
@@ -27,7 +27,7 @@ class UpdateChannelEndpoint internal constructor(
     private val channelId: String,
     private val operations: List<PNJsonPatchOperation>,
     private val ifMatch: String?,
-) : EndpointCore<EntityEnvelope<DataSyncChannel>, DataSyncUpdateChannelResult>(pubnub), UpdateChannel {
+) : EndpointCore<EntityEnvelope<PNDataSyncChannel>, PNDataSyncUpdateChannelResult>(pubnub), UpdateChannel {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -40,7 +40,7 @@ class UpdateChannelEndpoint internal constructor(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<DataSyncChannel>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNDataSyncChannel>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -63,9 +63,9 @@ class UpdateChannelEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<DataSyncChannel>>): DataSyncUpdateChannelResult {
+    override fun createResponse(input: Response<EntityEnvelope<PNDataSyncChannel>>): PNDataSyncUpdateChannelResult {
         return input.body()!!.let {
-            DataSyncUpdateChannelResult(
+            PNDataSyncUpdateChannelResult(
                 status = it.status,
                 data = it.data,
             )

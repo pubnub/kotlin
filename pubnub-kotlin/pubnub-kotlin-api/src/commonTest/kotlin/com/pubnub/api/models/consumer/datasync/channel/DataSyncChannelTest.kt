@@ -15,7 +15,7 @@ class DataSyncChannelTest {
         val id = randomString()
         val className = randomString()
         val eTag = randomString()
-        val channel = DataSyncChannel(
+        val channel = PNDataSyncChannel(
             id = id,
             className = className,
             classVersion = 2,
@@ -42,7 +42,7 @@ class DataSyncChannelTest {
 
     @Test
     fun optional_fields_default_to_null() {
-        val channel = DataSyncChannel(
+        val channel = PNDataSyncChannel(
             id = randomString(),
             className = randomString(),
             classVersion = 1,

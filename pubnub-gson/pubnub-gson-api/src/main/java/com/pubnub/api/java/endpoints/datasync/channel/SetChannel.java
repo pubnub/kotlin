@@ -1,7 +1,7 @@
 package com.pubnub.api.java.endpoints.datasync.channel;
 
 import com.pubnub.api.java.endpoints.Endpoint;
-import com.pubnub.api.java.models.consumer.datasync.channel.DataSyncSetChannelResult;
+import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncSetChannelResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @see com.pubnub.api.java.datasync.DataSync#setChannel(String, int)
  */
-public interface SetChannel extends Endpoint<DataSyncSetChannelResult> {
+public interface SetChannel extends Endpoint<PNDataSyncSetChannelResult> {
     /**
      * Optional channel status.
      */

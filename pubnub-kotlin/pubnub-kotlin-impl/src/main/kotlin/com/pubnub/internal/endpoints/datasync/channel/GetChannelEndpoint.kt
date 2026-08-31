@@ -6,8 +6,8 @@ import com.pubnub.api.endpoints.datasync.channel.GetChannel
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncChannel
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncGetChannelResult
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncChannel
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncGetChannelResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -23,7 +23,7 @@ import retrofit2.Response
 class GetChannelEndpoint internal constructor(
     pubnub: PubNubImpl,
     private val channelId: String,
-) : EndpointCore<EntityEnvelope<DataSyncChannel>, DataSyncGetChannelResult>(pubnub), GetChannel {
+) : EndpointCore<EntityEnvelope<PNDataSyncChannel>, PNDataSyncGetChannelResult>(pubnub), GetChannel {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -33,7 +33,7 @@ class GetChannelEndpoint internal constructor(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<DataSyncChannel>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNDataSyncChannel>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -52,9 +52,9 @@ class GetChannelEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<DataSyncChannel>>): DataSyncGetChannelResult {
+    override fun createResponse(input: Response<EntityEnvelope<PNDataSyncChannel>>): PNDataSyncGetChannelResult {
         return input.body()!!.let {
-            DataSyncGetChannelResult(
+            PNDataSyncGetChannelResult(
                 status = it.status,
                 data = it.data,
             )

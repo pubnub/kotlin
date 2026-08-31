@@ -7,11 +7,11 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncSortField;
-import com.pubnub.api.java.models.consumer.datasync.channel.DataSyncCreateChannelResult;
-import com.pubnub.api.java.models.consumer.datasync.channel.DataSyncGetChannelResult;
-import com.pubnub.api.java.models.consumer.datasync.channel.DataSyncGetChannelsResult;
-import com.pubnub.api.java.models.consumer.datasync.channel.DataSyncSetChannelResult;
-import com.pubnub.api.java.models.consumer.datasync.channel.DataSyncUpdateChannelResult;
+import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncCreateChannelResult;
+import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncGetChannelResult;
+import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncGetChannelsResult;
+import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncSetChannelResult;
+import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncUpdateChannelResult;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
         payload.put("email", "alice@example.com");
 
         // create (no className -> server defaults it to "Channel")
-        final DataSyncCreateChannelResult createResult = server.dataSync().createChannel(classVersion)
+        final PNDataSyncCreateChannelResult createResult = server.dataSync().createChannel(classVersion)
                 .channelId(channelId)
                 .status("active")
                 .payload(payload)
@@ -75,7 +75,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             }
 
             // get
-            final DataSyncGetChannelResult getResult = server.dataSync().getChannel(channelId).sync();
+            final PNDataSyncGetChannelResult getResult = server.dataSync().getChannel(channelId).sync();
             assertEquals(channelId, getResult.getData().getId());
             assertEquals("active", getResult.getData().getStatus());
 
@@ -117,7 +117,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
 
         // create -> token scoped to `create` on this specific channel id
         grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).create());
-        final DataSyncCreateChannelResult createResult = client.dataSync().createChannel(classVersion)
+        final PNDataSyncCreateChannelResult createResult = client.dataSync().createChannel(classVersion)
                 .channelId(channelId)
                 .status("active")
                 .payload(payload)
@@ -132,13 +132,13 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
 
             // get -> token scoped to `get` on this specific channel
             grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).get());
-            final DataSyncGetChannelResult getResult = client.dataSync().getChannel(channelId).sync();
+            final PNDataSyncGetChannelResult getResult = client.dataSync().getChannel(channelId).sync();
             assertEquals(channelId, getResult.getData().getId());
             assertEquals("active", getResult.getData().getStatus());
 
             // getAll -> token scoped to `get` on this specific channel id
             grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).get());
-            final DataSyncGetChannelsResult getAllResult = client.dataSync().getChannels()
+            final PNDataSyncGetChannelsResult getAllResult = client.dataSync().getChannels()
                     .limit(100)
                     .sync();
             assertNotNull(getAllResult);
@@ -149,7 +149,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> operations = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final DataSyncUpdateChannelResult patchResult = client.dataSync().updateChannel(channelId, operations)
+            final PNDataSyncUpdateChannelResult patchResult = client.dataSync().updateChannel(channelId, operations)
                     .sync();
             assertEquals("inactive", patchResult.getData().getStatus());
 
@@ -158,7 +158,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             final Map<String, Object> newPayload = new HashMap<>();
             newPayload.put("username", "Bob");
             newPayload.put("email", "bob@example.com");
-            final DataSyncSetChannelResult updateResult = client.dataSync().setChannel(channelId, classVersion)
+            final PNDataSyncSetChannelResult updateResult = client.dataSync().setChannel(channelId, classVersion)
                     .status("archived")
                     .payload(newPayload)
                     .sync();
@@ -203,7 +203,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
         final Map<String, Object> payload = new HashMap<>();
         payload.put("username", "Bob");
 
-        final DataSyncCreateChannelResult createResult = server.dataSync().createChannel(classVersion)
+        final PNDataSyncCreateChannelResult createResult = server.dataSync().createChannel(classVersion)
                 .payload(payload)
                 .sync();
 
@@ -231,7 +231,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
 
         try {
             // getAll -> the created channel is present
-            final DataSyncGetChannelsResult getAllResult = server.dataSync().getChannels()
+            final PNDataSyncGetChannelsResult getAllResult = server.dataSync().getChannels()
                     .limit(100)
                     .sync();
             assertNotNull(getAllResult);
@@ -241,7 +241,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> operations = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final DataSyncUpdateChannelResult patchResult = server.dataSync().updateChannel(channelId, operations)
+            final PNDataSyncUpdateChannelResult patchResult = server.dataSync().updateChannel(channelId, operations)
                     .sync();
             assertEquals("inactive", patchResult.getData().getStatus());
 
@@ -252,7 +252,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             final Map<String, Object> newPayload = new HashMap<>();
             newPayload.put("username", "Bob");
             newPayload.put("email", "bob@example.com");
-            final DataSyncSetChannelResult updateResult = server.dataSync().setChannel(channelId, classVersion)
+            final PNDataSyncSetChannelResult updateResult = server.dataSync().setChannel(channelId, classVersion)
                     .status("archived")
                     .payload(newPayload)
                     .sync();
@@ -260,7 +260,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertEquals("Bob", updateResult.getData().getPayload().get("username"));
 
             // get reflects the full replacement
-            final DataSyncGetChannelResult afterUpdate = server.dataSync().getChannel(channelId).sync();
+            final PNDataSyncGetChannelResult afterUpdate = server.dataSync().getChannel(channelId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("Bob", afterUpdate.getData().getPayload().get("username"));
         } finally {
@@ -275,7 +275,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
         payload.put("email", "alice@example.com");
 
         // create
-        final DataSyncCreateChannelResult createResult = server.dataSync().createChannel(classVersion)
+        final PNDataSyncCreateChannelResult createResult = server.dataSync().createChannel(classVersion)
                 .channelId(channelId)
                 .status("active")
                 .payload(payload)
@@ -289,7 +289,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             final List<PNJsonPatchOperation> inactiveOps = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
-            final DataSyncUpdateChannelResult patch1 = server.dataSync().updateChannel(channelId, inactiveOps)
+            final PNDataSyncUpdateChannelResult patch1 = server.dataSync().updateChannel(channelId, inactiveOps)
                     .ifMatch(originalETag)
                     .sync();
             assertEquals("inactive", patch1.getData().getStatus());
@@ -336,7 +336,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
 
         try {
             // filter -> exact name equality
-            final DataSyncGetChannelsResult filtered = server.dataSync().getChannels()
+            final PNDataSyncGetChannelsResult filtered = server.dataSync().getChannels()
                     .filter("name == \"" + nameA + "\"")
                     .sync();
             final List<String> filteredIds = filtered.getData().stream()
@@ -344,7 +344,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertEquals(Collections.singletonList(idA), filteredIds);
 
             // classLevel -> the built-in Channel class is defined at the Global level
-            final DataSyncGetChannelsResult scoped = server.dataSync().getChannels()
+            final PNDataSyncGetChannelsResult scoped = server.dataSync().getChannels()
                     .classLevel(PNDataSyncClassLevel.GLOBAL)
                     .filter("name == \"" + nameA + "\"")
                     .sync();
@@ -352,7 +352,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                     scoped.getData().stream().map(c -> c.getId()).collect(Collectors.toList()));
 
             // sort ascending (default direction)
-            final DataSyncGetChannelsResult sortedAsc = server.dataSync().getChannels()
+            final PNDataSyncGetChannelsResult sortedAsc = server.dataSync().getChannels()
                     .filter("name LIKE \"" + namePrefix + "*\"")
                     .sort(Collections.singletonList(new PNDataSyncSortField("name")))
                     .sync();
@@ -360,7 +360,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                     sortedAsc.getData().stream().map(c -> c.getId()).collect(Collectors.toList()));
 
             // sort descending
-            final DataSyncGetChannelsResult sortedDesc = server.dataSync().getChannels()
+            final PNDataSyncGetChannelsResult sortedDesc = server.dataSync().getChannels()
                     .filter("name LIKE \"" + namePrefix + "*\"")
                     .sort(Collections.singletonList(new PNDataSyncSortField("name", false)))
                     .sync();
@@ -368,7 +368,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                     sortedDesc.getData().stream().map(c -> c.getId()).collect(Collectors.toList()));
 
             // limit + cursor -> page one channel at a time; `next` is non-null
-            final DataSyncGetChannelsResult firstPage = server.dataSync().getChannels()
+            final PNDataSyncGetChannelsResult firstPage = server.dataSync().getChannels()
                     .filter("name LIKE \"" + namePrefix + "*\"")
                     .sort(Collections.singletonList(new PNDataSyncSortField("name")))
                     .limit(1)
@@ -379,7 +379,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertTrue("Expected more pages after the first", firstPage.getNext().isHasNext());
             assertNotNull(firstPage.getNext().getCursor());
 
-            final DataSyncGetChannelsResult secondPage = server.dataSync().getChannels()
+            final PNDataSyncGetChannelsResult secondPage = server.dataSync().getChannels()
                     .filter("name LIKE \"" + namePrefix + "*\"")
                     .sort(Collections.singletonList(new PNDataSyncSortField("name")))
                     .limit(1)
@@ -402,7 +402,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
         // would fail DS-0100 "Entity class definition not found".)
         final Map<String, Object> payload = new HashMap<>();
         payload.put("name", "Alice");
-        final DataSyncCreateChannelResult createResult = server.dataSync().createChannel(classVersion)
+        final PNDataSyncCreateChannelResult createResult = server.dataSync().createChannel(classVersion)
                 .channelId(channelId)
                 .classLevel(PNDataSyncClassLevel.GLOBAL)
                 .payload(payload)

@@ -2,7 +2,7 @@ package com.pubnub.api.java.endpoints.datasync.user;
 
 import com.pubnub.api.java.endpoints.Endpoint;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
-import com.pubnub.api.java.models.consumer.datasync.user.DataSyncCreateUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncCreateUserResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @see com.pubnub.api.java.datasync.DataSync#createUser(int)
  */
-public interface CreateUser extends Endpoint<DataSyncCreateUserResult> {
+public interface CreateUser extends Endpoint<PNDataSyncCreateUserResult> {
     /**
      * Optional user identifier. When not set the server generates one.
      */

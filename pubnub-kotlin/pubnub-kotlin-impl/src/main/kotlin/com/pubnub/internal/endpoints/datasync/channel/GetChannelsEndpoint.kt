@@ -7,8 +7,8 @@ import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncPage
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncChannel
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncGetChannelsResult
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncChannel
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncGetChannelsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -31,10 +31,10 @@ class GetChannelsEndpoint internal constructor(
     private val sort: List<PNDataSyncSortField>,
     private val limit: Int?,
     private val cursor: String?,
-) : EndpointCore<EntitiesEnvelope<DataSyncChannel>, DataSyncGetChannelsResult>(pubnub), GetChannels {
+) : EndpointCore<EntitiesEnvelope<PNDataSyncChannel>, PNDataSyncGetChannelsResult>(pubnub), GetChannels {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntitiesEnvelope<DataSyncChannel>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntitiesEnvelope<PNDataSyncChannel>> {
         val sortParam = sort.joinToString(",") {
             if (it.ascending) {
                 it.property
@@ -76,9 +76,9 @@ class GetChannelsEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntitiesEnvelope<DataSyncChannel>>): DataSyncGetChannelsResult {
+    override fun createResponse(input: Response<EntitiesEnvelope<PNDataSyncChannel>>): PNDataSyncGetChannelsResult {
         return input.body()!!.let {
-            DataSyncGetChannelsResult(
+            PNDataSyncGetChannelsResult(
                 status = it.status,
                 data = it.data,
                 next = PNDataSyncPage(

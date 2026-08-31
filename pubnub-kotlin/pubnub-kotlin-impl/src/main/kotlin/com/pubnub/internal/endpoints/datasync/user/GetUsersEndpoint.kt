@@ -7,8 +7,8 @@ import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncPage
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
-import com.pubnub.api.models.consumer.datasync.user.DataSyncGetUsersResult
-import com.pubnub.api.models.consumer.datasync.user.DataSyncUser
+import com.pubnub.api.models.consumer.datasync.user.PNDataSyncGetUsersResult
+import com.pubnub.api.models.consumer.datasync.user.PNDataSyncUser
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -31,10 +31,10 @@ class GetUsersEndpoint internal constructor(
     private val sort: List<PNDataSyncSortField>,
     private val limit: Int?,
     private val cursor: String?,
-) : EndpointCore<EntitiesEnvelope<DataSyncUser>, DataSyncGetUsersResult>(pubnub), GetUsers {
+) : EndpointCore<EntitiesEnvelope<PNDataSyncUser>, PNDataSyncGetUsersResult>(pubnub), GetUsers {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntitiesEnvelope<DataSyncUser>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntitiesEnvelope<PNDataSyncUser>> {
         val sortParam = sort.joinToString(",") {
             if (it.ascending) {
                 it.property
@@ -76,9 +76,9 @@ class GetUsersEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntitiesEnvelope<DataSyncUser>>): DataSyncGetUsersResult {
+    override fun createResponse(input: Response<EntitiesEnvelope<PNDataSyncUser>>): PNDataSyncGetUsersResult {
         return input.body()!!.let {
-            DataSyncGetUsersResult(
+            PNDataSyncGetUsersResult(
                 status = it.status,
                 data = it.data,
                 next = PNDataSyncPage(

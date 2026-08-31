@@ -5,7 +5,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.datasync.entity.RemoveEntity;
-import com.pubnub.api.java.models.consumer.datasync.entity.DataSyncRemoveEntityResult;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncRemoveEntityResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Accessors(chain = true, fluent = true)
 public class RemoveEntityImpl
-        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.entity.DataSyncRemoveEntityResult, DataSyncRemoveEntityResult>
+        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncRemoveEntityResult, PNDataSyncRemoveEntityResult>
         implements RemoveEntity {
 
     private final String entityId;
@@ -30,16 +30,16 @@ public class RemoveEntityImpl
 
     @NotNull
     @Override
-    protected ExtendedRemoteAction<DataSyncRemoveEntityResult> mapResult(
-            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.entity.DataSyncRemoveEntityResult> action) {
+    protected ExtendedRemoteAction<PNDataSyncRemoveEntityResult> mapResult(
+            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncRemoveEntityResult> action) {
         return new MappingRemoteAction<>(action, result ->
-                new DataSyncRemoveEntityResult(result.getStatus())
+                new PNDataSyncRemoveEntityResult(result.getStatus())
         );
     }
 
     @Override
     @NotNull
-    protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.DataSyncRemoveEntityResult> createRemoteAction() {
+    protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncRemoveEntityResult> createRemoteAction() {
         return pubnub.getDataSync().removeEntity(entityId, ifMatch);
     }
 }

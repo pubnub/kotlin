@@ -8,7 +8,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
-import com.pubnub.api.models.consumer.datasync.entity.DataSyncCreateEntityResult
+import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.test.CommonUtils.randomValue
 import org.junit.Assert.assertEquals
@@ -39,7 +39,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             hobby = "poetry",
             custom = "value",
         )
-        val createResult: DataSyncCreateEntityResult = server.dataSync.createEntity(
+        val createResult: PNDataSyncCreateEntityResult = server.dataSync.createEntity(
             className = className,
             classVersion = classVersion,
             entityId = entityId,

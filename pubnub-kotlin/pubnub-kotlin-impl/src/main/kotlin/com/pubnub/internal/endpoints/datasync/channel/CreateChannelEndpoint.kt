@@ -5,8 +5,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncChannel
-import com.pubnub.api.models.consumer.datasync.channel.DataSyncCreateChannelResult
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncChannel
+import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncCreateChannelResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -29,10 +29,10 @@ class CreateChannelEndpoint internal constructor(
     private val channelId: String?,
     private val status: String?,
     private val payload: Any?,
-) : EndpointCore<EntityEnvelope<DataSyncChannel>, DataSyncCreateChannelResult>(pubnub), CreateChannel {
+) : EndpointCore<EntityEnvelope<PNDataSyncChannel>, PNDataSyncCreateChannelResult>(pubnub), CreateChannel {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<DataSyncChannel>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNDataSyncChannel>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -67,9 +67,9 @@ class CreateChannelEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<DataSyncChannel>>): DataSyncCreateChannelResult {
+    override fun createResponse(input: Response<EntityEnvelope<PNDataSyncChannel>>): PNDataSyncCreateChannelResult {
         return input.body()!!.let {
-            DataSyncCreateChannelResult(
+            PNDataSyncCreateChannelResult(
                 status = it.status,
                 data = it.data,
             )

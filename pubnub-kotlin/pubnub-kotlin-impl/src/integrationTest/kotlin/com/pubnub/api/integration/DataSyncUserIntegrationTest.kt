@@ -6,7 +6,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
-import com.pubnub.api.models.consumer.datasync.user.DataSyncCreateUserResult
+import com.pubnub.api.models.consumer.datasync.user.PNDataSyncCreateUserResult
 import com.pubnub.test.CommonUtils.randomValue
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -37,7 +37,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         )
         // todo add entityClass to test
         // add test with class that inherits from User
-        val createResult: DataSyncCreateUserResult = server.dataSync.createUser(
+        val createResult: PNDataSyncCreateUserResult = server.dataSync.createUser(
             classVersion = classVersion,
             userId = userId,
             status = "active",

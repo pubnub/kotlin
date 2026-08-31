@@ -1,7 +1,7 @@
 package com.pubnub.internal.models.server.datasync
 
 import com.pubnub.api.logging.LogConfig
-import com.pubnub.api.models.consumer.datasync.user.DataSyncUser
+import com.pubnub.api.models.consumer.datasync.user.PNDataSyncUser
 import com.pubnub.internal.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -65,9 +65,9 @@ internal class DataSyncUserModelsTest {
             }
         """.trimIndent()
 
-        val envelope: EntitiesEnvelope<DataSyncUser> = mapper.fromJson(
+        val envelope: EntitiesEnvelope<PNDataSyncUser> = mapper.fromJson(
             json,
-            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<DataSyncUser>>() {}.type,
+            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<PNDataSyncUser>>() {}.type,
         )
 
         assertEquals("TjQw", envelope.meta?.nextCursor)
@@ -79,9 +79,9 @@ internal class DataSyncUserModelsTest {
     fun usersMeta_defaults_when_missing() {
         val json = """{ "status": 200, "data": [] }"""
 
-        val envelope: EntitiesEnvelope<DataSyncUser> = mapper.fromJson(
+        val envelope: EntitiesEnvelope<PNDataSyncUser> = mapper.fromJson(
             json,
-            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<DataSyncUser>>() {}.type,
+            object : com.google.gson.reflect.TypeToken<EntitiesEnvelope<PNDataSyncUser>>() {}.type,
         )
 
         assertNull(envelope.meta)
@@ -105,7 +105,7 @@ internal class DataSyncUserModelsTest {
             }
         """.trimIndent()
 
-        val user: DataSyncUser = mapper.fromJson(json, DataSyncUser::class.java)
+        val user: PNDataSyncUser = mapper.fromJson(json, PNDataSyncUser::class.java)
 
         assertEquals("u1", user.id)
         assertEquals("User", user.className)

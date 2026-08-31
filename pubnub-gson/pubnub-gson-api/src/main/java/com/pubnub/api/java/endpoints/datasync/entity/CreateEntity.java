@@ -2,7 +2,7 @@ package com.pubnub.api.java.endpoints.datasync.entity;
 
 import com.pubnub.api.java.endpoints.Endpoint;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
-import com.pubnub.api.java.models.consumer.datasync.entity.DataSyncCreateEntityResult;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncCreateEntityResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @see com.pubnub.api.java.datasync.DataSync#createEntity(String, int)
  */
-public interface CreateEntity extends Endpoint<DataSyncCreateEntityResult> {
+public interface CreateEntity extends Endpoint<PNDataSyncCreateEntityResult> {
     /**
      * Optional entity identifier. When not set the server generates one.
      */

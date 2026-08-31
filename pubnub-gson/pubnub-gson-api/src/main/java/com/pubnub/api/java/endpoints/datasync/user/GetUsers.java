@@ -3,7 +3,7 @@ package com.pubnub.api.java.endpoints.datasync.user;
 import com.pubnub.api.java.endpoints.Endpoint;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncSortField;
-import com.pubnub.api.java.models.consumer.datasync.user.DataSyncGetUsersResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncGetUsersResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @see com.pubnub.api.java.datasync.DataSync#getUsers()
  */
-public interface GetUsers extends Endpoint<DataSyncGetUsersResult> {
+public interface GetUsers extends Endpoint<PNDataSyncGetUsersResult> {
     /**
      * Optional entity class identifier. When not set the whole User family is returned;
      * when set it narrows the results to that {@code User} subclass.
