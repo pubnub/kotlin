@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.datasync.entity.RemoveEntity
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.entity.PNRemoveEntityResult
+import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncRemoveEntityResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -22,7 +22,7 @@ class RemoveEntityEndpoint internal constructor(
     pubnub: PubNubImpl,
     private val entityId: String,
     private val ifMatch: String?,
-) : EndpointCore<Void, PNRemoveEntityResult>(pubnub), RemoveEntity {
+) : EndpointCore<Void, PNDataSyncRemoveEntityResult>(pubnub), RemoveEntity {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -53,9 +53,9 @@ class RemoveEntityEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<Void>): PNRemoveEntityResult {
+    override fun createResponse(input: Response<Void>): PNDataSyncRemoveEntityResult {
         // DeleteSuccessResponse has an empty body, so surface the HTTP status code.
-        return PNRemoveEntityResult(input.code())
+        return PNDataSyncRemoveEntityResult(input.code())
     }
 
     override fun operationType(): PNOperationType = PNOperationType.PNRemoveEntityOperation

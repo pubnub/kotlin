@@ -1,25 +1,13 @@
 package com.pubnub.api.java.endpoints.datasync.user;
 
 import com.pubnub.api.java.endpoints.Endpoint;
-import com.pubnub.api.java.models.consumer.datasync.user.PNUpdateUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncUpdateUserResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-
 /**
- * @see com.pubnub.api.java.datasync.DataSync#updateUser(String, int)
+ * @see com.pubnub.api.java.datasync.DataSync#updateUser(String, java.util.List)
  */
-public interface UpdateUser extends Endpoint<PNUpdateUserResult> {
-    /**
-     * Optional user status.
-     */
-    UpdateUser status(@Nullable String status);
-
-    /**
-     * Optional arbitrary JSON object payload.
-     */
-    UpdateUser payload(@Nullable Map<String, Object> payload);
-
+public interface UpdateUser extends Endpoint<PNDataSyncUpdateUserResult> {
     /**
      * Optional eTag for optimistic concurrency ({@code If-Match} header).
      */

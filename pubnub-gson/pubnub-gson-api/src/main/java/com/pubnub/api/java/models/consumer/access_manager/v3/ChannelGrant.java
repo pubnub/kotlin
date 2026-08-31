@@ -43,6 +43,11 @@ public class ChannelGrant extends PNResource<ChannelGrant> implements TokenGrant
     }
 
     @Override
+    public ChannelGrant create() {
+        return super.create();
+    }
+
+    @Override
     public ChannelGrant delete() {
         return super.delete();
     }

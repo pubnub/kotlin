@@ -1,25 +1,34 @@
 package com.pubnub.api.datasync
 
+import com.pubnub.api.endpoints.datasync.channel.CreateChannel
+import com.pubnub.api.endpoints.datasync.channel.GetChannel
+import com.pubnub.api.endpoints.datasync.channel.GetChannels
+import com.pubnub.api.endpoints.datasync.channel.RemoveChannel
+import com.pubnub.api.endpoints.datasync.channel.SetChannel
+import com.pubnub.api.endpoints.datasync.channel.UpdateChannel
 import com.pubnub.api.endpoints.datasync.entity.CreateEntity
 import com.pubnub.api.endpoints.datasync.entity.GetEntities
 import com.pubnub.api.endpoints.datasync.entity.GetEntity
-import com.pubnub.api.endpoints.datasync.entity.PatchEntity
 import com.pubnub.api.endpoints.datasync.entity.RemoveEntity
+import com.pubnub.api.endpoints.datasync.entity.SetEntity
 import com.pubnub.api.endpoints.datasync.entity.UpdateEntity
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
-import com.pubnub.api.endpoints.datasync.user.PatchUser
 import com.pubnub.api.endpoints.datasync.user.RemoveUser
+import com.pubnub.api.endpoints.datasync.user.SetUser
 import com.pubnub.api.endpoints.datasync.user.UpdateUser
+import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
+import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 
 internal class DataSyncImpl : DataSync {
     override fun getEntity(entityId: String): GetEntity = throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun createEntity(
-        entityClass: String,
-        entityClassVersion: Int,
+        className: String,
+        classVersion: Int,
+        classLevel: PNDataSyncClassLevel?,
         entityId: String?,
         status: String?,
         payload: Any?,
@@ -29,36 +38,37 @@ internal class DataSyncImpl : DataSync {
         throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun getEntities(
-        entityClass: String,
-        entityClassVersion: Int?,
-        entityClassLevel: String?,
+        className: String,
+        classVersion: Int?,
+        classLevel: PNDataSyncClassLevel?,
         filter: String?,
         filterAdvanced: String?,
-        sort: String?,
+        sort: List<PNDataSyncSortField>,
         limit: Int?,
         cursor: String?,
     ): GetEntities = throw NotImplementedError(NOT_IMPLEMENTED)
 
-    override fun patchEntity(
+    override fun updateEntity(
         entityId: String,
         operations: List<PNJsonPatchOperation>,
         ifMatch: String?,
-    ): PatchEntity = throw NotImplementedError(NOT_IMPLEMENTED)
+    ): UpdateEntity = throw NotImplementedError(NOT_IMPLEMENTED)
 
-    override fun updateEntity(
+    override fun setEntity(
         entityId: String,
-        entityClassVersion: Int,
+        classVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,
-    ): UpdateEntity = throw NotImplementedError(NOT_IMPLEMENTED)
+    ): SetEntity = throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun getUser(userId: String): GetUser = throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun createUser(
-        entityClassVersion: Int,
+        classVersion: Int,
         userId: String?,
-        entityClass: String?,
+        className: String?,
+        classLevel: PNDataSyncClassLevel?,
         status: String?,
         payload: Any?,
     ): CreateUser = throw NotImplementedError(NOT_IMPLEMENTED)
@@ -67,29 +77,68 @@ internal class DataSyncImpl : DataSync {
         throw NotImplementedError(NOT_IMPLEMENTED)
 
     override fun getUsers(
-        entityClass: String?,
-        entityClassVersion: Int?,
-        entityClassLevel: String?,
+        className: String?,
+        classVersion: Int?,
+        classLevel: PNDataSyncClassLevel?,
         filter: String?,
         filterAdvanced: String?,
-        sort: String?,
+        sort: List<PNDataSyncSortField>,
         limit: Int?,
         cursor: String?,
     ): GetUsers = throw NotImplementedError(NOT_IMPLEMENTED)
 
-    override fun patchUser(
+    override fun updateUser(
         userId: String,
         operations: List<PNJsonPatchOperation>,
         ifMatch: String?,
-    ): PatchUser = throw NotImplementedError(NOT_IMPLEMENTED)
+    ): UpdateUser = throw NotImplementedError(NOT_IMPLEMENTED)
 
-    override fun updateUser(
+    override fun setUser(
         userId: String,
-        entityClassVersion: Int,
+        classVersion: Int,
         status: String?,
         payload: Any?,
         ifMatch: String?,
-    ): UpdateUser = throw NotImplementedError(NOT_IMPLEMENTED)
+    ): SetUser = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun getChannel(channelId: String): GetChannel = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun createChannel(
+        classVersion: Int,
+        channelId: String?,
+        className: String?,
+        classLevel: PNDataSyncClassLevel?,
+        status: String?,
+        payload: Any?,
+    ): CreateChannel = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun removeChannel(channelId: String, ifMatch: String?): RemoveChannel =
+        throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun getChannels(
+        className: String?,
+        classVersion: Int?,
+        classLevel: PNDataSyncClassLevel?,
+        filter: String?,
+        filterAdvanced: String?,
+        sort: List<PNDataSyncSortField>,
+        limit: Int?,
+        cursor: String?,
+    ): GetChannels = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun updateChannel(
+        channelId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String?,
+    ): UpdateChannel = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun setChannel(
+        channelId: String,
+        classVersion: Int,
+        status: String?,
+        payload: Any?,
+        ifMatch: String?,
+    ): SetChannel = throw NotImplementedError(NOT_IMPLEMENTED)
 }
 
 private const val NOT_IMPLEMENTED = "DataSync is not implemented on the JS target"

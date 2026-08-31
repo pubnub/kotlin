@@ -5,8 +5,9 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.datasync.entity.CreateEntity;
-import com.pubnub.api.java.models.consumer.datasync.entity.PNCreateEntityResult;
-import com.pubnub.api.java.models.consumer.datasync.entity.PNEntityConverter;
+import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncCreateEntityResult;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNDataSyncEntityConverter;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,15 +18,19 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class CreateEntityImpl
-        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.entity.PNCreateEntityResult, PNCreateEntityResult>
+        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult, PNDataSyncCreateEntityResult>
         implements CreateEntity {
 
-    private final String entityClass;
-    private final int entityClassVersion;
+    private final String className;
+    private final int classVersion;
 
     @Setter
     @Nullable
     private String entityId;
+
+    @Setter
+    @Nullable
+    private PNDataSyncClassLevel classLevel;
 
     @Setter
     @Nullable
@@ -35,30 +40,31 @@ public class CreateEntityImpl
     @Nullable
     private Map<String, Object> payload;
 
-    public CreateEntityImpl(String entityClass, int entityClassVersion, final PubNub pubnubInstance) {
+    public CreateEntityImpl(String className, int classVersion, final PubNub pubnubInstance) {
         super(pubnubInstance);
-        this.entityClass = entityClass;
-        this.entityClassVersion = entityClassVersion;
+        this.className = className;
+        this.classVersion = classVersion;
     }
 
     @NotNull
     @Override
-    protected ExtendedRemoteAction<PNCreateEntityResult> mapResult(
-            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.entity.PNCreateEntityResult> action) {
+    protected ExtendedRemoteAction<PNDataSyncCreateEntityResult> mapResult(
+            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult> action) {
         return new MappingRemoteAction<>(action, result ->
-                new PNCreateEntityResult(
+                new PNDataSyncCreateEntityResult(
                         result.getStatus(),
-                        PNEntityConverter.from(result.getData())
+                        PNDataSyncEntityConverter.from(result.getData())
                 )
         );
     }
 
     @Override
     @NotNull
-    protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNCreateEntityResult> createRemoteAction() {
+    protected Endpoint<com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult> createRemoteAction() {
         return pubnub.getDataSync().createEntity(
-                entityClass,
-                entityClassVersion,
+                className,
+                classVersion,
+                classLevel == null ? null : com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel.valueOf(classLevel.name()),
                 entityId,
                 status,
                 payload

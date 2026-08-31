@@ -5,32 +5,37 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.datasync.user.GetUsers;
-import com.pubnub.api.java.models.consumer.datasync.user.PNGetUsersResult;
-import com.pubnub.api.java.models.consumer.datasync.user.PNUserConverter;
+import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
+import com.pubnub.api.java.models.consumer.datasync.PNDataSyncPage;
+import com.pubnub.api.java.models.consumer.datasync.PNDataSyncSortField;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncGetUsersResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncUserConverter;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Accessors(chain = true, fluent = true)
 public class GetUsersImpl
-        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.user.PNGetUsersResult, PNGetUsersResult>
+        extends DelegatingEndpoint<com.pubnub.api.models.consumer.datasync.user.PNDataSyncGetUsersResult, PNDataSyncGetUsersResult>
         implements GetUsers {
 
     @Setter
     @Nullable
-    private String entityClass;
+    private String className;
 
     @Setter
     @Nullable
-    private Integer entityClassVersion;
+    private Integer classVersion;
 
     @Setter
     @Nullable
-    private String entityClassLevel;
+    private PNDataSyncClassLevel classLevel;
 
     @Setter
     @Nullable
@@ -42,7 +47,7 @@ public class GetUsersImpl
 
     @Setter
     @Nullable
-    private String sort;
+    private List<PNDataSyncSortField> sort;
 
     @Setter
     @Nullable
@@ -58,29 +63,37 @@ public class GetUsersImpl
 
     @NotNull
     @Override
-    protected ExtendedRemoteAction<PNGetUsersResult> mapResult(
-            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.user.PNGetUsersResult> action) {
-        return new MappingRemoteAction<>(action, result ->
-                new PNGetUsersResult(
-                        result.getStatus(),
-                        result.getData().stream().map(PNUserConverter::from).collect(Collectors.toList()),
-                        result.getNext(),
-                        result.getHasNext(),
-                        result.getLimit()
-                )
-        );
+    protected ExtendedRemoteAction<PNDataSyncGetUsersResult> mapResult(
+            @NotNull ExtendedRemoteAction<com.pubnub.api.models.consumer.datasync.user.PNDataSyncGetUsersResult> action) {
+        return new MappingRemoteAction<>(action, result -> {
+            com.pubnub.api.models.consumer.datasync.PNDataSyncPage kNext = result.getNext();
+            return new PNDataSyncGetUsersResult(
+                    result.getStatus(),
+                    result.getData().stream().map(PNDataSyncUserConverter::from).collect(Collectors.toList()),
+                    new PNDataSyncPage(kNext.getCursor(), kNext.getHasNext(), kNext.getLimit())
+            );
+        });
     }
 
     @Override
     @NotNull
-    protected Endpoint<com.pubnub.api.models.consumer.datasync.user.PNGetUsersResult> createRemoteAction() {
+    protected Endpoint<com.pubnub.api.models.consumer.datasync.user.PNDataSyncGetUsersResult> createRemoteAction() {
+        final List<com.pubnub.api.models.consumer.datasync.PNDataSyncSortField> mappedSort =
+                sort == null
+                        ? Collections.emptyList()
+                        : sort.stream()
+                                .map(s -> new com.pubnub.api.models.consumer.datasync.PNDataSyncSortField(
+                                        s.getProperty(),
+                                        s.isAscending()
+                                ))
+                                .collect(Collectors.toList());
         return pubnub.getDataSync().getUsers(
-                entityClass,
-                entityClassVersion,
-                entityClassLevel,
+                className,
+                classVersion,
+                classLevel == null ? null : com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel.valueOf(classLevel.name()),
                 filter,
                 filterAdvanced,
-                sort,
+                mappedSort,
                 limit,
                 cursor
         );

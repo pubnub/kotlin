@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A single JSON Patch (RFC-6902) operation used by {@code pubnub.dataSync().patchEntity()}.
+ * A single JSON Patch (RFC-6902) operation used by {@code pubnub.dataSync().updateEntity()}.
  */
 @Getter
 @Setter
