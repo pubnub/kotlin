@@ -6,8 +6,8 @@ import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.models.consumer.datasync.user.PNGetUserResult
-import com.pubnub.api.models.consumer.datasync.user.PNUser
+import com.pubnub.api.models.consumer.datasync.user.PNDataSyncGetUserResult
+import com.pubnub.api.models.consumer.datasync.user.PNDataSyncUser
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
@@ -23,7 +23,7 @@ import retrofit2.Response
 class GetUserEndpoint internal constructor(
     pubnub: PubNubImpl,
     private val userId: String,
-) : EndpointCore<EntityEnvelope<PNUser>, PNGetUserResult>(pubnub), GetUser {
+) : EndpointCore<EntityEnvelope<PNDataSyncUser>, PNDataSyncGetUserResult>(pubnub), GetUser {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
@@ -33,7 +33,7 @@ class GetUserEndpoint internal constructor(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUser>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNDataSyncUser>> {
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -52,9 +52,9 @@ class GetUserEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNUser>>): PNGetUserResult {
+    override fun createResponse(input: Response<EntityEnvelope<PNDataSyncUser>>): PNDataSyncGetUserResult {
         return input.body()!!.let {
-            PNGetUserResult(
+            PNDataSyncGetUserResult(
                 status = it.status,
                 data = it.data,
             )

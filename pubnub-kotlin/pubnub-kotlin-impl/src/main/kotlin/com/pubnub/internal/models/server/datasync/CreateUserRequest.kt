@@ -12,6 +12,10 @@ internal data class CreateUserRequestData(
     // a `User` subclass.
     val entityClass: String? = null,
     val entityClassVersion: Int,
+    // Optional class level (wire string, e.g. "SubKey" / "Global") — the endpoint maps the public
+    // `classLevel: PNDataSyncClassLevel?` param to `entityClassLevel = classLevel?.value`. Omitted from
+    // the wire payload when null.
+    val entityClassLevel: String? = null,
     val status: String? = null,
     val payload: Any? = null,
 )

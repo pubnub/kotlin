@@ -129,9 +129,9 @@ sealed class PNOperationType(open val queryParam: String? = null) {
 
     object PNGetEntitiesOperation : DataSyncOperation()
 
-    object PNPatchEntityOperation : DataSyncOperation()
-
     object PNUpdateEntityOperation : DataSyncOperation()
+
+    object PNSetEntityOperation : DataSyncOperation()
 
     object PNGetUserOperation : DataSyncOperation()
 
@@ -141,7 +141,19 @@ sealed class PNOperationType(open val queryParam: String? = null) {
 
     object PNGetUsersOperation : DataSyncOperation()
 
-    object PNPatchUserOperation : DataSyncOperation()
-
     object PNUpdateUserOperation : DataSyncOperation()
+
+    object PNSetUserOperation : DataSyncOperation()
+
+    object PNGetChannelOperation : DataSyncOperation()
+
+    object PNCreateChannelOperation : DataSyncOperation()
+
+    object PNRemoveChannelOperation : DataSyncOperation()
+
+    object PNGetChannelsOperation : DataSyncOperation()
+
+    object PNUpdateChannelOperation : DataSyncOperation()
+
+    object PNSetChannelOperation : DataSyncOperation()
 }
