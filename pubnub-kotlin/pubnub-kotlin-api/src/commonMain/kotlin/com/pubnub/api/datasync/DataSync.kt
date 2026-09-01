@@ -64,6 +64,14 @@ interface DataSync {
     /**
      * List DataSync entities of a class.
      *
+     * Results are scoped to the caller's access token: only entities the token is permitted to read (`get`)
+     * are returned. Entities the token cannot read are silently omitted — the call does not error and does not
+     * return a `403` for the un-readable entities. This token scoping is applied before [filterFast] / [filter] /
+     * [sort]. When the PubNub instance is configured with a secretKey (a trusted server-side deployment, never a
+     * client — the secretKey must not be shipped to clients), or when using a token whose grants cover the whole
+     * result set, no permission-based filtering is applied and all matching entities are returned, subject only to
+     * [filterFast] / [filter] / [sort] and [limit] paging.
+     *
      * @param className Entity class identifier (required).
      * @param classVersion Optional entity class version. When `null` the server uses the latest.
      * @param classLevel Optional level at which the entity class is defined (e.g. `SubKey` / `Global`).
@@ -175,6 +183,14 @@ interface DataSync {
     /**
      * List DataSync users.
      *
+     * Results are scoped to the caller's access token: only users the token is permitted to read (`get`)
+     * are returned. Users the token cannot read are silently omitted — the call does not error and does not
+     * return a `403` for the un-readable users. This token scoping is applied before [filterFast] / [filter] /
+     * [sort]. When the PubNub instance is configured with a secretKey (a trusted server-side deployment, never a
+     * client — the secretKey must not be shipped to clients), or when using a token whose grants cover the whole
+     * result set, no permission-based filtering is applied and all matching users are returned, subject only to
+     * [filterFast] / [filter] / [sort] and [limit] paging.
+     *
      * @param className Optional entity class identifier. When `null` the whole User family is returned;
      *   when set it narrows the results to that `User` subclass.
      * @param classVersion Optional entity class version. When `null` the server uses the latest.
@@ -285,6 +301,14 @@ interface DataSync {
 
     /**
      * List DataSync channels.
+     *
+     * Results are scoped to the caller's access token: only channels the token is permitted to read (`get`)
+     * are returned. Channels the token cannot read are silently omitted — the call does not error and does not
+     * return a `403` for the un-readable channels. This token scoping is applied before [filterFast] / [filter] /
+     * [sort]. When the PubNub instance is configured with a secretKey (a trusted server-side deployment, never a
+     * client — the secretKey must not be shipped to clients), or when using a token whose grants cover the whole
+     * result set, no permission-based filtering is applied and all matching channels are returned, subject only to
+     * [filterFast] / [filter] / [sort] and [limit] paging.
      *
      * @param className Optional entity class identifier. When `null` the whole Channel family is returned;
      *   when set it narrows the results to that `Channel` subclass.

@@ -190,6 +190,60 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun getChannelsReturnsOnlyChannelsTheTokenCanRead() {
+        // Two channels created with `server` (has the secretKey, so no token needed).
+        val grantedChannelId = "channel-granted-" + randomValue()
+        val ungrantedChannelId = "channel-ungranted-" + randomValue()
+
+        server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = grantedChannelId,
+            status = "active",
+            payload = TestChannelPayload(name = "Granted"),
+        ).sync()
+        server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = ungrantedChannelId,
+            status = "active",
+            payload = TestChannelPayload(name = "Ungranted"),
+        ).sync()
+
+        // A client on the same keyset as `server` but without the secretKey; it can only authenticate via setToken.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // Grant the client `get` on ONLY one of the two channels.
+        grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = grantedChannelId, get = true))
+
+        try {
+            // getChannels with a token that only grants `get` on `grantedChannelId`.
+            // The server does NOT reject the whole listing; instead it returns a filtered list containing
+            // only the channels the token can read. The ungranted channel is silently omitted rather than
+            // leaking to a client that has no permission to read it.
+            val getAllResult = client.dataSync.getChannels(limit = 100).sync()
+
+            assertTrue(
+                "Expected the granted channel to be present in the filtered listing",
+                getAllResult.data.any { it.id == grantedChannelId },
+            )
+            assertTrue(
+                "The ungranted channel must not leak to a token that cannot read it",
+                getAllResult.data.none { it.id == ungrantedChannelId },
+            )
+        } finally {
+            // best-effort cleanup with `server` (secretKey), regardless of what the client could see
+            try {
+                server.dataSync.removeChannel(grantedChannelId).sync()
+            } catch (ignored: PubNubException) {
+            }
+            try {
+                server.dataSync.removeChannel(ungrantedChannelId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
     fun createWithServerGeneratedId() {
         val createResult = server.dataSync.createChannel(
             classVersion = classVersion,

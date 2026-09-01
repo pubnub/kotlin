@@ -175,6 +175,60 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun getUsersReturnsOnlyUsersTheTokenCanRead() {
+        // Two users created with `server` (has the secretKey, so no token needed).
+        val grantedUserId = "user-granted-" + randomValue()
+        val ungrantedUserId = "user-ungranted-" + randomValue()
+
+        server.dataSync.createUser(
+            classVersion = classVersion,
+            userId = grantedUserId,
+            status = "active",
+            payload = TestUserPayload(username = "Granted", email = "granted@example.com"),
+        ).sync()
+        server.dataSync.createUser(
+            classVersion = classVersion,
+            userId = ungrantedUserId,
+            status = "active",
+            payload = TestUserPayload(username = "Ungranted", email = "ungranted@example.com"),
+        ).sync()
+
+        // A client on the same keyset as `server` but without the secretKey; it can only authenticate via setToken.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // Grant the client `get` on ONLY one of the two users.
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = grantedUserId, get = true))
+
+        try {
+            // getUsers with a token that only grants `get` on `grantedUserId`.
+            // The server does NOT reject the whole listing; instead it returns a filtered list
+            // containing only the users the token can read. The ungranted user is silently omitted
+            // rather than leaking to a client that has no permission to read it.
+            val getAllResult = client.dataSync.getUsers(limit = 100).sync()
+
+            assertTrue(
+                "Expected the granted user to be present in the filtered listing",
+                getAllResult.data.any { it.id == grantedUserId },
+            )
+            assertTrue(
+                "The ungranted user must not leak to a token that cannot read it",
+                getAllResult.data.none { it.id == ungrantedUserId },
+            )
+        } finally {
+            // best-effort cleanup with `server` (secretKey), regardless of what the client could see
+            try {
+                server.dataSync.removeUser(grantedUserId).sync()
+            } catch (ignored: PubNubException) {
+            }
+            try {
+                server.dataSync.removeUser(ungrantedUserId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
     fun createWithServerGeneratedId() {
         val createResult = server.dataSync.createUser(
             classVersion = classVersion,

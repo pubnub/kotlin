@@ -176,6 +176,62 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun getEntitiesReturnsOnlyEntitiesTheTokenCanRead() {
+        // Two entities created with `server` (has the secretKey, so no token needed).
+        val grantedEntityId = "entity-granted-" + randomValue()
+        val ungrantedEntityId = "entity-ungranted-" + randomValue()
+
+        server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = grantedEntityId,
+            status = "active",
+            payload = TestUserPayload(username = "Granted", email = "granted@example.com"),
+        ).sync()
+        server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = ungrantedEntityId,
+            status = "active",
+            payload = TestUserPayload(username = "Ungranted", email = "ungranted@example.com"),
+        ).sync()
+
+        // A client on the same keyset as `server` but without the secretKey; it can only authenticate via setToken.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // Grant the client `get` on ONLY one of the two entities.
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(grantedEntityId, get = true))
+
+        try {
+            // getEntities with a token that only grants `get` on `grantedEntityId`.
+            // The server does NOT reject the whole listing; instead it returns a filtered list containing
+            // only the entities the token can read. The ungranted entity is silently omitted rather than
+            // leaking to a client that has no permission to read it.
+            val getAllResult = client.dataSync.getEntities(className = className, limit = 100).sync()
+
+            assertTrue(
+                "Expected the granted entity to be present in the filtered listing",
+                getAllResult.data.any { it.id == grantedEntityId },
+            )
+            assertTrue(
+                "The ungranted entity must not leak to a token that cannot read it",
+                getAllResult.data.none { it.id == ungrantedEntityId },
+            )
+        } finally {
+            // best-effort cleanup with `server` (secretKey), regardless of what the client could see
+            try {
+                server.dataSync.removeEntity(grantedEntityId).sync()
+            } catch (ignored: PubNubException) {
+            }
+            try {
+                server.dataSync.removeEntity(ungrantedEntityId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
     fun createWithServerGeneratedId() {
         val createResult = server.dataSync.createEntity(
             className = className,
