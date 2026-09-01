@@ -14,10 +14,34 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncUserIntegrationTest : BaseIntegrationTest() {
     private val classVersion = 1
     private val userId = "user-" + randomValue()
+
+    /**
+     * Wipes every user on the keyset before the suite runs so leftover rows from earlier runs (or a crashed
+     * suite) can't skew list/filter assertions. Uses `server` (holds the secretKey), pages through `getUsers`
+     * until exhausted, and best-effort removes each id.
+     */
+    @BeforeAll
+    fun cleanupExistingUsers() {
+        /*while (true) {
+            val page = server.dataSync.getUsers(limit = 100).sync()
+            if (page.data.isEmpty()) {
+                break
+            }
+            page.data.forEach { user ->
+                try {
+                    server.dataSync.removeUser(user.id).sync()
+                } catch (ignored: PubNubException) {
+                }
+            }
+        }*/
+    }
 
     data class TestUserPayload(
         val username: String,

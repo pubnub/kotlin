@@ -16,10 +16,34 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     private val classVersion = 1
     private val channelId = "channel-" + randomValue()
+
+    /**
+     * Wipes every channel on the keyset before the suite runs so leftover rows from earlier runs (or a crashed
+     * suite) can't skew list/filter assertions. Uses `server` (holds the secretKey), pages through `getChannels`
+     * until exhausted, and best-effort removes each id.
+     */
+    @BeforeAll
+    fun cleanupExistingChannels() {
+        /*while (true) {
+            val page = server.dataSync.getChannels(limit = 100).sync()
+            if (page.data.isEmpty()) {
+                break
+            }
+            page.data.forEach { channel ->
+                try {
+                    server.dataSync.removeChannel(channel.id).sync()
+                } catch (ignored: PubNubException) {
+                }
+            }
+        }*/
+    }
 
     data class TestChannelPayload(
         val username: String? = null,

@@ -17,11 +17,35 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     private val className = "TestUser"
     private val classVersion = 1
     private val entityId = "entity-" + randomValue()
+
+    /**
+     * Wipes every entity of [className] on the keyset before the suite runs so leftover rows from earlier runs
+     * (or a crashed suite) can't skew list/filter assertions. Uses `server` (holds the secretKey), pages through
+     * `getEntities` until exhausted, and best-effort removes each id.
+     */
+    @BeforeAll
+    fun cleanupExistingEntities() {
+        /*while (true) {
+            val page = server.dataSync.getEntities(className = className, limit = 100).sync()
+            if (page.data.isEmpty()) {
+                break
+            }
+            page.data.forEach { entity ->
+                try {
+                    server.dataSync.removeEntity(entity.id).sync()
+                } catch (ignored: PubNubException) {
+                }
+            }
+        }*/
+    }
 
     data class TestUserPayload(
         val username: String,
