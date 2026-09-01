@@ -17,11 +17,35 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     private val className = "TestUser"
     private val classVersion = 1
     private val entityId = "entity-" + randomValue()
+
+    /**
+     * Wipes every entity of [className] on the keyset before the suite runs so leftover rows from earlier runs
+     * (or a crashed suite) can't skew list/filter assertions. Uses `server` (holds the secretKey), pages through
+     * `getEntities` until exhausted, and best-effort removes each id.
+     */
+    @BeforeAll
+    fun cleanupExistingEntities() {
+        /*while (true) {
+            val page = server.dataSync.getEntities(className = className, limit = 100).sync()
+            if (page.data.isEmpty()) {
+                break
+            }
+            page.data.forEach { entity ->
+                try {
+                    server.dataSync.removeEntity(entity.id).sync()
+                } catch (ignored: PubNubException) {
+                }
+            }
+        }*/
+    }
 
     data class TestUserPayload(
         val username: String,
@@ -173,6 +197,62 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             grants = grants.toList(),
         ).sync().token
         client.setToken(token)
+    }
+
+    @Test
+    fun getEntitiesReturnsOnlyEntitiesTheTokenCanRead() {
+        // Two entities created with `server` (has the secretKey, so no token needed).
+        val grantedEntityId = "entity-granted-" + randomValue()
+        val ungrantedEntityId = "entity-ungranted-" + randomValue()
+
+        server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = grantedEntityId,
+            status = "active",
+            payload = TestUserPayload(username = "Granted", email = "granted@example.com"),
+        ).sync()
+        server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = ungrantedEntityId,
+            status = "active",
+            payload = TestUserPayload(username = "Ungranted", email = "ungranted@example.com"),
+        ).sync()
+
+        // A client on the same keyset as `server` but without the secretKey; it can only authenticate via setToken.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // Grant the client `get` on ONLY one of the two entities.
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(grantedEntityId, get = true))
+
+        try {
+            // getEntities with a token that only grants `get` on `grantedEntityId`.
+            // The server does NOT reject the whole listing; instead it returns a filtered list containing
+            // only the entities the token can read. The ungranted entity is silently omitted rather than
+            // leaking to a client that has no permission to read it.
+            val getAllResult = client.dataSync.getEntities(className = className, limit = 100).sync()
+
+            assertTrue(
+                "Expected the granted entity to be present in the filtered listing",
+                getAllResult.data.any { it.id == grantedEntityId },
+            )
+            assertTrue(
+                "The ungranted entity must not leak to a token that cannot read it",
+                getAllResult.data.none { it.id == ungrantedEntityId },
+            )
+        } finally {
+            // best-effort cleanup with `server` (secretKey), regardless of what the client could see
+            try {
+                server.dataSync.removeEntity(grantedEntityId).sync()
+            } catch (ignored: PubNubException) {
+            }
+            try {
+                server.dataSync.removeEntity(ungrantedEntityId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
     }
 
     @Test
@@ -355,10 +435,10 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            // filter -> exact username equality (double-quoted string literal, per AppContext QL)
+            // filterFast -> exact username equality (double-quoted string literal, per AppContext QL)
             val filtered = server.dataSync.getEntities(
                 className = className,
-                filter = "username == \"$userA\"",
+                filterFast = "username == \"$userA\"",
             ).sync()
             val filteredIds = filtered.data.map { it.id }
             assertEquals(setOf(idA), filteredIds.toSet())
@@ -368,28 +448,28 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             val scoped = server.dataSync.getEntities(
                 className = className,
                 classLevel = PNDataSyncClassLevel.SUBKEY,
-                filter = "username == \"$userA\"",
+                filterFast = "username == \"$userA\"",
             ).sync()
             assertEquals(setOf(idA), scoped.data.map { it.id }.toSet())
 
-            // filterAdvanced -> prefix match via LIKE with a `*` wildcard, capturing all three rows
+            // filterFast -> prefix match via LIKE with a `*` wildcard, capturing all three rows
             val advanced = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
             ).sync()
             assertEquals(setOf(idA, idB, idC), advanced.data.map { it.id }.toSet())
 
             // sort -> ascending by username (bare property, no direction suffix); a-b-c order
             val sortedDefault = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username")),
             ).sync()
             assertEquals(listOf(idA, idB, idC), sortedDefault.data.map { it.id })
 
             val sorted = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username", ascending = true)),
             ).sync()
             assertEquals(listOf(idA, idB, idC), sorted.data.map { it.id })
@@ -397,7 +477,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             // sort descending -> the same rows in reverse (c-b-a) order
             val sortedDesc = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username", ascending = false)),
             ).sync()
             assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
@@ -405,7 +485,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             // limit + cursor -> page through this run's rows one entity at a time
             val firstPage = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username")),
                 limit = 1,
             ).sync()
@@ -416,7 +496,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
 
             val secondPage = server.dataSync.getEntities(
                 className = className,
-                filter = "username LIKE \"$userPrefix*\"",
+                filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username")),
                 limit = 1,
                 cursor = firstPage.next.cursor,

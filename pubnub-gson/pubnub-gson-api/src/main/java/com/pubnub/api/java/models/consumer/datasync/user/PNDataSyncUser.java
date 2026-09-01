@@ -13,8 +13,7 @@ import java.util.Map;
  * DataSync User resource returned by {@code pubnub.dataSync().getUser()} / {@code createUser()}.
  *
  * <p>A User is a specialized DataSync entity whose class defaults to {@code User}. The built-in {@code User}
- * class is defined at the {@code GLOBAL} level and its filterable/sortable set is {@code name}
- * ({@code username} / {@code email} are custom-class properties, not built-in {@code User} fields).
+ * class is defined at the {@code GLOBAL} level and its filterable/sortable set is {@code name}.
  */
 @Getter
 @Setter

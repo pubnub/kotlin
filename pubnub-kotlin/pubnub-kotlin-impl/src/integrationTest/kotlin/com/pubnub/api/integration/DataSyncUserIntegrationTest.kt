@@ -14,10 +14,34 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncUserIntegrationTest : BaseIntegrationTest() {
     private val classVersion = 1
     private val userId = "user-" + randomValue()
+
+    /**
+     * Wipes every user on the keyset before the suite runs so leftover rows from earlier runs (or a crashed
+     * suite) can't skew list/filter assertions. Uses `server` (holds the secretKey), pages through `getUsers`
+     * until exhausted, and best-effort removes each id.
+     */
+    @BeforeAll
+    fun cleanupExistingUsers() {
+        /*while (true) {
+            val page = server.dataSync.getUsers(limit = 100).sync()
+            if (page.data.isEmpty()) {
+                break
+            }
+            page.data.forEach { user ->
+                try {
+                    server.dataSync.removeUser(user.id).sync()
+                } catch (ignored: PubNubException) {
+                }
+            }
+        }*/
+    }
 
     data class TestUserPayload(
         val username: String,
@@ -172,6 +196,60 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             grants = grants.toList(),
         ).sync().token
         client.setToken(token)
+    }
+
+    @Test
+    fun getUsersReturnsOnlyUsersTheTokenCanRead() {
+        // Two users created with `server` (has the secretKey, so no token needed).
+        val grantedUserId = "user-granted-" + randomValue()
+        val ungrantedUserId = "user-ungranted-" + randomValue()
+
+        server.dataSync.createUser(
+            classVersion = classVersion,
+            userId = grantedUserId,
+            status = "active",
+            payload = TestUserPayload(username = "Granted", email = "granted@example.com"),
+        ).sync()
+        server.dataSync.createUser(
+            classVersion = classVersion,
+            userId = ungrantedUserId,
+            status = "active",
+            payload = TestUserPayload(username = "Ungranted", email = "ungranted@example.com"),
+        ).sync()
+
+        // A client on the same keyset as `server` but without the secretKey; it can only authenticate via setToken.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // Grant the client `get` on ONLY one of the two users.
+        grantAndAuthenticate(client, authorizedUUID, UserGrant.id(id = grantedUserId, get = true))
+
+        try {
+            // getUsers with a token that only grants `get` on `grantedUserId`.
+            // The server does NOT reject the whole listing; instead it returns a filtered list
+            // containing only the users the token can read. The ungranted user is silently omitted
+            // rather than leaking to a client that has no permission to read it.
+            val getAllResult = client.dataSync.getUsers(limit = 100).sync()
+
+            assertTrue(
+                "Expected the granted user to be present in the filtered listing",
+                getAllResult.data.any { it.id == grantedUserId },
+            )
+            assertTrue(
+                "The ungranted user must not leak to a token that cannot read it",
+                getAllResult.data.none { it.id == ungrantedUserId },
+            )
+        } finally {
+            // best-effort cleanup with `server` (secretKey), regardless of what the client could see
+            try {
+                server.dataSync.removeUser(grantedUserId).sync()
+            } catch (ignored: PubNubException) {
+            }
+            try {
+                server.dataSync.removeUser(ungrantedUserId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
     }
 
     @Test
