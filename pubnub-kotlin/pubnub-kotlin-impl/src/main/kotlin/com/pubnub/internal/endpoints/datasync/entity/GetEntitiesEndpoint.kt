@@ -28,8 +28,8 @@ class GetEntitiesEndpoint internal constructor(
     private val className: String,
     private val classVersion: Int?,
     private val classLevel: PNDataSyncClassLevel?,
+    private val filterFast: String?,
     private val filter: String?,
-    private val filterAdvanced: String?,
     private val sort: List<PNDataSyncSortField>,
     private val limit: Int?,
     private val cursor: String?,
@@ -58,8 +58,8 @@ class GetEntitiesEndpoint internal constructor(
                         "className" to className,
                         "classVersion" to (classVersion ?: ""),
                         "classLevel" to (classLevel?.value ?: ""),
+                        "filterFast" to (filterFast ?: ""),
                         "filter" to (filter ?: ""),
-                        "filterAdvanced" to (filterAdvanced ?: ""),
                         "sort" to sortParam,
                         "limit" to (limit ?: ""),
                         "cursor" to (cursor ?: "")
@@ -72,8 +72,8 @@ class GetEntitiesEndpoint internal constructor(
         queryParams["entity_class"] = className
         classVersion?.let { queryParams["entity_class_version"] = it.toString() }
         classLevel?.let { queryParams["entity_class_level"] = it.value }
+        filterFast?.let { queryParams["filter_fast"] = it }
         filter?.let { queryParams["filter"] = it }
-        filterAdvanced?.let { queryParams["filter_advanced"] = it }
         if (sortParam.isNotEmpty()) {
             queryParams["sort"] = sortParam
         }

@@ -58,6 +58,15 @@ public interface DataSync {
      * {@code sort} returns a server error. An Entity has no built-in default class, so the filterable set is
      * whatever the supplied {@code className} declares.
      *
+     * <p>Results are scoped to the caller's access token: only entities the token is permitted to read
+     * ({@code get}) are returned. Entities the token cannot read are silently omitted — the call does not error
+     * and does not return a {@code 403} for the un-readable entities. This token scoping is applied before
+     * {@code filterFast} / {@code filter} / {@code sort}. When the PubNub instance is configured with a
+     * secretKey (a trusted server-side deployment, never a client — the secretKey must not be shipped to clients),
+     * or when using a token whose grants cover the whole result set, no permission-based filtering is applied and
+     * all matching entities are
+     * returned, subject only to {@code filterFast} / {@code filter} / {@code sort} and {@code limit} paging.
+     *
      * @param className Entity class identifier (required).
      */
     GetEntities getEntities(String className);
@@ -113,9 +122,17 @@ public interface DataSync {
      *
      * <p>Filtering and sorting are only allowed on the entity class's properties whose filtering mode is not
      * disabled (i.e. those the class marks as filterable); using any other property in a {@code filter}/
-     * {@code sort} returns a server error. For the built-in {@code User} class this set is {@code name}
-     * ({@code username} / {@code email} are custom-class properties, not built-in {@code User} fields). The
-     * built-in {@code User} class is defined at the {@code GLOBAL} class level.
+     * {@code sort} returns a server error. For the built-in {@code User} class this set is {@code name} and
+     * {@code type}. The built-in {@code User} class is defined at the {@code GLOBAL} class level.
+     *
+     * <p>Results are scoped to the caller's access token: only users the token is permitted to read
+     * ({@code get}) are returned. Users the token cannot read are silently omitted — the call does not error
+     * and does not return a {@code 403} for the un-readable users. This token scoping is applied before
+     * {@code filterFast} / {@code filter} / {@code sort}. When the PubNub instance is configured with a
+     * secretKey (a trusted server-side deployment, never a client — the secretKey must not be shipped to clients),
+     * or when using a token whose grants cover the whole result set, no permission-based filtering is applied and
+     * all matching users are
+     * returned, subject only to {@code filterFast} / {@code filter} / {@code sort} and {@code limit} paging.
      */
     GetUsers getUsers();
 
@@ -175,6 +192,15 @@ public interface DataSync {
      * filterable indexes over {@code /payload/name} and {@code /payload/type} — both nullable, not a required
      * or exclusive payload schema; the {@code payload} stays arbitrary JSON. The default {@code Channel} class
      * is defined at the {@code GLOBAL} class level.
+     *
+     * <p>Results are scoped to the caller's access token: only channels the token is permitted to read
+     * ({@code get}) are returned. Channels the token cannot read are silently omitted — the call does not error
+     * and does not return a {@code 403} for the un-readable channels. This token scoping is applied before
+     * {@code filterFast} / {@code filter} / {@code sort}. When the PubNub instance is configured with a
+     * secretKey (a trusted server-side deployment, never a client — the secretKey must not be shipped to clients),
+     * or when using a token whose grants cover the whole result set, no permission-based filtering is applied and
+     * all matching channels are
+     * returned, subject only to {@code filterFast} / {@code filter} / {@code sort} and {@code limit} paging.
      */
     GetChannels getChannels();
 
