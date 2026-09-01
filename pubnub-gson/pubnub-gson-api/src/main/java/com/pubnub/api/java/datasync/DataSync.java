@@ -56,7 +56,8 @@ public interface DataSync {
      * <p>Filtering and sorting are only allowed on the entity class's properties whose filtering mode is not
      * disabled (i.e. those the class marks as filterable); using any other property in a {@code filter}/
      * {@code sort} returns a server error. An Entity has no built-in default class, so the filterable set is
-     * whatever the supplied {@code className} declares.
+     * whatever the supplied {@code className} declares, plus the built-in fields {@code id}, {@code createdAt},
+     * {@code updatedAt}, and {@code status}, which are always filterable and sortable on any class.
      *
      * <p>Results are scoped to the caller's access token: only entities the token is permitted to read
      * ({@code get}) are returned. Entities the token cannot read are silently omitted — the call does not error
@@ -123,7 +124,9 @@ public interface DataSync {
      * <p>Filtering and sorting are only allowed on the entity class's properties whose filtering mode is not
      * disabled (i.e. those the class marks as filterable); using any other property in a {@code filter}/
      * {@code sort} returns a server error. For the built-in {@code User} class this set is {@code name} and
-     * {@code type}. The built-in {@code User} class is defined at the {@code GLOBAL} class level.
+     * {@code type}, plus the built-in fields {@code id}, {@code createdAt}, {@code updatedAt}, and
+     * {@code status}, which are always filterable and sortable on any class. The built-in {@code User} class is
+     * defined at the {@code GLOBAL} class level.
      *
      * <p>Results are scoped to the caller's access token: only users the token is permitted to read
      * ({@code get}) are returned. Users the token cannot read are silently omitted — the call does not error
@@ -190,8 +193,9 @@ public interface DataSync {
      * {@code sort} returns a server error. For the default {@code Channel} class this set is {@code name} and
      * {@code type}, but a custom class or subclass may declare additional filterable properties. These are
      * filterable indexes over {@code /payload/name} and {@code /payload/type} — both nullable, not a required
-     * or exclusive payload schema; the {@code payload} stays arbitrary JSON. The default {@code Channel} class
-     * is defined at the {@code GLOBAL} class level.
+     * or exclusive payload schema; the {@code payload} stays arbitrary JSON. In addition, the built-in fields
+     * {@code id}, {@code createdAt}, {@code updatedAt}, and {@code status} are always filterable and sortable on
+     * any class. The default {@code Channel} class is defined at the {@code GLOBAL} class level.
      *
      * <p>Results are scoped to the caller's access token: only channels the token is permitted to read
      * ({@code get}) are returned. Channels the token cannot read are silently omitted — the call does not error

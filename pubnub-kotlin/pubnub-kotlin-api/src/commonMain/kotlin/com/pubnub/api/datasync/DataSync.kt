@@ -78,8 +78,9 @@ interface DataSync {
      * @param filterFast Optional filter expression. Filtering is only allowed on the entity class's properties
      *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
      *   other property returns a server error. The filterable/sortable set has no fixed default — it is
-     *   whatever the (required) [className] declares, and system fields (e.g. `status`, `createdAt`,
-     *   `updatedAt`, `id`) are not filterable unless the class declares a property for them. `filterFast` is
+     *   whatever the (required) [className] declares. In addition, the built-in fields `id`, `createdAt`,
+     *   `updatedAt`, and `status` (case-sensitive, exactly as spelled) are always filterable and sortable on
+     *   any class, regardless of its declared properties. `filterFast` is
      *   strongly consistent — it always reflects the latest writes — but accepts fewer conditions than
      *   [filter]; a limit on the number of conditions applies and can be adjusted by PubNub support
      *   (see the PubNub DataSync documentation for the current limit). For larger or more complex queries use
@@ -92,7 +93,8 @@ interface DataSync {
      *   may be supplied; sending both is rejected with an error.
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
      *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     *   rule as [filterFast] — the properties the (required) [className] marks as filterable.
+     *   rule as [filterFast] — the properties the (required) [className] marks as filterable, plus the built-in
+     *   fields `id`, `createdAt`, `updatedAt`, and `status`.
      * @param limit Optional page size (1–100, server default 20).
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
@@ -199,7 +201,9 @@ interface DataSync {
      * @param filterFast Optional filter expression. Filtering is only allowed on the entity class's properties
      *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
      *   other property returns a server error. The built-in `User` class exposes `name` and `type` as its
-     *   filterable properties. `filterFast` is strongly consistent — it always reflects the latest writes —
+     *   filterable properties. In addition, the built-in fields `id`, `createdAt`, `updatedAt`, and `status`
+     *   (case-sensitive, exactly as spelled) are always filterable and sortable on any class, regardless of its
+     *   declared properties. `filterFast` is strongly consistent — it always reflects the latest writes —
      *   but accepts fewer conditions than [filter]; a limit on the number of conditions applies and can
      *   be adjusted by PubNub support (see the PubNub DataSync documentation for the current limit). For larger
      *   or more complex queries use [filter]. At most one of [filterFast] and [filter] may be
@@ -211,7 +215,8 @@ interface DataSync {
      *   may be supplied; sending both is rejected with an error.
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
      *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     *   rule as [filterFast] (built-in `User` class: `name` and `type`).
+     *   rule as [filterFast] (built-in `User` class: `name` and `type`, plus the built-in fields `id`,
+     *   `createdAt`, `updatedAt`, and `status`).
      * @param limit Optional page size (1–100, server default 20).
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
@@ -320,7 +325,9 @@ interface DataSync {
      *   other property returns a server error. For the default `Channel` class this set is `name` and `type`,
      *   but a custom class or subclass may declare additional filterable properties. These are filterable
      *   indexes over `/payload/name` and `/payload/type` — both nullable, not a required or exclusive payload
-     *   schema; the `payload` stays arbitrary JSON. `filterFast` is strongly consistent — it always reflects the
+     *   schema; the `payload` stays arbitrary JSON. In addition, the built-in fields `id`, `createdAt`,
+     *   `updatedAt`, and `status` (case-sensitive, exactly as spelled) are always filterable and sortable on
+     *   any class, regardless of its declared properties. `filterFast` is strongly consistent — it always reflects the
      *   latest writes — but accepts fewer conditions than [filter]; a limit on the number of conditions
      *   applies and can be adjusted by PubNub support (see the PubNub DataSync documentation for the current
      *   limit). For larger or more complex queries use [filter]. At most one of [filterFast] and
@@ -332,7 +339,8 @@ interface DataSync {
      *   may be supplied; sending both is rejected with an error.
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
      *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     *   rule as [filterFast] (default `Channel` class: `name` and `type`).
+     *   rule as [filterFast] (default `Channel` class: `name` and `type`, plus the built-in fields `id`,
+     *   `createdAt`, `updatedAt`, and `status`).
      * @param limit Optional page size (1–100, server default 20).
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */

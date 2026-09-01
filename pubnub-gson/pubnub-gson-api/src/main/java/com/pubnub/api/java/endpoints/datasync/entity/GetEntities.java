@@ -26,9 +26,9 @@ public interface GetEntities extends Endpoint<PNDataSyncGetEntitiesResult> {
      * Optional filter expression. Filtering is only allowed on the entity class's properties whose filtering
      * mode is not disabled (i.e. those the class marks as filterable); filtering on any other property
      * returns a server error. The filterable set depends on the entity class supplied to
-     * {@code getEntities(className)} — an Entity has no built-in default set, and system fields (e.g.
-     * {@code status}, {@code createdAt}, {@code updatedAt}, {@code id}) are not filterable unless the class
-     * declares a property for them.
+     * {@code getEntities(className)} — an Entity has no built-in default set. In addition, the built-in fields
+     * {@code id}, {@code createdAt}, {@code updatedAt}, and {@code status} (case-sensitive, exactly as spelled)
+     * are always filterable and sortable on any class, regardless of its declared properties.
      *
      * <p>{@code filterFast} is strongly consistent — it always reflects the latest writes — but accepts fewer
      * conditions than {@link #filter(String)}; a limit on the number of conditions applies and can be
@@ -50,7 +50,8 @@ public interface GetEntities extends Endpoint<PNDataSyncGetEntitiesResult> {
     /**
      * Optional sort criteria applied in order; each {@link PNDataSyncSortField} sorts on a payload
      * property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     * rule as {@link #filterFast(String)} — only properties the entity class marks as filterable may be used.
+     * rule as {@link #filterFast(String)} — only properties the entity class marks as filterable may be used,
+     * plus the built-in fields {@code id}, {@code createdAt}, {@code updatedAt}, and {@code status}.
      */
     GetEntities sort(@Nullable List<PNDataSyncSortField> sort);
 

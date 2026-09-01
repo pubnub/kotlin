@@ -33,7 +33,9 @@ public interface GetChannels extends Endpoint<PNDataSyncGetChannelsResult> {
      * Optional filter expression. Filtering is only allowed on the entity class's properties whose filtering
      * mode is not disabled (i.e. those the class marks as filterable); filtering on any other property
      * returns a server error. For the default {@code Channel} class this set is {@code name} and {@code type},
-     * but a custom class or subclass may declare additional filterable properties.
+     * but a custom class or subclass may declare additional filterable properties. In addition, the built-in
+     * fields {@code id}, {@code createdAt}, {@code updatedAt}, and {@code status} (case-sensitive, exactly as
+     * spelled) are always filterable and sortable on any class, regardless of its declared properties.
      *
      * <p>{@code filterFast} is strongly consistent — it always reflects the latest writes — but accepts fewer
      * conditions than {@link #filter(String)}; a limit on the number of conditions applies and can be
@@ -55,7 +57,8 @@ public interface GetChannels extends Endpoint<PNDataSyncGetChannelsResult> {
     /**
      * Optional sort criteria applied in order; each {@link PNDataSyncSortField} sorts on a payload
      * property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     * rule as {@link #filterFast(String)} (default {@code Channel} class: {@code name} and {@code type}).
+     * rule as {@link #filterFast(String)} (default {@code Channel} class: {@code name} and {@code type}, plus
+     * the built-in fields {@code id}, {@code createdAt}, {@code updatedAt}, and {@code status}).
      */
     GetChannels sort(@Nullable List<PNDataSyncSortField> sort);
 
