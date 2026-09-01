@@ -37,11 +37,11 @@ public class GetEntitiesImpl
 
     @Setter
     @Nullable
-    private String filter;
+    private String filterFast;
 
     @Setter
     @Nullable
-    private String filterAdvanced;
+    private String filter;
 
     @Setter
     @Nullable
@@ -90,8 +90,8 @@ public class GetEntitiesImpl
                 className,
                 classVersion,
                 classLevel == null ? null : com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel.valueOf(classLevel.name()),
+                filterFast,
                 filter,
-                filterAdvanced,
                 mappedSort,
                 limit,
                 cursor

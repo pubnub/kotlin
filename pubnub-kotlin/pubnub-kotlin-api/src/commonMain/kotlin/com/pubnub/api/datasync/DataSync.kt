@@ -64,23 +64,35 @@ interface DataSync {
     /**
      * List DataSync entities of a class.
      *
+     * Results are scoped to the caller's access token: only entities the token is permitted to read (`get`)
+     * are returned. Entities the token cannot read are silently omitted — the call does not error and does not
+     * return a `403` for the un-readable entities. This token scoping is applied before [filterFast] / [filter] /
+     * [sort]. When the PubNub instance is configured with a secretKey (a trusted server-side deployment, never a
+     * client — the secretKey must not be shipped to clients), or when using a token whose grants cover the whole
+     * result set, no permission-based filtering is applied and all matching entities are returned, subject only to
+     * [filterFast] / [filter] / [sort] and [limit] paging.
+     *
      * @param className Entity class identifier (required).
      * @param classVersion Optional entity class version. When `null` the server uses the latest.
      * @param classLevel Optional level at which the entity class is defined (e.g. `SubKey` / `Global`).
-     * @param filter Optional filter expression. Filtering is only allowed on the entity class's properties
+     * @param filterFast Optional filter expression. Filtering is only allowed on the entity class's properties
      *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
      *   other property returns a server error. The filterable/sortable set has no fixed default — it is
-     *   whatever the (required) [className] declares. `filter` is strongly consistent (it always reflects
-     *   the latest writes) but limited in the number of conditionals per request — currently at most 10,
-     *   which support may raise via keyset configuration. A `filter` with more conditionals than allowed is
-     *   rejected with an error; use [filterAdvanced] for larger or more complex queries.
-     * @param filterAdvanced Optional advanced filter expression. Uses the same syntax and filterable-property
-     *   rules as [filter] but is not subject to the conditional-count limit, so use it for larger or more
-     *   complex queries. The trade-off is consistency: `filterAdvanced` is eventually consistent (recent writes
-     *   may not yet be reflected), whereas [filter] is strongly consistent.
+     *   whatever the (required) [className] declares, and system fields (e.g. `status`, `createdAt`,
+     *   `updatedAt`, `id`) are not filterable unless the class declares a property for them. `filterFast` is
+     *   strongly consistent — it always reflects the latest writes — but accepts fewer conditions than
+     *   [filter]; a limit on the number of conditions applies and can be adjusted by PubNub support
+     *   (see the PubNub DataSync documentation for the current limit). For larger or more complex queries use
+     *   [filter]. At most one of [filterFast] and [filter] may be supplied; sending both is
+     *   rejected with an error.
+     * @param filter Optional advanced filter expression. Uses the same syntax and filterable-property
+     *   rules as [filterFast] and is not subject to the same condition limit, so use it for larger or more complex
+     *   queries. The trade-off is consistency: `filter` is eventually consistent (recent writes may not
+     *   yet be reflected), whereas [filterFast] is strongly consistent. At most one of [filterFast] and [filter]
+     *   may be supplied; sending both is rejected with an error.
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
      *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     *   rule as [filter] — the properties the (required) [className] marks as filterable.
+     *   rule as [filterFast] — the properties the (required) [className] marks as filterable.
      * @param limit Optional page size (1–100, server default 20).
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
@@ -88,8 +100,8 @@ interface DataSync {
         className: String,
         classVersion: Int? = null,
         classLevel: PNDataSyncClassLevel? = null,
+        filterFast: String? = null,
         filter: String? = null,
-        filterAdvanced: String? = null,
         sort: List<PNDataSyncSortField> = emptyList(),
         limit: Int? = null,
         cursor: String? = null,
@@ -171,26 +183,35 @@ interface DataSync {
     /**
      * List DataSync users.
      *
+     * Results are scoped to the caller's access token: only users the token is permitted to read (`get`)
+     * are returned. Users the token cannot read are silently omitted — the call does not error and does not
+     * return a `403` for the un-readable users. This token scoping is applied before [filterFast] / [filter] /
+     * [sort]. When the PubNub instance is configured with a secretKey (a trusted server-side deployment, never a
+     * client — the secretKey must not be shipped to clients), or when using a token whose grants cover the whole
+     * result set, no permission-based filtering is applied and all matching users are returned, subject only to
+     * [filterFast] / [filter] / [sort] and [limit] paging.
+     *
      * @param className Optional entity class identifier. When `null` the whole User family is returned;
      *   when set it narrows the results to that `User` subclass.
      * @param classVersion Optional entity class version. When `null` the server uses the latest.
      * @param classLevel Optional level at which the entity class is defined. The built-in `User` class is
      *   defined at the `GLOBAL` level.
-     * @param filter Optional filter expression. Filtering is only allowed on the entity class's properties
+     * @param filterFast Optional filter expression. Filtering is only allowed on the entity class's properties
      *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
-     *   other property returns a server error. The built-in `User` class exposes `name` as its filterable
-     *   property (note `username` and `email` are properties of *custom* `User` subclasses, not of the
-     *   built-in `User` class). `filter` is strongly consistent (it always reflects the latest writes) but
-     *   limited in the number of conditionals per request — currently at most 10, which support may raise via
-     *   keyset configuration. A `filter` with more conditionals than allowed is rejected with an error; use
-     *   [filterAdvanced] for larger or more complex queries.
-     * @param filterAdvanced Optional advanced filter expression. Uses the same syntax and filterable-property
-     *   rules as [filter] but is not subject to the conditional-count limit, so use it for larger or more
-     *   complex queries. The trade-off is consistency: `filterAdvanced` is eventually consistent (recent writes
-     *   may not yet be reflected), whereas [filter] is strongly consistent.
+     *   other property returns a server error. The built-in `User` class exposes `name` and `type` as its
+     *   filterable properties. `filterFast` is strongly consistent — it always reflects the latest writes —
+     *   but accepts fewer conditions than [filter]; a limit on the number of conditions applies and can
+     *   be adjusted by PubNub support (see the PubNub DataSync documentation for the current limit). For larger
+     *   or more complex queries use [filter]. At most one of [filterFast] and [filter] may be
+     *   supplied; sending both is rejected with an error.
+     * @param filter Optional advanced filter expression. Uses the same syntax and filterable-property
+     *   rules as [filterFast] and is not subject to the same condition limit, so use it for larger or more complex
+     *   queries. The trade-off is consistency: `filter` is eventually consistent (recent writes may not
+     *   yet be reflected), whereas [filterFast] is strongly consistent. At most one of [filterFast] and [filter]
+     *   may be supplied; sending both is rejected with an error.
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
      *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     *   rule as [filter] (built-in `User` class: `name`).
+     *   rule as [filterFast] (built-in `User` class: `name` and `type`).
      * @param limit Optional page size (1–100, server default 20).
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
@@ -198,8 +219,8 @@ interface DataSync {
         className: String? = null,
         classVersion: Int? = null,
         classLevel: PNDataSyncClassLevel? = null,
+        filterFast: String? = null,
         filter: String? = null,
-        filterAdvanced: String? = null,
         sort: List<PNDataSyncSortField> = emptyList(),
         limit: Int? = null,
         cursor: String? = null,
@@ -281,27 +302,37 @@ interface DataSync {
     /**
      * List DataSync channels.
      *
+     * Results are scoped to the caller's access token: only channels the token is permitted to read (`get`)
+     * are returned. Channels the token cannot read are silently omitted — the call does not error and does not
+     * return a `403` for the un-readable channels. This token scoping is applied before [filterFast] / [filter] /
+     * [sort]. When the PubNub instance is configured with a secretKey (a trusted server-side deployment, never a
+     * client — the secretKey must not be shipped to clients), or when using a token whose grants cover the whole
+     * result set, no permission-based filtering is applied and all matching channels are returned, subject only to
+     * [filterFast] / [filter] / [sort] and [limit] paging.
+     *
      * @param className Optional entity class identifier. When `null` the whole Channel family is returned;
      *   when set it narrows the results to that `Channel` subclass.
      * @param classVersion Optional entity class version. When `null` the server uses the latest.
      * @param classLevel Optional level at which the entity class is defined. The built-in `Channel` class is
      *   defined at the `GLOBAL` level.
-     * @param filter Optional filter expression. Filtering is only allowed on the entity class's properties
+     * @param filterFast Optional filter expression. Filtering is only allowed on the entity class's properties
      *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
      *   other property returns a server error. For the default `Channel` class this set is `name` and `type`,
      *   but a custom class or subclass may declare additional filterable properties. These are filterable
      *   indexes over `/payload/name` and `/payload/type` — both nullable, not a required or exclusive payload
-     *   schema; the `payload` stays arbitrary JSON. `filter` is strongly consistent (it always reflects the
-     *   latest writes) but limited in the number of conditionals per request — currently at most 10, which
-     *   support may raise via keyset configuration. A `filter` with more conditionals than allowed is
-     *   rejected with an error; use [filterAdvanced] for larger or more complex queries.
-     * @param filterAdvanced Optional advanced filter expression. Uses the same syntax and filterable-property
-     *   rules as [filter] but is not subject to the conditional-count limit, so use it for larger or more
-     *   complex queries. The trade-off is consistency: `filterAdvanced` is eventually consistent (recent writes
-     *   may not yet be reflected), whereas [filter] is strongly consistent.
+     *   schema; the `payload` stays arbitrary JSON. `filterFast` is strongly consistent — it always reflects the
+     *   latest writes — but accepts fewer conditions than [filter]; a limit on the number of conditions
+     *   applies and can be adjusted by PubNub support (see the PubNub DataSync documentation for the current
+     *   limit). For larger or more complex queries use [filter]. At most one of [filterFast] and
+     *   [filter] may be supplied; sending both is rejected with an error.
+     * @param filter Optional advanced filter expression. Uses the same syntax and filterable-property
+     *   rules as [filterFast] and is not subject to the same condition limit, so use it for larger or more complex
+     *   queries. The trade-off is consistency: `filter` is eventually consistent (recent writes may not
+     *   yet be reflected), whereas [filterFast] is strongly consistent. At most one of [filterFast] and [filter]
+     *   may be supplied; sending both is rejected with an error.
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
      *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     *   rule as [filter] (default `Channel` class: `name` and `type`).
+     *   rule as [filterFast] (default `Channel` class: `name` and `type`).
      * @param limit Optional page size (1–100, server default 20).
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
@@ -309,8 +340,8 @@ interface DataSync {
         className: String? = null,
         classVersion: Int? = null,
         classLevel: PNDataSyncClassLevel? = null,
+        filterFast: String? = null,
         filter: String? = null,
-        filterAdvanced: String? = null,
         sort: List<PNDataSyncSortField> = emptyList(),
         limit: Int? = null,
         cursor: String? = null,

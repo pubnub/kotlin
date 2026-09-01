@@ -16,10 +16,34 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     private val classVersion = 1
     private val channelId = "channel-" + randomValue()
+
+    /**
+     * Wipes every channel on the keyset before the suite runs so leftover rows from earlier runs (or a crashed
+     * suite) can't skew list/filter assertions. Uses `server` (holds the secretKey), pages through `getChannels`
+     * until exhausted, and best-effort removes each id.
+     */
+    @BeforeAll
+    fun cleanupExistingChannels() {
+        /*while (true) {
+            val page = server.dataSync.getChannels(limit = 100).sync()
+            if (page.data.isEmpty()) {
+                break
+            }
+            page.data.forEach { channel ->
+                try {
+                    server.dataSync.removeChannel(channel.id).sync()
+                } catch (ignored: PubNubException) {
+                }
+            }
+        }*/
+    }
 
     data class TestChannelPayload(
         val username: String? = null,
@@ -187,6 +211,60 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             grants = grants.toList(),
         ).sync().token
         client.setToken(token)
+    }
+
+    @Test
+    fun getChannelsReturnsOnlyChannelsTheTokenCanRead() {
+        // Two channels created with `server` (has the secretKey, so no token needed).
+        val grantedChannelId = "channel-granted-" + randomValue()
+        val ungrantedChannelId = "channel-ungranted-" + randomValue()
+
+        server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = grantedChannelId,
+            status = "active",
+            payload = TestChannelPayload(name = "Granted"),
+        ).sync()
+        server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = ungrantedChannelId,
+            status = "active",
+            payload = TestChannelPayload(name = "Ungranted"),
+        ).sync()
+
+        // A client on the same keyset as `server` but without the secretKey; it can only authenticate via setToken.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // Grant the client `get` on ONLY one of the two channels.
+        grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = grantedChannelId, get = true))
+
+        try {
+            // getChannels with a token that only grants `get` on `grantedChannelId`.
+            // The server does NOT reject the whole listing; instead it returns a filtered list containing
+            // only the channels the token can read. The ungranted channel is silently omitted rather than
+            // leaking to a client that has no permission to read it.
+            val getAllResult = client.dataSync.getChannels(limit = 100).sync()
+
+            assertTrue(
+                "Expected the granted channel to be present in the filtered listing",
+                getAllResult.data.any { it.id == grantedChannelId },
+            )
+            assertTrue(
+                "The ungranted channel must not leak to a token that cannot read it",
+                getAllResult.data.none { it.id == ungrantedChannelId },
+            )
+        } finally {
+            // best-effort cleanup with `server` (secretKey), regardless of what the client could see
+            try {
+                server.dataSync.removeChannel(grantedChannelId).sync()
+            } catch (ignored: PubNubException) {
+            }
+            try {
+                server.dataSync.removeChannel(ungrantedChannelId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
     }
 
     @Test
@@ -366,9 +444,9 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            // filter -> exact name equality (double-quoted string literal, per AppContext QL)
+            // filterFast -> exact name equality (double-quoted string literal, per AppContext QL)
             val filtered = server.dataSync.getChannels(
-                filter = "name == \"$nameA\"",
+                filterFast = "name == \"$nameA\"",
             ).sync()
             val filteredIds = filtered.data.map { it.id }
             assertEquals(setOf(idA), filteredIds.toSet())
@@ -378,39 +456,39 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             // it still returns the row
             val scoped = server.dataSync.getChannels(
                 classLevel = PNDataSyncClassLevel.GLOBAL,
-                filter = "name == \"$nameA\"",
+                filterFast = "name == \"$nameA\"",
             ).sync()
             assertEquals(setOf(idA), scoped.data.map { it.id }.toSet())
 
             // LIKE prefix match with a `*` wildcard, capturing all three rows
             val advanced = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
             ).sync()
             assertEquals(setOf(idA, idB, idC), advanced.data.map { it.id }.toSet())
 
             // sort -> ascending by name (default direction); this run's rows appear in a-b-c order
             val sortedDefault = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name")),
             ).sync()
             assertEquals(listOf(idA, idB, idC), sortedDefault.data.map { it.id })
 
             val sorted = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name", ascending = true)),
             ).sync()
             assertEquals(listOf(idA, idB, idC), sorted.data.map { it.id })
 
             // sort descending -> the same rows in reverse (c-b-a) order
             val sortedDesc = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name", ascending = false)),
             ).sync()
             assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
 
             // limit + cursor -> page through this run's rows one channel at a time
             val firstPage = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name")),
                 limit = 1,
             ).sync()
@@ -420,7 +498,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             assertNotNull(firstPage.next.cursor)
 
             val secondPage = server.dataSync.getChannels(
-                filter = "name LIKE \"$namePrefix*\"",
+                filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name")),
                 limit = 1,
                 cursor = firstPage.next.cursor,
