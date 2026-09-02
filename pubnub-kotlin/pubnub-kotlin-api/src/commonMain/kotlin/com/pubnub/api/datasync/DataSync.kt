@@ -75,26 +75,31 @@ interface DataSync {
      * @param className Entity class identifier (required).
      * @param classVersion Optional entity class version. When `null` the server uses the latest.
      * @param classLevel Optional level at which the entity class is defined (e.g. `SubKey` / `Global`).
-     * @param filterFast Optional filter expression. Filtering is only allowed on the entity class's properties
-     *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
-     *   other property returns a server error. The filterable/sortable set has no fixed default — it is
-     *   whatever the (required) [className] declares. In addition, the built-in fields `id`, `createdAt`,
-     *   `updatedAt`, and `status` (case-sensitive, exactly as spelled) are always filterable and sortable on
-     *   any class, regardless of its declared properties. `filterFast` is
-     *   strongly consistent — it always reflects the latest writes — but accepts fewer conditions than
-     *   [filter]; a limit on the number of conditions applies and can be adjusted by PubNub support
+     * @param filterFast Optional filter expression. Filtering is only allowed on properties the entity class
+     *   marks as filterable; filtering on any other property returns a server error. Each property in the class
+     *   declares a `filtering` mode — `none`, `simple`, or `full` — and the mode is cumulative: a `simple`
+     *   property is usable with `filterFast` (and [sort] on the `filterFast` path); a `full` property is usable
+     *   with both `filterFast` and [filter]; a `none` property is not filterable at all. So a `simple` property
+     *   works here but is rejected by [filter]. The filterable set has no fixed default — it is whatever the
+     *   (required) [className] declares. In addition, the built-in fields `id`, `createdAt`, `updatedAt`, and
+     *   `status` (case-sensitive, exactly as spelled) behave as `full` and are always filterable and sortable on
+     *   any class, on both the `filterFast` and [filter] paths, regardless of its declared properties.
+     *   `filterFast` is strongly consistent — it always reflects the latest writes — but accepts fewer conditions
+     *   than [filter]; a limit on the number of conditions applies and can be adjusted by PubNub support
      *   (see the PubNub DataSync documentation for the current limit). For larger or more complex queries use
      *   [filter]. At most one of [filterFast] and [filter] may be supplied; sending both is
      *   rejected with an error.
-     * @param filter Optional advanced filter expression. Uses the same syntax and filterable-property
-     *   rules as [filterFast] and is not subject to the same condition limit, so use it for larger or more complex
-     *   queries. The trade-off is consistency: `filter` is eventually consistent (recent writes may not
-     *   yet be reflected), whereas [filterFast] is strongly consistent. At most one of [filterFast] and [filter]
-     *   may be supplied; sending both is rejected with an error.
+     * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast], but only
+     *   properties whose `filtering` mode is `full` (plus the built-in fields) are usable here — a `simple`
+     *   property that works with [filterFast] is rejected by `filter`. It is not subject to the same condition
+     *   limit, so use it for larger or more complex queries. The trade-off is consistency: `filter` is eventually
+     *   consistent (recent writes may not yet be reflected), whereas [filterFast] is strongly consistent. At most
+     *   one of [filterFast] and [filter] may be supplied; sending both is rejected with an error.
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
-     *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     *   rule as [filterFast] — the properties the (required) [className] marks as filterable, plus the built-in
-     *   fields `id`, `createdAt`, `updatedAt`, and `status`.
+     *   property either ascending (default) or descending. Sorting is governed by the same `filtering`-mode gate
+     *   as filtering: a `simple` property is sortable on the strongly-consistent path ([filterFast], or a
+     *   sort-only / [cursor] request with neither filter); a `full` property is sortable on that path and on the
+     *   [filter] path. The built-in fields `id`, `createdAt`, `updatedAt`, and `status` are always sortable.
      * @param limit Optional page size (1–100, server default 20).
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
@@ -198,25 +203,32 @@ interface DataSync {
      * @param classVersion Optional entity class version. When `null` the server uses the latest.
      * @param classLevel Optional level at which the entity class is defined. The built-in `User` class is
      *   defined at the `GLOBAL` level.
-     * @param filterFast Optional filter expression. Filtering is only allowed on the entity class's properties
-     *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
-     *   other property returns a server error. The built-in `User` class exposes `name` and `type` as its
-     *   filterable properties. In addition, the built-in fields `id`, `createdAt`, `updatedAt`, and `status`
-     *   (case-sensitive, exactly as spelled) are always filterable and sortable on any class, regardless of its
-     *   declared properties. `filterFast` is strongly consistent — it always reflects the latest writes —
+     * @param filterFast Optional filter expression. Filtering is only allowed on properties the entity class
+     *   marks as filterable; filtering on any other property returns a server error. Each property declares a
+     *   `filtering` mode — `none`, `simple`, or `full` — and the mode is cumulative: a `simple` property is
+     *   usable with `filterFast` (and [sort] on the `filterFast` path); a `full` property is usable with both
+     *   `filterFast` and [filter]; a `none` property is not filterable at all. So a `simple` property works here
+     *   but is rejected by [filter]. The built-in `User` class exposes `name` and `type` as its filterable
+     *   properties. In addition, the built-in fields `id`, `createdAt`, `updatedAt`, and `status`
+     *   (case-sensitive, exactly as spelled) behave as `full` and are always filterable and sortable on any
+     *   class, on both the `filterFast` and [filter] paths, regardless of its declared properties. `filterFast`
+     *   is strongly consistent — it always reflects the latest writes —
      *   but accepts fewer conditions than [filter]; a limit on the number of conditions applies and can
      *   be adjusted by PubNub support (see the PubNub DataSync documentation for the current limit). For larger
      *   or more complex queries use [filter]. At most one of [filterFast] and [filter] may be
      *   supplied; sending both is rejected with an error.
-     * @param filter Optional advanced filter expression. Uses the same syntax and filterable-property
-     *   rules as [filterFast] and is not subject to the same condition limit, so use it for larger or more complex
-     *   queries. The trade-off is consistency: `filter` is eventually consistent (recent writes may not
-     *   yet be reflected), whereas [filterFast] is strongly consistent. At most one of [filterFast] and [filter]
-     *   may be supplied; sending both is rejected with an error.
+     * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast], but only
+     *   properties whose `filtering` mode is `full` (plus the built-in fields) are usable here — a `simple`
+     *   property that works with [filterFast] is rejected by `filter`. It is not subject to the same condition
+     *   limit, so use it for larger or more complex queries. The trade-off is consistency: `filter` is eventually
+     *   consistent (recent writes may not yet be reflected), whereas [filterFast] is strongly consistent. At most
+     *   one of [filterFast] and [filter] may be supplied; sending both is rejected with an error.
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
-     *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     *   rule as [filterFast] (built-in `User` class: `name` and `type`, plus the built-in fields `id`,
-     *   `createdAt`, `updatedAt`, and `status`).
+     *   property either ascending (default) or descending. Sorting is governed by the same `filtering`-mode gate
+     *   as filtering: a `simple` property is sortable on the strongly-consistent path ([filterFast], or a
+     *   sort-only / [cursor] request with neither filter); a `full` property is sortable on that path and on the
+     *   [filter] path. The built-in fields `id`, `createdAt`, `updatedAt`, and `status` are always sortable
+     *   (built-in `User` class filterable/sortable properties: `name` and `type`).
      * @param limit Optional page size (1–100, server default 20).
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
@@ -320,27 +332,34 @@ interface DataSync {
      * @param classVersion Optional entity class version. When `null` the server uses the latest.
      * @param classLevel Optional level at which the entity class is defined. The built-in `Channel` class is
      *   defined at the `GLOBAL` level.
-     * @param filterFast Optional filter expression. Filtering is only allowed on the entity class's properties
-     *   whose filtering mode is not disabled (i.e. those the class marks as filterable); filtering on any
-     *   other property returns a server error. For the default `Channel` class this set is `name` and `type`,
+     * @param filterFast Optional filter expression. Filtering is only allowed on properties the entity class
+     *   marks as filterable; filtering on any other property returns a server error. Each property declares a
+     *   `filtering` mode — `none`, `simple`, or `full` — and the mode is cumulative: a `simple` property is
+     *   usable with `filterFast` (and [sort] on the `filterFast` path); a `full` property is usable with both
+     *   `filterFast` and [filter]; a `none` property is not filterable at all. So a `simple` property works here
+     *   but is rejected by [filter]. For the default `Channel` class this set is `name` and `type`,
      *   but a custom class or subclass may declare additional filterable properties. These are filterable
      *   indexes over `/payload/name` and `/payload/type` — both nullable, not a required or exclusive payload
      *   schema; the `payload` stays arbitrary JSON. In addition, the built-in fields `id`, `createdAt`,
-     *   `updatedAt`, and `status` (case-sensitive, exactly as spelled) are always filterable and sortable on
-     *   any class, regardless of its declared properties. `filterFast` is strongly consistent — it always reflects the
+     *   `updatedAt`, and `status` (case-sensitive, exactly as spelled) behave as `full` and are always filterable
+     *   and sortable on any class, on both the `filterFast` and [filter] paths, regardless of its declared
+     *   properties. `filterFast` is strongly consistent — it always reflects the
      *   latest writes — but accepts fewer conditions than [filter]; a limit on the number of conditions
      *   applies and can be adjusted by PubNub support (see the PubNub DataSync documentation for the current
      *   limit). For larger or more complex queries use [filter]. At most one of [filterFast] and
      *   [filter] may be supplied; sending both is rejected with an error.
-     * @param filter Optional advanced filter expression. Uses the same syntax and filterable-property
-     *   rules as [filterFast] and is not subject to the same condition limit, so use it for larger or more complex
-     *   queries. The trade-off is consistency: `filter` is eventually consistent (recent writes may not
-     *   yet be reflected), whereas [filterFast] is strongly consistent. At most one of [filterFast] and [filter]
-     *   may be supplied; sending both is rejected with an error.
+     * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast], but only
+     *   properties whose `filtering` mode is `full` (plus the built-in fields) are usable here — a `simple`
+     *   property that works with [filterFast] is rejected by `filter`. It is not subject to the same condition
+     *   limit, so use it for larger or more complex queries. The trade-off is consistency: `filter` is eventually
+     *   consistent (recent writes may not yet be reflected), whereas [filterFast] is strongly consistent. At most
+     *   one of [filterFast] and [filter] may be supplied; sending both is rejected with an error.
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
-     *   property either ascending (default) or descending. Sorting is governed by the same filterable-property
-     *   rule as [filterFast] (default `Channel` class: `name` and `type`, plus the built-in fields `id`,
-     *   `createdAt`, `updatedAt`, and `status`).
+     *   property either ascending (default) or descending. Sorting is governed by the same `filtering`-mode gate
+     *   as filtering: a `simple` property is sortable on the strongly-consistent path ([filterFast], or a
+     *   sort-only / [cursor] request with neither filter); a `full` property is sortable on that path and on the
+     *   [filter] path. The built-in fields `id`, `createdAt`, `updatedAt`, and `status` are always sortable
+     *   (default `Channel` class filterable/sortable properties: `name` and `type`).
      * @param limit Optional page size (1–100, server default 20).
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
