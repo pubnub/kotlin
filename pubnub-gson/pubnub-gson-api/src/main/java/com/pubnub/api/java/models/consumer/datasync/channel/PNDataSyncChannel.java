@@ -20,8 +20,19 @@ import java.util.Map;
 @Accessors(chain = true)
 @ToString
 public class PNDataSyncChannel {
+    /**
+     * Channel identifier.
+     */
     private String id;
+
+    /**
+     * Entity class identifier (a {@code Channel} subclass, defaults to {@code Channel}).
+     */
     private String className;
+
+    /**
+     * Version of the entity class.
+     */
     private int classVersion;
 
     /**
@@ -30,16 +41,36 @@ public class PNDataSyncChannel {
     @Nullable
     private String classLevel;
 
+    /**
+     * Date and time the channel was created.
+     */
     private String createdAt;
+
+    /**
+     * Date and time the channel was last updated.
+     */
     private String updatedAt;
+
+    /**
+     * The channel's content fingerprint used in conditional requests.
+     */
     private String eTag;
 
+    /**
+     * Channel status.
+     */
     @Nullable
     private String status;
 
-    @Nullable
+    /**
+     * Date and time when the channel expires (will be deleted automatically). Always present —
+     * server-computed from the entity class TTL and never client-settable.
+     */
     private String expiresAt;
 
+    /**
+     * Arbitrary user-defined JSON object.
+     */
     @Nullable
     private Map<String, Object> payload;
 }

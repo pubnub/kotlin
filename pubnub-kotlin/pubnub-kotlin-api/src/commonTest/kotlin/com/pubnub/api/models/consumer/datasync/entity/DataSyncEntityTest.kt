@@ -45,11 +45,11 @@ class DataSyncEntityTest {
             createdAt = "2021-01-01T00:00:00.000Z",
             updatedAt = "2021-01-01T00:00:00.000Z",
             eTag = randomString(),
+            expiresAt = "2022-01-01T00:00:00.000Z",
         )
 
         assertNull(entity.classLevel)
         assertNull(entity.status)
-        assertNull(entity.expiresAt)
         assertNull(entity.payload)
     }
 }
