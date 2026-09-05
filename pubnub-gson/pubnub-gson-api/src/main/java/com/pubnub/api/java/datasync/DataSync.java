@@ -6,6 +6,12 @@ import com.pubnub.api.java.endpoints.datasync.channel.GetChannels;
 import com.pubnub.api.java.endpoints.datasync.channel.RemoveChannel;
 import com.pubnub.api.java.endpoints.datasync.channel.SetChannel;
 import com.pubnub.api.java.endpoints.datasync.channel.UpdateChannel;
+import com.pubnub.api.java.endpoints.datasync.membership.CreateMembership;
+import com.pubnub.api.java.endpoints.datasync.membership.GetMembership;
+import com.pubnub.api.java.endpoints.datasync.membership.GetMemberships;
+import com.pubnub.api.java.endpoints.datasync.membership.RemoveMembership;
+import com.pubnub.api.java.endpoints.datasync.membership.SetMembership;
+import com.pubnub.api.java.endpoints.datasync.membership.UpdateMembership;
 import com.pubnub.api.java.endpoints.datasync.entity.CreateEntity;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntities;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntity;
@@ -235,4 +241,85 @@ public interface DataSync {
      * @param classVersion Version of the class the payload conforms to.
      */
     SetChannel setChannel(String channelId, int classVersion);
+
+    /**
+     * Get a DataSync membership by its id.
+     *
+     * <p>A Membership is a specialized DataSync relationship linking a Channel and a User.
+     *
+     * @param membershipId Identifier of the membership to fetch.
+     */
+    GetMembership getMembership(String membershipId);
+
+    /**
+     * Create a DataSync membership linking a Channel and a User. Optional fields are set via the returned builder.
+     *
+     * <p>This API always targets the built-in {@code Membership} relationship class — there is no
+     * class-name parameter; the SDK fixes the class to {@code Membership}. Creating a Membership <i>subclass</i>
+     * is not supported here; that is served by the general {@code /relationships} API.
+     *
+     * @param channelId    Identifier of the Channel side of the membership. Must reference an existing Channel
+     *                     entity — a missing or wrong-class entity is rejected.
+     * @param userId       Identifier of the User side of the membership. Must reference an existing User
+     *                     entity — a missing or wrong-class entity is rejected.
+     * @param classVersion Version of the {@code Membership} class the payload conforms to. Currently only
+     *                     version {@code 1} exists — pass {@code 1}. New versions may be introduced in the
+     *                     future; when one is, opt in by passing its number.
+     */
+    CreateMembership createMembership(String channelId, String userId, int classVersion);
+
+    /**
+     * Remove a DataSync membership by its id. Optional {@code ifMatch} is set via the returned builder.
+     *
+     * @param membershipId Identifier of the membership to remove.
+     */
+    RemoveMembership removeMembership(String membershipId);
+
+    /**
+     * List DataSync memberships, optionally filtered by channel and/or user. Optional filters/paging are set via
+     * the returned builder.
+     *
+     * <p>This API always queries the built-in {@code Membership} relationship class — there is no class-name
+     * query, only {@code classVersion}. Querying a Membership <i>subclass</i> is not supported here; that is
+     * served by the general {@code /relationships} API. See {@link GetMemberships#filterFast(String)},
+     * {@link GetMemberships#filter(String)}, and {@link GetMemberships#sort(List)} for the exact per-parameter
+     * rules. The built-in fields {@code id}, {@code createdAt}, {@code updatedAt}, and {@code status} are
+     * filterable and sortable, except that {@code status} may be excluded when the class declares it as a
+     * projected field and the token cannot fully reach it.
+     *
+     * <p>Results are scoped to the caller's access token: only memberships the token is permitted to read
+     * ({@code get}) are returned. Memberships the token cannot read are silently omitted — the call does not error
+     * and does not return a {@code 403} for the un-readable memberships. Token scoping and the
+     * {@code filterFast} / {@code filter} / {@code sort} criteria are applied together, so the returned page
+     * never contains a membership the token cannot read regardless of the other criteria. When the PubNub
+     * instance is configured with a secretKey
+     * (a trusted server-side deployment, never a client — the secretKey must not be shipped to clients), or when
+     * using a token whose grants cover the whole result set, no permission-based filtering is applied and all
+     * matching memberships are returned, subject only to {@code filterFast} / {@code filter} / {@code sort} and
+     * {@code limit} paging.
+     */
+    GetMemberships getMemberships();
+
+    /**
+     * Partially update a DataSync membership via JSON Patch (RFC-6902). Optional {@code ifMatch} is set via the returned builder.
+     *
+     * @param membershipId Identifier of the membership to patch.
+     * @param operations   Non-empty list of JSON Patch operations to apply.
+     */
+    UpdateMembership updateMembership(String membershipId, List<PNJsonPatchOperation> operations);
+
+    /**
+     * Replaces a membership in full. Optional fields are set via the returned builder.
+     * <p>
+     * Every mutable field is overwritten. Omitting {@code status} or {@code payload} clears the stored value rather
+     * than preserving it, so a read-modify-write must send back every field it wants to keep. This cannot re-point
+     * or reclassify a membership — the linked channel/user and the relationship class are immutable. Use
+     * {@link #updateMembership(String, List)} to change part of a membership.
+     *
+     * @param membershipId Identifier of the membership to replace.
+     * @param classVersion Version of the {@code Membership} class the payload conforms to. Currently only
+     *                     version {@code 1} exists — pass {@code 1}. New versions may be introduced in the
+     *                     future; when one is, opt in by passing its number.
+     */
+    SetMembership setMembership(String membershipId, int classVersion);
 }

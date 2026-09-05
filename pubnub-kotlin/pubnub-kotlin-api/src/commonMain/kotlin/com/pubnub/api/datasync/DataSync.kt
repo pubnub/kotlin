@@ -12,6 +12,12 @@ import com.pubnub.api.endpoints.datasync.entity.GetEntity
 import com.pubnub.api.endpoints.datasync.entity.RemoveEntity
 import com.pubnub.api.endpoints.datasync.entity.SetEntity
 import com.pubnub.api.endpoints.datasync.entity.UpdateEntity
+import com.pubnub.api.endpoints.datasync.membership.CreateMembership
+import com.pubnub.api.endpoints.datasync.membership.GetMembership
+import com.pubnub.api.endpoints.datasync.membership.GetMemberships
+import com.pubnub.api.endpoints.datasync.membership.RemoveMembership
+import com.pubnub.api.endpoints.datasync.membership.SetMembership
+import com.pubnub.api.endpoints.datasync.membership.UpdateMembership
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
@@ -407,4 +413,143 @@ interface DataSync {
         payload: Any? = null,
         ifMatch: String? = null,
     ): SetChannel
+
+    /**
+     * Get a DataSync membership by its id.
+     *
+     * A Membership is a specialized DataSync relationship linking a Channel and a User.
+     *
+     * @param membershipId Identifier of the membership to fetch.
+     */
+    fun getMembership(membershipId: String): GetMembership
+
+    /**
+     * Create a DataSync membership linking a Channel and a User.
+     *
+     * This API always targets the built-in `Membership` relationship class — there is no `className`
+     * parameter; the SDK fixes the class to `Membership`. Creating a Membership *subclass* is not supported
+     * here; that is served by the general `/relationships` API.
+     *
+     * @param channelId Identifier of the Channel (entity A) to link. Required. Must reference an existing
+     *   Channel entity — a missing or wrong-class entity is rejected.
+     * @param userId Identifier of the User (entity B) to link. Required. Must reference an existing User
+     *   entity — a missing or wrong-class entity is rejected.
+     * @param classVersion Version of the `Membership` class the payload conforms to. Currently only version
+     *   `1` exists — pass `1`. New versions may be introduced in the future; when one is, opt in by passing
+     *   its number.
+     * @param membershipId Optional membership identifier. When `null` the server generates one.
+     * @param status Optional membership status.
+     * @param payload Optional arbitrary JSON object payload.
+     */
+    fun createMembership(
+        channelId: String,
+        userId: String,
+        classVersion: Int,
+        membershipId: String? = null,
+        status: String? = null,
+        payload: Any? = null,
+    ): CreateMembership
+
+    /**
+     * Remove a DataSync membership by its id.
+     *
+     * @param membershipId Identifier of the membership to remove.
+     * @param ifMatch Optional eTag for a conditional remove (`If-Match` header).
+     */
+    fun removeMembership(membershipId: String, ifMatch: String? = null): RemoveMembership
+
+    /**
+     * List DataSync memberships, optionally filtered by channel and/or user.
+     *
+     * This API always queries the built-in `Membership` relationship class — there is no class-name query,
+     * only [classVersion]. Querying a Membership *subclass* is not supported here; that is served by the
+     * general `/relationships` API.
+     *
+     * Results are scoped to the caller's access token: only memberships the token is permitted to read (`get`)
+     * are returned. Memberships the token cannot read are silently omitted — the call does not error and does
+     * not return a `403` for the un-readable memberships. Token scoping and the [filterFast] / [filter] /
+     * [sort] criteria are applied together, so the returned page never contains a membership the token cannot
+     * read regardless of the other criteria. When the PubNub instance is configured with a secretKey (a trusted server-side
+     * deployment, never a client — the secretKey must not be shipped to clients), or when using a token whose
+     * grants cover the whole result set, no permission-based filtering is applied and all matching memberships
+     * are returned, subject only to [filterFast] / [filter] / [sort] and [limit] paging.
+     *
+     * @param channelId Optional Channel identifier to filter by. [channelId] and [userId] are independent,
+     *   AND-ed equality filters on fixed sides of the membership: [channelId] matches the Channel (entity A)
+     *   side and [userId] matches the User (entity B) side. Supplying only one narrows to memberships on that
+     *   side; supplying both returns the membership(s) matching both (i.e. that specific channel-user pair);
+     *   supplying neither lists all readable memberships.
+     * @param userId Optional User identifier to filter by. See [channelId] for how the two combine.
+     * @param classVersion Restricts results to a single version of the `Membership` class. If omitted, every
+     *   version is returned.
+     * @param filterFast Optional filter expression. For the built-in `Membership` class, filtering is allowed
+     *   only on the built-in fields `id`, `createdAt`, `updatedAt`, and `status` (case-sensitive, exactly as
+     *   spelled), which are filterable and sortable on both the `filterFast` and [filter] paths — except that
+     *   `status` may be excluded when the class declares it as a projected field and the token cannot fully
+     *   reach it. `filterFast` is strongly consistent — it always
+     *   reflects the latest writes — but accepts fewer conditions than [filter]; a limit on the number of
+     *   conditions applies and can be adjusted by PubNub support (see the PubNub DataSync documentation for the
+     *   current limit). For larger or more complex queries use [filter]. At most one of [filterFast] and
+     *   [filter] may be supplied; sending both is rejected with an error.
+     * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast] and, for the
+     *   built-in `Membership` class, targets the same built-in fields. It is not subject to the same condition
+     *   limit, so use it for larger or more complex queries. The trade-off is consistency: `filter` is
+     *   eventually consistent (recent writes may not yet be reflected), whereas [filterFast] is strongly
+     *   consistent. At most one of [filterFast] and [filter] may be supplied; sending both is rejected with an
+     *   error.
+     * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a property
+     *   either ascending (default) or descending. For the built-in `Membership` class, the sortable set is the
+     *   built-in fields `id`, `createdAt`, `updatedAt`, and `status` (with the same `status` caveat as
+     *   [filterFast]).
+     * @param limit Optional page size (1–100, server default 20).
+     * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
+     */
+    fun getMemberships(
+        channelId: String? = null,
+        userId: String? = null,
+        classVersion: Int? = null,
+        filterFast: String? = null,
+        filter: String? = null,
+        sort: List<PNDataSyncSortField> = emptyList(),
+        limit: Int? = null,
+        cursor: String? = null,
+    ): GetMemberships
+
+    /**
+     * Partially update a DataSync membership via JSON Patch (RFC-6902).
+     *
+     * @param membershipId Identifier of the membership to patch.
+     * @param operations Non-empty list of JSON Patch operations to apply.
+     * @param ifMatch Optional eTag for optimistic concurrency (`If-Match` header).
+     */
+    fun updateMembership(
+        membershipId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String? = null,
+    ): UpdateMembership
+
+    /**
+     * Replaces a membership in full.
+     *
+     * Every mutable field is overwritten. Omitting [status] or [payload] clears the stored value rather than
+     * preserving it, so a read-modify-write must send back every field it wants to keep. This cannot re-point
+     * or reclassify a membership — the linked channel/user and the relationship class are immutable. Use
+     * [updateMembership] to change part of a membership.
+     *
+     * @param membershipId Identifier of the membership to replace.
+     * @param classVersion Version of the `Membership` class the payload conforms to. Currently only version
+     *   `1` exists — pass `1`. New versions may be introduced in the future; when one is, opt in by passing
+     *   its number.
+     * @param status Optional status to store with the membership.
+     * @param payload Optional replacement membership fields (arbitrary JSON object).
+     * @param ifMatch Optional eTag last read, to fail the request when the membership changed since
+     *   (`If-Match` header).
+     */
+    fun setMembership(
+        membershipId: String,
+        classVersion: Int,
+        status: String? = null,
+        payload: Any? = null,
+        ifMatch: String? = null,
+    ): SetMembership
 }
