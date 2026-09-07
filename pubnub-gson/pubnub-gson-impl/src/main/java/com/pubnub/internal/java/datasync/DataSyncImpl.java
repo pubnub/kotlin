@@ -21,6 +21,18 @@ import com.pubnub.api.java.endpoints.datasync.user.UpdateUser;
 import com.pubnub.api.java.endpoints.datasync.user.RemoveUser;
 import com.pubnub.api.java.endpoints.datasync.user.SetUser;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
+import com.pubnub.api.java.endpoints.datasync.membership.CreateMembership;
+import com.pubnub.api.java.endpoints.datasync.membership.GetMembership;
+import com.pubnub.api.java.endpoints.datasync.membership.GetMemberships;
+import com.pubnub.api.java.endpoints.datasync.membership.RemoveMembership;
+import com.pubnub.api.java.endpoints.datasync.membership.SetMembership;
+import com.pubnub.api.java.endpoints.datasync.membership.UpdateMembership;
+import com.pubnub.internal.java.endpoints.datasync.membership.CreateMembershipImpl;
+import com.pubnub.internal.java.endpoints.datasync.membership.GetMembershipImpl;
+import com.pubnub.internal.java.endpoints.datasync.membership.GetMembershipsImpl;
+import com.pubnub.internal.java.endpoints.datasync.membership.RemoveMembershipImpl;
+import com.pubnub.internal.java.endpoints.datasync.membership.SetMembershipImpl;
+import com.pubnub.internal.java.endpoints.datasync.membership.UpdateMembershipImpl;
 import com.pubnub.internal.java.endpoints.datasync.channel.CreateChannelImpl;
 import com.pubnub.internal.java.endpoints.datasync.channel.GetChannelImpl;
 import com.pubnub.internal.java.endpoints.datasync.channel.GetChannelsImpl;
@@ -137,5 +149,35 @@ public class DataSyncImpl implements DataSync {
     @Override
     public SetChannel setChannel(String channelId, int classVersion) {
         return new SetChannelImpl(channelId, classVersion, pubnubInstance);
+    }
+
+    @Override
+    public GetMembership getMembership(String membershipId) {
+        return new GetMembershipImpl(membershipId, pubnubInstance);
+    }
+
+    @Override
+    public CreateMembership createMembership(String channelId, String userId, int classVersion) {
+        return new CreateMembershipImpl(channelId, userId, classVersion, pubnubInstance);
+    }
+
+    @Override
+    public RemoveMembership removeMembership(String membershipId) {
+        return new RemoveMembershipImpl(membershipId, pubnubInstance);
+    }
+
+    @Override
+    public GetMemberships getMemberships() {
+        return new GetMembershipsImpl(pubnubInstance);
+    }
+
+    @Override
+    public UpdateMembership updateMembership(String membershipId, List<PNJsonPatchOperation> operations) {
+        return new UpdateMembershipImpl(membershipId, operations, pubnubInstance);
+    }
+
+    @Override
+    public SetMembership setMembership(String membershipId, int classVersion) {
+        return new SetMembershipImpl(membershipId, classVersion, pubnubInstance);
     }
 }

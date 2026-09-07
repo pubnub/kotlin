@@ -134,6 +134,7 @@ internal class DataSyncEntityModelsTest {
         assertEquals(3, entity.classVersion)
         assertEquals("SubKey", entity.classLevel)
         assertEquals("etag123", entity.eTag)
+        assertEquals("2022-01-01T00:00:00.000Z", entity.expiresAt)
         assertEquals("alice", entity.payload?.get("name"))
     }
 }

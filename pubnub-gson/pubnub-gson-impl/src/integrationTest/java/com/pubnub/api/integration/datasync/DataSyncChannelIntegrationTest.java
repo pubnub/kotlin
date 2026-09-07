@@ -59,6 +59,8 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             // guards the @SerializedName mapping: wire `entityClass` -> `.getClassName()`
             assertEquals("Channel", createResult.getData().getClassName());
             assertNotNull(createResult.getData().getETag());
+            // expiresAt is a required, server-computed field: proves the server always returns it
+            assertFalse(createResult.getData().getExpiresAt().trim().isEmpty());
             assertEquals("Alice", createResult.getData().getPayload().get("username"));
             assertEquals("alice@example.com", createResult.getData().getPayload().get("email"));
 

@@ -101,6 +101,7 @@ internal class DataSyncUserModelsTest {
               "createdAt": "2021-01-01T00:00:00.000Z",
               "updatedAt": "2021-01-02T00:00:00.000Z",
               "eTag": "etag123",
+              "expiresAt": "2022-01-01T00:00:00.000Z",
               "payload": { "name": "alice" }
             }
         """.trimIndent()
@@ -111,6 +112,7 @@ internal class DataSyncUserModelsTest {
         assertEquals("User", user.className)
         assertEquals(3, user.classVersion)
         assertEquals("Global", user.classLevel)
+        assertEquals("2022-01-01T00:00:00.000Z", user.expiresAt)
         assertEquals("alice", user.payload?.get("name"))
     }
 }

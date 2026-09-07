@@ -86,7 +86,8 @@ internal class DataSyncChannelModelsTest {
               "entityClassVersion": 1,
               "createdAt": "2021-01-01T00:00:00.000Z",
               "updatedAt": "2021-01-01T00:00:00.000Z",
-              "eTag": "etag456"
+              "eTag": "etag456",
+              "expiresAt": "2022-01-01T00:00:00.000Z"
             }
         """.trimIndent()
 
@@ -94,9 +95,9 @@ internal class DataSyncChannelModelsTest {
 
         assertEquals("Channel", channel.className)
         assertEquals(1, channel.classVersion)
+        assertEquals("2022-01-01T00:00:00.000Z", channel.expiresAt)
         assertNull(channel.classLevel)
         assertNull(channel.status)
-        assertNull(channel.expiresAt)
         assertNull(channel.payload)
     }
 }

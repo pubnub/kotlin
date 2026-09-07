@@ -57,6 +57,8 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         assertEquals(entityClass, createResult.getData().getClassName());
         assertEquals(entityClassVersion, createResult.getData().getClassVersion());
         assertNotNull(createResult.getData().getETag());
+        // expiresAt is a required, server-computed field: proves the server always returns it
+        assertFalse(createResult.getData().getExpiresAt().trim().isEmpty());
 
         // create again with the same id -> 409 (create is create-only)
         try {

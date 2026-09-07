@@ -12,6 +12,12 @@ import com.pubnub.api.endpoints.datasync.entity.GetEntity
 import com.pubnub.api.endpoints.datasync.entity.RemoveEntity
 import com.pubnub.api.endpoints.datasync.entity.SetEntity
 import com.pubnub.api.endpoints.datasync.entity.UpdateEntity
+import com.pubnub.api.endpoints.datasync.membership.CreateMembership
+import com.pubnub.api.endpoints.datasync.membership.GetMembership
+import com.pubnub.api.endpoints.datasync.membership.GetMemberships
+import com.pubnub.api.endpoints.datasync.membership.RemoveMembership
+import com.pubnub.api.endpoints.datasync.membership.SetMembership
+import com.pubnub.api.endpoints.datasync.membership.UpdateMembership
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
@@ -139,6 +145,45 @@ internal class DataSyncImpl : DataSync {
         payload: Any?,
         ifMatch: String?,
     ): SetChannel = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun getMembership(membershipId: String): GetMembership = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun createMembership(
+        channelId: String,
+        userId: String,
+        classVersion: Int,
+        membershipId: String?,
+        status: String?,
+        payload: Any?,
+    ): CreateMembership = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun removeMembership(membershipId: String, ifMatch: String?): RemoveMembership =
+        throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun getMemberships(
+        channelId: String?,
+        userId: String?,
+        classVersion: Int?,
+        filterFast: String?,
+        filter: String?,
+        sort: List<PNDataSyncSortField>,
+        limit: Int?,
+        cursor: String?,
+    ): GetMemberships = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun updateMembership(
+        membershipId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String?,
+    ): UpdateMembership = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun setMembership(
+        membershipId: String,
+        classVersion: Int,
+        status: String?,
+        payload: Any?,
+        ifMatch: String?,
+    ): SetMembership = throw NotImplementedError(NOT_IMPLEMENTED)
 }
 
 private const val NOT_IMPLEMENTED = "DataSync is not implemented on the Apple target"

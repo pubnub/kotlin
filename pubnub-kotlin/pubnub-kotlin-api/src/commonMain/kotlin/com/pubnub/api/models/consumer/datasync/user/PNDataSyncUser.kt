@@ -18,8 +18,9 @@ import com.pubnub.api.utils.SerializedName
  * @property createdAt Date and time the user was created.
  * @property updatedAt Date and time the user was last updated.
  * @property eTag The user's content fingerprint used in conditional requests.
- * @property status User status.
  * @property expiresAt Date and time when the user expires (will be deleted automatically).
+ *   Always present — server-computed from the entity class TTL and never client-settable.
+ * @property status User status.
  * @property payload Arbitrary user-defined JSON object.
  */
 data class PNDataSyncUser(
@@ -30,7 +31,7 @@ data class PNDataSyncUser(
     val createdAt: String,
     val updatedAt: String,
     val eTag: String,
+    val expiresAt: String,
     val status: String? = null,
-    val expiresAt: String? = null,
     val payload: Map<String, Any?>? = null,
 )
