@@ -75,6 +75,8 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         assertEquals(className, createResult.data.className)
         assertEquals(classVersion, createResult.data.classVersion)
         assertNotNull(createResult.data.eTag)
+        // expiresAt is a required, server-computed field: proves the server always returns it
+        assertTrue(createResult.data.expiresAt.isNotBlank())
         assertEquals(payload.username, createResult.data.payload?.get("username"))
         assertEquals(payload.email, createResult.data.payload?.get("email"))
 

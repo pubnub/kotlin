@@ -13,6 +13,12 @@ import com.pubnub.api.endpoints.datasync.entity.GetEntity
 import com.pubnub.api.endpoints.datasync.entity.RemoveEntity
 import com.pubnub.api.endpoints.datasync.entity.SetEntity
 import com.pubnub.api.endpoints.datasync.entity.UpdateEntity
+import com.pubnub.api.endpoints.datasync.membership.CreateMembership
+import com.pubnub.api.endpoints.datasync.membership.GetMembership
+import com.pubnub.api.endpoints.datasync.membership.GetMemberships
+import com.pubnub.api.endpoints.datasync.membership.RemoveMembership
+import com.pubnub.api.endpoints.datasync.membership.SetMembership
+import com.pubnub.api.endpoints.datasync.membership.UpdateMembership
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
@@ -35,6 +41,12 @@ import com.pubnub.internal.endpoints.datasync.entity.GetEntityEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.RemoveEntityEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.SetEntityEndpoint
 import com.pubnub.internal.endpoints.datasync.entity.UpdateEntityEndpoint
+import com.pubnub.internal.endpoints.datasync.membership.CreateMembershipEndpoint
+import com.pubnub.internal.endpoints.datasync.membership.GetMembershipEndpoint
+import com.pubnub.internal.endpoints.datasync.membership.GetMembershipsEndpoint
+import com.pubnub.internal.endpoints.datasync.membership.RemoveMembershipEndpoint
+import com.pubnub.internal.endpoints.datasync.membership.SetMembershipEndpoint
+import com.pubnub.internal.endpoints.datasync.membership.UpdateMembershipEndpoint
 import com.pubnub.internal.endpoints.datasync.user.CreateUserEndpoint
 import com.pubnub.internal.endpoints.datasync.user.GetUserEndpoint
 import com.pubnub.internal.endpoints.datasync.user.GetUsersEndpoint
@@ -261,6 +273,81 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
         return SetChannelEndpoint(
             pubnub = pubnub,
             channelId = channelId,
+            classVersion = classVersion,
+            status = status,
+            payload = payload,
+            ifMatch = ifMatch,
+        )
+    }
+
+    override fun getMembership(membershipId: String): GetMembership {
+        return GetMembershipEndpoint(pubnub, membershipId)
+    }
+
+    override fun createMembership(
+        channelId: String,
+        userId: String,
+        classVersion: Int,
+        membershipId: String?,
+        status: String?,
+        payload: Any?,
+    ): CreateMembership {
+        return CreateMembershipEndpoint(
+            pubnub = pubnub,
+            channelId = channelId,
+            userId = userId,
+            classVersion = classVersion,
+            membershipId = membershipId,
+            status = status,
+            payload = payload,
+        )
+    }
+
+    override fun removeMembership(membershipId: String, ifMatch: String?): RemoveMembership {
+        return RemoveMembershipEndpoint(pubnub, membershipId, ifMatch)
+    }
+
+    override fun getMemberships(
+        channelId: String?,
+        userId: String?,
+        classVersion: Int?,
+        filterFast: String?,
+        filter: String?,
+        sort: List<PNDataSyncSortField>,
+        limit: Int?,
+        cursor: String?,
+    ): GetMemberships {
+        return GetMembershipsEndpoint(
+            pubnub = pubnub,
+            channelId = channelId,
+            userId = userId,
+            classVersion = classVersion,
+            filterFast = filterFast,
+            filter = filter,
+            sort = sort,
+            limit = limit,
+            cursor = cursor,
+        )
+    }
+
+    override fun updateMembership(
+        membershipId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String?,
+    ): UpdateMembership {
+        return UpdateMembershipEndpoint(pubnub, membershipId, operations, ifMatch)
+    }
+
+    override fun setMembership(
+        membershipId: String,
+        classVersion: Int,
+        status: String?,
+        payload: Any?,
+        ifMatch: String?,
+    ): SetMembership {
+        return SetMembershipEndpoint(
+            pubnub = pubnub,
+            membershipId = membershipId,
             classVersion = classVersion,
             status = status,
             payload = payload,

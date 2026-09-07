@@ -44,14 +44,15 @@ internal class PNDataSyncEntityConverterTest {
             createdAt = randomString(),
             updatedAt = randomString(),
             eTag = randomString(),
+            expiresAt = randomString(),
         )
 
         val actual = PNDataSyncEntityConverter.from(entity)
 
         assertEquals(entity.id, actual.id)
+        assertEquals(entity.expiresAt, actual.expiresAt)
         assertEquals(null, actual.classLevel)
         assertEquals(null, actual.status)
-        assertEquals(null, actual.expiresAt)
         assertEquals(null, actual.payload)
     }
 

@@ -44,14 +44,15 @@ internal class PNDataSyncUserConverterTest {
             createdAt = randomString(),
             updatedAt = randomString(),
             eTag = randomString(),
+            expiresAt = randomString(),
         )
 
         val actual = PNDataSyncUserConverter.from(user)
 
         assertEquals(user.id, actual.id)
+        assertEquals(user.expiresAt, actual.expiresAt)
         assertEquals(null, actual.classLevel)
         assertEquals(null, actual.status)
-        assertEquals(null, actual.expiresAt)
         assertEquals(null, actual.payload)
     }
 

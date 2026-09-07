@@ -20,8 +20,19 @@ import java.util.Map;
 @Accessors(chain = true)
 @ToString
 public class PNDataSyncEntity {
+    /**
+     * Entity identifier.
+     */
     private String id;
+
+    /**
+     * Entity class identifier.
+     */
     private String className;
+
+    /**
+     * Version of the entity class.
+     */
     private int classVersion;
 
     /**
@@ -30,16 +41,36 @@ public class PNDataSyncEntity {
     @Nullable
     private String classLevel;
 
+    /**
+     * Date and time the entity was created.
+     */
     private String createdAt;
+
+    /**
+     * Date and time the entity was last updated.
+     */
     private String updatedAt;
+
+    /**
+     * The entity's content fingerprint used in conditional requests.
+     */
     private String eTag;
 
+    /**
+     * Entity status.
+     */
     @Nullable
     private String status;
 
-    @Nullable
+    /**
+     * Date and time when the entity expires (will be deleted automatically). Always present —
+     * server-computed from the entity class TTL and never client-settable.
+     */
     private String expiresAt;
 
+    /**
+     * Arbitrary user-defined JSON object.
+     */
     @Nullable
     private Map<String, Object> payload;
 }

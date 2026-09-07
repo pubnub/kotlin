@@ -54,6 +54,8 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             assertEquals(userId, createResult.getData().getId());
             assertEquals(entityClassVersion, createResult.getData().getClassVersion());
             assertNotNull(createResult.getData().getETag());
+            // expiresAt is a required, server-computed field: proves the server always returns it
+            assertFalse(createResult.getData().getExpiresAt().trim().isEmpty());
             assertEquals("Alice", createResult.getData().getPayload().get("username"));
             assertEquals("alice@example.com", createResult.getData().getPayload().get("email"));
 

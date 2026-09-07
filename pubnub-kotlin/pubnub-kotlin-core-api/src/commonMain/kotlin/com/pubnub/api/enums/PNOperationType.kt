@@ -156,4 +156,18 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     object PNUpdateChannelOperation : DataSyncOperation()
 
     object PNSetChannelOperation : DataSyncOperation()
+
+    object PNGetMembershipOperation : DataSyncOperation()
+
+    object PNCreateMembershipOperation : DataSyncOperation()
+
+    object PNRemoveMembershipOperation : DataSyncOperation()
+
+    // Named PNGetDataSyncMembershipsOperation (not PNGetMembershipsOperation) to avoid a compile-blocking
+    // simple-name clash with App Context's existing ObjectsOperation `PNGetMembershipsOperation`.
+    object PNGetDataSyncMembershipsOperation : DataSyncOperation()
+
+    object PNUpdateMembershipOperation : DataSyncOperation()
+
+    object PNSetMembershipOperation : DataSyncOperation()
 }

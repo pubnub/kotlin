@@ -49,11 +49,11 @@ class DataSyncChannelTest {
             createdAt = "2021-01-01T00:00:00.000Z",
             updatedAt = "2021-01-01T00:00:00.000Z",
             eTag = randomString(),
+            expiresAt = "2022-01-01T00:00:00.000Z",
         )
 
         assertNull(channel.classLevel)
         assertNull(channel.status)
-        assertNull(channel.expiresAt)
         assertNull(channel.payload)
     }
 

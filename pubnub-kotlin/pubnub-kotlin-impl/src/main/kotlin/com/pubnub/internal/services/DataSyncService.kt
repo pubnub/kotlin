@@ -2,13 +2,16 @@ package com.pubnub.internal.services
 
 import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncChannel
 import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncEntity
+import com.pubnub.api.models.consumer.datasync.membership.PNDataSyncMembership
 import com.pubnub.api.models.consumer.datasync.user.PNDataSyncUser
 import com.pubnub.internal.models.server.datasync.CreateChannelRequest
 import com.pubnub.internal.models.server.datasync.CreateEntityRequest
+import com.pubnub.internal.models.server.datasync.CreateMembershipRequest
 import com.pubnub.internal.models.server.datasync.CreateUserRequest
 import com.pubnub.internal.models.server.datasync.EntitiesEnvelope
 import com.pubnub.internal.models.server.datasync.JsonPatchOperation
 import com.pubnub.internal.models.server.datasync.SetEntityRequest
+import com.pubnub.internal.models.server.datasync.SetMembershipRequest
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.http.Body
@@ -169,4 +172,53 @@ internal interface DataSyncService {
         @Header("If-Match") ifMatch: String?,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncChannel>>
+
+    @GET("v1/datasync/subkeys/{subKey}/memberships/{membershipId}")
+    fun getMembership(
+        @Path("subKey") subKey: String,
+        @Path("membershipId") membershipId: String,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntityEnvelope<PNDataSyncMembership>>
+
+    @Headers("Content-Type: application/vnd.pubnub.objects.membership+json;version=1")
+    @POST("v1/datasync/subkeys/{subKey}/memberships")
+    fun createMembership(
+        @Path("subKey") subKey: String,
+        @Body body: CreateMembershipRequest,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntityEnvelope<PNDataSyncMembership>>
+
+    @DELETE("v1/datasync/subkeys/{subKey}/memberships/{membershipId}")
+    fun deleteMembership(
+        @Path("subKey") subKey: String,
+        @Path("membershipId") membershipId: String,
+        @Header("If-Match") ifMatch: String?,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<Void>
+
+    @GET("v1/datasync/subkeys/{subKey}/memberships")
+    fun getMemberships(
+        @Path("subKey") subKey: String,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntitiesEnvelope<PNDataSyncMembership>>
+
+    @Headers("Content-Type: application/json-patch+json")
+    @PATCH("v1/datasync/subkeys/{subKey}/memberships/{membershipId}")
+    fun updateMembership(
+        @Path("subKey") subKey: String,
+        @Path("membershipId") membershipId: String,
+        @Body body: List<JsonPatchOperation>,
+        @Header("If-Match") ifMatch: String?,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntityEnvelope<PNDataSyncMembership>>
+
+    @Headers("Content-Type: application/vnd.pubnub.objects.membership+json;version=1")
+    @PUT("v1/datasync/subkeys/{subKey}/memberships/{membershipId}")
+    fun setMembership(
+        @Path("subKey") subKey: String,
+        @Path("membershipId") membershipId: String,
+        @Body body: SetMembershipRequest,
+        @Header("If-Match") ifMatch: String?,
+        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+    ): Call<EntityEnvelope<PNDataSyncMembership>>
 }
