@@ -69,9 +69,9 @@ public class PNDataSyncMembership {
     private String status;
 
     /**
-     * Date and time when the membership expires (will be deleted automatically).
+     * Date and time when the membership expires (will be deleted automatically). Always present:
+     * server-computed on every response, never client-settable.
      */
-    @Nullable
     private String expiresAt;
 
     /**

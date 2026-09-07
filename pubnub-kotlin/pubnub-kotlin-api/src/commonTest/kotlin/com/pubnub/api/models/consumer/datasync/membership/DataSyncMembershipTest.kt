@@ -50,10 +50,10 @@ class DataSyncMembershipTest {
             createdAt = "2021-01-01T00:00:00.000Z",
             updatedAt = "2021-01-01T00:00:00.000Z",
             eTag = randomString(),
+            expiresAt = "2022-01-01T00:00:00.000Z",
         )
 
         assertNull(membership.status)
-        assertNull(membership.expiresAt)
         assertNull(membership.payload)
     }
 }

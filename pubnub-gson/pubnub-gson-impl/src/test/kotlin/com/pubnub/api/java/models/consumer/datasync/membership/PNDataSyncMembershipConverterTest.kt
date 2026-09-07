@@ -48,6 +48,7 @@ internal class PNDataSyncMembershipConverterTest {
             createdAt = randomString(),
             updatedAt = randomString(),
             eTag = randomString(),
+            expiresAt = randomString(),
         )
 
         val actual = PNDataSyncMembershipConverter.from(membership)
@@ -55,8 +56,8 @@ internal class PNDataSyncMembershipConverterTest {
         assertEquals(membership.id, actual.id)
         assertEquals(membership.channelId, actual.channelId)
         assertEquals(membership.userId, actual.userId)
+        assertEquals(membership.expiresAt, actual.expiresAt)
         assertEquals(null, actual.status)
-        assertEquals(null, actual.expiresAt)
         assertEquals(null, actual.payload)
     }
 

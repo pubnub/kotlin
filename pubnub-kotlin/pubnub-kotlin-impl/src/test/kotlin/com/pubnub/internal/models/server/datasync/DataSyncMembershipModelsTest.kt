@@ -114,7 +114,8 @@ internal class DataSyncMembershipModelsTest {
               "relationshipClassVersion": 1,
               "createdAt": "2021-01-01T00:00:00.000Z",
               "updatedAt": "2021-01-01T00:00:00.000Z",
-              "eTag": "etag456"
+              "eTag": "etag456",
+              "expiresAt": "2022-01-01T00:00:00.000Z"
             }
         """.trimIndent()
 
@@ -122,8 +123,8 @@ internal class DataSyncMembershipModelsTest {
 
         assertEquals("Membership", membership.className)
         assertEquals(1, membership.classVersion)
+        assertEquals("2022-01-01T00:00:00.000Z", membership.expiresAt)
         assertNull(membership.status)
-        assertNull(membership.expiresAt)
         assertNull(membership.payload)
     }
 }

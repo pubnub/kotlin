@@ -19,8 +19,9 @@ import com.pubnub.api.utils.SerializedName
  * @property createdAt Date and time the membership was created.
  * @property updatedAt Date and time the membership was last updated.
  * @property eTag The membership's content fingerprint used in conditional requests.
+ * @property expiresAt Date and time when the membership expires (will be deleted automatically). Always
+ * present: server-computed on every response, never client-settable.
  * @property status Membership status.
- * @property expiresAt Date and time when the membership expires (will be deleted automatically).
  * @property payload Arbitrary user-defined JSON object.
  */
 data class PNDataSyncMembership(
@@ -32,7 +33,7 @@ data class PNDataSyncMembership(
     val createdAt: String,
     val updatedAt: String,
     val eTag: String,
+    val expiresAt: String,
     val status: String? = null,
-    val expiresAt: String? = null,
     val payload: Map<String, Any?>? = null,
 )
