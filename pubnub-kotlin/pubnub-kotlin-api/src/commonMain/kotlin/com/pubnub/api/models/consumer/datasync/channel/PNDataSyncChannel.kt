@@ -18,8 +18,9 @@ import com.pubnub.api.utils.SerializedName
  * @property createdAt Date and time the channel was created.
  * @property updatedAt Date and time the channel was last updated.
  * @property eTag The channel's content fingerprint used in conditional requests.
- * @property status Channel status.
  * @property expiresAt Date and time when the channel expires (will be deleted automatically).
+ *   Always present — server-computed from the entity class TTL and never client-settable.
+ * @property status Channel status.
  * @property payload Arbitrary user-defined JSON object.
  */
 data class PNDataSyncChannel(
@@ -30,7 +31,7 @@ data class PNDataSyncChannel(
     val createdAt: String,
     val updatedAt: String,
     val eTag: String,
+    val expiresAt: String,
     val status: String? = null,
-    val expiresAt: String? = null,
     val payload: Map<String, Any?>? = null,
 )

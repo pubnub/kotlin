@@ -44,14 +44,15 @@ internal class PNDataSyncChannelConverterTest {
             createdAt = randomString(),
             updatedAt = randomString(),
             eTag = randomString(),
+            expiresAt = randomString(),
         )
 
         val actual = PNDataSyncChannelConverter.from(channel)
 
         assertEquals(channel.id, actual.id)
+        assertEquals(channel.expiresAt, actual.expiresAt)
         assertEquals(null, actual.classLevel)
         assertEquals(null, actual.status)
-        assertEquals(null, actual.expiresAt)
         assertEquals(null, actual.payload)
     }
 
