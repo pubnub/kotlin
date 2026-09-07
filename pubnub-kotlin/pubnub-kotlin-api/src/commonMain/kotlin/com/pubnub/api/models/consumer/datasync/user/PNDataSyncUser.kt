@@ -6,10 +6,6 @@ import com.pubnub.api.utils.SerializedName
  * DataSync User resource returned by `pubnub.dataSync.getUser`, `createUser` and referenced by
  * remove operations. A User is a specialized DataSync entity of class `User`.
  *
- * The class-identity properties are exposed with the `class*` names (`className` / `classVersion` /
- * `classLevel`), while the server serializes them under the camelCase `entityClass*` wire keys — hence the
- * `@field:SerializedName` mappings below.
- *
  * @property id User identifier.
  * @property className Entity class identifier (a `User` subclass, defaults to `User`).
  * @property classVersion Version of the entity class.

@@ -12,6 +12,12 @@ import com.pubnub.api.java.endpoints.datasync.membership.GetMemberships;
 import com.pubnub.api.java.endpoints.datasync.membership.RemoveMembership;
 import com.pubnub.api.java.endpoints.datasync.membership.SetMembership;
 import com.pubnub.api.java.endpoints.datasync.membership.UpdateMembership;
+import com.pubnub.api.java.endpoints.datasync.relationship.CreateRelationship;
+import com.pubnub.api.java.endpoints.datasync.relationship.GetRelationship;
+import com.pubnub.api.java.endpoints.datasync.relationship.GetRelationships;
+import com.pubnub.api.java.endpoints.datasync.relationship.RemoveRelationship;
+import com.pubnub.api.java.endpoints.datasync.relationship.SetRelationship;
+import com.pubnub.api.java.endpoints.datasync.relationship.UpdateRelationship;
 import com.pubnub.api.java.endpoints.datasync.entity.CreateEntity;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntities;
 import com.pubnub.api.java.endpoints.datasync.entity.GetEntity;
@@ -77,7 +83,7 @@ public interface DataSync {
      * all matching entities are
      * returned, subject only to {@code filterFast} / {@code filter} / {@code sort} and {@code limit} paging.
      *
-     * @param className Entity class identifier (required).
+     * @param className Entity class identifier.
      */
     GetEntities getEntities(String className);
 
@@ -322,4 +328,85 @@ public interface DataSync {
      *                     future; when one is, opt in by passing its number.
      */
     SetMembership setMembership(String membershipId, int classVersion);
+
+    /**
+     * Get a DataSync relationship by its id.
+     *
+     * <p>A Relationship links two entities under a relationship class. It is the general counterpart to
+     * Membership, which is a fixed Channel↔User specialization.
+     *
+     * @param relationshipId Identifier of the relationship to fetch.
+     */
+    GetRelationship getRelationship(String relationshipId);
+
+    /**
+     * Create a DataSync relationship linking two entities. Optional fields are set via the returned builder.
+     *
+     * @param entityAId    Identifier of entity A. Must reference an existing entity — a missing or
+     *                     wrong-class entity is rejected.
+     * @param entityBId    Identifier of entity B. Must reference an existing entity — a missing or
+     *                     wrong-class entity is rejected.
+     * @param className    Relationship class identifier.
+     * @param classVersion Version of the relationship class the payload conforms to. Relationship classes are
+     *                     versioned (an integer {@code >= 1}); pass the version of the class you are targeting.
+     */
+    CreateRelationship createRelationship(String entityAId, String entityBId, String className, int classVersion);
+
+    /**
+     * Remove a DataSync relationship by its id. Optional {@code ifMatch} is set via the returned builder.
+     *
+     * @param relationshipId Identifier of the relationship to remove.
+     */
+    RemoveRelationship removeRelationship(String relationshipId);
+
+    /**
+     * List DataSync relationships of a class, optionally filtered by entity A and/or entity B. Optional
+     * filters/paging are set via the returned builder.
+     *
+     * <p>Filtering and sorting are only allowed on properties the relationship class marks as filterable via
+     * their {@code filtering} mode ({@code none} / {@code simple} / {@code full}), which also determines which of
+     * {@code filterFast} / {@code filter} / {@code sort} a property may be used with — see
+     * {@link GetRelationships#filterFast(String)}, {@link GetRelationships#filter(String)}, and
+     * {@link GetRelationships#sort(List)} for the exact per-parameter rules. The filterable set has no fixed
+     * default; it is whatever the supplied {@code className} declares as filterable payload properties (indexes
+     * over the relationship's {@code /payload}; the {@code payload} otherwise stays arbitrary JSON). In addition,
+     * the built-in fields {@code id}, {@code createdAt}, {@code updatedAt}, and {@code status} behave as
+     * {@code full} and are always filterable and sortable on any class, except that {@code status} may be
+     * excluded when the class declares it as a projected field and the token cannot fully reach it.
+     *
+     * <p>Results are scoped to the caller's access token: only relationships the token is permitted to read
+     * ({@code get}) are returned. Relationships the token cannot read are silently omitted — the call does not
+     * error and does not return a {@code 403} for the un-readable relationships. Token scoping and the
+     * {@code filterFast} / {@code filter} / {@code sort} criteria are applied together, so the returned page
+     * never contains a relationship the token cannot read regardless of the other criteria. When the PubNub
+     * instance is configured with a secretKey (a trusted server-side deployment, never a client — the secretKey
+     * must not be shipped to clients), or when using a token whose grants cover the whole result set, no
+     * permission-based filtering is applied and all matching relationships are returned, subject only to
+     * {@code filterFast} / {@code filter} / {@code sort} and {@code limit} paging.
+     *
+     * @param className Relationship class identifier.
+     */
+    GetRelationships getRelationships(String className);
+
+    /**
+     * Partially update a DataSync relationship via JSON Patch (RFC-6902). Optional {@code ifMatch} is set via the returned builder.
+     *
+     * @param relationshipId Identifier of the relationship to patch.
+     * @param operations     Non-empty list of JSON Patch operations to apply.
+     */
+    UpdateRelationship updateRelationship(String relationshipId, List<PNJsonPatchOperation> operations);
+
+    /**
+     * Replaces a relationship in full. Optional fields are set via the returned builder.
+     * <p>
+     * Every mutable field is overwritten. Omitting {@code status} or {@code payload} clears the stored value rather
+     * than preserving it, so a read-modify-write must send back every field it wants to keep. This cannot re-point
+     * or reclassify a relationship — the linked entities and the relationship class are immutable. Use
+     * {@link #updateRelationship(String, List)} to change part of a relationship.
+     *
+     * @param relationshipId Identifier of the relationship to replace.
+     * @param classVersion   Version of the relationship class the payload conforms to. Relationship classes are
+     *                       versioned (an integer {@code >= 1}); pass the version of the class you are targeting.
+     */
+    SetRelationship setRelationship(String relationshipId, int classVersion);
 }

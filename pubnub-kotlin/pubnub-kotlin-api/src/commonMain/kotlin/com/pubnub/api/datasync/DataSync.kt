@@ -18,6 +18,12 @@ import com.pubnub.api.endpoints.datasync.membership.GetMemberships
 import com.pubnub.api.endpoints.datasync.membership.RemoveMembership
 import com.pubnub.api.endpoints.datasync.membership.SetMembership
 import com.pubnub.api.endpoints.datasync.membership.UpdateMembership
+import com.pubnub.api.endpoints.datasync.relationship.CreateRelationship
+import com.pubnub.api.endpoints.datasync.relationship.GetRelationship
+import com.pubnub.api.endpoints.datasync.relationship.GetRelationships
+import com.pubnub.api.endpoints.datasync.relationship.RemoveRelationship
+import com.pubnub.api.endpoints.datasync.relationship.SetRelationship
+import com.pubnub.api.endpoints.datasync.relationship.UpdateRelationship
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
@@ -78,7 +84,7 @@ interface DataSync {
      * result set, no permission-based filtering is applied and all matching entities are returned, subject only to
      * [filterFast] / [filter] / [sort] and [limit] paging.
      *
-     * @param className Entity class identifier (required).
+     * @param className Entity class identifier.
      * @param classVersion Optional entity class version. When `null` the server uses the latest.
      * @param classLevel Optional level at which the entity class is defined (e.g. `SubKey` / `Global`).
      * @param filterFast Optional filter expression. Filtering is only allowed on properties the entity class
@@ -430,9 +436,9 @@ interface DataSync {
      * parameter; the SDK fixes the class to `Membership`. Creating a Membership *subclass* is not supported
      * here; that is served by the general `/relationships` API.
      *
-     * @param channelId Identifier of the Channel (entity A) to link. Required. Must reference an existing
+     * @param channelId Identifier of the Channel (entity A) to link. Must reference an existing
      *   Channel entity — a missing or wrong-class entity is rejected.
-     * @param userId Identifier of the User (entity B) to link. Required. Must reference an existing User
+     * @param userId Identifier of the User (entity B) to link. Must reference an existing User
      *   entity — a missing or wrong-class entity is rejected.
      * @param classVersion Version of the `Membership` class the payload conforms to. Currently only version
      *   `1` exists — pass `1`. New versions may be introduced in the future; when one is, opt in by passing
@@ -552,4 +558,144 @@ interface DataSync {
         payload: Any? = null,
         ifMatch: String? = null,
     ): SetMembership
+
+    /**
+     * Get a DataSync relationship by its id.
+     *
+     * A Relationship is a typed link between two entities (side A and side B) under an arbitrary relationship
+     * class.
+     *
+     * @param relationshipId Identifier of the relationship to fetch.
+     */
+    fun getRelationship(relationshipId: String): GetRelationship
+
+    /**
+     * Create a DataSync relationship linking two entities under a relationship class.
+     *
+     * Unlike `createMembership`, [className] is **required** — this API targets the caller-supplied relationship
+     * class rather than a fixed built-in one, and the two ends are the generic [entityAId] / [entityBId] rather
+     * than a Channel/User pair.
+     *
+     * @param entityAId Identifier of entity A to link. Must reference an existing entity — a missing
+     *   or wrong-class entity is rejected.
+     * @param entityBId Identifier of entity B to link. Must reference an existing entity — a missing
+     *   or wrong-class entity is rejected.
+     * @param className Relationship class identifier.
+     * @param classVersion Version of the relationship class the payload conforms to. Relationship classes are
+     *   versioned (an integer `>= 1`); pass the version of the class you are targeting.
+     * @param relationshipId Optional relationship identifier. When `null` the server generates one.
+     * @param status Optional relationship status.
+     * @param payload Optional arbitrary JSON object payload.
+     */
+    fun createRelationship(
+        entityAId: String,
+        entityBId: String,
+        className: String,
+        classVersion: Int,
+        relationshipId: String? = null,
+        status: String? = null,
+        payload: Any? = null,
+    ): CreateRelationship
+
+    /**
+     * Remove a DataSync relationship by its id.
+     *
+     * @param relationshipId Identifier of the relationship to remove.
+     * @param ifMatch Optional eTag for a conditional remove (`If-Match` header).
+     */
+    fun removeRelationship(relationshipId: String, ifMatch: String? = null): RemoveRelationship
+
+    /**
+     * List DataSync relationships in a relationship class, optionally filtered by either end.
+     *
+     * Unlike `getMemberships`, [className] is **required** — the relationship class to query is caller-supplied,
+     * not a fixed built-in one.
+     *
+     * Filtering and sorting are only allowed on properties the relationship class marks as filterable via their
+     * `filtering` mode (`none` / `simple` / `full`), which also determines which of [filterFast] / [filter] /
+     * [sort] a property may be used with. The filterable set has no fixed default; it is whatever the supplied
+     * [className] declares as filterable payload properties (indexes over the relationship's `/payload`; the
+     * `payload` otherwise stays arbitrary JSON). In addition, the built-in fields `id`, `createdAt`, `updatedAt`,
+     * and `status` behave as `full` and are always filterable and sortable on any class.
+     *
+     * Results are scoped to the caller's access token: only relationships the token is permitted to read (`get`)
+     * are returned. Relationships the token cannot read are silently omitted — the call does not error and does
+     * not return a `403` for the un-readable relationships. Token scoping and the [filterFast] / [filter] /
+     * [sort] criteria are applied together, so the returned page never contains a relationship the token cannot
+     * read regardless of the other criteria. When the PubNub instance is configured with a secretKey (a trusted
+     * server-side deployment, never a client — the secretKey must not be shipped to clients), or when using a
+     * token whose grants cover the whole result set, no permission-based filtering is applied and all matching
+     * relationships are returned, subject only to [filterFast] / [filter] / [sort] and [limit] paging.
+     *
+     * @param className Relationship class identifier to query.
+     * @param entityAId Optional entity A identifier to filter by. [entityAId] and [entityBId] are independent,
+     *   AND-ed equality filters on the two sides of the relationship. Supplying only one narrows to relationships
+     *   on that side; supplying both returns the relationships matching both; supplying neither lists all
+     *   readable relationships in the class. This is not a pair-only lookup API.
+     * @param entityBId Optional entity B identifier to filter by. See [entityAId] for how the two combine.
+     * @param classVersion Restricts results to a single version of the relationship class. If omitted, every
+     *   version is returned.
+     * @param filterFast Optional filter expression. `filterFast` is strongly consistent — it always reflects the
+     *   latest writes — but accepts fewer conditions than [filter]; a limit on the number of conditions applies
+     *   and can be adjusted by PubNub support (see the PubNub DataSync documentation for the current limit). For
+     *   larger or more complex queries use [filter]. At most one of [filterFast] and [filter] may be supplied;
+     *   sending both is rejected with an error.
+     * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast]. It is not subject
+     *   to the same condition limit, so use it for larger or more complex queries. The trade-off is consistency:
+     *   `filter` is eventually consistent (recent writes may not yet be reflected), whereas [filterFast] is
+     *   strongly consistent. At most one of [filterFast] and [filter] may be supplied; sending both is rejected
+     *   with an error.
+     * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a property either
+     *   ascending (default) or descending.
+     * @param limit Optional page size (1–100, server default 20).
+     * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
+     */
+    fun getRelationships(
+        className: String,
+        entityAId: String? = null,
+        entityBId: String? = null,
+        classVersion: Int? = null,
+        filterFast: String? = null,
+        filter: String? = null,
+        sort: List<PNDataSyncSortField> = emptyList(),
+        limit: Int? = null,
+        cursor: String? = null,
+    ): GetRelationships
+
+    /**
+     * Partially update a DataSync relationship via JSON Patch (RFC-6902).
+     *
+     * @param relationshipId Identifier of the relationship to patch.
+     * @param operations Non-empty list of JSON Patch operations to apply.
+     * @param ifMatch Optional eTag for optimistic concurrency (`If-Match` header).
+     */
+    fun updateRelationship(
+        relationshipId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String? = null,
+    ): UpdateRelationship
+
+    /**
+     * Replaces a relationship in full.
+     *
+     * Every mutable field is overwritten. Omitting [status] or [payload] clears the stored value rather than
+     * preserving it, so a read-modify-write must send back every field it wants to keep. This cannot re-point
+     * or reclassify a relationship — the two linked entities ([entityAId] / [entityBId]) and the relationship
+     * class are immutable. Use [updateRelationship] to change part of a relationship.
+     *
+     * @param relationshipId Identifier of the relationship to replace.
+     * @param classVersion Version of the relationship class the payload conforms to. Relationship classes are
+     *   versioned (an integer `>= 1`); pass the version of the class you are targeting.
+     * @param status Optional status to store with the relationship.
+     * @param payload Optional replacement relationship fields (arbitrary JSON object).
+     * @param ifMatch Optional eTag last read, to fail the request when the relationship changed since
+     *   (`If-Match` header).
+     */
+    fun setRelationship(
+        relationshipId: String,
+        classVersion: Int,
+        status: String? = null,
+        payload: Any? = null,
+        ifMatch: String? = null,
+    ): SetRelationship
 }
