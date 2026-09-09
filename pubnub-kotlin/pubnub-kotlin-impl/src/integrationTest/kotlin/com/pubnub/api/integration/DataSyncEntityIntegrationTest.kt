@@ -20,6 +20,28 @@ import org.junit.Test
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
 
+/**
+ * Integration tests for the DataSync entity API. They depend on a pre-provisioned `TestUser` entity class
+ * existing on the keyset (there is no SDK method to create classes — see `scripts/datasync/create-classes.sh`).
+ *
+ * `TestUser` (SubKey level, version 1) is defined as:
+ * ```
+ * property     path                    valueKind  filtering  nullable  projections
+ * username     /payload/username       string     full       false     __default__, admin
+ * email        /payload/email          string     simple     true      admin            (admin-only)
+ * status       /status                 string     simple     true      __default__, admin
+ * signupDate   /payload/signupDate     date       simple     true      __default__, admin
+ * ```
+ *
+ * Consequences the tests rely on:
+ * - `username` is non-nullable → every create/PUT must include it (else `DS-0650`).
+ * - `email` is in the `admin` projection only → a `__default__`-projection read hides it, and a
+ *   `__default__`-projection write is rejected. Token-authorized writes that include `email` must grant the
+ *   entity through `projection = "admin"`.
+ * - Under a non-default projection the write guard rejects EVERY payload field not in that projection, so an
+ *   `admin`-projected write payload may contain only `admin` fields (no undeclared fields like `hobby`/`custom`).
+ * - `signupDate` is `date`-kind → date-only `YYYY-MM-DD` literals (not RFC-3339 datetime).
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     private val className = "TestUser"
@@ -118,13 +140,17 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         val client = createAuthorizedClient()
         val authorizedUUID = client.configuration.userId.value
 
-        // create -> token scoped to `create` on this specific entity id
-        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, create = true))
+        // create -> token scoped to `create` on this specific entity id.
+        // projection = "admin": the payload writes `email`, which TestUser declares in the `admin`
+        // projection only. A default-projection token would be rejected (DS-0202) for writing a field
+        // outside its projection, so the create grant must resolve this entity through `admin`.
+        // Under a non-default projection the write guard rejects EVERY payload field not in the
+        // projection (including uncontrolled fields), so the payload must contain only admin fields —
+        // no `hobby`/`custom`, which are not declared on the class.
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, create = true, projection = "admin"))
         val payload = TestUserPayload(
             username = "Alice",
             email = "alice@example.com",
-            hobby = "poetry",
-            custom = "value",
         )
         val createResult = client.dataSync.createEntity(
             className = className,
@@ -166,8 +192,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         ).sync()
         assertEquals("inactive", patchResult.data.status)
 
-        // update -> token scoped to `update` on this specific entity (PUT maps to `update`)
-        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, update = true))
+        // update -> token scoped to `update` on this specific entity (PUT maps to `update`).
+        // projection = "admin" for the same reason as create: the new payload writes `email`.
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, update = true, projection = "admin"))
         val newPayload = TestUserPayload(username = "Bob", email = "bob@example.com")
         val updateResult = client.dataSync.setEntity(
             entityId = entityId,
@@ -509,6 +536,131 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             server.dataSync.removeEntity(idA).sync()
             server.dataSync.removeEntity(idB).sync()
             server.dataSync.removeEntity(idC).sync()
+        }
+    }
+
+    @Test
+    fun getEntityAppliesProjectionCarriedByTheToken() {
+        // A projection is a named, filtered view of a class's fields, carried by the PAM token (not a read
+        // parameter). The `TestUser` class declares `email` as belonging to the `admin` projection ONLY, while
+        // `username` (and `status`) belong to both `__default__` and `admin`. So the same entity read through an
+        // `admin`-projected token exposes `email`, but read through the implicit `__default__` projection hides it.
+        val payload = TestUserPayload(
+            username = "Alice",
+            email = "alice@example.com",
+        )
+        server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = entityId,
+            status = "active",
+            payload = payload,
+        ).sync()
+
+        // A client on the same keyset as `server` but without the secretKey, so it only sees what its token allows.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        try {
+            // admin-projected `get` token -> the `email` (admin-only) field is visible.
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, get = true, projection = "admin"))
+            val adminView = client.dataSync.getEntity(entityId).sync()
+            assertEquals(entityId, adminView.data.id)
+            assertEquals("Alice", adminView.data.payload?.get("username"))
+            assertEquals(
+                "The admin-projected token must expose the admin-only `email` field",
+                "alice@example.com",
+                adminView.data.payload?.get("email"),
+            )
+
+            // no projection -> implicit `__default__` view: `email` is omitted, `username` is still present.
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, get = true))
+            val defaultView = client.dataSync.getEntity(entityId).sync()
+            assertEquals(entityId, defaultView.data.id)
+            assertEquals(
+                "The __default__ projection must still expose `username`",
+                "Alice",
+                defaultView.data.payload?.get("username"),
+            )
+            assertTrue(
+                "The admin-only `email` field must NOT leak through the __default__ projection",
+                defaultView.data.payload?.get("email") == null,
+            )
+        } finally {
+            server.dataSync.removeEntity(entityId).sync()
+        }
+    }
+
+    @Test
+    fun getAllRangeFilterAndSortOnDateValueKind() {
+        // `TestUser.signupDate` is a `date`-valueKind property declared `filtering: "simple"` (Postgres,
+        // strongly consistent), so these reads resolve immediately after create — no await/poll needed.
+        // This exercises the `date` value kind end-to-end: a range `filterFast` (>=) and a non-string sort,
+        // as opposed to the string-only `username` coverage in getAllWithFilterSortLimitAndCursor.
+        //
+        // The `date` value kind expects a date-only `YYYY-MM-DD` literal on the wire; a full RFC-3339 datetime is
+        // rejected with DS-0008 ("not of expected type 'date'").
+        val run = randomValue()
+        val userPrefix = "user-$run-"
+        val idOld = "entity-$run-old"
+        val idMid = "entity-$run-mid"
+        val idNew = "entity-$run-new"
+        val dateOld = "2019-01-01"
+        val dateMid = "2021-06-15"
+        val dateNew = "2023-12-31"
+        val cutoff = "2020-01-01" // excludes idOld, includes idMid and idNew
+
+        // Each row carries a run-unique username (so a LIKE keeps the assertions isolated) and a distinct signupDate.
+        server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = idOld,
+            status = "active",
+            payload = mapOf("username" to "${userPrefix}old", "email" to "old@example.com", "signupDate" to dateOld),
+        ).sync()
+        server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = idMid,
+            status = "active",
+            payload = mapOf("username" to "${userPrefix}mid", "email" to "mid@example.com", "signupDate" to dateMid),
+        ).sync()
+        server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = idNew,
+            status = "active",
+            payload = mapOf("username" to "${userPrefix}new", "email" to "new@example.com", "signupDate" to dateNew),
+        ).sync()
+
+        try {
+            // range filterFast -> signupDate >= cutoff keeps idMid and idNew, drops idOld.
+            // The username LIKE keeps this run isolated from any other TestUser rows on the shared keyset.
+            val ranged = server.dataSync.getEntities(
+                className = className,
+                filterFast = "username LIKE \"$userPrefix*\" && signupDate >= \"$cutoff\"",
+            ).sync()
+            assertEquals(setOf(idMid, idNew), ranged.data.map { it.id }.toSet())
+
+            // sort ascending by the date property -> old, mid, new
+            val sortedAsc = server.dataSync.getEntities(
+                className = className,
+                filterFast = "username LIKE \"$userPrefix*\"",
+                sort = listOf(PNDataSyncSortField("signupDate", ascending = true)),
+            ).sync()
+            assertEquals(listOf(idOld, idMid, idNew), sortedAsc.data.map { it.id })
+
+            // sort descending -> new, mid, old
+            val sortedDesc = server.dataSync.getEntities(
+                className = className,
+                filterFast = "username LIKE \"$userPrefix*\"",
+                sort = listOf(PNDataSyncSortField("signupDate", ascending = false)),
+            ).sync()
+            assertEquals(listOf(idNew, idMid, idOld), sortedDesc.data.map { it.id })
+        } finally {
+            server.dataSync.removeEntity(idOld).sync()
+            server.dataSync.removeEntity(idMid).sync()
+            server.dataSync.removeEntity(idNew).sync()
         }
     }
 

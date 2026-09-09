@@ -70,7 +70,7 @@ class GrantTokenEndpoint(
                         "uuids" to uuids.map { mapOf("id" to it.id, "get" to it.get, "update" to it.update, "delete" to it.delete) },
                         "users" to users.map { mapOf("id" to it.id, "get" to it.get, "create" to it.create, "update" to it.update, "delete" to it.delete) },
                         "dataSync" to dataSync.map {
-                            mapOf("namespace" to it.namespace, "id" to it.id, "get" to it.get, "create" to it.create, "update" to it.update, "delete" to it.delete)
+                            mapOf("namespace" to it.namespace, "id" to it.id, "get" to it.get, "create" to it.create, "update" to it.update, "delete" to it.delete, "projection" to (it.projection ?: ""))
                         }
                     ),
                     operation = this::class.simpleName
