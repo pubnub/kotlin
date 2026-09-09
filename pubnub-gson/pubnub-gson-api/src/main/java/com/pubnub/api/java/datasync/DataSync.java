@@ -141,9 +141,12 @@ public interface DataSync {
      * {@code filterFast} / {@code filter} / {@code sort} a property may be used with — see
      * {@link GetUsers#filterFast(String)}, {@link GetUsers#filter(String)}, and {@link GetUsers#sort(List)} for
      * the exact per-parameter rules. For the built-in {@code User} class the filterable set is {@code name} and
-     * {@code type}, plus the built-in fields {@code id}, {@code createdAt}, {@code updatedAt}, and
-     * {@code status}, which behave as {@code full} and are always filterable and sortable on any class. The
-     * built-in {@code User} class is defined at the {@code GLOBAL} class level.
+     * {@code type}, and a subclass that extends {@code User} may declare additional filterable properties. These
+     * are filterable indexes over {@code /payload/name} and {@code /payload/type} — both nullable, not a required
+     * or exclusive payload schema; the {@code payload} stays arbitrary JSON. In addition, the built-in fields
+     * {@code id}, {@code createdAt}, {@code updatedAt}, and {@code status} behave as {@code full} and are always
+     * filterable and sortable on any class. The built-in {@code User} class is defined at the {@code GLOBAL}
+     * class level.
      *
      * <p>Results are scoped to the caller's access token: only users the token is permitted to read
      * ({@code get}) are returned. Users the token cannot read are silently omitted — the call does not error

@@ -180,7 +180,12 @@ interface DataSync {
      *   at more than one level. Create-only — not accepted by [setUser]. The built-in `User` class is
      *   defined at the `GLOBAL` level.
      * @param status Optional user status.
-     * @param payload Optional arbitrary JSON object payload.
+     * @param payload Optional arbitrary JSON object payload. The payload is free-form, but the built-in `User`
+     *   class indexes the `name` and `type` properties: populating them here makes the user filterable and
+     *   sortable on `name` / `type` in [getUsers]. Any other payload property is stored but not queryable unless
+     *   a subclass that extends `User` declares it filterable (such a subclass inherits the `name` / `type`
+     *   indexes and may add its own). The built-in fields `id`, `createdAt`, `updatedAt`, and `status` are always
+     *   filterable/sortable regardless of payload.
      */
     fun createUser(
         classVersion: Int,
@@ -221,7 +226,10 @@ interface DataSync {
      *   usable with `filterFast` (and [sort] on the `filterFast` path); a `full` property is usable with both
      *   `filterFast` and [filter]; a `none` property is not filterable at all. So a `simple` property works here
      *   but is rejected by [filter]. The built-in `User` class exposes `name` and `type` as its filterable
-     *   properties. In addition, the built-in fields `id`, `createdAt`, `updatedAt`, and `status`
+     *   properties, and a subclass that extends `User` may declare additional filterable properties. These are
+     *   filterable indexes over `/payload/name` and `/payload/type` — both nullable, not a required or exclusive
+     *   payload schema; the `payload` stays arbitrary JSON. In addition, the built-in fields `id`, `createdAt`,
+     *   `updatedAt`, and `status`
      *   (case-sensitive, exactly as spelled) behave as `full` and are always filterable and sortable on any
      *   class, on both the `filterFast` and [filter] paths, regardless of its declared properties. `filterFast`
      *   is strongly consistent — it always reflects the latest writes —
@@ -309,7 +317,12 @@ interface DataSync {
      *   at more than one level. Create-only — not accepted by [setChannel]. The built-in `Channel` class is
      *   defined at the `GLOBAL` level.
      * @param status Optional channel status.
-     * @param payload Optional arbitrary JSON object payload.
+     * @param payload Optional arbitrary JSON object payload. The payload is free-form, but the default `Channel`
+     *   class indexes the `name` and `type` properties: populating them here makes the channel filterable and
+     *   sortable on `name` / `type` in [getChannels]. Any other payload property is stored but not queryable
+     *   unless a custom class or `Channel` subclass declares it filterable (a subclass inherits the `name` /
+     *   `type` indexes and may add its own). The built-in fields `id`, `createdAt`, `updatedAt`, and `status` are
+     *   always filterable/sortable regardless of payload.
      */
     fun createChannel(
         classVersion: Int,

@@ -47,7 +47,8 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
 
     data class TestChannelPayload(
         val username: String? = null,
-        val name: String? = null,
+        val name: String? = null, // this is predefined property in User class definition
+        val type: String? = null,  // this is predefined property in User class definition
         val email: String? = null,
         val hobby: String? = null,
         val custom: String? = null,
@@ -57,10 +58,11 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     fun createGetAndDeleteChannel() {
         // create (no className -> server defaults it to "Channel")
         val payload = TestChannelPayload(
-            username = "Alice",
-            email = "alice@example.com",
-            hobby = "poetry",
+            email = "capybara@example.com",
+            hobby = "coding",
             custom = "value",
+            name = "Capy",
+            type = "SDK"
         )
         val createResult: PNDataSyncCreateChannelResult = server.dataSync.createChannel(
             classVersion = classVersion,

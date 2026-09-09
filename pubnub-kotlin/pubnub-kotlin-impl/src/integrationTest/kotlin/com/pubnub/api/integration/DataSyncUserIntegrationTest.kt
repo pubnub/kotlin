@@ -5,6 +5,8 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
+import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
+import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.api.models.consumer.datasync.user.PNDataSyncCreateUserResult
 import com.pubnub.test.CommonUtils.randomValue
@@ -48,6 +50,8 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         val email: String,
         val hobby: String? = null,
         val custom: String? = null,
+        val name: String? = null, // this is predefined property in User class definition
+        val type: String? = null  // this is predefined property in User class definition
     )
 
     @Test
@@ -287,6 +291,8 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             username = "Alice",
             email = "alice@example.com",
             hobby = "poetry",
+            name = "Doe",
+            type = "Admin"
         )
         server.dataSync.createUser(
             classVersion = classVersion,
@@ -331,6 +337,112 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             assertEquals("Bob", afterUpdate.data.payload?.get("username"))
         } finally {
             server.dataSync.removeUser(userId).sync()
+        }
+    }
+
+    @Test
+    fun getUsersWithFilterSortLimitAndCursor() {
+        // filter/sort operate on the payload properties the entity class marks as filterable. The built-in
+        // `User` class declares `name` and `type` as filterable/sortable — `username`/`email` are *custom*
+        // class properties and would be rejected with DS-0005 "Unknown field" on the built-in User class. Each
+        // row is tagged with a run-unique `name` so the assertions stay isolated from any other users on the
+        // keyset, and the names sort a < b < c for deterministic ordering. `getUsers` takes the typed request
+        // args: `classLevel = PNDataSyncClassLevel.GLOBAL` (the level the built-in User class is defined at) and
+        // `sort = listOf(PNDataSyncSortField(...))`, and returns a non-null `next: PNDataSyncPage`.
+        val run = randomValue()
+        val nameA = "user-$run-a"
+        val nameB = "user-$run-b"
+        val nameC = "user-$run-c"
+        val namePrefix = "user-$run-"
+        val idA = "user-$run-id-a"
+        val idB = "user-$run-id-b"
+        val idC = "user-$run-id-c"
+
+        server.dataSync.createUser(
+            classVersion = classVersion,
+            userId = idA,
+            status = "active",
+            payload = TestUserPayload(username = "Alice", email = "alice@example.com", name = nameA, type = "Admin"),
+        ).sync()
+        server.dataSync.createUser(
+            classVersion = classVersion,
+            userId = idB,
+            status = "active",
+            payload = TestUserPayload(username = "Bob", email = "bob@example.com", name = nameB, type = "Member"),
+        ).sync()
+        server.dataSync.createUser(
+            classVersion = classVersion,
+            userId = idC,
+            status = "active",
+            payload = TestUserPayload(username = "Carol", email = "carol@example.com", name = nameC, type = "Admin"),
+        ).sync()
+
+        try {
+            // filterFast -> exact name equality (double-quoted string literal, per AppContext QL)
+            val filtered = server.dataSync.getUsers(
+                filterFast = "name == \"$nameA\"",
+            ).sync()
+            val filteredIds = filtered.data.map { it.id }
+            assertEquals(setOf(idA), filteredIds.toSet())
+            assertTrue("Expected the un-matched user to be filtered out", !filteredIds.contains(idB))
+
+            // filterFast on the other built-in filterable field, `type` -> the two Admin rows, not the Member
+            val filteredByType = server.dataSync.getUsers(
+                filterFast = "name LIKE \"$namePrefix*\" && type == \"Admin\"",
+            ).sync()
+            assertEquals(setOf(idA, idC), filteredByType.data.map { it.id }.toSet())
+
+            // classLevel -> the built-in User class is defined at the Global level, so scoping the list to it
+            // still returns the row
+            val scoped = server.dataSync.getUsers(
+                classLevel = PNDataSyncClassLevel.GLOBAL,
+                filterFast = "name == \"$nameA\"",
+            ).sync()
+            assertEquals(setOf(idA), scoped.data.map { it.id }.toSet())
+
+            // LIKE prefix match with a `*` wildcard, capturing all three rows
+            val advanced = server.dataSync.getUsers(
+                filterFast = "name LIKE \"$namePrefix*\"",
+            ).sync()
+            assertEquals(setOf(idA, idB, idC), advanced.data.map { it.id }.toSet())
+
+            // sort -> ascending by name (default direction); this run's rows appear in a-b-c order
+            val sortedDefault = server.dataSync.getUsers(
+                filterFast = "name LIKE \"$namePrefix*\"",
+                sort = listOf(PNDataSyncSortField("name")),
+            ).sync()
+            assertEquals(listOf(idA, idB, idC), sortedDefault.data.map { it.id })
+
+            // sort descending -> the same rows in reverse (c-b-a) order
+            val sortedDesc = server.dataSync.getUsers(
+                filterFast = "name LIKE \"$namePrefix*\"",
+                sort = listOf(PNDataSyncSortField("name", ascending = false)),
+            ).sync()
+            assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
+
+            // limit + cursor -> page through this run's rows one user at a time
+            val firstPage = server.dataSync.getUsers(
+                filterFast = "name LIKE \"$namePrefix*\"",
+                sort = listOf(PNDataSyncSortField("name")),
+                limit = 1,
+            ).sync()
+            assertEquals(1, firstPage.data.size)
+            assertEquals(idA, firstPage.data.first().id)
+            assertTrue("Expected more pages after the first", firstPage.next.hasNext)
+            assertNotNull(firstPage.next.cursor)
+
+            val secondPage = server.dataSync.getUsers(
+                filterFast = "name LIKE \"$namePrefix*\"",
+                sort = listOf(PNDataSyncSortField("name")),
+                limit = 1,
+                cursor = firstPage.next.cursor,
+            ).sync()
+            assertEquals(1, secondPage.data.size)
+            assertEquals(idB, secondPage.data.first().id)
+        } finally {
+            server.dataSync.removeUser(idA).sync()
+            server.dataSync.removeUser(idB).sync()
+            server.dataSync.removeUser(idC).sync()
         }
     }
 

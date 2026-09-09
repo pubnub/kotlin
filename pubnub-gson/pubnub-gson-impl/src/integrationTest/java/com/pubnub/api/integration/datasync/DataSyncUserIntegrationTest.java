@@ -5,6 +5,8 @@ import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
+import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
+import com.pubnub.api.java.models.consumer.datasync.PNDataSyncSortField;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
 import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncCreateUserResult;
 import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncGetUserResult;
@@ -19,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -36,11 +39,18 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         server = getServer();
     }
 
+    private static Map<String, Object> payload(String username, String email) {
+        final Map<String, Object> payload = new HashMap<>();
+        payload.put("username", username);
+        if (email != null) {
+            payload.put("email", email);
+        }
+        return payload;
+    }
+
     @Test
     public void createGetAndDeleteUser() throws PubNubException {
-        final Map<String, Object> payload = new HashMap<>();
-        payload.put("username", "Alice");
-        payload.put("email", "alice@example.com");
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
 
         // create (no entityClass -> server defaults it to "User")
         final PNDataSyncCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
@@ -113,9 +123,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
         final com.pubnub.api.java.PubNub client = getAuthorizedClient();
         final String authorizedUUID = client.getConfiguration().getUserId().getValue();
 
-        final Map<String, Object> payload = new HashMap<>();
-        payload.put("username", "Alice");
-        payload.put("email", "alice@example.com");
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
 
         // create -> token scoped to `create` on this specific user id
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).create());
@@ -157,9 +165,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
 
         // update -> token scoped to `update` on this specific user (PUT maps to `update`)
         grantAndAuthenticate(client, authorizedUUID, UserGrant.id(userId).update());
-        final Map<String, Object> newPayload = new HashMap<>();
-        newPayload.put("username", "Bob");
-        newPayload.put("email", "bob@example.com");
+        final Map<String, Object> newPayload = payload("Bob", "bob@example.com");
         final PNDataSyncSetUserResult updateResult = client.dataSync().setUser(userId, entityClassVersion)
                 .status("archived")
                 .payload(newPayload)
@@ -192,8 +198,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void createWithServerGeneratedId() throws PubNubException {
-        final Map<String, Object> payload = new HashMap<>();
-        payload.put("username", "Bob");
+        final Map<String, Object> payload = payload("Bob", null);
 
         final PNDataSyncCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
                 .payload(payload)
@@ -210,9 +215,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void createGetAllPatchUpdateAndDeleteUser() throws PubNubException {
-        final Map<String, Object> payload = new HashMap<>();
-        payload.put("username", "Alice");
-        payload.put("email", "alice@example.com");
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
 
         // create
         server.dataSync().createUser(entityClassVersion)
@@ -241,9 +244,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             assertEquals("inactive", server.dataSync().getUser(userId).sync().getData().getStatus());
 
             // update -> full replace of status + payload
-            final Map<String, Object> newPayload = new HashMap<>();
-            newPayload.put("username", "Bob");
-            newPayload.put("email", "bob@example.com");
+            final Map<String, Object> newPayload = payload("Bob", "bob@example.com");
             final PNDataSyncSetUserResult updateResult = server.dataSync().setUser(userId, entityClassVersion)
                     .status("archived")
                     .payload(newPayload)
@@ -261,10 +262,109 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void getUsersWithFilterSortLimitAndCursor() throws PubNubException {
+        // filter/sort operate on the payload properties the entity class marks as filterable. The built-in
+        // `User` class declares `name` and `type` as filterable/sortable -- `username`/`email` are *custom*
+        // class properties and would be rejected with DS-0005 "Unknown field" on the built-in User class. Seed
+        // three users with a run-unique `name` so assertions stay isolated from any other users; the names sort
+        // a < b < c. `getUsers()` takes the typed builder args: `classLevel(PNDataSyncClassLevel)` (GLOBAL is the
+        // level the built-in User class is defined at) and `sort(List<PNDataSyncSortField>)`, and returns a
+        // non-null `next` (read `getCursor()`/`isHasNext()`).
+        final String run = RandomStringUtils.random(8, "abcdefgh");
+        final String nameA = "user-" + run + "-a";
+        final String nameB = "user-" + run + "-b";
+        final String nameC = "user-" + run + "-c";
+        final String namePrefix = "user-" + run + "-";
+        final String idA = "user-" + run + "-id-a";
+        final String idB = "user-" + run + "-id-b";
+        final String idC = "user-" + run + "-id-c";
+
+        createUserWithNameAndType(idA, nameA, "Admin");
+        createUserWithNameAndType(idB, nameB, "Member");
+        createUserWithNameAndType(idC, nameC, "Admin");
+
+        try {
+            // filterFast -> exact name equality
+            final PNDataSyncGetUsersResult filtered = server.dataSync().getUsers()
+                    .filterFast("name == \"" + nameA + "\"")
+                    .sync();
+            final List<String> filteredIds = filtered.getData().stream()
+                    .map(u -> u.getId()).collect(Collectors.toList());
+            assertEquals(Collections.singletonList(idA), filteredIds);
+
+            // filterFast on the other built-in filterable field, `type` -> the two Admin rows, not the Member
+            final PNDataSyncGetUsersResult filteredByType = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\" && type == \"Admin\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name")))
+                    .sync();
+            assertEquals(Arrays.asList(idA, idC),
+                    filteredByType.getData().stream().map(u -> u.getId()).collect(Collectors.toList()));
+
+            // classLevel -> the built-in User class is defined at the Global level
+            final PNDataSyncGetUsersResult scoped = server.dataSync().getUsers()
+                    .classLevel(PNDataSyncClassLevel.GLOBAL)
+                    .filterFast("name == \"" + nameA + "\"")
+                    .sync();
+            assertEquals(Collections.singletonList(idA),
+                    scoped.getData().stream().map(u -> u.getId()).collect(Collectors.toList()));
+
+            // sort ascending (default direction)
+            final PNDataSyncGetUsersResult sortedAsc = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name")))
+                    .sync();
+            assertEquals(Arrays.asList(idA, idB, idC),
+                    sortedAsc.getData().stream().map(u -> u.getId()).collect(Collectors.toList()));
+
+            // sort descending
+            final PNDataSyncGetUsersResult sortedDesc = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name", false)))
+                    .sync();
+            assertEquals(Arrays.asList(idC, idB, idA),
+                    sortedDesc.getData().stream().map(u -> u.getId()).collect(Collectors.toList()));
+
+            // limit + cursor -> page one user at a time; `next` is non-null
+            final PNDataSyncGetUsersResult firstPage = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name")))
+                    .limit(1)
+                    .sync();
+            assertEquals(1, firstPage.getData().size());
+            assertEquals(idA, firstPage.getData().get(0).getId());
+            assertNotNull(firstPage.getNext());
+            assertTrue("Expected more pages after the first", firstPage.getNext().isHasNext());
+            assertNotNull(firstPage.getNext().getCursor());
+
+            final PNDataSyncGetUsersResult secondPage = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name")))
+                    .limit(1)
+                    .cursor(firstPage.getNext().getCursor())
+                    .sync();
+            assertEquals(1, secondPage.getData().size());
+            assertEquals(idB, secondPage.getData().get(0).getId());
+        } finally {
+            server.dataSync().removeUser(idA).sync();
+            server.dataSync().removeUser(idB).sync();
+            server.dataSync().removeUser(idC).sync();
+        }
+    }
+
+    private void createUserWithNameAndType(String id, String name, String type) throws PubNubException {
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
+        payload.put("name", name);
+        payload.put("type", type);
+        server.dataSync().createUser(entityClassVersion)
+                .userId(id)
+                .status("active")
+                .payload(payload)
+                .sync();
+    }
+
+    @Test
     public void patchWithIfMatchAndStaleETagThrows412() throws PubNubException {
-        final Map<String, Object> payload = new HashMap<>();
-        payload.put("username", "Alice");
-        payload.put("email", "alice@example.com");
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
 
         // create
         final PNDataSyncCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
