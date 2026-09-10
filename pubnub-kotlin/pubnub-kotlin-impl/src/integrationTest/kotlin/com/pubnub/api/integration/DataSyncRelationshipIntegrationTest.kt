@@ -37,9 +37,10 @@ import org.junit.jupiter.api.TestInstance
  *   `TestNode`, `entityBClass` = `TestNode`. Exercises the happy path (create/get/getAll/update/set/remove),
  *   filtering, paging and PAM. Declares exactly one property:
  *
- *   | Property | Path      | valueKind | filtering | isNullable | Projections |
- *   |----------|-----------|-----------|-----------|------------|-------------|
- *   | `status` | `/status` | string    | **full**  | true       | none        |
+ *   | Property | Path              | valueKind | filtering  | isNullable | Projections     |
+ *   |----------|-------------------|-----------|------------|------------|-----------------|
+ *   | `status` | `/status`         | string    | **full**   | true       | none            |
+ *   | `secret` | `/payload/secret` | string    | **simple** | true       | **admin** only  |
  *
  * - Relationship class **`TestOwnership`** (version 1) — cardinality **ONE_TO_ONE**, `entityAClass` = `TestNode`,
  *   `entityBClass` = `TestNode`, **no declared properties**. Used only to make **DS-0801** (cardinality conflict)
@@ -65,9 +66,21 @@ import org.junit.jupiter.api.TestInstance
  * ### Uncontrolled payload fields
  *
  * `role`/`custom` (the fields in [TestRelationshipPayload]) are **not** declared properties on `TestFriendship`.
- * They round-trip through create/set/get freely but are **not** filterable or sortable. Because neither
- * relationship class declares any projections, the projection write-guard (DS-0202, which the entity `TestUser`
- * class exercises) does not apply here — every relationship op uses a default-projection grant.
+ * They round-trip through create/set/get freely but are **not** filterable or sortable.
+ *
+ * ### Projections
+ *
+ * A projection is a named, filtered view of a class's fields, carried by the PAM token (not a read parameter). It is
+ * strict keep-only: a read exposes ONLY the fields the token's projection declares.
+ * `TestFriendship` declares `secret` in the `admin` projection **only**, so it behaves like the entity `TestUser.email`
+ * field:
+ * - the `admin`-projection **read** exposes `secret` but NOT `status` (which is not in the `admin` projection); the
+ *   `__default__`-projection **read** exposes `status` but hides `secret`;
+ * - a `__default__`-projection **write** of a payload containing `secret` is rejected with **DS-0202**;
+ * - a token-authorized write that includes `secret` must grant the relationship through `projection = "admin"`, and
+ *   under that non-default projection the write payload may contain **only** admin-projected fields (no undeclared
+ *   fields like `role`/`custom`). See [getRelationshipAppliesProjectionCarriedByTheToken] and
+ *   [createRelationshipUnderNonDefaultProjectionEnforcesWriteGuard].
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
@@ -83,6 +96,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
     data class TestRelationshipPayload(
         val role: String? = null,
         val custom: String? = null,
+        // Declared on TestFriendship in the `admin` projection ONLY (see class KDoc).
+        val secret: String? = null,
     )
 
     /**
@@ -467,6 +482,124 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             fail("Expected validation to reject a blank className on list")
         } catch (e: PubNubException) {
             assertEquals(PubNubError.ENTITY_CLASS_MISSING, e.pubnubError)
+        }
+    }
+
+    @Test
+    fun getRelationshipAppliesProjectionCarriedByTheToken() = withTwoEntities { entityAId, entityBId ->
+        // A projection is a named, filtered view of a class's fields, carried by the PAM token (not a read
+        // parameter). It is strict keep-only: a read exposes ONLY the fields the token's projection declares.
+        // `TestFriendship`'s `admin` projection declares `secret` (and nothing else), while `status` is a built-in
+        // field carried by the implicit `__default__` view. So the two views are complementary: the `admin`-projected
+        // read exposes `secret` but NOT `status`; the `__default__` read exposes `status` but NOT `secret`.
+        // Mirrors DataSyncEntityIntegrationTest.getEntityAppliesProjectionCarriedByTheToken.
+        val relationshipId = "relationship-" + randomValue()
+        server.dataSync.createRelationship(
+            entityAId = entityAId,
+            entityBId = entityBId,
+            className = m2mClass,
+            classVersion = classVersion,
+            relationshipId = relationshipId,
+            status = "active",
+            payload = TestRelationshipPayload(secret = "top-secret"),
+        ).sync()
+
+        // A client on the same keyset as `server` but without the secretKey, so it only sees what its token allows.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        try {
+            // admin-projected `get` token -> the `secret` (admin-only) field is visible; `status`, which is NOT in
+            // the `admin` projection, is omitted (keep-only).
+            grantAndAuthenticate(
+                client,
+                authorizedUUID,
+                DataSyncGrant.relationship(name = relationshipId, get = true, projection = "admin")
+            )
+            val adminView = client.dataSync.getRelationship(relationshipId).sync()
+            assertEquals(relationshipId, adminView.data.id)
+            assertEquals(
+                "The admin-projected token must expose the admin-only `secret` field",
+                "top-secret",
+                adminView.data.payload?.get("secret"),
+            )
+            assertTrue(
+                "`status` is not in the `admin` projection, so it must NOT appear under an admin-projected read",
+                adminView.data.status == null,
+            )
+
+            // no projection -> implicit `__default__` view: `secret` is omitted, `status` is present.
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = relationshipId, get = true))
+            val defaultView = client.dataSync.getRelationship(relationshipId).sync()
+            assertEquals(relationshipId, defaultView.data.id)
+            assertEquals(
+                "The __default__ projection must still expose the built-in `status` field",
+                "active",
+                defaultView.data.status,
+            )
+            assertTrue(
+                "The admin-only `secret` field must NOT leak through the __default__ projection",
+                defaultView.data.payload?.get("secret") == null,
+            )
+        } finally {
+            try {
+                server.dataSync.removeRelationship(relationshipId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
+    fun createRelationshipUnderNonDefaultProjectionEnforcesWriteGuard() = withTwoEntities { entityAId, entityBId ->
+        // `TestFriendship` declares `secret` in the `admin` projection ONLY. The server enforces a projection
+        // write-guard on create: a token whose projection does NOT permit a field cannot write it. So writing
+        // `secret` requires an `admin`-projected create grant; a `__default__`-projected create of a payload
+        // containing `secret` is rejected with DS-0202 (HTTP 403), pre-commit (nothing is persisted).
+        //
+        // Under a NON-default projection the guard is strict keep-only: the write payload may contain ONLY
+        // fields declared in that projection, so the admin-projected payload below carries `secret` and nothing
+        // else (no undeclared `role`/`custom`, which would also 403). Asserted as a positive/negative pair so it
+        // proves the projection boundary is *enforced*, not merely that some write failed.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // negative leg: __default__-projected create writing the admin-only `secret` -> 403 (DS-0202).
+        val rejectedId = "relationship-" + randomValue()
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = rejectedId, create = true))
+        try {
+            client.dataSync.createRelationship(
+                entityAId = entityAId,
+                entityBId = entityBId,
+                className = m2mClass,
+                classVersion = classVersion,
+                relationshipId = rejectedId,
+                payload = TestRelationshipPayload(secret = "top-secret"),
+            ).sync()
+            fail("Expected a 403 when writing an admin-only field under the __default__ projection")
+        } catch (e: PubNubException) {
+            assertEquals("Writing an admin-only field under __default__ must be rejected by the projection write-guard", 403, e.statusCode)
+        }
+
+        // positive leg: admin-projected create of the SAME admin-only field -> succeeds. Payload must contain
+        // ONLY admin-projected fields, so it carries `secret` alone.
+        val acceptedId = "relationship-" + randomValue()
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = acceptedId, create = true, projection = "admin"))
+        try {
+            val createResult = client.dataSync.createRelationship(
+                entityAId = entityAId,
+                entityBId = entityBId,
+                className = m2mClass,
+                classVersion = classVersion,
+                relationshipId = acceptedId,
+                payload = TestRelationshipPayload(secret = "top-secret"),
+            ).sync()
+            assertEquals(acceptedId, createResult.data.id)
+            assertEquals("top-secret", createResult.data.payload?.get("secret"))
+        } finally {
+            try {
+                server.dataSync.removeRelationship(acceptedId).sync()
+            } catch (ignored: PubNubException) {
+            }
         }
     }
 

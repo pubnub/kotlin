@@ -41,6 +41,14 @@ import static org.junit.Assert.fail;
  *       {@code TestNode}; used only to make DS-0801 (cardinality) reachable.</li>
  * </ul>
  *
+ * {@code TestFriendship} additionally declares a {@code secret} property (path {@code /payload/secret}) in the
+ * {@code admin} projection ONLY. A {@code __default__}-projection read hides {@code secret}, and a
+ * {@code __default__}-projection write of it is rejected by the server's projection write-guard (DS-0202, HTTP
+ * 403); a write that includes {@code secret} must grant the relationship through {@code .projection("admin")}, and
+ * under that non-default projection the payload may contain only admin-projected fields. See
+ * {@link #getRelationshipAppliesProjectionCarriedByTheToken()} and
+ * {@link #createRelationshipUnderNonDefaultProjectionEnforcesWriteGuard()}.
+ *
  * The SDK has no relationship-class metadata API, so these classes are provisioned out-of-band; the test treats
  * them as preconditions and uses run-unique ids for intra-suite isolation.
  */
@@ -542,6 +550,113 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
             }
         } finally {
             bestEffortRemoveRelationship(relationshipId);
+            bestEffortRemoveEntity(entityAId);
+            bestEffortRemoveEntity(entityBId);
+        }
+    }
+
+    /**
+     * A projection is a named, filtered view of a class's fields, carried by the PAM token (not a read parameter).
+     * {@code TestFriendship} declares {@code secret} in the {@code admin} projection ONLY, so an {@code admin}-projected
+     * read exposes it while the implicit {@code __default__} read hides it (the built-in {@code status} stays visible).
+     * Mirrors {@code DataSyncEntityIntegrationTest#getEntityAppliesProjectionCarriedByTheToken}.
+     */
+    @Test
+    public void getRelationshipAppliesProjectionCarriedByTheToken() throws PubNubException {
+        final String run = random();
+        final String entityAId = "node-a-" + run;
+        final String entityBId = "node-b-" + run;
+        final String relationshipId = "relationship-" + run;
+        createNode(entityAId);
+        createNode(entityBId);
+
+        final Map<String, Object> payload = new HashMap<>();
+        payload.put("secret", "top-secret");
+        server.dataSync().createRelationship(entityAId, entityBId, M2M_CLASS, classVersion)
+                .relationshipId(relationshipId)
+                .status("active")
+                .payload(payload)
+                .sync();
+
+        final com.pubnub.api.java.PubNub client = getAuthorizedClient();
+        final String authorizedUUID = client.getConfiguration().getUserId().getValue();
+
+        try {
+            // admin-projected `get` token -> the `secret` (admin-only) field is visible; `status`, which is NOT in
+            // the `admin` projection, is omitted (keep-only).
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(relationshipId).get().projection("admin"));
+            final PNDataSyncGetRelationshipResult adminView = client.dataSync().getRelationship(relationshipId).sync();
+            assertEquals(relationshipId, adminView.getData().getId());
+            assertEquals("top-secret", adminView.getData().getPayload().get("secret"));
+            assertTrue(
+                    "`status` is not in the `admin` projection, so it must NOT appear under an admin-projected read",
+                    adminView.getData().getStatus() == null);
+
+            // no projection -> implicit `__default__` view: `secret` is omitted, `status` is present.
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(relationshipId).get());
+            final PNDataSyncGetRelationshipResult defaultView = client.dataSync().getRelationship(relationshipId).sync();
+            assertEquals(relationshipId, defaultView.getData().getId());
+            assertEquals("active", defaultView.getData().getStatus());
+            assertTrue(
+                    "The admin-only `secret` field must NOT leak through the __default__ projection",
+                    defaultView.getData().getPayload() == null || defaultView.getData().getPayload().get("secret") == null);
+        } finally {
+            bestEffortRemoveRelationship(relationshipId);
+            bestEffortRemoveEntity(entityAId);
+            bestEffortRemoveEntity(entityBId);
+        }
+    }
+
+    /**
+     * The server enforces a projection write-guard on create: a token whose projection does not permit a field
+     * cannot write it. {@code TestFriendship} declares {@code secret} in {@code admin} only, so a
+     * {@code __default__}-projected create of a payload containing {@code secret} is rejected with DS-0202 (HTTP
+     * 403), while an {@code admin}-projected create succeeds. Under a non-default projection the payload may contain
+     * only admin-projected fields, so the admin payload carries {@code secret} alone. Asserted as a positive/negative
+     * pair so it proves the projection boundary is enforced, not merely that some write failed.
+     */
+    @Test
+    public void createRelationshipUnderNonDefaultProjectionEnforcesWriteGuard() throws PubNubException {
+        final String run = random();
+        final String entityAId = "node-a-" + run;
+        final String entityBId = "node-b-" + run;
+        createNode(entityAId);
+        createNode(entityBId);
+
+        final com.pubnub.api.java.PubNub client = getAuthorizedClient();
+        final String authorizedUUID = client.getConfiguration().getUserId().getValue();
+
+        final String rejectedId = "relationship-rej-" + run;
+        final String acceptedId = "relationship-acc-" + run;
+
+        final Map<String, Object> secretPayload = new HashMap<>();
+        secretPayload.put("secret", "top-secret");
+
+        try {
+            // negative leg: __default__-projected create writing the admin-only `secret` -> 403 (DS-0202).
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(rejectedId).create());
+            try {
+                client.dataSync().createRelationship(entityAId, entityBId, M2M_CLASS, classVersion)
+                        .relationshipId(rejectedId)
+                        .payload(secretPayload)
+                        .sync();
+                fail("Expected a 403 when writing an admin-only field under the __default__ projection");
+            } catch (PubNubException e) {
+                assertEquals(403, e.getStatusCode());
+            }
+
+            // positive leg: admin-projected create of the SAME admin-only field -> succeeds.
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(acceptedId).create().projection("admin"));
+            final PNDataSyncCreateRelationshipResult createResult = client.dataSync()
+                    .createRelationship(entityAId, entityBId, M2M_CLASS, classVersion)
+                    .relationshipId(acceptedId)
+                    .payload(secretPayload)
+                    .sync();
+            assertEquals(acceptedId, createResult.getData().getId());
+            assertEquals("top-secret", createResult.getData().getPayload().get("secret"));
+        } finally {
+            bestEffortRemoveRelationship(rejectedId);
+            bestEffortRemoveRelationship(acceptedId);
             bestEffortRemoveEntity(entityAId);
             bestEffortRemoveEntity(entityBId);
         }

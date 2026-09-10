@@ -56,7 +56,9 @@ JSON
 )"
 
 # TestFriendship — MANY_TO_MANY, both sides TestNode. status=full covers relationship filter/sort.
-say "relationship-class: TestFriendship v1 (many-to-many, TestNode<->TestNode, status full)"
+# secret=admin-only projection (the discriminating field) — mirrors TestUser.email; exercises the
+# relationship projection read + DS-0202 write-guard.
+say "relationship-class: TestFriendship v1 (many-to-many, TestNode<->TestNode, status full; secret admin-only projection)"
 meta_post "$META/relationship-classes/TestFriendship/versions/1" "$RELATIONSHIP_CLASS_MT" "$(cat <<JSON
 {
   "data": {
@@ -64,7 +66,8 @@ meta_post "$META/relationship-classes/TestFriendship/versions/1" "$RELATIONSHIP_
     "entityAClass": "TestNode",
     "entityBClass": "TestNode",
     "properties": [
-      { "name": "status", "path": "/status", "valueKind": "string", "filtering": "full", "isNullable": true }
+      { "name": "status", "path": "/status",         "valueKind": "string", "filtering": "full",   "isNullable": true },
+      { "name": "secret", "path": "/payload/secret", "valueKind": "string", "filtering": "simple", "isNullable": true, "projections": [{ "name": "admin" }] }
     ]
   }
 }
