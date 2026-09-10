@@ -26,20 +26,48 @@ import org.junit.jupiter.api.TestInstance
  *
  * ### Pre-seeded relationship classes (keyset preconditions)
  *
- * Two entity classes and two relationship classes are assumed to exist on the keyset:
+ * Two entity classes and two relationship classes are assumed to exist on the keyset. The schemas below are the
+ * authoritative definitions provisioned by `scripts/datasync/create-classes.sh` (see that script and its README
+ * for the metadata-API payloads). Property declarations decide filter/sort behavior, so they are reproduced here.
  *
  * - Entity class **`TestNode`** (version 1) — a generic entity class used for both sides of every relationship
- *   below (`entityAClass` == `entityBClass` == `TestNode`).
+ *   below (`entityAClass` == `entityBClass` == `TestNode`). **No declared properties** — payload fields like
+ *   `name` (used by [withTwoEntities]) are stored and returned as-is but are not filterable/sortable.
  * - Relationship class **`TestFriendship`** (version 1) — cardinality **MANY_TO_MANY**, `entityAClass` =
  *   `TestNode`, `entityBClass` = `TestNode`. Exercises the happy path (create/get/getAll/update/set/remove),
- *   filtering, paging and PAM.
- * - Relationship class **`TestOwnership`** (version 1) — cardinality **ONE_TO_ONE**, `entityAClass` = `TestNode`,
- *   `entityBClass` = `TestNode`. Used only to make **DS-0801** (cardinality conflict) reachable — a second
- *   ONE_TO_ONE relationship on the same entity A must be rejected.
+ *   filtering, paging and PAM. Declares exactly one property:
  *
- * Because these are purpose-seeded classes (not the built-in `Membership` class), this suite does not share the
- * `uk_relationship_pair` table with [DataSyncMembershipIntegrationTest]; the cross-suite collision concern is
- * moot. Intra-suite isolation still relies on run-unique entity/relationship ids.
+ *   | Property | Path      | valueKind | filtering | isNullable | Projections |
+ *   |----------|-----------|-----------|-----------|------------|-------------|
+ *   | `status` | `/status` | string    | **full**  | true       | none        |
+ *
+ * - Relationship class **`TestOwnership`** (version 1) — cardinality **ONE_TO_ONE**, `entityAClass` = `TestNode`,
+ *   `entityBClass` = `TestNode`, **no declared properties**. Used only to make **DS-0801** (cardinality conflict)
+ *   reachable — a second ONE_TO_ONE relationship on the same entity A must be rejected.
+ *
+ * ### Filtering tiers (why `status` is queryable two ways)
+ *
+ * A property's `filtering` mode forms a strict capability hierarchy — `full` is a superset of `simple`:
+ *
+ * - `none` — not filterable or sortable.
+ * - `simple` — Postgres-indexed only → queryable via [DataSync.getRelationships] `filterFast` (strongly
+ *   consistent; reflects the latest write immediately).
+ * - `full` — Postgres-indexed **and** OpenSearch-indexed → queryable via `filterFast` (Postgres, strongly
+ *   consistent) **and** `filter` (OpenSearch, **eventually consistent** — a read right after a write may not yet
+ *   see the record, so a `filter` assertion must poll; see [awaitRelationshipIds]).
+ *
+ * The built-in fields `id`, `createdAt`, `updatedAt`, and `status` behave as `full` on every class regardless of
+ * declaration, so `status` is always queryable via both params. `TestFriendship` additionally declares `status`
+ * `full` (which, for a built-in, only sets its projections — here none). Net effect: `filterFast == "status"`
+ * reads the native Postgres column strongly-consistently ([getAllWithFilterSortLimitAndCursor]), while
+ * `filter == "status"` exercises the OpenSearch path and must be polled ([getAllWithAdvancedFilterOnStatus]).
+ *
+ * ### Uncontrolled payload fields
+ *
+ * `role`/`custom` (the fields in [TestRelationshipPayload]) are **not** declared properties on `TestFriendship`.
+ * They round-trip through create/set/get freely but are **not** filterable or sortable. Because neither
+ * relationship class declares any projections, the projection write-guard (DS-0202, which the entity `TestUser`
+ * class exercises) does not apply here — every relationship op uses a default-projection grant.
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
@@ -721,6 +749,89 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 }
             }
         }
+    }
+
+    @Test
+    fun getAllWithAdvancedFilterOnStatus() = withTwoEntities { entityAId, _ ->
+        // OpenSearch counterpart to getAllWithFilterSortLimitAndCursor. `TestFriendship.status` is `full`, so it
+        // is queryable via BOTH `filterFast` (Postgres, strongly consistent) and `filter` (OpenSearch). This test
+        // exercises the `filter` (OpenSearch) path, which is EVENTUALLY consistent: there is a write-to-index
+        // delay, so the assertion must poll with a bounded retry ([awaitRelationshipIds]) rather than read once.
+        val run = randomValue()
+        val statusA = "adv-$run-a"
+        val statusB = "adv-$run-b"
+        val idA = "relationship-$run-a"
+        val idB = "relationship-$run-b"
+        val bA = "node-$run-a"
+        val bB = "node-$run-b"
+
+        listOf(bA, bB).forEach {
+            server.dataSync.createEntity(
+                className = nodeClass,
+                classVersion = classVersion,
+                entityId = it,
+                payload = mapOf("name" to it),
+            ).sync()
+        }
+
+        server.dataSync.createRelationship(entityAId, bA, m2mClass, classVersion, idA, status = statusA).sync()
+        server.dataSync.createRelationship(entityAId, bB, m2mClass, classVersion, idB, status = statusB).sync()
+
+        try {
+            // filter (advanced / OpenSearch) -> exact status equality, polled until the index catches up.
+            val matched = awaitRelationshipIds(setOf(idA)) {
+                server.dataSync.getRelationships(
+                    className = m2mClass,
+                    entityAId = entityAId,
+                    filter = "status == \"$statusA\"",
+                ).sync().data.map { it.id }.toSet()
+            }
+            assertEquals(setOf(idA), matched)
+
+            // a prefix LIKE over the same param captures both rows once indexed
+            val both = awaitRelationshipIds(setOf(idA, idB)) {
+                server.dataSync.getRelationships(
+                    className = m2mClass,
+                    entityAId = entityAId,
+                    filter = "status LIKE \"adv-$run-*\"",
+                ).sync().data.map { it.id }.toSet()
+            }
+            assertEquals(setOf(idA, idB), both)
+        } finally {
+            listOf(idA, idB).forEach {
+                try {
+                    server.dataSync.removeRelationship(it).sync()
+                } catch (ignored: PubNubException) {
+                }
+            }
+            listOf(bA, bB).forEach {
+                try {
+                    server.dataSync.removeEntity(it).sync()
+                } catch (ignored: PubNubException) {
+                }
+            }
+        }
+    }
+
+    /**
+     * Polls [query] until it returns exactly [expected] or the timeout elapses, then returns the last result. Used
+     * for `filter` (OpenSearch) reads, which are eventually consistent — a record is not visible until the
+     * write-to-index step completes, so an immediate read flakes. `filterFast` (Postgres) reads are strongly
+     * consistent and never need this.
+     */
+    private fun awaitRelationshipIds(
+        expected: Set<String>,
+        timeoutMillis: Long = 15_000,
+        pollMillis: Long = 500,
+        query: () -> Set<String>,
+    ): Set<String> {
+        val deadline = System.currentTimeMillis() + timeoutMillis
+        var last = query()
+        while (last != expected && System.currentTimeMillis() < deadline) {
+            Thread.sleep(pollMillis)
+            last = query()
+        }
+        return last
     }
 
     private fun grantAndAuthenticate(client: PubNub, authorizedUUID: String, vararg grants: DataSyncGrantType) {

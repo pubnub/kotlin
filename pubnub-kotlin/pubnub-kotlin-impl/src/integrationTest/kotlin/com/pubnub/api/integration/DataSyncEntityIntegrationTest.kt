@@ -665,6 +665,123 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun createEntityWithNoDeclaredPropertiesRoundTripsArbitraryPayload() {
+        // The `TestNode` class declares NO properties (and no projections) — unlike `TestUser`. This verifies
+        // that a class without declared properties still accepts arbitrary payload fields on createEntity and
+        // returns them verbatim on get — i.e. undeclared fields are uncontrolled (stored as opaque JSON), not
+        // rejected. They are simply not filterable/sortable. Driven through a PAM-token client (not the secretKey
+        // `server`) to prove the uncontrolled fields survive a token-authorized write: because `TestNode`
+        // declares no projections, a default-projection grant is enough and the projection write-guard (DS-0202)
+        // does not apply.
+        val nodeClass = "TestNode"
+        val run = randomValue()
+        val nodeId = "node-arbitrary-$run"
+
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // create -> token scoped to `create` on this specific entity id (default projection).
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(nodeId, create = true))
+        val createResult = client.dataSync.createEntity(
+            className = nodeClass,
+            classVersion = classVersion,
+            entityId = nodeId,
+            status = "active",
+            payload = mapOf(
+                "name" to "Node-$run",
+                "role" to "admin",
+                "custom" to "value",
+                "nested" to mapOf("k" to "v"),
+                "count" to 7,
+            ),
+        ).sync()
+
+        try {
+            assertEquals(nodeId, createResult.data.id)
+            assertEquals(nodeClass, createResult.data.className)
+            // undeclared fields are echoed back on the create response
+            assertEquals("Node-$run", createResult.data.payload?.get("name"))
+            assertEquals("admin", createResult.data.payload?.get("role"))
+            assertEquals("value", createResult.data.payload?.get("custom"))
+
+            // and they round-trip on a subsequent token-authorized get
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(nodeId, get = true))
+            val getResult = client.dataSync.getEntity(nodeId).sync()
+            assertEquals(nodeId, getResult.data.id)
+            assertEquals("Node-$run", getResult.data.payload?.get("name"))
+            assertEquals("admin", getResult.data.payload?.get("role"))
+            assertEquals("value", getResult.data.payload?.get("custom"))
+            assertEquals("active", getResult.data.status)
+        } finally {
+            try {
+                server.dataSync.removeEntity(nodeId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
+    fun createEntityUnderDefaultProjectionRoundTripsUndeclaredPayloadFields() {
+        // Companion to createEntityWithNoDeclaredPropertiesRoundTripsArbitraryPayload, but on `TestUser` — a
+        // class that DOES declare properties and projections. This verifies that under the implicit `__default__`
+        // projection, undeclared fields (`hobby`, `custom`) pass through the write-guard freely (they are
+        // uncontrolled — not class properties), alongside a declared `__default__` field (`username`).
+        //
+        // Contrast with the token-authorized create in
+        // createGetDeletePatchUpdateGetAllEntityWithServerGrantedToken: there the payload writes `email` (an
+        // `admin`-only field), which forces an `admin` (non-default) projection — and under a NON-default
+        // projection the write-guard rejects EVERY field not in that projection, including undeclared ones. Here
+        // the payload deliberately omits `email` so the write stays on `__default__`, where undeclared fields are
+        // allowed. `username` is non-nullable, so it must be present (else DS-0650).
+        val run = randomValue()
+        val userId = "entity-default-proj-$run"
+
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // create -> `create` on this specific entity id, NO projection => implicit `__default__`.
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(userId, create = true))
+        val createResult = client.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = userId,
+            status = "active",
+            payload = mapOf(
+                "username" to "Alice-$run", // declared, in __default__
+                "hobby" to "poetry", // undeclared -> uncontrolled
+                "custom" to "value", // undeclared -> uncontrolled
+            ),
+        ).sync()
+
+        try {
+            assertEquals(userId, createResult.data.id)
+            assertEquals(className, createResult.data.className)
+            assertEquals("Alice-$run", createResult.data.payload?.get("username"))
+            // undeclared fields are echoed back on the create response
+            assertEquals("poetry", createResult.data.payload?.get("hobby"))
+            assertEquals("value", createResult.data.payload?.get("custom"))
+
+            // and they round-trip on a subsequent __default__-projection get
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(userId, get = true))
+            val getResult = client.dataSync.getEntity(userId).sync()
+            assertEquals(userId, getResult.data.id)
+            assertEquals("Alice-$run", getResult.data.payload?.get("username"))
+            assertEquals("poetry", getResult.data.payload?.get("hobby"))
+            assertEquals("value", getResult.data.payload?.get("custom"))
+            // sanity: the admin-only `email` was never written and is absent under __default__
+            assertTrue(
+                "email was not written and must not appear under the __default__ projection",
+                getResult.data.payload?.get("email") == null,
+            )
+        } finally {
+            try {
+                server.dataSync.removeEntity(userId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
     fun patchEmptyOperationsThrows() {
         try {
             server.dataSync.updateEntity(entityId, emptyList()).sync()
