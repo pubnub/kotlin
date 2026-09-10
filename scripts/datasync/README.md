@@ -18,7 +18,7 @@ the **direct class-management REST API** (the admin/metadata plane). These scrip
 |------------------|--------------|--------------|------------------------------------------------------------------------------|
 | `TestNode` v1    | entity       | —            | none (generic; used for both ends of every relationship)                     |
 | `TestUser` v1    | entity       | —            | `username` (full), `email` (simple, **admin-only** projection), `status` (simple), `signupDate` (date, simple) |
-| `TestFriendship` v1 | relationship | many-to-many | `status` (full); sides `TestNode`↔`TestNode`                              |
+| `TestFriendship` v1 | relationship | many-to-many | `status` (full), `secret` (simple, **admin-only** projection); sides `TestNode`↔`TestNode` |
 | `TestOwnership` v1  | relationship | one-to-one   | none; sides `TestNode`↔`TestNode` (only exists to make DS-0801 reachable)  |
 
 **Not provisioned:** `User`/`Channel` are built-in **Global** classes (a SubKey class of that
@@ -61,5 +61,5 @@ There is a write-to-index delay between a successful write and when a record bec
 `filter` query, so **tests asserting on `filter` must poll/await with a bounded retry** — an
 immediate read will flake.
 
-`filtering: "simple"` properties (`email`, `status`, `signupDate`) are Postgres-backed, powering
+`filtering: "simple"` properties (`email`, `status`, `signupDate`, and `TestFriendship.secret`) are Postgres-backed, powering
 the strongly-consistent `filterFast` (+ `sort`) param — those reads are immediate.

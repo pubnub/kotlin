@@ -35,7 +35,7 @@ import org.junit.jupiter.api.TestInstance
  *   `name` (used by [withTwoEntities]) are stored and returned as-is but are not filterable/sortable.
  * - Relationship class **`TestFriendship`** (version 1) — cardinality **MANY_TO_MANY**, `entityAClass` =
  *   `TestNode`, `entityBClass` = `TestNode`. Exercises the happy path (create/get/getAll/update/set/remove),
- *   filtering, paging and PAM. Declares exactly one property:
+ *   filtering, paging and PAM. Declares two properties:
  *
  *   | Property | Path              | valueKind | filtering  | isNullable | Projections     |
  *   |----------|-------------------|-----------|------------|------------|-----------------|

@@ -119,7 +119,6 @@ public abstract class BaseIntegrationTest {
         return getPubNub(builder -> {
             builder.subscribeKey(PAM_SUB_KEY);
             builder.publishKey(PAM_PUB_KEY);
-            builder.secure(false);
             // no secretKey — the client authenticates only via setToken(...)
         });
     }

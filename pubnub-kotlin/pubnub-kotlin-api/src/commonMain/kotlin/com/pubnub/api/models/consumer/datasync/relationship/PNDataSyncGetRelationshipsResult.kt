@@ -5,7 +5,7 @@ import com.pubnub.api.models.consumer.datasync.PNDataSyncPage
 /**
  * Result of `pubnub.dataSync.getRelationships`.
  *
- * DataSync list endpoints are **cursor-based** (unlike App Context's page-based `PNPage`).
+ * DataSync list endpoints are cursor-based.
  *
  * @property status HTTP status code of the response.
  * @property data The relationships on this page.

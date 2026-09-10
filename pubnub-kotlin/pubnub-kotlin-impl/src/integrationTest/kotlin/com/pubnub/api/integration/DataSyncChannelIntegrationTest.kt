@@ -47,8 +47,8 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
 
     data class TestChannelPayload(
         val username: String? = null,
-        val name: String? = null, // this is predefined property in User class definition
-        val type: String? = null, // this is predefined property in User class definition
+        val name: String? = null, // this is predefined property in Channel class definition
+        val type: String? = null, // this is predefined property in Channel class definition
         val email: String? = null,
         val hobby: String? = null,
         val custom: String? = null,

@@ -629,7 +629,8 @@ interface DataSync {
      * [sort] a property may be used with. The filterable set has no fixed default; it is whatever the supplied
      * [className] declares as filterable payload properties (indexes over the relationship's `/payload`; the
      * `payload` otherwise stays arbitrary JSON). In addition, the built-in fields `id`, `createdAt`, `updatedAt`,
-     * and `status` behave as `full` and are always filterable and sortable on any class.
+     * and `status` behave as `full` and are always filterable and sortable on any class, except that `status` may
+     * be excluded when the class declares it as a projected field and the token cannot fully reach it.
      *
      * Results are scoped to the caller's access token: only relationships the token is permitted to read (`get`)
      * are returned. Relationships the token cannot read are silently omitted — the call does not error and does
@@ -693,7 +694,7 @@ interface DataSync {
      *
      * Every mutable field is overwritten. Omitting [status] or [payload] clears the stored value rather than
      * preserving it, so a read-modify-write must send back every field it wants to keep. This cannot re-point
-     * or reclassify a relationship — the two linked entities ([entityAId] / [entityBId]) and the relationship
+     * or reclassify a relationship — the two linked entities (`entityAId` / `entityBId`) and the relationship
      * class are immutable. Use [updateRelationship] to change part of a relationship.
      *
      * @param relationshipId Identifier of the relationship to replace.
