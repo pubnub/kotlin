@@ -51,7 +51,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
         val hobby: String? = null,
         val custom: String? = null,
         val name: String? = null, // this is predefined property in User class definition
-        val type: String? = null  // this is predefined property in User class definition
+        val type: String? = null // this is predefined property in User class definition
     )
 
     @Test
