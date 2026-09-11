@@ -35,7 +35,12 @@ public interface CreateUser extends Endpoint<PNDataSyncCreateUserResult> {
     CreateUser status(@Nullable String status);
 
     /**
-     * Optional arbitrary JSON object payload.
+     * Optional arbitrary JSON object payload. The payload is free-form, but the built-in {@code User} class
+     * indexes the {@code name} and {@code type} properties: populating them here makes the user filterable and
+     * sortable on {@code name} / {@code type} in {@code getUsers}. Any other payload property is stored but not
+     * queryable unless a subclass that extends {@code User} declares it filterable (such a subclass inherits the
+     * {@code name} / {@code type} indexes and may add its own). The built-in fields {@code id}, {@code createdAt},
+     * {@code updatedAt}, and {@code status} are always filterable/sortable regardless of payload.
      */
     CreateUser payload(@Nullable Map<String, Object> payload);
 }

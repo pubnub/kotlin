@@ -6,10 +6,6 @@ import com.pubnub.api.utils.SerializedName
  * DataSync Channel resource returned by `pubnub.dataSync.getChannel`, `createChannel` and referenced by
  * remove operations. A Channel is a specialized DataSync entity of class `Channel`.
  *
- * The class-identity properties are exposed with the `class*` names (`className` / `classVersion` /
- * `classLevel`), while the server serializes them under the camelCase `entityClass*` wire keys — hence the
- * `@field:SerializedName` mappings below.
- *
  * @property id Channel identifier.
  * @property className Entity class identifier (a `Channel` subclass, defaults to `Channel`).
  * @property classVersion Version of the entity class.

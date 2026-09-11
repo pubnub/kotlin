@@ -33,6 +33,18 @@ import com.pubnub.internal.java.endpoints.datasync.membership.GetMembershipsImpl
 import com.pubnub.internal.java.endpoints.datasync.membership.RemoveMembershipImpl;
 import com.pubnub.internal.java.endpoints.datasync.membership.SetMembershipImpl;
 import com.pubnub.internal.java.endpoints.datasync.membership.UpdateMembershipImpl;
+import com.pubnub.api.java.endpoints.datasync.relationship.CreateRelationship;
+import com.pubnub.api.java.endpoints.datasync.relationship.GetRelationship;
+import com.pubnub.api.java.endpoints.datasync.relationship.GetRelationships;
+import com.pubnub.api.java.endpoints.datasync.relationship.RemoveRelationship;
+import com.pubnub.api.java.endpoints.datasync.relationship.SetRelationship;
+import com.pubnub.api.java.endpoints.datasync.relationship.UpdateRelationship;
+import com.pubnub.internal.java.endpoints.datasync.relationship.CreateRelationshipImpl;
+import com.pubnub.internal.java.endpoints.datasync.relationship.GetRelationshipImpl;
+import com.pubnub.internal.java.endpoints.datasync.relationship.GetRelationshipsImpl;
+import com.pubnub.internal.java.endpoints.datasync.relationship.RemoveRelationshipImpl;
+import com.pubnub.internal.java.endpoints.datasync.relationship.SetRelationshipImpl;
+import com.pubnub.internal.java.endpoints.datasync.relationship.UpdateRelationshipImpl;
 import com.pubnub.internal.java.endpoints.datasync.channel.CreateChannelImpl;
 import com.pubnub.internal.java.endpoints.datasync.channel.GetChannelImpl;
 import com.pubnub.internal.java.endpoints.datasync.channel.GetChannelsImpl;
@@ -179,5 +191,35 @@ public class DataSyncImpl implements DataSync {
     @Override
     public SetMembership setMembership(String membershipId, int classVersion) {
         return new SetMembershipImpl(membershipId, classVersion, pubnubInstance);
+    }
+
+    @Override
+    public GetRelationship getRelationship(String relationshipId) {
+        return new GetRelationshipImpl(relationshipId, pubnubInstance);
+    }
+
+    @Override
+    public CreateRelationship createRelationship(String entityAId, String entityBId, String className, int classVersion) {
+        return new CreateRelationshipImpl(entityAId, entityBId, className, classVersion, pubnubInstance);
+    }
+
+    @Override
+    public RemoveRelationship removeRelationship(String relationshipId) {
+        return new RemoveRelationshipImpl(relationshipId, pubnubInstance);
+    }
+
+    @Override
+    public GetRelationships getRelationships(String className) {
+        return new GetRelationshipsImpl(className, pubnubInstance);
+    }
+
+    @Override
+    public UpdateRelationship updateRelationship(String relationshipId, List<PNJsonPatchOperation> operations) {
+        return new UpdateRelationshipImpl(relationshipId, operations, pubnubInstance);
+    }
+
+    @Override
+    public SetRelationship setRelationship(String relationshipId, int classVersion) {
+        return new SetRelationshipImpl(relationshipId, classVersion, pubnubInstance);
     }
 }

@@ -112,7 +112,6 @@ abstract class BaseIntegrationTest {
         serverConfig.secretKey = Keys.pamSecKey
         serverConfig.httpLoggingInterceptor = HttpLoggingInterceptor()
         serverConfig.action()
-
         return serverConfig.build()
     }
 

@@ -35,7 +35,12 @@ public interface CreateChannel extends Endpoint<PNDataSyncCreateChannelResult> {
     CreateChannel status(@Nullable String status);
 
     /**
-     * Optional arbitrary JSON object payload.
+     * Optional arbitrary JSON object payload. The payload is free-form, but the default {@code Channel} class
+     * indexes the {@code name} and {@code type} properties: populating them here makes the channel filterable and
+     * sortable on {@code name} / {@code type} in {@code getChannels}. Any other payload property is stored but not
+     * queryable unless a custom class or {@code Channel} subclass declares it filterable (a subclass inherits the
+     * {@code name} / {@code type} indexes and may add its own). The built-in fields {@code id}, {@code createdAt},
+     * {@code updatedAt}, and {@code status} are always filterable/sortable regardless of payload.
      */
     CreateChannel payload(@Nullable Map<String, Object> payload);
 }
