@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Result of {@code pubnub.dataSync().getMemberships()}.
- * DataSync list endpoints are cursor-based (unlike App Context's page-based paging).
+ * DataSync list endpoints are cursor-based.
  */
 @Getter
 @NoArgsConstructor

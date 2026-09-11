@@ -19,6 +19,12 @@ import com.pubnub.api.endpoints.datasync.membership.GetMemberships
 import com.pubnub.api.endpoints.datasync.membership.RemoveMembership
 import com.pubnub.api.endpoints.datasync.membership.SetMembership
 import com.pubnub.api.endpoints.datasync.membership.UpdateMembership
+import com.pubnub.api.endpoints.datasync.relationship.CreateRelationship
+import com.pubnub.api.endpoints.datasync.relationship.GetRelationship
+import com.pubnub.api.endpoints.datasync.relationship.GetRelationships
+import com.pubnub.api.endpoints.datasync.relationship.RemoveRelationship
+import com.pubnub.api.endpoints.datasync.relationship.SetRelationship
+import com.pubnub.api.endpoints.datasync.relationship.UpdateRelationship
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
@@ -47,6 +53,12 @@ import com.pubnub.internal.endpoints.datasync.membership.GetMembershipsEndpoint
 import com.pubnub.internal.endpoints.datasync.membership.RemoveMembershipEndpoint
 import com.pubnub.internal.endpoints.datasync.membership.SetMembershipEndpoint
 import com.pubnub.internal.endpoints.datasync.membership.UpdateMembershipEndpoint
+import com.pubnub.internal.endpoints.datasync.relationship.CreateRelationshipEndpoint
+import com.pubnub.internal.endpoints.datasync.relationship.GetRelationshipEndpoint
+import com.pubnub.internal.endpoints.datasync.relationship.GetRelationshipsEndpoint
+import com.pubnub.internal.endpoints.datasync.relationship.RemoveRelationshipEndpoint
+import com.pubnub.internal.endpoints.datasync.relationship.SetRelationshipEndpoint
+import com.pubnub.internal.endpoints.datasync.relationship.UpdateRelationshipEndpoint
 import com.pubnub.internal.endpoints.datasync.user.CreateUserEndpoint
 import com.pubnub.internal.endpoints.datasync.user.GetUserEndpoint
 import com.pubnub.internal.endpoints.datasync.user.GetUsersEndpoint
@@ -348,6 +360,85 @@ class DataSyncImpl(private val pubnub: PubNubImpl) : DataSync {
         return SetMembershipEndpoint(
             pubnub = pubnub,
             membershipId = membershipId,
+            classVersion = classVersion,
+            status = status,
+            payload = payload,
+            ifMatch = ifMatch,
+        )
+    }
+
+    override fun getRelationship(relationshipId: String): GetRelationship {
+        return GetRelationshipEndpoint(pubnub, relationshipId)
+    }
+
+    override fun createRelationship(
+        entityAId: String,
+        entityBId: String,
+        className: String,
+        classVersion: Int,
+        relationshipId: String?,
+        status: String?,
+        payload: Any?,
+    ): CreateRelationship {
+        return CreateRelationshipEndpoint(
+            pubnub = pubnub,
+            entityAId = entityAId,
+            entityBId = entityBId,
+            className = className,
+            classVersion = classVersion,
+            relationshipId = relationshipId,
+            status = status,
+            payload = payload,
+        )
+    }
+
+    override fun removeRelationship(relationshipId: String, ifMatch: String?): RemoveRelationship {
+        return RemoveRelationshipEndpoint(pubnub, relationshipId, ifMatch)
+    }
+
+    override fun getRelationships(
+        className: String,
+        entityAId: String?,
+        entityBId: String?,
+        classVersion: Int?,
+        filterFast: String?,
+        filter: String?,
+        sort: List<PNDataSyncSortField>,
+        limit: Int?,
+        cursor: String?,
+    ): GetRelationships {
+        return GetRelationshipsEndpoint(
+            pubnub = pubnub,
+            className = className,
+            entityAId = entityAId,
+            entityBId = entityBId,
+            classVersion = classVersion,
+            filterFast = filterFast,
+            filter = filter,
+            sort = sort,
+            limit = limit,
+            cursor = cursor,
+        )
+    }
+
+    override fun updateRelationship(
+        relationshipId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String?,
+    ): UpdateRelationship {
+        return UpdateRelationshipEndpoint(pubnub, relationshipId, operations, ifMatch)
+    }
+
+    override fun setRelationship(
+        relationshipId: String,
+        classVersion: Int,
+        status: String?,
+        payload: Any?,
+        ifMatch: String?,
+    ): SetRelationship {
+        return SetRelationshipEndpoint(
+            pubnub = pubnub,
+            relationshipId = relationshipId,
             classVersion = classVersion,
             status = status,
             payload = payload,

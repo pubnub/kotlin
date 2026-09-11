@@ -7,10 +7,6 @@ import com.pubnub.api.utils.SerializedName
  * by remove operations. A Membership is a specialized DataSync relationship linking a Channel (entity A) and a
  * User (entity B), re-exposed under the domain-friendly names [channelId] / [userId].
  *
- * The class-identity properties are exposed with the `class*` names ([className] / [classVersion]), while the
- * server serializes them under the camelCase `relationshipClass*` wire keys — hence the `@field:SerializedName`
- * mappings below.
- *
  * @property id Membership identifier.
  * @property channelId Identifier of the Channel (entity A) this membership links.
  * @property userId Identifier of the User (entity B) this membership links.

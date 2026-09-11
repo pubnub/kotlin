@@ -6,10 +6,6 @@ import com.pubnub.api.utils.SerializedName
  * DataSync Entity resource returned by `pubnub.dataSync.getEntity`, `createEntity` and referenced by
  * remove operations.
  *
- * The class-identity properties are exposed with the `class*` names (`className` / `classVersion` /
- * `classLevel`), while the server serializes them under the camelCase `entityClass*` wire keys — hence the
- * `@field:SerializedName` mappings below.
- *
  * @property id Entity identifier.
  * @property className Entity class identifier.
  * @property classVersion Version of the entity class.
