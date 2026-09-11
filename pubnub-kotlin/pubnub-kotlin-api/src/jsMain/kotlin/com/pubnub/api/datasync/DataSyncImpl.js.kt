@@ -18,6 +18,12 @@ import com.pubnub.api.endpoints.datasync.membership.GetMemberships
 import com.pubnub.api.endpoints.datasync.membership.RemoveMembership
 import com.pubnub.api.endpoints.datasync.membership.SetMembership
 import com.pubnub.api.endpoints.datasync.membership.UpdateMembership
+import com.pubnub.api.endpoints.datasync.relationship.CreateRelationship
+import com.pubnub.api.endpoints.datasync.relationship.GetRelationship
+import com.pubnub.api.endpoints.datasync.relationship.GetRelationships
+import com.pubnub.api.endpoints.datasync.relationship.RemoveRelationship
+import com.pubnub.api.endpoints.datasync.relationship.SetRelationship
+import com.pubnub.api.endpoints.datasync.relationship.UpdateRelationship
 import com.pubnub.api.endpoints.datasync.user.CreateUser
 import com.pubnub.api.endpoints.datasync.user.GetUser
 import com.pubnub.api.endpoints.datasync.user.GetUsers
@@ -184,6 +190,47 @@ internal class DataSyncImpl : DataSync {
         payload: Any?,
         ifMatch: String?,
     ): SetMembership = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun getRelationship(relationshipId: String): GetRelationship = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun createRelationship(
+        entityAId: String,
+        entityBId: String,
+        className: String,
+        classVersion: Int,
+        relationshipId: String?,
+        status: String?,
+        payload: Any?,
+    ): CreateRelationship = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun removeRelationship(relationshipId: String, ifMatch: String?): RemoveRelationship =
+        throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun getRelationships(
+        className: String,
+        entityAId: String?,
+        entityBId: String?,
+        classVersion: Int?,
+        filterFast: String?,
+        filter: String?,
+        sort: List<PNDataSyncSortField>,
+        limit: Int?,
+        cursor: String?,
+    ): GetRelationships = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun updateRelationship(
+        relationshipId: String,
+        operations: List<PNJsonPatchOperation>,
+        ifMatch: String?,
+    ): UpdateRelationship = throw NotImplementedError(NOT_IMPLEMENTED)
+
+    override fun setRelationship(
+        relationshipId: String,
+        classVersion: Int,
+        status: String?,
+        payload: Any?,
+        ifMatch: String?,
+    ): SetRelationship = throw NotImplementedError(NOT_IMPLEMENTED)
 }
 
 private const val NOT_IMPLEMENTED = "DataSync is not implemented on the JS target"
