@@ -70,6 +70,7 @@ fun registerDeviceForPushNotifications(pubnub: PubNub, fcmToken: String, apnsTok
 
     // Add FCM device to channels
     // In a real application, you would get this token from FirebaseMessaging.getInstance().token
+    // snippet.addDeviceToChannel
     pubnub.addPushNotificationsOnChannels(
         pushType = PNPushType.FCM,
         channels = notificationChannels,
@@ -82,6 +83,7 @@ fun registerDeviceForPushNotifications(pubnub: PubNub, fcmToken: String, apnsTok
             println("Error details: ${exception.message}")
         }
     }
+    // snippet.end
 
     // For APNS (iOS)
     println("\n## Registering APNS Device Token")
