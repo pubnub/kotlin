@@ -1,3 +1,10 @@
+## v13.4.3
+September 14 2026
+
+#### Added
+- Log unrecognised subscribe event types instead of dropping them silently.
+- Update dependency.
+
 ## v13.4.2
 August 12 2026
 
