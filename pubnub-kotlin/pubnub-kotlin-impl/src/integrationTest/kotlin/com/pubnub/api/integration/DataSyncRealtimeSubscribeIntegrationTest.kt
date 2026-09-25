@@ -1,6 +1,8 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
@@ -17,6 +19,8 @@ import com.pubnub.api.models.consumer.pubsub.datasync.PNSetDataSyncMembershipEve
 import com.pubnub.api.models.consumer.pubsub.datasync.PNSetDataSyncRelationshipEventMessage
 import com.pubnub.api.models.consumer.pubsub.datasync.PNSetDataSyncUserEventMessage
 import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.test.CommonUtils.randomValue
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -72,6 +76,26 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         return client
     }
 
+    /**
+     * Subscribes and blocks until [client]'s subscribe loop is actually connected, instead of sleeping on a
+     * fixed guess. Publishing before the receive loop is up would drop the realtime CREATE (e=5 events are not
+     * replayed from history on connect), so the writes must wait for [PNStatusCategory.PNConnectedCategory].
+     */
+    private fun subscribeAndAwaitConnect(client: PubNub, subscription: Subscription) {
+        val connected = CountDownLatch(1)
+        client.addListener(
+            object : StatusListener {
+                override fun status(pubnub: PubNub, status: PNStatus) {
+                    if (status.category == PNStatusCategory.PNConnectedCategory) {
+                        connected.countDown()
+                    }
+                }
+            },
+        )
+        subscription.subscribe()
+        assertTrue("subscribe loop did not connect", connected.await(15, TimeUnit.SECONDS))
+    }
+
     @Test
     fun receivesUserEventsViaAddListener() {
         val userId = "user-rt-" + randomValue()
@@ -106,8 +130,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 }
             },
         )
-        subscription.subscribe()
-        Thread.sleep(2000) // let the subscribe loop connect before publishing changes
+        subscribeAndAwaitConnect(client, subscription)
 
         try {
             server.dataSync.createUser(
@@ -170,8 +193,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 else -> {}
             }
         }
-        subscription.subscribe()
-        Thread.sleep(2000)
+        subscribeAndAwaitConnect(server, subscription)
 
         server.dataSync.createUser(
             classVersion = classVersion,
@@ -235,8 +257,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 }
             },
         )
-        subscription.subscribe()
-        Thread.sleep(2000)
+        subscribeAndAwaitConnect(client, subscription)
 
         try {
             server.dataSync.createChannel(
@@ -298,8 +319,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 else -> {}
             }
         }
-        subscription.subscribe()
-        Thread.sleep(2000)
+        subscribeAndAwaitConnect(server, subscription)
 
         server.dataSync.createChannel(
             classVersion = classVersion,
@@ -362,8 +382,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 }
             },
         )
-        subscription.subscribe()
-        Thread.sleep(2000)
+        subscribeAndAwaitConnect(client, subscription)
 
         try {
             // `TestUser` declares `email` in the `admin` projection only; `username` is in `__default__`. This
@@ -433,8 +452,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 else -> {}
             }
         }
-        subscription.subscribe()
-        Thread.sleep(2000)
+        subscribeAndAwaitConnect(server, subscription)
 
         // `TestUser` declares `email` in the `admin` projection only; `username` is in `__default__`. This
         // subscription is on the bare ref (the `__default__` channel), so the realtime snapshot must carry
@@ -512,8 +530,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                     }
                 },
             )
-            subscription.subscribe()
-            Thread.sleep(2000)
+            subscribeAndAwaitConnect(client, subscription)
 
             server.dataSync.createMembership(
                 channelId = channelId,
@@ -585,8 +602,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                     else -> {}
                 }
             }
-            subscription.subscribe()
-            Thread.sleep(2000)
+            subscribeAndAwaitConnect(server, subscription)
 
             server.dataSync.createMembership(
                 channelId = channelId,
@@ -673,8 +689,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                     }
                 },
             )
-            subscription.subscribe()
-            Thread.sleep(2000)
+            subscribeAndAwaitConnect(client, subscription)
 
             server.dataSync.createRelationship(
                 entityAId = entityAId,
@@ -757,8 +772,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                     else -> {}
                 }
             }
-            subscription.subscribe()
-            Thread.sleep(2000)
+            subscribeAndAwaitConnect(server, subscription)
 
             server.dataSync.createRelationship(
                 entityAId = entityAId,
@@ -815,8 +829,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 sawCreate.countDown()
             }
         }
-        subscription.subscribe()
-        Thread.sleep(2000)
+        subscribeAndAwaitConnect(server, subscription)
 
         try {
             server.dataSync.createEntity(
@@ -876,8 +889,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 sawCreate.countDown()
             }
         }
-        subscription.subscribe()
-        Thread.sleep(2000)
+        subscribeAndAwaitConnect(client, subscription)
 
         try {
             server.dataSync.createEntity(

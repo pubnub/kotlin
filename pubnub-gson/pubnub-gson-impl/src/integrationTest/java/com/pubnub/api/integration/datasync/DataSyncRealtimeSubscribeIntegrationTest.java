@@ -2,6 +2,7 @@ package com.pubnub.api.integration.datasync;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
@@ -9,7 +10,9 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
 import com.pubnub.api.java.v2.callbacks.EventListener;
+import com.pubnub.api.java.v2.callbacks.StatusListener;
 import com.pubnub.api.java.v2.subscriptions.Subscription;
+import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult;
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncSetEventType;
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDeleteDataSyncChannelEventMessage;
@@ -108,6 +111,26 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         return client;
     }
 
+    /**
+     * Subscribes and blocks until {@code client}'s subscribe loop is actually connected, instead of sleeping on
+     * a fixed guess. Publishing before the receive loop is up would drop the realtime CREATE (e=5 events are not
+     * replayed from history on connect), so the writes must wait for
+     * {@link PNStatusCategory#PNConnectedCategory}.
+     */
+    private void subscribeAndAwaitConnect(PubNub client, Subscription subscription) throws InterruptedException {
+        final CountDownLatch connected = new CountDownLatch(1);
+        client.addListener(new StatusListener() {
+            @Override
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+                if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
+                    connected.countDown();
+                }
+            }
+        });
+        subscription.subscribe();
+        assertTrue("subscribe loop did not connect", connected.await(15, TimeUnit.SECONDS));
+    }
+
     @Test
     public void receivesUserEventsViaAddListener() throws PubNubException, InterruptedException {
         final String userId = "user-rt-" + RandomStringUtils.random(8, "abcdefgh");
@@ -137,8 +160,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                 }
             }
         });
-        subscription.subscribe();
-        Thread.sleep(2000); // let the subscribe loop connect before publishing changes
+        subscribeAndAwaitConnect(client, subscription);
 
         try {
             server.dataSync().createUser(CLASS_VERSION).userId(userId).status("active").payload(payload("username", "Alice")).sync();
@@ -185,8 +207,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                 sawDelete.countDown();
             }
         });
-        subscription.subscribe();
-        Thread.sleep(2000);
+        subscribeAndAwaitConnect(server, subscription);
 
         server.dataSync().createUser(CLASS_VERSION).userId(userId).status("active").payload(payload("username", "Alice")).sync();
         server.dataSync().updateUser(userId, Collections.singletonList(
@@ -234,8 +255,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                 }
             }
         });
-        subscription.subscribe();
-        Thread.sleep(2000);
+        subscribeAndAwaitConnect(client, subscription);
 
         try {
             server.dataSync().createChannel(CLASS_VERSION).channelId(channelId).status("active").payload(payload("name", "Chan-A")).sync();
@@ -281,8 +301,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                 sawDelete.countDown();
             }
         });
-        subscription.subscribe();
-        Thread.sleep(2000);
+        subscribeAndAwaitConnect(server, subscription);
 
         server.dataSync().createChannel(CLASS_VERSION).channelId(channelId).status("active").payload(payload("name", "Chan-A")).sync();
         server.dataSync().updateChannel(channelId, Collections.singletonList(
@@ -329,8 +348,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                 }
             }
         });
-        subscription.subscribe();
-        Thread.sleep(2000);
+        subscribeAndAwaitConnect(client, subscription);
 
         try {
             // `TestUser` declares `email` in the `admin` projection only; `username` is in `__default__`. This
@@ -383,8 +401,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                 sawDelete.countDown();
             }
         });
-        subscription.subscribe();
-        Thread.sleep(2000);
+        subscribeAndAwaitConnect(server, subscription);
 
         // `TestUser` declares `email` in the `admin` projection only; `username` is in `__default__`. This
         // subscription is on the bare ref (the `__default__` channel), so the realtime snapshot must carry
@@ -445,8 +462,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                     }
                 }
             });
-            subscription.subscribe();
-            Thread.sleep(2000);
+            subscribeAndAwaitConnect(client, subscription);
 
             server.dataSync().createMembership(channelId, userId, CLASS_VERSION).membershipId(membershipId).status("active").sync();
             server.dataSync().setMembership(membershipId, CLASS_VERSION).status("archived").sync();
@@ -498,8 +514,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                     sawDelete.countDown();
                 }
             });
-            subscription.subscribe();
-            Thread.sleep(2000);
+            subscribeAndAwaitConnect(server, subscription);
 
             server.dataSync().createMembership(channelId, userId, CLASS_VERSION).membershipId(membershipId).status("active").sync();
             server.dataSync().setMembership(membershipId, CLASS_VERSION).status("archived").sync();
@@ -556,8 +571,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                     }
                 }
             });
-            subscription.subscribe();
-            Thread.sleep(2000);
+            subscribeAndAwaitConnect(client, subscription);
 
             server.dataSync().createRelationship(entityAId, entityBId, "TestFriendship", CLASS_VERSION).relationshipId(relationshipId).status("active").sync();
             server.dataSync().setRelationship(relationshipId, CLASS_VERSION).status("archived").sync();
@@ -609,8 +623,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                     sawDelete.countDown();
                 }
             });
-            subscription.subscribe();
-            Thread.sleep(2000);
+            subscribeAndAwaitConnect(server, subscription);
 
             server.dataSync().createRelationship(entityAId, entityBId, "TestFriendship", CLASS_VERSION).relationshipId(relationshipId).status("active").sync();
             server.dataSync().setRelationship(relationshipId, CLASS_VERSION).status("archived").sync();
@@ -652,8 +665,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                 }
             }
         });
-        subscription.subscribe();
-        Thread.sleep(2000);
+        subscribeAndAwaitConnect(server, subscription);
 
         try {
             // `server` holds the secretKey, so it bypasses the projection write-guard and can write the
@@ -706,8 +718,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                 }
             }
         });
-        subscription.subscribe();
-        Thread.sleep(2000);
+        subscribeAndAwaitConnect(client, subscription);
 
         try {
             server.dataSync().createEntity("TestUser", CLASS_VERSION).entityId(entityId).status("active").payload(userPayload("Alice", "alice@example.com")).sync();
