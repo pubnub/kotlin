@@ -121,6 +121,9 @@ import com.pubnub.api.v2.createPNConfiguration
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
@@ -1268,6 +1271,15 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     override fun userMetadata(id: String): UserMetadata {
         TODO("Not yet implemented")
     }
+
+    override fun dataSyncUser(id: String): DataSyncUser =
+        throw NotImplementedError("DataSync realtime subscribe is not implemented on the JS target")
+
+    override fun dataSyncChannel(id: String): DataSyncChannel =
+        throw NotImplementedError("DataSync realtime subscribe is not implemented on the JS target")
+
+    override fun dataSyncEntity(id: String): DataSyncEntity =
+        throw NotImplementedError("DataSync realtime subscribe is not implemented on the JS target")
 
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
         TODO("Not yet implemented")

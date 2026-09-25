@@ -7,6 +7,7 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -34,6 +35,7 @@ internal class EmitMessagesEffect(
                     is PNSignalResult -> messagesConsumer.announce(message)
                     is PNMessageActionResult -> messagesConsumer.announce(message)
                     is PNObjectEventResult -> messagesConsumer.announce(message)
+                    is PNDataSyncEventResult -> messagesConsumer.announce(message)
                     is PNFileEventResult -> messagesConsumer.announce(message)
                 }
             } catch (_: Throwable) {

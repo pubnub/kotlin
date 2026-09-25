@@ -1,5 +1,14 @@
 package com.pubnub.api.models.consumer.access_manager.v3
 
+/**
+ * A PAM v3 grant on a **User (App Context / DataSync `users`) record** — the `get`/`update`/`delete`/`create`
+ * permissions guard REST CRUD on the user object.
+ *
+ * It does **not** grant a realtime subscribe (there is deliberately no `read`/subscribe bit here): subscribing to a
+ * DataSync user's events is a plain PubSub read of the ref-channel and needs a channel `read` grant
+ * ([ChannelGrant.name] with `read = true`) on the ref-channel, not this record grant. See
+ * [com.pubnub.api.v2.entities.DataSyncUser] `subscription(...)`.
+ */
 interface UserGrant : TokenGrant {
     /**
      * The single DataSync projection the token holder looks *through* when reading this user's DataSync schema, or

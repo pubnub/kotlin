@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -48,5 +49,9 @@ data class DelegatingEventListener(
 
     override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
         Converters.objects(result, listener, pubnubJava)
+    }
+
+    override fun dataSync(pubnub: PubNub, result: PNDataSyncEventResult) {
+        listener.dataSync(pubnubJava, result)
     }
 }

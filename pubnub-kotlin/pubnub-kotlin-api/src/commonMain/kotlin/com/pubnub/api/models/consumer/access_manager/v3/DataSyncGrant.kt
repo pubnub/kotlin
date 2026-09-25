@@ -14,6 +14,14 @@ package com.pubnub.api.models.consumer.access_manager.v3
  * entity/relationship class schema under `projections`. When set, the SDK emits the corresponding `pn-projections`
  * entry into the token meta automatically. Omit it (or pass `null`) to use the implicit `__default__` projection.
  *
+ * These grants authorize DataSync **REST CRUD** (`get`/`create`/`update`/`delete`) on the resource record only.
+ * They do **not** authorize subscribing to realtime events: a realtime subscribe is a plain PubSub read of the
+ * resource's ref-channel, so it needs a channel `read` grant
+ * ([ChannelGrant.name] with `read = true`) on the resolved ref-channel — `id` for the default projection,
+ * `__{projection}__{id}` otherwise. See the `subscription(...)` methods on the DataSync entity handles
+ * ([com.pubnub.api.v2.entities.DataSyncEntity], [com.pubnub.api.v2.entities.DataSyncChannel],
+ * [com.pubnub.api.v2.entities.DataSyncUser]).
+ *
  * ```kotlin
  * pubnub.grantToken(
  *     ttl = 60,

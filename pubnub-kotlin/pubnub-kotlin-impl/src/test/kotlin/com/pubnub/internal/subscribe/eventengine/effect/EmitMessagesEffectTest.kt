@@ -9,6 +9,7 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -225,6 +226,7 @@ class CreateMessagesConsumerImpl : MessagesConsumer {
     val pnSignalResultList = mutableListOf<PNSignalResult>()
     val pnMessageActionResultList = mutableListOf<PNMessageActionResult>()
     val pnObjectEventResultList = mutableListOf<PNObjectEventResult>()
+    val pnDataSyncEventResultList = mutableListOf<PNDataSyncEventResult>()
     val pnFileEventResultList = mutableListOf<PNFileEventResult>()
 
     override fun announce(message: PNMessageResult) {
@@ -245,6 +247,10 @@ class CreateMessagesConsumerImpl : MessagesConsumer {
 
     override fun announce(pnObjectEventResult: PNObjectEventResult) {
         pnObjectEventResultList.add(pnObjectEventResult)
+    }
+
+    override fun announce(pnDataSyncEventResult: PNDataSyncEventResult) {
+        pnDataSyncEventResultList.add(pnDataSyncEventResult)
     }
 
     override fun announce(pnFileEventResult: PNFileEventResult) {

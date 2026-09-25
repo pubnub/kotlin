@@ -10,6 +10,7 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -110,6 +111,13 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
         setCallbacks.safeForEach { it.objects(pubnub, envelope) }
     }
 
+    override fun announce(pnDataSyncEventResult: PNDataSyncEventResult) {
+        eventListeners.safeForEach { it.dataSync(pubnub, pnDataSyncEventResult) }
+        val envelope = AnnouncementEnvelope(pnDataSyncEventResult)
+        subscriptionCallbacks.safeForEach { it.dataSync(pubnub, envelope) }
+        setCallbacks.safeForEach { it.dataSync(pubnub, envelope) }
+    }
+
     override fun announce(pnFileEventResult: PNFileEventResult) {
         eventListeners.safeForEach { it.file(pubnub, pnFileEventResult) }
         val envelope = AnnouncementEnvelope(pnFileEventResult)
@@ -162,6 +170,11 @@ interface AnnouncementCallback {
     fun objects(
         pubnub: PubNub,
         envelope: AnnouncementEnvelope<PNObjectEventResult>,
+    )
+
+    fun dataSync(
+        pubnub: PubNub,
+        envelope: AnnouncementEnvelope<PNDataSyncEventResult>,
     )
 
     fun file(

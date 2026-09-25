@@ -70,6 +70,9 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -514,6 +517,12 @@ actual interface PubNub {
     actual fun channelMetadata(id: String): ChannelMetadata
 
     actual fun userMetadata(id: String): UserMetadata
+
+    actual fun dataSyncUser(id: String): DataSyncUser
+
+    actual fun dataSyncChannel(id: String): DataSyncChannel
+
+    actual fun dataSyncEntity(id: String): DataSyncEntity
 
     actual fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet
 

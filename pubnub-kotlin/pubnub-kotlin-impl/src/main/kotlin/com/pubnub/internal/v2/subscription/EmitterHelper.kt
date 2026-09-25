@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -49,6 +50,13 @@ class EmitterHelper(eventEmitter: EventEmitter) {
                     onObjects?.invoke(result)
                 }
 
+                override fun dataSync(
+                    pubnub: PubNub,
+                    result: PNDataSyncEventResult,
+                ) {
+                    onDataSync?.invoke(result)
+                }
+
                 override fun file(
                     pubnub: PubNub,
                     result: PNFileEventResult,
@@ -64,5 +72,6 @@ class EmitterHelper(eventEmitter: EventEmitter) {
     var onSignal: ((PNSignalResult) -> Unit)? = null
     var onMessageAction: ((PNMessageActionResult) -> Unit)? = null
     var onObjects: ((PNObjectEventResult) -> Unit)? = null
+    var onDataSync: ((PNDataSyncEventResult) -> Unit)? = null
     var onFile: ((PNFileEventResult) -> Unit)? = null
 }

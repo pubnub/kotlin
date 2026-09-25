@@ -75,6 +75,9 @@ import com.pubnub.api.v2.callbacks.StatusEmitter
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -151,6 +154,33 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @return a [UserMetadata] instance representing the channel metadata with the given [id]
      */
     actual fun userMetadata(id: String): UserMetadata
+
+    /**
+     * Create a handle to a [DataSyncUser] object that can be used to obtain a [Subscription] to DataSync
+     * realtime events about the user with the given [id].
+     *
+     * @param id the user's ref/id.
+     * @return a [DataSyncUser] handle for the given [id].
+     */
+    actual fun dataSyncUser(id: String): DataSyncUser
+
+    /**
+     * Create a handle to a [DataSyncChannel] object that can be used to obtain a [Subscription] to
+     * DataSync realtime events about the channel with the given [id].
+     *
+     * @param id the channel's ref/id.
+     * @return a [DataSyncChannel] handle for the given [id].
+     */
+    actual fun dataSyncChannel(id: String): DataSyncChannel
+
+    /**
+     * Create a handle to a [DataSyncEntity] object that can be used to obtain a [Subscription] to
+     * DataSync realtime events about the entity with the given [id].
+     *
+     * @param id the entity's ref/id.
+     * @return a [DataSyncEntity] handle for the given [id].
+     */
+    actual fun dataSyncEntity(id: String): DataSyncEntity
 
     /**
      * Create a [SubscriptionSet] from the given [subscriptions].

@@ -73,6 +73,9 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.Subscription
@@ -591,6 +594,28 @@ expect interface PubNub {
     fun channelMetadata(id: String): ChannelMetadata
 
     fun userMetadata(id: String): UserMetadata
+
+    /**
+     * Creates a [DataSyncUser] handle for subscribing to DataSync realtime events about the user
+     * with the given [id].
+     *
+     * Convenience over `channel(id).subscription()` that additionally resolves projection channels; a
+     * plain channel subscription on the same ref also delivers these events. The handle is a channel
+     * filter on the ref and receives the full mix of DataSync leaf types routed to it.
+     */
+    fun dataSyncUser(id: String): DataSyncUser
+
+    /**
+     * Creates a [DataSyncChannel] handle for subscribing to DataSync realtime events about the
+     * channel with the given [id]. See [dataSyncUser].
+     */
+    fun dataSyncChannel(id: String): DataSyncChannel
+
+    /**
+     * Creates a [DataSyncEntity] handle for subscribing to DataSync realtime events about the
+     * entity with the given [id]. See [dataSyncUser].
+     */
+    fun dataSyncEntity(id: String): DataSyncEntity
 
     fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet
 

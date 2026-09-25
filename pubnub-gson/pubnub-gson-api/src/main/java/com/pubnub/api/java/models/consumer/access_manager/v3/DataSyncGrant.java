@@ -15,6 +15,14 @@ package com.pubnub.api.java.models.consumer.access_manager.v3;
  * matching {@code pn-projections} entry into the token meta automatically. Leave it unset to use the implicit
  * {@code __default__} projection.
  *
+ * <p>These grants authorize DataSync <b>REST CRUD</b> ({@code get}/{@code create}/{@code update}/{@code delete}) on
+ * the resource record only. They do <b>not</b> authorize subscribing to realtime events: a realtime subscribe is a
+ * plain PubSub read of the resource's ref-channel, so it needs a channel {@code read} grant
+ * ({@link ChannelGrant#name(String)} then {@code .read()}) on the resolved ref-channel — {@code id} for the default
+ * projection, {@code __{projection}__{id}} otherwise. See the {@code subscription(...)} methods on the DataSync
+ * entity handles ({@link com.pubnub.api.java.v2.entities.DataSyncEntity},
+ * {@link com.pubnub.api.java.v2.entities.DataSyncChannel}, {@link com.pubnub.api.java.v2.entities.DataSyncUser}).
+ *
  * <pre>{@code
  * pubnub.grantToken(60)
  *     .authorizedUserId(new UserId("my-authorized-user"))

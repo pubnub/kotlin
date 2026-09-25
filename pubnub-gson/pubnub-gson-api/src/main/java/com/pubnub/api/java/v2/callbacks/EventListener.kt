@@ -8,6 +8,7 @@ import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 
@@ -42,5 +43,16 @@ interface EventListener : Listener {
     }
 
     fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {
+    }
+
+    /**
+     * Receive DataSync realtime events on subscribed ref-channels.
+     *
+     * A single subscribed ref-channel delivers a mix of leaf types; branch on the sealed
+     * [PNDataSyncEventResult.extractedMessage]. This exposes the Kotlin
+     * [PNDataSyncEventResult] directly (a conscious cross-SDK choice — DataSync does not ship Java-specific
+     * per-type result models, unlike objects).
+     */
+    fun dataSync(pubnub: PubNub, result: PNDataSyncEventResult) {
     }
 }

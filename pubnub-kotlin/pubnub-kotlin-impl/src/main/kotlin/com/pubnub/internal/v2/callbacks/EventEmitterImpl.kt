@@ -6,6 +6,7 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -81,6 +82,15 @@ class EventEmitterImpl(
         }
     }
 
+    fun dataSync(
+        pubnub: PubNub,
+        dataSyncEvent: PNDataSyncEventResult,
+    ) {
+        listeners.forEach {
+            it.dataSync(pubnub, dataSyncEvent)
+        }
+    }
+
     fun file(
         pubnub: PubNub,
         pnFileEventResult: PNFileEventResult,
@@ -134,6 +144,15 @@ class EventEmitterImpl(
     ) {
         if (accepts(envelope)) {
             objects(pubnub, envelope.event)
+        }
+    }
+
+    override fun dataSync(
+        pubnub: PubNub,
+        envelope: AnnouncementEnvelope<PNDataSyncEventResult>,
+    ) {
+        if (accepts(envelope)) {
+            dataSync(pubnub, envelope.event)
         }
     }
 
