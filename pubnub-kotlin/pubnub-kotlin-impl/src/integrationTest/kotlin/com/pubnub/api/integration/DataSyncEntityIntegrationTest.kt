@@ -592,6 +592,91 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun createEntityUnderProjectionEnforcesWriteGuard() {
+        // Negative counterpart to getEntityAppliesProjectionCarriedByTheToken (which covers the READ side) and
+        // to the projected happy-path writes in createGetDeletePatchUpdateGetAllEntityWithServerGrantedToken.
+        // `TestUser` declares `email` in the `admin` projection ONLY. The server enforces a projection write-guard,
+        // so which fields a write may carry is decided by the token's projection:
+        //   - under `__default__` the guard is a denylist over declared props: a declared field NOT in
+        //     `__default__` (here `email`) is rejected;
+        //   - under a NON-default projection (`admin`) the guard is strict keep-only: EVERY payload field not
+        //     declared in that projection is rejected, including undeclared/uncontrolled ones (`hobby`/`custom`).
+        // Both rejections are DS-0202 -> HTTP 403, pre-commit (nothing is persisted). Asserted as pairs so it
+        // proves the projection boundary is *enforced*, not merely that some write failed.
+        //
+        // The write-guard is enforced only on token-authenticated requests (the backend skips it when there is
+        // no PAM token). So these run on the token-authorized `client`; the secretKey `server` would bypass the
+        // guard and the write would wrongly succeed.
+        val client = createAuthorizedClient()
+        val authorizedUUID = client.configuration.userId.value
+
+        // negative A: __default__-projected create writing the admin-only `email` -> 403 (DS-0202).
+        val defaultRejectedId = "entity-" + randomValue()
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(defaultRejectedId, create = true))
+        try {
+            client.dataSync.createEntity(
+                className = className,
+                classVersion = classVersion,
+                entityId = defaultRejectedId,
+                status = "active",
+                payload = TestUserPayload(username = "Alice", email = "alice@example.com"),
+            ).sync()
+            fail("Expected a 403 when writing the admin-only email under the __default__ projection")
+        } catch (e: PubNubException) {
+            assertEquals(
+                "Writing an admin-only field under __default__ must be rejected by the projection write-guard",
+                403,
+                e.statusCode,
+            )
+        }
+
+        // negative B: admin-projected create carrying an UNDECLARED field (`hobby`) -> 403 (DS-0202).
+        // Isolates a single variable: `username` is admin-declared (and non-nullable, so required) and `email`
+        // is deliberately omitted, leaving `hobby` (uncontrolled) as the only field that can trip the guard.
+        // A raw map payload is used so `email` can be left out entirely (TestUserPayload.email is non-null).
+        val adminRejectedId = "entity-" + randomValue()
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(adminRejectedId, create = true, projection = "admin"))
+        try {
+            client.dataSync.createEntity(
+                className = className,
+                classVersion = classVersion,
+                entityId = adminRejectedId,
+                status = "active",
+                payload = mapOf("username" to "Alice", "hobby" to "poetry"),
+            ).sync()
+            fail("Expected a 403 when writing an undeclared field under the non-default admin projection")
+        } catch (e: PubNubException) {
+            assertEquals(
+                "An undeclared field under a non-default projection must be rejected by the projection write-guard",
+                403,
+                e.statusCode,
+            )
+        }
+
+        // positive leg: admin-projected create carrying ONLY admin-declared fields (`username` + `email`,
+        // no undeclared fields) -> succeeds, proving the guard rejects on projection membership, not blanket.
+        val acceptedId = "entity-" + randomValue()
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(acceptedId, create = true, projection = "admin"))
+        try {
+            val createResult = client.dataSync.createEntity(
+                className = className,
+                classVersion = classVersion,
+                entityId = acceptedId,
+                status = "active",
+                payload = TestUserPayload(username = "Alice", email = "alice@example.com"),
+            ).sync()
+            assertEquals(acceptedId, createResult.data.id)
+            assertEquals("Alice", createResult.data.payload?.get("username"))
+            assertEquals("alice@example.com", createResult.data.payload?.get("email"))
+        } finally {
+            try {
+                server.dataSync.removeEntity(acceptedId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
     fun getAllRangeFilterAndSortOnDateValueKind() {
         // `TestUser.signupDate` is a `date`-valueKind property declared `filtering: "simple"` (Postgres,
         // strongly consistent), so these reads resolve immediately after create — no await/poll needed.

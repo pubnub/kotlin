@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.pubsub.datasync
 
 /**
- * Whether a DataSync realtime Set event (`e=5`) is a first write ([CREATE]) or a change to an
+ * Whether a DataSync realtime Set event is a first write ([CREATE]) or a change to an
  * existing object ([UPDATE]).
  *
  * The backend never mislabels a first write as [UPDATE] or vice versa — the value is reliable.
