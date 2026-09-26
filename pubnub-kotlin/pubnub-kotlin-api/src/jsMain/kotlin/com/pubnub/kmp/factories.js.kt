@@ -43,8 +43,6 @@ actual fun createEventListener(
     onDataSync: (PubNub, PNDataSyncEventResult) -> Unit,
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
-    // onDataSync is accepted for signature parity with the expect; the JS target sources behavior from
-    // PubNubJs.ListenerParameters and does not emit DataSync (e=5) events.
     val listener = object : PubNubJs.ListenerParameters, EventListener {
         override val message: (PubNubJs.MessageEvent) -> Unit = { messageEvent ->
             onMessage(
@@ -220,6 +218,9 @@ actual fun createEventListener(
                     }
                 )
             )
+        }
+        override val dataSync = { event: PubNubJs.DataSyncEvent ->
+            onDataSync(pubnub, event.toDataSyncEventResult())
         }
     }
     return listener

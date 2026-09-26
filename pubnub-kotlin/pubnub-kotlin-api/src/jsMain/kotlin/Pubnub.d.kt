@@ -513,6 +513,28 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface RemoveMembershipEvent : BaseObjectsEvent
 
+    // Mirrors `Subscription.DataSyncData` from the npm `pubnub` typings. `data` is the wire object
+    // passed through as-is (for `delete` it is collapsed to `{id, deletedAt}`).
+    interface DataSyncMessage {
+        var version: String
+        var source: String
+        var type: String // "user" | "channel" | "entity" | "membership" | "relationship" (wire)
+        var className: String?
+        var classLevel: String? // "Global" | "SubKey"
+        var classVersion: Number?
+        var event: String // "create" | "update" | "delete"
+        var objectType: String // JS-derived kind; not used — Kotlin dispatches on wire `type` like the JVM
+        var data: Any?
+    }
+
+    // Mirrors `Subscription.DataSyncObject` from the npm `pubnub` typings.
+    interface DataSyncEvent {
+        var channel: String
+        var subscription: String?
+        var timetoken: String
+        var message: DataSyncMessage
+    }
+
     interface PublishParameters {
         var message: Any
         var channel: String
@@ -750,6 +772,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         val messageAction: ((messageActionEvent: MessageActionEvent) -> Unit)?
         val file: ((fileEvent: FileEvent) -> Unit)?
         val objects: ((objectEvent: BaseObjectsEvent) -> Unit)?
+        val dataSync: ((dataSyncEvent: DataSyncEvent) -> Unit)?
     }
 
     interface ReconnectParameters {

@@ -81,6 +81,7 @@ actual fun createEventListener(
             onMessageAction = { onMessageAction(pubnub, createMessageActionResult(it)) },
             onAppContext = { value -> createObjectEvent(value)?.let { res -> onObjects(pubnub, res) } },
             onFile = { onFile(pubnub, createFileEventResult(it)) }
+            // todo add dataSync once available
         ),
         onMessage = onMessage,
         onPresence = onPresence,
@@ -88,6 +89,7 @@ actual fun createEventListener(
         onMessageAction = onMessageAction,
         onObjects = onObjects,
         onFile = onFile
+        // todo add dataSync once available
     )
 }
 
