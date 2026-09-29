@@ -54,7 +54,6 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -270,8 +269,10 @@ expect interface PubNub {
 
     /**
      * The modern `grantToken`: mint a token from a single flat list of grants. Every grant carries its own resource
-     * type ([ChannelGrant], [ChannelGroupGrant], [UserGrant] or a [DataSyncGrantType] from [DataSyncGrant]), so a
-     * pub/sub-only customer, an App Context customer and a DataSync customer all use the same product-neutral method.
+     * type ([ChannelGrant], [ChannelGroupGrant] or a [DataSyncGrantType] from [DataSyncGrant]), so a pub/sub-only
+     * customer, an App Context customer and a DataSync customer all use the same product-neutral method. DataSync
+     * realtime subscribe is granted with [DataSyncGrant.subscribe] / [DataSyncGrant.subscribePattern], which return a
+     * [ChannelGrant] on the resolved ref-channel.
      *
      * ```kotlin
      * pubnub.grantToken(

@@ -3,8 +3,8 @@ package com.pubnub.api.integration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncSetEventType
@@ -58,19 +58,19 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
     private val classVersion = 1
 
     /**
-     * Mints a token (scoped to plain PubSub `read` on the given DataSync ref-channels) and hands back a
-     * PAM-only client authenticated with it. A realtime subscribe on a DataSync ref-channel is authorized by
-     * the ordinary channel-`read` PAM check — the backend only *publishes* the events; no DataSync-specific
-     * grant is consulted on the subscribe/receive path — so channel `read` on the exact ref-channel string is
-     * all the subscriber needs. `server` (secretKey) still performs every CRUD write.
+     * Mints a token carrying [grants] and hands back a PAM-only client authenticated with it. A realtime
+     * subscribe on a DataSync ref-channel is authorized by the ordinary channel-`read` PAM check — the backend
+     * only *publishes* the events; no DataSync-specific grant is consulted on the subscribe/receive path — so
+     * [DataSyncGrant.subscribe] / [DataSyncGrant.subscribePattern] (channel `read` on the resolved ref-channel)
+     * is all the subscriber needs. `server` (secretKey) still performs every CRUD write.
      */
-    private fun authorizedSubscriber(vararg refChannels: String): PubNub {
+    private fun authorizedSubscriber(vararg grants: TokenGrant): PubNub {
         val client = createAuthorizedClient()
         val token =
             server.grantToken(
                 ttl = 60,
                 authorizedUserId = client.configuration.userId,
-                grants = refChannels.map { ChannelGrant.name(it, read = true) },
+                grants = grants.toList(),
             ).sync().token
         client.setToken(token)
         return client
@@ -106,7 +106,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         var deleteLeaf: PNDeleteDataSyncUserEventMessage? = null
 
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
-        val client = authorizedSubscriber(userId)
+        val client = authorizedSubscriber(DataSyncGrant.subscribe(userId))
 
         val subscription = client.dataSyncUser(userId).subscription()
         subscription.addListener(
@@ -234,7 +234,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         var deleteLeaf: PNDeleteDataSyncChannelEventMessage? = null
 
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
-        val client = authorizedSubscriber(channelId)
+        val client = authorizedSubscriber(DataSyncGrant.subscribe(channelId))
         val subscription = client.dataSyncChannel(channelId).subscription()
         subscription.addListener(
             object : EventListener {
@@ -359,7 +359,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         var deleteLeaf: PNDeleteDataSyncEntityEventMessage? = null
 
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
-        val client = authorizedSubscriber(entityId)
+        val client = authorizedSubscriber(DataSyncGrant.subscribe(entityId))
         val subscription = client.dataSyncEntity(entityId).subscription()
         subscription.addListener(
             object : EventListener {
@@ -506,7 +506,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         server.dataSync.createUser(classVersion = classVersion, userId = userId, payload = mapOf("name" to "User-$run")).sync()
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
         // A membership is published to both endpoint refs; subscribe to the Channel endpoint to hear it.
-        val client = authorizedSubscriber(channelId)
+        val client = authorizedSubscriber(DataSyncGrant.subscribe(channelId))
         try {
             val subscription = client.dataSyncChannel(channelId).subscription()
             subscription.addListener(
@@ -665,7 +665,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         ).sync()
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
         // A relationship is published to both endpoint refs; subscribe to entity A's ref to hear it.
-        val client = authorizedSubscriber(entityAId)
+        val client = authorizedSubscriber(DataSyncGrant.subscribe(entityAId))
         try {
             val subscription = client.dataSyncEntity(entityAId).subscription()
             subscription.addListener(
@@ -856,32 +856,50 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
     fun adminProjectionSubscriptionUnderTokenCarriesAdminOnlyField() {
         // Same admin-projection guarantee as `adminProjectionSubscriptionCarriesAdminOnlyField`, but the
         // subscriber is a PAM-only client that has NO secretKey — it authenticates purely with a token minted
-        // by `server`. A realtime subscribe over PubSub still needs a plain channel `read` grant on the
-        // resolved `__admin__{id}` ref-channel; the DataSync `entity(..., projection = "admin")` grant only
-        // carries the projection lens, not the pub/sub read bit (they are separate concerns). So the token
-        // must carry both. `server` (secretKey) does the CRUD write, since a `__default__` token cannot write
-        // the admin-only `email`.
+        // by `server`. `DataSyncGrant.subscribe(id, "admin")` grants the pub/sub `read` on the resolved
+        // `__admin__{id}` ref-channel, which is what authorizes the realtime subscribe. The paired
+        // `DataSyncGrant.entity(..., projection = "admin")` is the documented "read through and subscribe to the
+        // same projection" setup: it sets the REST read lens and is NOT needed to receive events (see
+        // `adminProjectionSubscribeGrantAloneReceivesAdminOnlyField`), so the REST read below is what exercises
+        // it. `server` (secretKey) does the CRUD write, since a `__default__` token cannot write the admin-only
+        // `email`.
         val entityId = "entity-proj-token-" + randomValue()
-        val adminChannel = "__admin__$entityId"
-        val client = createAuthorizedClient()
-        val authorizedUserId = client.configuration.userId
+        val client =
+            authorizedSubscriber(
+                DataSyncGrant.subscribe(entityId, projection = "admin"),
+                DataSyncGrant.entity(entityId, get = true, projection = "admin"),
+            )
 
-        val token =
-            server.grantToken(
-                ttl = 60,
-                authorizedUserId = authorizedUserId,
-                grants =
-                    listOf(
-                        ChannelGrant.name(adminChannel, read = true),
-                        DataSyncGrant.entity(entityId, get = true, projection = "admin"),
-                    ),
-            ).sync().token
-        client.setToken(token)
+        assertAdminCreateReceived(client, entityId) {
+            val fetched = client.dataSync.getEntity(entityId).sync()
+            assertEquals("alice@example.com", fetched.data.payload?.get("email")) // REST read through "admin"
+        }
+    }
+
+    @Test
+    fun adminProjectionSubscribeGrantAloneReceivesAdminOnlyField() {
+        // The token carries ONLY `DataSyncGrant.subscribe(id, "admin")` — no DataSync entity grant at all. The
+        // realtime subscribe is a plain pub/sub read of `__admin__{id}`, and the admin projection is baked into
+        // what the backend publishes on that channel, so the event still carries the admin-only `email`.
+        val entityId = "entity-proj-sub-only-" + randomValue()
+        val client = authorizedSubscriber(DataSyncGrant.subscribe(entityId, projection = "admin"))
+
+        assertAdminCreateReceived(client, entityId)
+    }
+
+    @Test
+    fun subscribePatternGrantReceivesDefaultProjectionEvents() {
+        // Verifies that PAM honours the `^` anchor in channel patterns: `subscribePattern("<prefix>-.*")` is
+        // granted as `^(?:<prefix>-.*)`. If this test fails (no event under a token that should match), PAM does
+        // not accept the anchored form and the anchoring in `DataSyncNamespace.refChannelPattern` must be
+        // revisited. Counterpart: `subscribePatternGrantDoesNotCoverProjectionMirror`.
+        val prefix = "entity-pat-" + randomValue()
+        val entityId = "$prefix-1"
+        val client = authorizedSubscriber(DataSyncGrant.subscribePattern("$prefix-.*"))
 
         val sawCreate = CountDownLatch(1)
         var createLeaf: PNSetDataSyncEntityEventMessage? = null
-
-        val subscription = client.dataSyncEntity(entityId).subscription("admin")
+        val subscription = client.dataSyncEntity(entityId).subscription()
         subscription.onDataSync = { result ->
             val msg = result.extractedMessage
             if (msg is PNSetDataSyncEntityEventMessage && msg.event == PNDataSyncSetEventType.CREATE) {
@@ -901,12 +919,113 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             ).sync()
 
             assertTrue(
+                "Expected a create entity event under a subscribePattern token",
+                sawCreate.await(15, TimeUnit.SECONDS),
+            )
+            assertEquals(entityId, createLeaf!!.data.id)
+            assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
+            assertNull("default projection must not expose the admin-only email", createLeaf!!.data.payload?.get("email"))
+        } finally {
+            client.unsubscribeAll()
+            client.destroy()
+            try {
+                server.dataSync.removeEntity(entityId).sync()
+            } catch (ignored: Exception) {
+            }
+        }
+    }
+
+    @Test
+    fun subscribePatternGrantDoesNotCoverProjectionMirror() {
+        // Verifies that PAM honours the `^` anchor in channel patterns: the default-projection grant
+        // `^(?:<prefix>-.*)` must NOT match the admin mirror `__admin__<prefix>-1`. An unanchored
+        // `<prefix>-.*` would match it, leaking admin-only fields to a default-projection token. Together with
+        // `subscribePatternGrantReceivesDefaultProjectionEvents` this pins the anchoring behaviour;
+        val prefix = "entity-pat-deny-" + randomValue()
+        val entityId = "$prefix-1"
+        val client = authorizedSubscriber(DataSyncGrant.subscribePattern("$prefix-.*"))
+
+        val denied = CountDownLatch(1)
+        var deniedStatus: PNStatus? = null
+        client.addListener(
+            object : StatusListener {
+                override fun status(pubnub: PubNub, status: PNStatus) {
+                    if (status.category == PNStatusCategory.PNConnectionError) {
+                        deniedStatus = status
+                        denied.countDown()
+                    }
+                }
+            },
+        )
+
+        try {
+            client.dataSyncEntity(entityId).subscription("admin").subscribe()
+
+            assertTrue(
+                "Expected the admin-mirror subscribe to be rejected under a default-projection pattern token",
+                denied.await(15, TimeUnit.SECONDS),
+            )
+            assertEquals(403, deniedStatus!!.exception?.statusCode)
+        } finally {
+            client.unsubscribeAll()
+            client.destroy()
+        }
+    }
+
+    @Test
+    fun subscribePatternWithProjectionReceivesAdminOnlyField() {
+        // `subscribePattern("<prefix>-.*", "admin")` is granted as `^__admin__(?:<prefix>-.*)`, which covers the
+        // admin mirror `__admin__<prefix>-1`. The `entityPattern(..., projection = "admin")` grant sets the REST
+        // read lens for the same ids (the usual pairing); the realtime event carries the admin-only `email`.
+        val prefix = "entity-pat-proj-" + randomValue()
+        val entityId = "$prefix-1"
+        val client =
+            authorizedSubscriber(
+                DataSyncGrant.subscribePattern("$prefix-.*", projection = "admin"),
+                DataSyncGrant.entityPattern("$prefix-.*", get = true, projection = "admin"),
+            )
+
+        assertAdminCreateReceived(client, entityId)
+    }
+
+    /**
+     * Subscribes [client] to the `admin` projection of [entityId], has `server` create it as a `TestUser`
+     * carrying the admin-only `email`, and asserts the realtime CREATE carries it. Runs [afterEvent] (while the
+     * client and entity still exist), then tears down the client and the entity.
+     */
+    private fun assertAdminCreateReceived(client: PubNub, entityId: String, afterEvent: () -> Unit = {}) {
+        val sawCreate = CountDownLatch(1)
+        var createLeaf: PNSetDataSyncEntityEventMessage? = null
+
+        val subscription = client.dataSyncEntity(entityId).subscription("admin")
+        subscription.onDataSync = { result ->
+            val msg = result.extractedMessage
+            if (msg is PNSetDataSyncEntityEventMessage && msg.event == PNDataSyncSetEventType.CREATE) {
+                createLeaf = msg
+                sawCreate.countDown()
+            }
+        }
+
+        try {
+            subscribeAndAwaitConnect(client, subscription)
+
+            server.dataSync.createEntity(
+                className = "TestUser",
+                classVersion = classVersion,
+                entityId = entityId,
+                status = "active",
+                payload = mapOf("username" to "Alice", "email" to "alice@example.com"),
+            ).sync()
+
+            assertTrue(
                 "Expected a create entity event on the admin projection under a PAM token",
                 sawCreate.await(15, TimeUnit.SECONDS),
             )
             assertEquals(entityId, createLeaf!!.data.id)
             assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
             assertEquals("alice@example.com", createLeaf!!.data.payload?.get("email"))
+
+            afterEvent()
         } finally {
             client.unsubscribeAll()
             client.destroy()

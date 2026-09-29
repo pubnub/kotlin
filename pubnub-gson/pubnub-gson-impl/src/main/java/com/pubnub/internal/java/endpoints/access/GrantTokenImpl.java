@@ -13,7 +13,6 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
-import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
@@ -106,8 +105,6 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                 list.add(toInternal((ChannelGrant) grant));
             } else if (grant instanceof ChannelGroupGrant) {
                 list.add(toInternal((ChannelGroupGrant) grant));
-            } else if (grant instanceof UserGrant) {
-                list.add(toInternal((UserGrant) grant));
             } else if (grant instanceof DataSyncGrant) {
                 list.add(toInternal((DataSyncGrant) grant));
             } else {
@@ -152,8 +149,7 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isCreate(),
                     grant.isGet(),
                     grant.isJoin(),
-                    grant.isUpdate(),
-                    grant.getProjection()
+                    grant.isUpdate()
             );
         } else {
             return com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant.Companion.name(
@@ -165,8 +161,7 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isCreate(),
                     grant.isGet(),
                     grant.isJoin(),
-                    grant.isUpdate(),
-                    grant.getProjection()
+                    grant.isUpdate()
             );
         }
     }
@@ -205,6 +200,14 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                 return pattern
                         ? factory.membershipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
                         : factory.membership(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
+            case DataSyncGrant.DATASYNC_CHANNELS:
+                return pattern
+                        ? factory.channelPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
+                        : factory.channel(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
+            case DataSyncGrant.DATASYNC_USERS:
+                return pattern
+                        ? factory.userPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
+                        : factory.user(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
             default:
                 throw new IllegalArgumentException("unknown datasync namespace: " + grant.getNamespace());
         }
@@ -224,28 +227,6 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isGet(),
                     grant.isUpdate(),
                     grant.isDelete()
-            );
-        }
-    }
-
-    static com.pubnub.api.models.consumer.access_manager.v3.UserGrant toInternal(UserGrant grant) {
-        if (grant.isPatternResource()) {
-            return com.pubnub.api.models.consumer.access_manager.v3.UserGrant.Companion.pattern(
-                    grant.getId(),
-                    grant.isGet(),
-                    grant.isUpdate(),
-                    grant.isDelete(),
-                    grant.isCreate(),
-                    grant.getProjection()
-            );
-        } else {
-            return com.pubnub.api.models.consumer.access_manager.v3.UserGrant.Companion.id(
-                    grant.getId(),
-                    grant.isGet(),
-                    grant.isUpdate(),
-                    grant.isDelete(),
-                    grant.isCreate(),
-                    grant.getProjection()
             );
         }
     }

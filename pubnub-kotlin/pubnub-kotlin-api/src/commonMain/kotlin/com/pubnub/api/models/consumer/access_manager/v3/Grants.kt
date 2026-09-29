@@ -40,7 +40,6 @@ internal data class PNChannelResourceGrant(
     override val get: Boolean = false,
     override val join: Boolean = false,
     override val update: Boolean = false,
-    override val projection: String? = null,
 ) : PNResourceGrant(), ChannelGrant {
     constructor(spacePermissions: SpacePermissions) : this(
         id = spacePermissions.id,
@@ -76,7 +75,6 @@ internal data class PNChannelPatternGrant(
     override val get: Boolean = false,
     override val join: Boolean = false,
     override val update: Boolean = false,
-    override val projection: String? = null,
 ) : PNPatternGrant(), ChannelGrant {
     constructor(spacePermissions: SpacePermissions) : this(
         id = spacePermissions.id,
@@ -156,27 +154,11 @@ internal data class PNUserPatternPermissionsGrant(
     override val delete: Boolean = false,
 ) : PNPatternGrant(), UserPermissions
 
-internal data class PNUserResourceGrant(
-    override val id: String,
-    override val get: Boolean = false,
-    override val update: Boolean = false,
-    override val delete: Boolean = false,
-    override val create: Boolean = false,
-    override val projection: String? = null,
-) : PNResourceGrant(), UserGrant
-
-internal data class PNUserPatternGrant(
-    override val id: String,
-    override val get: Boolean = false,
-    override val update: Boolean = false,
-    override val delete: Boolean = false,
-    override val create: Boolean = false,
-    override val projection: String? = null,
-) : PNPatternGrant(), UserGrant
-
 /**
- * The three DataSync PAM v3 resource namespaces. They appear literally as keys under the
- * token's `res`/`pat` blocks, as siblings of `chan`/`grp`/`uuid`.
+ * DataSync PAM v3 namespaces and helpers.
+ *
+ * [ENTITIES], [RELATIONSHIPS] and [MEMBERSHIPS] appear literally as keys under the token's `res`/`pat` blocks, as
+ * siblings of `chan`/`grp`/`uuid`. [USERS_PROJECTION] and [CHANNELS_PROJECTION] do **not**: see their docs.
  */
 object DataSyncNamespace {
     const val ENTITIES = "datasync:entities"
@@ -184,18 +166,17 @@ object DataSyncNamespace {
     const val MEMBERSHIPS = "datasync:memberships"
 
     /**
-     * Projection-key namespace for User instances. This prefix is used **only** to build the `pn-projections`
-     * composite key (`datasync:users:<id>`) for a [UserGrant] that carries a projection — it is **not** a permission
-     * bucket. A user's permission continues to live in the plain `users` bucket (server team, 2026-08-07). Note this
-     * contradicts the ADR examples, which key every projection under `datasync:entities:<id>`; the server team
-     * confirmed `datasync:users` / `datasync:channels` for User/Channel instances.
+     * Namespace of [DataSyncGrant.user] / [DataSyncGrant.userPattern]. It is **not** a permission bucket: the
+     * permission bits of those grants go into the plain `users` bucket, and this string appears only as the prefix of
+     * the `pn-projections` composite key (`datasync:users:<id>`) (server team, 2026-08-07). Note this contradicts the
+     * ADR examples, which key every projection under `datasync:entities:<id>`.
      */
     const val USERS_PROJECTION = "datasync:users"
 
     /**
-     * Projection-key namespace for Channel instances. Projection-key-only, like [USERS_PROJECTION]: a channel's
-     * permission stays in the plain `channels` bucket; only its `pn-projections` composite key uses the
-     * `datasync:channels:<id>` prefix (server team, 2026-08-07).
+     * Namespace of [DataSyncGrant.channel] / [DataSyncGrant.channelPattern]. Like [USERS_PROJECTION] it is **not** a
+     * permission bucket: the permission bits go into the plain `channels` bucket (shared with pub/sub and App Context
+     * v2), and this string appears only as the prefix of the `pn-projections` composite key (`datasync:channels:<id>`).
      */
     const val CHANNELS_PROJECTION = "datasync:channels"
 
@@ -207,6 +188,79 @@ object DataSyncNamespace {
 
     /** The `meta` key the DataSync backend reads per-resource projection assignments from. */
     const val PN_PROJECTIONS = "pn-projections"
+
+    /**
+     * Resolves the ref-channel a DataSync resource publishes its realtime events on. `null`, `"default"` and
+     * [DEFAULT_PROJECTION] resolve to the bare [id]; any other projection resolves to `__{projection}__{id}`.
+     *
+     * The rule has no resource type, so it applies to any ref (entity, user, channel).
+     *
+     * @throws IllegalArgumentException if [projection] is blank.
+     */
+    fun refChannel(
+        id: String,
+        projection: String? = null,
+    ): String =
+        if (isDefaultProjection(projection)) {
+            id
+        } else {
+            "__${projection}__$id"
+        }
+
+    /**
+     * Builds the PAM channel regex matching the ref-channels of every DataSync resource whose id matches [pattern],
+     * as seen through [projection] (resolved like [refChannel]).
+     *
+     * The result is always anchored at the start and wraps [pattern] in a non-capturing group, so a top-level `|`
+     * stays behind the prefix:
+     * - `("capy-.*", null)` → `^(?:capy-.*)`. The anchor keeps it from also matching the projection mirrors
+     *   (`__admin__capy-1`), which PAM's unanchored matching of a bare `capy-.*` would.
+     * - `("capy-.*", "admin")` → `^__admin__(?:capy-.*)`.
+     * - A leading `^` in [pattern] is moved to the front: `("^capy-.*", "admin")` → `^__admin__(?:capy-.*)`.
+     *
+     * Only the leading `^` is moved. A pattern that anchors several alternatives (`^a|^b`) is not rewritten, so its
+     * inner `^` can never match after the prefix: write it as `a|b` instead.
+     *
+     * [pattern] must be a valid regex on its own. Otherwise the wrapper could be closed early: `a)|.*` would become
+     * `^(?:a)|.*`, whose unanchored `.*` branch matches every channel, projection mirrors included.
+     *
+     * @throws IllegalArgumentException if [pattern] is blank or only `^` (either would match every channel), if it is
+     * not a valid regex, or if [projection] is blank.
+     */
+    fun refChannelPattern(
+        pattern: String,
+        projection: String? = null,
+    ): String {
+        val body = pattern.removePrefix("^")
+        require(body.isNotBlank()) { "pattern must not be blank" }
+        require(runCatching { Regex(body) }.isSuccess) { "pattern must be a valid regex: $pattern" }
+        val prefix = if (isDefaultProjection(projection)) {
+            ""
+        } else {
+            escapeRegex("__${projection}__")
+        }
+        return "^$prefix(?:$body)"
+    }
+
+    private fun isDefaultProjection(projection: String?): Boolean {
+        if (projection == null) {
+            return true
+        }
+        require(projection.isNotBlank()) { "projection must not be blank" }
+        return projection == "default" || projection == DEFAULT_PROJECTION
+    }
+
+    private fun escapeRegex(literal: String): String =
+        buildString {
+            literal.forEach { c ->
+                if (c in REGEX_META_CHARS) {
+                    append('\\')
+                }
+                append(c)
+            }
+        }
+
+    private const val REGEX_META_CHARS = "\\^$.|?*+()[]{}"
 }
 
 /**

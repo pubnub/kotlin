@@ -62,7 +62,6 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -781,7 +780,6 @@ open class PubNubImpl(
             channels = channels,
             channelGroups = channelGroups,
             uuids = uuids,
-            users = emptyList(),
             dataSync = emptyList(),
         )
     }
@@ -794,17 +792,15 @@ open class PubNubImpl(
     ): GrantToken {
         val channels = ArrayList<ChannelGrant>()
         val channelGroups = ArrayList<ChannelGroupGrant>()
-        val users = ArrayList<UserGrant>()
         val dataSync = ArrayList<DataSyncGrantType>()
         grants.forEach { grant ->
             when (grant) {
                 is DataSyncGrantType -> dataSync.add(grant)
                 is ChannelGrant -> channels.add(grant)
                 is ChannelGroupGrant -> channelGroups.add(grant)
-                is UserGrant -> users.add(grant)
                 else -> throw PubNubException(
                     "Unsupported TokenGrant type: ${grant::class.simpleName}. " +
-                        "Use ChannelGrant, ChannelGroupGrant, UserGrant or a DataSyncGrant factory.",
+                        "Use ChannelGrant, ChannelGroupGrant or a DataSyncGrant factory.",
                 )
             }
         }
@@ -816,7 +812,6 @@ open class PubNubImpl(
             channels = channels,
             channelGroups = channelGroups,
             uuids = emptyList(),
-            users = users,
             dataSync = dataSync,
         )
     }

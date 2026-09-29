@@ -1,28 +1,17 @@
 package com.pubnub.api.java.models.consumer.access_manager.v3;
 
+/**
+ * A PAM v3 grant on a <b>channel</b>: pub/sub ({@code read}/{@code write}), presence, channel management
+ * ({@code manage}) and App Context v2 channel metadata / members / memberships ({@code get}/{@code update}/
+ * {@code delete}/{@code join}).
+ *
+ * <p>For DataSync channels use {@link DataSyncGrant#channel(String)} (REST CRUD, optional projection) and
+ * {@link DataSyncGrant#subscribe(String)} (realtime subscribe on the resolved ref-channel) instead.
+ */
 public class ChannelGrant extends PNResource<ChannelGrant> implements TokenGrant {
-
-    private String projection;
 
     private ChannelGrant() {
 
-    }
-
-    /**
-     * The DataSync projection the token holder looks through when reading this channel's DataSync schema, or
-     * {@code null} for the implicit {@code __default__} projection. It applies only to DataSync reads through this
-     * channel's schema and is ignored by the pub/sub / Presence / App Context bits carried on the same grant.
-     */
-    public String getProjection() {
-        return projection;
-    }
-
-    /**
-     * Sets the DataSync projection the token holder looks through for this channel. Fluent; returns {@code this}.
-     */
-    public ChannelGrant projection(String projection) {
-        this.projection = projection;
-        return this;
     }
 
     public static ChannelGrant name(String channelName) {
@@ -40,11 +29,6 @@ public class ChannelGrant extends PNResource<ChannelGrant> implements TokenGrant
     @Override
     public ChannelGrant read() {
         return super.read();
-    }
-
-    @Override
-    public ChannelGrant create() {
-        return super.create();
     }
 
     @Override

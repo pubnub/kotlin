@@ -3,7 +3,7 @@ package com.pubnub.api.integration.datasync;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
-import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncSortField;
@@ -105,8 +105,8 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
      * Same create/get/getAll/patch/update/delete flow as {@link #createGetAllPatchUpdateAndDeleteChannel()}, but the
      * "server" (the only party holding the secretKey) mints scoped PAM tokens and the client authenticates with them.
      *
-     * <p>O1 PAM probe: a DataSync Channel authorizes under the classic {@code channels} PAM resource type, so the
-     * grant is a {@link ChannelGrant} keyed by the channelId (NOT a DataSyncGrant).
+     * <p>PAM check: a DataSync Channel is authorized by the plain {@code channels} bucket;
+     * {@link DataSyncGrant#channel(String)} keyed by the channelId writes its bits there.
      */
     @Test
     public void createGetAndDeleteUpdatePatchGetAllChannelsWithServerGrantedToken() throws PubNubException {
@@ -118,7 +118,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
         payload.put("email", "alice@example.com");
 
         // create -> token scoped to `create` on this specific channel id
-        grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).create());
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).create());
         final PNDataSyncCreateChannelResult createResult = client.dataSync().createChannel(classVersion)
                 .channelId(channelId)
                 .status("active")
@@ -133,13 +133,13 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertEquals("Alice", createResult.getData().getPayload().get("username"));
 
             // get -> token scoped to `get` on this specific channel
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).get());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).get());
             final PNDataSyncGetChannelResult getResult = client.dataSync().getChannel(channelId).sync();
             assertEquals(channelId, getResult.getData().getId());
             assertEquals("active", getResult.getData().getStatus());
 
             // getAll -> token scoped to `get` on this specific channel id
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).get());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).get());
             final PNDataSyncGetChannelsResult getAllResult = client.dataSync().getChannels()
                     .limit(100)
                     .sync();
@@ -147,7 +147,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertTrue(getAllResult.getData().stream().anyMatch(c -> channelId.equals(c.getId())));
 
             // patch -> token scoped to `update` on this specific channel (PATCH maps to `update`)
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).update());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).update());
             final List<PNJsonPatchOperation> operations = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
@@ -156,7 +156,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertEquals("inactive", patchResult.getData().getStatus());
 
             // update -> token scoped to `update` on this specific channel (PUT maps to `update`)
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).update());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).update());
             final Map<String, Object> newPayload = new HashMap<>();
             newPayload.put("username", "Bob");
             newPayload.put("email", "bob@example.com");
@@ -168,11 +168,11 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertEquals("Bob", updateResult.getData().getPayload().get("username"));
 
             // delete -> token scoped to `delete` on this specific channel
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).delete());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).delete());
             client.dataSync().removeChannel(channelId).sync();
 
             // get after delete -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).get());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).get());
             try {
                 client.dataSync().getChannel(channelId).sync();
                 fail("Expected a 404 after deleting the channel");

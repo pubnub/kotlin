@@ -9,7 +9,6 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
-import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScope;
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjections;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
@@ -133,8 +132,8 @@ public class GrantTokenIT extends BaseIntegrationTest {
     @Test
     public void grantToken_withAllGrantTypes_viaFlatList() throws PubNubException {
         // given — mint a single token through the new flat `.grants(...)` overload carrying EVERY grant type that
-        // implements TokenGrant: ChannelGrant, ChannelGroupGrant, UserGrant and DataSyncGrant. Each grant type is
-        // exercised in both exact and pattern form, and DataSync covers all three namespaces (entities,
+        // implements TokenGrant: ChannelGrant, ChannelGroupGrant and DataSyncGrant. Each grant type is
+        // exercised in both exact and pattern form, and DataSync covers every namespace (channels, users, entities,
         // relationships, memberships).
         PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
@@ -142,6 +141,8 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final String channelPattern = "channel.*";
         final String channelGroupId = "channelGroup";
         final String channelGroupPattern = "channelGroup.*";
+        final String dataSyncChannelId = "dsChannel01";
+        final String dataSyncChannelPattern = "dsChannel.*";
         final String userId = "user01";
         final String userPattern = "user.*";
         final String entityId = "capy-001";
@@ -160,8 +161,11 @@ public class GrantTokenIT extends BaseIntegrationTest {
                         ChannelGrant.pattern(channelPattern).read(),
                         ChannelGroupGrant.id(channelGroupId).read().manage(),
                         ChannelGroupGrant.pattern(channelGroupPattern).read(),
-                        UserGrant.id(userId).get().update(),
-                        UserGrant.pattern(userPattern).get().create(),
+                        DataSyncGrant.channel(dataSyncChannelId).get().update(),
+                        DataSyncGrant.channelPattern(dataSyncChannelPattern).get().create(),
+                        DataSyncGrant.user(userId).get().update(),
+                        DataSyncGrant.userPattern(userPattern).get().create(),
+                        DataSyncGrant.subscribe(userId,"adminProjection"),
                         DataSyncGrant.entity(entityId).get().update(),
                         DataSyncGrant.entityPattern(entityPattern).get(),
                         DataSyncGrant.relationship(relationshipId).get(),
@@ -185,7 +189,13 @@ public class GrantTokenIT extends BaseIntegrationTest {
         assertEquals(new PNToken.PNResourcePermissions(true, false, false, false, false, false, false, false),
                 pnToken.getPatterns().getChannelGroups().get(channelGroupPattern));
 
-        // UserGrant permissions land in the plain `users` bucket (not `uuids`).
+        // DataSyncGrant.channel permissions land in the plain `channels` bucket.
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, true, false, false),
+                pnToken.getResources().getChannels().get(dataSyncChannelId));
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, true),
+                pnToken.getPatterns().getChannels().get(dataSyncChannelPattern));
+
+        // DataSyncGrant.user permissions land in the plain `users` bucket (not `uuids`).
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, true, false, false),
                 pnToken.getResources().getUsers().get(userId));
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, true),

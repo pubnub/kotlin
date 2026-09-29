@@ -10,7 +10,6 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 
 data class GrantTokenRequestBody(
     val ttl: Int,
@@ -46,16 +45,19 @@ data class GrantTokenRequestBody(
             uuids: List<UUIDGrant>,
             meta: Any?,
             uuid: String?,
-            users: List<UserGrant> = emptyList(),
             dataSync: List<DataSyncGrantType> = emptyList(),
         ): GrantTokenRequestBody {
+            // DataSync channels/users have no bucket of their own: their bits OR-merge into the plain
+            // `channels`/`users` buckets. Their namespace only prefixes the `pn-projections` key.
+            val allChannels: List<PNGrant> = channels + dataSync.filter { it.namespace == DataSyncNamespace.CHANNELS_PROJECTION }
+            val users = dataSync.filter { it.namespace == DataSyncNamespace.USERS_PROJECTION }
             val entities = dataSync.filter { it.namespace == DataSyncNamespace.ENTITIES }
             val relationships = dataSync.filter { it.namespace == DataSyncNamespace.RELATIONSHIPS }
             val memberships = dataSync.filter { it.namespace == DataSyncNamespace.MEMBERSHIPS }
 
             val resources =
                 GrantTokenPermission(
-                    channels = getResources(channels),
+                    channels = getResources(allChannels),
                     groups = getResources(groups),
                     uuids = getResources(uuids),
                     users = getResources(users),
@@ -65,7 +67,7 @@ data class GrantTokenRequestBody(
                 )
             val patterns =
                 GrantTokenPermission(
-                    channels = getPatterns(channels),
+                    channels = getPatterns(allChannels),
                     groups = getPatterns(groups),
                     uuids = getPatterns(uuids),
                     users = getPatterns(users),
@@ -73,7 +75,7 @@ data class GrantTokenRequestBody(
                     datasyncRelationships = getPatterns(relationships),
                     datasyncMemberships = getPatterns(memberships),
                 )
-            val metaWithProjections = mergeProjectionsIntoMeta(meta, channels, users, dataSync)
+            val metaWithProjections = mergeProjectionsIntoMeta(meta, dataSync)
             val permissions = GrantTokenPermissions(resources, patterns, metaWithProjections, uuid)
             return GrantTokenRequestBody(ttl, permissions)
         }
@@ -81,14 +83,11 @@ data class GrantTokenRequestBody(
         /**
          * Fold any per-grant projection into the token [meta] as a `pn-projections` block.
          *
-         * A projection can come from three grant types, each with its own composite-key namespace:
-         * - [DataSyncGrantType] → `"${grant.namespace}:${grant.id}"` (`datasync:entities`/`relationships`/`memberships`);
-         * - [UserGrant] with a projection → `"${DataSyncNamespace.USERS_PROJECTION}:${grant.id}"` (`datasync:users:<id>`);
-         * - [ChannelGrant] with a projection → `"${DataSyncNamespace.CHANNELS_PROJECTION}:${grant.id}"`
-         *   (`datasync:channels:<id>`).
+         * Only [DataSyncGrantType] carries a projection, keyed `"${grant.namespace}:${grant.id}"`
+         * (`datasync:entities`/`relationships`/`memberships`/`users`/`channels`).
          *
          * Note the User/Channel projection namespaces (`datasync:users`/`datasync:channels`) are projection-key-only:
-         * the *permissions* for those grants still land in the plain `users`/`channels` buckets. The id is passed
+         * the *permissions* for those grants land in the plain `users`/`channels` buckets. The id is passed
          * through verbatim (no separator normalization); pattern grants land under `pat`, exact grants under `res`. If
          * the caller already supplied a `pn-projections` entry inside their own [meta] map it is preserved and the
          * grant-derived entries are merged on top of it (last-wins on a colliding composite key). Returns the original
@@ -101,8 +100,6 @@ data class GrantTokenRequestBody(
         @Throws(PubNubException::class)
         private fun mergeProjectionsIntoMeta(
             meta: Any?,
-            channels: List<ChannelGrant>,
-            users: List<UserGrant>,
             dataSync: List<DataSyncGrantType>,
         ): Any {
             // Each entry pairs a composite key with its projection; pattern grants route to `pat`, the rest to `res`.
@@ -111,16 +108,6 @@ data class GrantTokenRequestBody(
             val entries = ArrayList<ProjectionEntry>()
             dataSync.forEach { grant ->
                 grant.projection?.let { entries.add(ProjectionEntry("${grant.namespace}:${grant.id}", it, grant is PNPatternGrant)) }
-            }
-            users.forEach { grant ->
-                grant.projection?.let {
-                    entries.add(ProjectionEntry("${DataSyncNamespace.USERS_PROJECTION}:${grant.id}", it, grant is PNPatternGrant))
-                }
-            }
-            channels.forEach { grant ->
-                grant.projection?.let {
-                    entries.add(ProjectionEntry("${DataSyncNamespace.CHANNELS_PROJECTION}:${grant.id}", it, grant is PNPatternGrant))
-                }
             }
             if (entries.isEmpty()) {
                 return meta ?: emptyMap<Any, Any>()

@@ -1,5 +1,6 @@
 package com.pubnub.internal.v2.entities
 
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.v2.entities.DataSyncChannel
 import com.pubnub.api.v2.entities.DataSyncEntity
 import com.pubnub.api.v2.entities.DataSyncUser
@@ -8,21 +9,11 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
 /**
- * Resolves a DataSync ref [id] + [projection] to the channel name events for it are published on.
- *
- * The canonical server base-projection name is `__default__`; `"default"` is accepted as a
- * convenience alias. Both collapse to the bare ref [id]. Any other projection resolves to
- * `__{projection}__{id}`. A blank projection is rejected. This is the single source of truth for the rule
- * (the gson-impl handles delegate here).
+ * Resolves a DataSync ref [id] + [projection] to the channel name events for it are published on. Delegates to
+ * [DataSyncNamespace.refChannel], the single source of truth for the rule, shared with
+ * [com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.subscribe] (the gson-impl handles delegate here).
  */
-internal fun resolveDataSyncChannel(id: String, projection: String): String {
-    require(projection.isNotBlank()) { "projection must not be blank" }
-    return if (projection == "default" || projection == "__default__") {
-        id
-    } else {
-        "__${projection}__$id"
-    }
-}
+internal fun resolveDataSyncChannel(id: String, projection: String): String = DataSyncNamespace.refChannel(id, projection)
 
 private fun PubNubImpl.dataSyncSubscription(channelName: ChannelName, options: SubscriptionOptions): SubscriptionImpl {
     val channels = setOf(channelName)

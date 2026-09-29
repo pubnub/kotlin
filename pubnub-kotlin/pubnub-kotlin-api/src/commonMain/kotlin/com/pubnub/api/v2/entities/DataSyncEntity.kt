@@ -16,11 +16,19 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
  * the same ref also delivers these events. The handle additionally resolves projection channels.
  *
  * **PAM:** because subscribing is a plain PubSub read of the ref-channel, an authorized client needs a
- * channel `read` grant on the resolved ref-channel name — `ChannelGrant.name(id, read = true)` for the
- * default projection, `ChannelGrant.name("__{projection}__{id}", read = true)` for a non-default one. This
- * is separate from the DataSync CRUD permission on the entity *record*
- * ([com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.entity]): the record grant does not
- * authorize the subscribe, and the channel `read` grant does not authorize record CRUD.
+ * channel `read` grant on the resolved ref-channel name. Use [com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.subscribe]
+ * (`subscribe(id)` for the default projection, `subscribe(id, projection)` for a non-default one) or
+ * [com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.subscribePattern] for many refs. This is separate from the DataSync
+ * CRUD permission on the entity *record* ([com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.entity]): the record grant does not
+ * authorize the subscribe, and the subscribe grant does not authorize record CRUD.
+ *
+ * The two `projection` parameters differ: on `entity(...)` it sets the REST read view (`meta.pn-projections`); on
+ * `subscribe(...)` it only selects the ref-channel name (`__{projection}__{id}`) and adds nothing to the meta.
+ * To read through and subscribe to a projection, grant both:
+ * ```kotlin
+ * DataSyncGrant.entity("capy-001", get = true, projection = "admin")
+ * DataSyncGrant.subscribe("capy-001", projection = "admin")
+ * ```
  *
  * Use [com.pubnub.api.PubNub.dataSyncEntity] to create instances.
  */
@@ -39,7 +47,7 @@ interface DataSyncEntity : Subscribable {
      * Returns a [Subscription] to this entity's events for the given [projection].
      *
      * `"default"` / `"__default__"` resolve to the base ref channel (`id`); any other value resolves to
-     * `__{projection}__{id}`. A blank projection is rejected. `"__default__"` is the canonical server
+     * `__{projection}__{id}`. A blank projection is rejected (throws `IllegalArgumentException`). `"__default__"` is the canonical server
      * projection name; `"default"` is accepted as a convenience alias.
      */
     fun subscription(projection: String, options: SubscriptionOptions = com.pubnub.api.v2.subscriptions.EmptyOptions): Subscription

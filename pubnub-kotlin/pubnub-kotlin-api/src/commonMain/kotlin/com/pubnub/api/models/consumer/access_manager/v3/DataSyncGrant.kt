@@ -4,33 +4,58 @@ package com.pubnub.api.models.consumer.access_manager.v3
  * Factory for DataSync (App Context v4) PAM v3 resource grants, passed in the `grants` list of
  * [com.pubnub.api.PubNub.grantToken].
  *
- * DataSync introduces three resource namespaces — `datasync:entities`, `datasync:relationships` and
- * `datasync:memberships` (the keys emitted into the token's `res`/`pat` maps) — each of which can be granted on an
- * exact resource id or on a regex pattern. Only the four DataSync-relevant permission flags are exposed: `get`,
- * `create`, `update` and `delete`.
+ * Every DataSync resource is granted here, on an exact resource id or on a regex pattern:
+ * - [entity] / [entityPattern] → `datasync:entities` bucket;
+ * - [relationship] / [relationshipPattern] → `datasync:relationships` bucket;
+ * - [membership] / [membershipPattern] → `datasync:memberships` bucket;
+ * - [channel] / [channelPattern] → the plain `channels` bucket;
+ * - [user] / [userPattern] → the plain `users` bucket.
+ *
+ * Only the four DataSync-relevant permission flags are exposed: `get`, `create`, `update` and `delete`.
+ *
+ * **Shared `channels` bucket:** DataSync channels share the `channels` bucket with pub/sub and App Context v2, so
+ * `channel(id, update = true)` also authorizes App Context v2 `setChannelMetadata` for the same id (and `get` /
+ * `delete` likewise). Grants on the same id are OR-merged, so combining a [ChannelGrant] and a [channel] grant on one
+ * id is safe: the token carries the union of both.
  *
  * Each grant can also carry an optional `projection`: when this client uses the token to access this resource, they
  * see it through this projection. A projection is a named, filtered view of a resource's fields, defined in the
- * entity/relationship class schema under `projections`. When set, the SDK emits the corresponding `pn-projections`
- * entry into the token meta automatically. Omit it (or pass `null`) to use the implicit `__default__` projection.
+ * class schema under `projections`. When set, the SDK emits the corresponding `pn-projections` entry into the token
+ * meta automatically. Omit it (or pass `null`) to use the implicit `__default__` projection.
  *
  * These grants authorize DataSync **REST CRUD** (`get`/`create`/`update`/`delete`) on the resource record only.
  * They do **not** authorize subscribing to realtime events: a realtime subscribe is a plain PubSub read of the
- * resource's ref-channel, so it needs a channel `read` grant
- * ([ChannelGrant.name] with `read = true`) on the resolved ref-channel — `id` for the default projection,
- * `__{projection}__{id}` otherwise. See the `subscription(...)` methods on the DataSync entity handles
- * ([com.pubnub.api.v2.entities.DataSyncEntity], [com.pubnub.api.v2.entities.DataSyncChannel],
- * [com.pubnub.api.v2.entities.DataSyncUser]).
+ * resource's ref-channel. Use [subscribe] / [subscribePattern] for that. They resolve the ref-channel names for you.
+ * See the
+ * `subscription(...)` methods on the DataSync handles ([com.pubnub.api.v2.entities.DataSyncEntity],
+ * [com.pubnub.api.v2.entities.DataSyncChannel], [com.pubnub.api.v2.entities.DataSyncUser]).
  *
  * ```kotlin
  * pubnub.grantToken(
  *     ttl = 60,
  *     authorizedUserId = UserId("pam-debug-admin"),
  *     grants = listOf(
+ *         // entities
  *         DataSyncGrant.entity("capy-001", get = true, update = true, projection = "admin"),
- *         DataSyncGrant.entityPattern(".*", get = true),
+ *         DataSyncGrant.entityPattern("capy-.*", get = true),
+ *         // relationships
  *         DataSyncGrant.relationship("user.A:channel.X", get = true, projection = "admin"),
- *         DataSyncGrant.membership("user-123:channel-X", get = true),
+ *         DataSyncGrant.relationshipPattern("user\\.A:.*", get = true),
+ *         // memberships
+ *         DataSyncGrant.membership("user-123:channel-X", get = true, delete = true),
+ *         DataSyncGrant.membershipPattern("user-123:.*", get = true),
+ *         // channels (plain `channels` bucket)
+ *         DataSyncGrant.channel("chat-1", get = true, update = true, projection = "admin"),
+ *         DataSyncGrant.channelPattern("chat-.*", get = true),
+ *         // users (plain `users` bucket)
+ *         DataSyncGrant.user("user-123", get = true, update = true),
+ *         DataSyncGrant.userPattern("user-.*", get = true, create = true),
+ *         // realtime subscribe (pub/sub `read` on the resolved ref-channel)
+ *         DataSyncGrant.subscribe("capy-001"),                     // read on "capy-001"
+ *         DataSyncGrant.subscribe("chat-1", projection = "admin"), // read on "__admin__chat-1"
+ *         // default projection publishes on the bare id, so no prefix; `^` keeps it off the `__admin__capy-…` mirrors
+ *         DataSyncGrant.subscribePattern("capy-.*"),                       // read on "^(?:capy-.*)"
+ *         DataSyncGrant.subscribePattern("chat-.*", projection = "admin"), // read on "^__admin__(?:chat-.*)"
  *     ),
  * ).sync().token
  * ```
@@ -131,4 +156,119 @@ object DataSyncGrant {
         projection: String? = null,
     ): DataSyncGrantType =
         PNDataSyncPatternGrant(DataSyncNamespace.MEMBERSHIPS, pattern, get, create, update, delete, projection)
+
+    // channels
+
+    /**
+     * Grants DataSync REST CRUD on a channel record. The permission bits land in the plain `channels` bucket, shared
+     * with pub/sub and App Context v2: `update = true` also authorizes App Context v2 `setChannelMetadata` for the
+     * same id.
+     *
+     * @param projection the single projection the token holder looks *through* for this channel's REST reads, or
+     * `null` for the implicit `__default__` projection. Emitted into the token meta as the `pn-projections` entry
+     * `datasync:channels:<name>`. It does not affect realtime subscribe (see [subscribe]).
+     */
+    fun channel(
+        name: String,
+        get: Boolean = false,
+        create: Boolean = false,
+        update: Boolean = false,
+        delete: Boolean = false,
+        projection: String? = null,
+    ): DataSyncGrantType =
+        PNDataSyncResourceGrant(DataSyncNamespace.CHANNELS_PROJECTION, name, get, create, update, delete, projection)
+
+    /**
+     * Pattern (regex) variant of [channel].
+     */
+    fun channelPattern(
+        pattern: String,
+        get: Boolean = false,
+        create: Boolean = false,
+        update: Boolean = false,
+        delete: Boolean = false,
+        projection: String? = null,
+    ): DataSyncGrantType =
+        PNDataSyncPatternGrant(DataSyncNamespace.CHANNELS_PROJECTION, pattern, get, create, update, delete, projection)
+
+    // users
+
+    /**
+     * Grants DataSync REST CRUD on a user record. The permission bits land in the plain `users` bucket.
+     *
+     * @param projection the single projection the token holder looks *through* for this user's REST reads, or `null`
+     * for the implicit `__default__` projection. Emitted into the token meta as the `pn-projections` entry
+     * `datasync:users:<name>`. It does not affect realtime subscribe (see [subscribe]).
+     */
+    fun user(
+        name: String,
+        get: Boolean = false,
+        create: Boolean = false,
+        update: Boolean = false,
+        delete: Boolean = false,
+        projection: String? = null,
+    ): DataSyncGrantType =
+        PNDataSyncResourceGrant(DataSyncNamespace.USERS_PROJECTION, name, get, create, update, delete, projection)
+
+    /**
+     * Pattern (regex) variant of [user].
+     */
+    fun userPattern(
+        pattern: String,
+        get: Boolean = false,
+        create: Boolean = false,
+        update: Boolean = false,
+        delete: Boolean = false,
+        projection: String? = null,
+    ): DataSyncGrantType =
+        PNDataSyncPatternGrant(DataSyncNamespace.USERS_PROJECTION, pattern, get, create, update, delete, projection)
+
+    // realtime subscribe
+
+    /**
+     * Grants a realtime subscribe on the ref-channel of a DataSync entity, user or channel: a pub/sub `read` on
+     * [DataSyncNamespace.refChannel] (`id` for the default projection, `__{projection}__{id}` otherwise).
+     * Relationships and memberships have no ref-channel of their own: their events are published to both endpoint
+     * refs.
+     *
+     * The [projection] here only **selects the ref-channel name**. It adds nothing to the token meta. That differs
+     * from the `projection` of [entity] / [channel] / [user], which sets the REST read view in `meta.pn-projections`.
+     * To both read through and subscribe to a projection, grant the pair:
+     * ```kotlin
+     * DataSyncGrant.channel("chat-1", get = true, projection = "admin") // REST reads through "admin"
+     * DataSyncGrant.subscribe("chat-1", projection = "admin")           // read on "__admin__chat-1"
+     * ```
+     *
+     * Returns a plain [ChannelGrant] (not a [DataSyncGrantType], which has no `read` bit), so it also works on
+     * targets whose `grantToken` supports only channel grants.
+     *
+     * @param projection `null` (or `"default"` / `"__default__"`) for the default projection.
+     * @throws IllegalArgumentException if [projection] is blank.
+     */
+    fun subscribe(
+        id: String,
+        projection: String? = null,
+    ): ChannelGrant = ChannelGrant.name(DataSyncNamespace.refChannel(id, projection), read = true)
+
+    /**
+     * Pattern variant of [subscribe]: a pub/sub `read` on every ref-channel whose id matches the regex [pattern], as
+     * seen through [projection]. The channel regex is built by [DataSyncNamespace.refChannelPattern]: it is anchored
+     * at the start and wraps [pattern] in a non-capturing group, e.g. `subscribePattern("capy-.*")` →
+     * `^(?:capy-.*)` and `subscribePattern("capy-.*", "admin")` → `^__admin__(?:capy-.*)`.
+     *
+     * The anchor matters: a hand-written `ChannelGrant.pattern("capy-.*", read = true)` also matches the projection
+     * mirrors (`__admin__capy-1`), because PAM does not anchor patterns. A leading `^` in [pattern] is moved in front
+     * of the prefix. A pattern anchoring several alternatives (`^a|^b`) is not rewritten and won't match under a
+     * projection; write it as `a|b`. [pattern] must be a valid regex on its own, so an unbalanced `)` can't close the
+     * wrapping group and escape the anchor.
+     *
+     * Like [subscribe], [projection] only selects the channel names and adds nothing to the token meta.
+     *
+     * @throws IllegalArgumentException if [pattern] is blank, only `^` or not a valid regex, or if [projection] is
+     * blank.
+     */
+    fun subscribePattern(
+        pattern: String,
+        projection: String? = null,
+    ): ChannelGrant = ChannelGrant.pattern(DataSyncNamespace.refChannelPattern(pattern, projection), read = true)
 }

@@ -537,9 +537,10 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         grants: List<TokenGrant>
     ): GrantToken {
         // The underlying `pubnub` npm package exposes only the `channels`/`groups`/`uuids` buckets and no DataSync.
-        // Only ChannelGrant/ChannelGroupGrant can be forwarded here. Rather than silently drop a UserGrant or a
-        // DataSyncGrantType — which would mint a *weaker token than requested*, a security footgun — throw so the
-        // caller learns the JS target can't honor the request. (The Kotlin/JVM and Java/GSON SDKs carry every bucket.)
+        // Only ChannelGrant/ChannelGroupGrant can be forwarded here (DataSyncGrant.subscribe/subscribePattern return a
+        // ChannelGrant, so they work). Rather than silently drop a DataSyncGrantType — which would mint a *weaker token
+        // than requested*, a security footgun — throw so the caller learns the JS target can't honor the request.
+        // (The Kotlin/JVM and Java/GSON SDKs carry every bucket.)
         val channels = ArrayList<ChannelGrant>()
         val channelGroups = ArrayList<ChannelGroupGrant>()
         grants.forEach { grant ->

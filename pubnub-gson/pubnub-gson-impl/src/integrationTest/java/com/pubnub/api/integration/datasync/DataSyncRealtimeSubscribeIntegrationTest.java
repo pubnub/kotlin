@@ -5,7 +5,6 @@ import com.pubnub.api.UserId;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.java.PubNub;
-import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
@@ -90,17 +89,18 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
     }
 
     /**
-     * Mints a token (scoped to plain PubSub {@code read} on the given DataSync ref-channels) and hands back a
+     * Mints a token (scoped to plain PubSub {@code read} on the default-projection ref-channels of the given DataSync
+     * ids, via {@link DataSyncGrant#subscribe(String)}) and hands back a
      * PAM-only client authenticated with it. A realtime subscribe on a DataSync ref-channel is authorized by
      * the ordinary channel-{@code read} PAM check — the backend only <i>publishes</i> the events; no
      * DataSync-specific grant is consulted on the subscribe/receive path — so channel {@code read} on the exact
      * ref-channel string is all the subscriber needs. {@code server} (secretKey) still performs every CRUD write.
      */
-    private PubNub authorizedSubscriber(String... refChannels) throws PubNubException {
+    private PubNub authorizedSubscriber(String... refIds) throws PubNubException {
         final PubNub client = getAuthorizedClient();
         final List<TokenGrant> grants = new ArrayList<>();
-        for (String refChannel : refChannels) {
-            grants.add(ChannelGrant.name(refChannel).read());
+        for (String refId : refIds) {
+            grants.add(DataSyncGrant.subscribe(refId));
         }
         final String token = server.grantToken(60)
                 .authorizedUserId(client.getConfiguration().getUserId())
@@ -691,14 +691,13 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         // must carry both. `server` (secretKey) does the CRUD write, since a `__default__` token cannot write
         // the admin-only `email`.
         final String entityId = "entity-proj-token-" + RandomStringUtils.random(8, "abcdefgh");
-        final String adminChannel = "__admin__" + entityId;
         final PubNub client = getAuthorizedClient();
         final UserId authorizedUserId = client.getConfiguration().getUserId();
 
         final String token = server.grantToken(60)
                 .authorizedUserId(authorizedUserId)
                 .grants(Arrays.asList(
-                        ChannelGrant.name(adminChannel).read(),
+                        DataSyncGrant.subscribe(entityId, "admin"),
                         DataSyncGrant.entity(entityId).get().projection("admin")
                 ))
                 .sync()

@@ -55,7 +55,6 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -1131,9 +1130,11 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     /**
      * The modern `grantToken`: mint a token from a single flat list of grants for PubNub Access Manager (PAM).
      *
-     * Every grant carries its own resource type ([ChannelGrant], [ChannelGroupGrant], [UserGrant] or a
-     * [DataSyncGrantType] from [DataSyncGrant]), so a pub/sub-only customer, an App Context customer and a DataSync
-     * customer all use the same product-neutral method. Each grant type exposes only the permissions relevant to it.
+     * Every grant carries its own resource type ([ChannelGrant], [ChannelGroupGrant] or a [DataSyncGrantType] from
+     * [DataSyncGrant]), so a pub/sub-only customer, an App Context customer and a DataSync customer all use the same
+     * product-neutral method. Each grant type exposes only the permissions relevant to it. DataSync realtime subscribe
+     * is granted with [DataSyncGrant.subscribe] / [DataSyncGrant.subscribePattern], which return a [ChannelGrant] on the
+     * resolved ref-channel.
      *
      * The legacy `uuids` bucket is intentionally not reachable here — [UUIDGrant] does not implement [TokenGrant].
      * Use the legacy overload for `uuids`.

@@ -10,7 +10,6 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.CommonUtils
 import com.pubnub.test.Keys
@@ -212,8 +211,8 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
     @Test
     fun grantToken_withAllGrantTypes_viaFlatList() {
         // given — mint a single token through the new flat `grants` overload carrying EVERY grant type that
-        // implements TokenGrant: ChannelGrant, ChannelGroupGrant, UserGrant and DataSyncGrant. Each grant type is
-        // exercised in both exact and pattern form, and DataSync covers all three namespaces (entities,
+        // implements TokenGrant: ChannelGrant, ChannelGroupGrant and DataSyncGrant. Each grant type is
+        // exercised in both exact and pattern form, and DataSync covers every namespace (channels, users, entities,
         // relationships, memberships).
         val pubNubUnderTest = server
         val expectedTTL = 1337
@@ -221,6 +220,8 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val channelPattern = "channel.*"
         val channelGroupId = "channelGroup"
         val channelGroupPattern = "channelGroup.*"
+        val dataSyncChannelId = "dsChannel01"
+        val dataSyncChannelPattern = "dsChannel.*"
         val userId = "user01"
         val userPattern = "user.*"
         val entityId = "capy-001"
@@ -241,8 +242,11 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                         ChannelGrant.pattern(pattern = channelPattern, read = true),
                         ChannelGroupGrant.id(id = channelGroupId, read = true, manage = true),
                         ChannelGroupGrant.pattern(pattern = channelGroupPattern, read = true),
-                        UserGrant.id(id = userId, get = true, update = true),
-                        UserGrant.pattern(pattern = userPattern, get = true, create = true),
+                        DataSyncGrant.subscribe(userId, projection = "admin"),
+                        DataSyncGrant.channel(dataSyncChannelId, get = true, update = true),
+                        DataSyncGrant.channelPattern(dataSyncChannelPattern, get = true, create = true),
+                        DataSyncGrant.user(name = userId, get = true, update = true),
+                        DataSyncGrant.userPattern(pattern = userPattern, get = true, create = true),
                         DataSyncGrant.entity(entityId, get = true, update = true),
                         DataSyncGrant.entityPattern(entityPattern, get = true),
                         DataSyncGrant.relationship(relationshipId, get = true),
@@ -262,7 +266,11 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         assertEquals(PNResourcePermissions(read = true, manage = true), resources.channelGroups[channelGroupId])
         assertEquals(PNResourcePermissions(read = true), patterns.channelGroups[channelGroupPattern])
 
-        // UserGrant permissions land in the plain `users` bucket (not `uuids`).
+        // DataSyncGrant.channel permissions land in the plain `channels` bucket.
+        assertEquals(PNResourcePermissions(get = true, update = true), resources.channels[dataSyncChannelId])
+        assertEquals(PNResourcePermissions(get = true, create = true), patterns.channels[dataSyncChannelPattern])
+
+        // DataSyncGrant.user permissions land in the plain `users` bucket (not `uuids`).
         assertEquals(PNResourcePermissions(get = true, update = true), resources.users[userId])
         assertEquals(PNResourcePermissions(get = true, create = true), patterns.users[userPattern])
 

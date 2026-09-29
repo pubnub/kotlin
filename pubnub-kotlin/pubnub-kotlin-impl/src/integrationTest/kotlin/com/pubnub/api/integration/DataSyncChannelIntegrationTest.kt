@@ -4,7 +4,8 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
-import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncCreateChannelResult
@@ -122,13 +123,13 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     @Test
     fun createGetAndDeleteUpdatePatchGetAllChannelsWithServerGrantedToken() {
         // A client on the same keyset as `server` but without the secretKey, so it can only authenticate via setToken.
-        // O1 PAM probe: DataSync /channels authorizes via the classic `ChannelGrant` (channels resource type),
-        // NOT DataSyncGrant.
+        // PAM check: DataSync /channels is authorized by the plain `channels` bucket; DataSyncGrant.channel writes its
+        // bits there.
         val client = createAuthorizedClient()
         val authorizedUUID = client.configuration.userId.value
 
         // create -> token scoped to `create` on this specific channel id
-        grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = channelId, create = true))
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, create = true))
 
         val payload = TestChannelPayload(
             username = "Alice",
@@ -151,20 +152,20 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             assertEquals(payload.email, createResult.data.payload?.get("email"))
 
             // get -> token scoped to `get` on this specific channel
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = channelId, get = true))
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, get = true))
             val getResult = client.dataSync.getChannel(channelId).sync()
             assertEquals(channelId, getResult.data.id)
             assertEquals("active", getResult.data.status)
 
             // getAll -> token scoped to `get` on this specific channel id
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = channelId, get = true))
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, get = true))
             val getAllResult = client.dataSync.getChannels(
                 limit = 100,
             ).sync()
             assertTrue(getAllResult.data.any { it.id == channelId })
 
             // patch -> token scoped to `update` on this specific channel (PATCH maps to `update`)
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = channelId, update = true))
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, update = true))
             val patchResult = client.dataSync.updateChannel(
                 channelId = channelId,
                 operations = listOf(
@@ -174,7 +175,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             assertEquals("inactive", patchResult.data.status)
 
             // update -> token scoped to `update` on this specific channel (PUT maps to `update`)
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = channelId, update = true))
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, update = true))
             val newPayload = TestChannelPayload(username = "Bob", email = "bob@example.com")
             val updateResult = client.dataSync.setChannel(
                 channelId = channelId,
@@ -186,11 +187,11 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             assertEquals("Bob", updateResult.data.payload?.get("username"))
 
             // delete -> token scoped to `delete` on this specific channel
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = channelId, delete = true))
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, delete = true))
             client.dataSync.removeChannel(channelId).sync()
 
             // get after delete -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = channelId, get = true))
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, get = true))
             try {
                 client.dataSync.getChannel(channelId).sync()
                 fail("Expected a 404 after deleting the channel")
@@ -208,7 +209,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
         }
     }
 
-    private fun grantAndAuthenticate(client: PubNub, authorizedUUID: String, vararg grants: ChannelGrant) {
+    private fun grantAndAuthenticate(client: PubNub, authorizedUUID: String, vararg grants: TokenGrant) {
         val token = server.grantToken(
             ttl = 60,
             authorizedUserId = UserId(authorizedUUID),
@@ -241,7 +242,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
         val authorizedUUID = client.configuration.userId.value
 
         // Grant the client `get` on ONLY one of the two channels.
-        grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(name = grantedChannelId, get = true))
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = grantedChannelId, get = true))
 
         try {
             // getChannels with a token that only grants `get` on `grantedChannelId`.
