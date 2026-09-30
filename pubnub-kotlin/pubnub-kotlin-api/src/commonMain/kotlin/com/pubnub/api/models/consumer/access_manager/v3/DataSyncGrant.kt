@@ -18,10 +18,19 @@ package com.pubnub.api.models.consumer.access_manager.v3
  * `delete` likewise). Grants on the same id are OR-merged, so combining a [ChannelGrant] and a [channel] grant on one
  * id is safe: the token carries the union of both.
  *
- * Each grant can also carry an optional `projection`: when this client uses the token to access this resource, they
- * see it through this projection. A projection is a named, filtered view of a resource's fields, defined in the
- * class schema under `projections`. When set, the SDK emits the corresponding `pn-projections` entry into the token
- * meta automatically. Omit it (or pass `null`) to use the implicit `__default__` projection.
+ * [entity], [relationship], [channel] and [user] grants (and their pattern variants) can also carry an optional
+ * `projection`: when this client uses the token to access this resource, they see it through this projection. A
+ * projection is a named, filtered view of a resource's fields, defined in the class schema under `projections`. When
+ * set, the SDK emits the corresponding `pn-projections` entry into the token meta automatically. Omit it (or pass
+ * `null`) to use the implicit `__default__` projection. Don't write `pn-projections` into the token meta yourself:
+ * `grantToken` rejects a caller meta that contains it.
+ *
+ * Which projections a resource has depends on its class:
+ * - entities and relationships: the projections declared by their custom class;
+ * - channels and users: only `__default__` for the built-in `Channel` / `User` classes. A named projection only has
+ *   an effect for a custom Channel / User subclass that declares it;
+ * - memberships: always `__default__` (the built-in `Membership` class has no named projections), so [membership]
+ *   takes no `projection` parameter.
  *
  * These grants authorize DataSync **REST CRUD** (`get`/`create`/`update`/`delete`) on the resource record only.
  * They do **not** authorize subscribing to realtime events: a realtime subscribe is a plain PubSub read of the
@@ -128,9 +137,9 @@ object DataSyncGrant {
     // memberships
 
     /**
-     * @param projection the single projection the token holder looks *through* for this resource, or `null` for the
-     * implicit `__default__` projection. When set, the SDK emits the matching `pn-projections` entry into the token
-     * meta automatically. Pass [DataSyncNamespace.DEFAULT_PROJECTION] to write `__default__` out explicitly.
+     * Grants DataSync REST CRUD on a membership record. There is no `projection` parameter: memberships always use
+     * the built-in `Membership` class, which declares no named projections, so they are always read through
+     * `__default__`. For a custom membership-like class with projections, use a relationship class and [relationship].
      */
     fun membership(
         name: String,
@@ -138,14 +147,11 @@ object DataSyncGrant {
         create: Boolean = false,
         update: Boolean = false,
         delete: Boolean = false,
-        projection: String? = null,
     ): DataSyncGrantType =
-        PNDataSyncResourceGrant(DataSyncNamespace.MEMBERSHIPS, name, get, create, update, delete, projection)
+        PNDataSyncResourceGrant(DataSyncNamespace.MEMBERSHIPS, name, get, create, update, delete, projection = null)
 
     /**
-     * @param projection the single projection the token holder looks *through* for this resource, or `null` for the
-     * implicit `__default__` projection. When set, the SDK emits the matching `pn-projections` entry into the token
-     * meta automatically. Pass [DataSyncNamespace.DEFAULT_PROJECTION] to write `__default__` out explicitly.
+     * Pattern (regex) variant of [membership].
      */
     fun membershipPattern(
         pattern: String,
@@ -153,9 +159,8 @@ object DataSyncGrant {
         create: Boolean = false,
         update: Boolean = false,
         delete: Boolean = false,
-        projection: String? = null,
     ): DataSyncGrantType =
-        PNDataSyncPatternGrant(DataSyncNamespace.MEMBERSHIPS, pattern, get, create, update, delete, projection)
+        PNDataSyncPatternGrant(DataSyncNamespace.MEMBERSHIPS, pattern, get, create, update, delete, projection = null)
 
     // channels
 
@@ -166,7 +171,9 @@ object DataSyncGrant {
      *
      * @param projection the single projection the token holder looks *through* for this channel's REST reads, or
      * `null` for the implicit `__default__` projection. Emitted into the token meta as the `pn-projections` entry
-     * `datasync:channels:<name>`. It does not affect realtime subscribe (see [subscribe]).
+     * `datasync:channels:<name>`. It does not affect realtime subscribe (see [subscribe]). A named projection only
+     * has an effect for channels of a custom Channel subclass that declares it: the built-in `Channel` class exposes
+     * its fields through `__default__` only.
      */
     fun channel(
         name: String,
@@ -198,7 +205,9 @@ object DataSyncGrant {
      *
      * @param projection the single projection the token holder looks *through* for this user's REST reads, or `null`
      * for the implicit `__default__` projection. Emitted into the token meta as the `pn-projections` entry
-     * `datasync:users:<name>`. It does not affect realtime subscribe (see [subscribe]).
+     * `datasync:users:<name>`. It does not affect realtime subscribe (see [subscribe]). A named projection only has
+     * an effect for users of a custom User subclass that declares it: the built-in `User` class exposes its fields
+     * through `__default__` only.
      */
     fun user(
         name: String,

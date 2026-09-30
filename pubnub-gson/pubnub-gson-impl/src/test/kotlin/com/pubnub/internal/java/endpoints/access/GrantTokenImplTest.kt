@@ -249,4 +249,40 @@ class GrantTokenImplTest {
         assertEquals("^(?:chat-.*)", subscribePattern.id)
         assertTrue(subscribePattern.read && subscribePattern is PNPatternGrant)
     }
+
+    @Test
+    fun projectionOnMembershipGrantThrows() {
+        // memberships use the built-in Membership class, which has no named projections
+        assertThrows(IllegalStateException::class.java) { DataSyncGrant.membership("user-1:chat-1").projection("admin") }
+        assertThrows(IllegalStateException::class.java) { DataSyncGrant.membershipPattern("user-1:.*").projection("admin") }
+    }
+
+    @Test
+    fun membershipGrantConvertsWithoutProjection() {
+        objectUnderTest = GrantTokenImpl(pubNubCore)
+        objectUnderTest.ttl(ttl)
+            .grants(
+                listOf<TokenGrant>(
+                    DataSyncGrant.membership("user-1:chat-1").get().delete(),
+                    DataSyncGrant.membershipPattern("user-1:.*").get(),
+                ),
+            )
+        every {
+            pubNubCore.grantToken(ttl, any(), meta, capture(grantsCapture))
+        } returns grantTokenEndpoint
+
+        // when
+        objectUnderTest.createRemoteAction()
+
+        // then
+        val membership = grantsCapture.captured[0] as DataSyncGrantType
+        assertEquals(DataSyncNamespace.MEMBERSHIPS, membership.namespace)
+        assertTrue(membership.get && membership.delete)
+        assertEquals(null, membership.projection)
+
+        val membershipPattern = grantsCapture.captured[1] as DataSyncGrantType
+        assertEquals(DataSyncNamespace.MEMBERSHIPS, membershipPattern.namespace)
+        assertTrue(membershipPattern is PNPatternGrant)
+        assertEquals(null, membershipPattern.projection)
+    }
 }

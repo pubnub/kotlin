@@ -88,20 +88,28 @@ data class GrantTokenRequestBody(
          *
          * Note the User/Channel projection namespaces (`datasync:users`/`datasync:channels`) are projection-key-only:
          * the *permissions* for those grants land in the plain `users`/`channels` buckets. The id is passed
-         * through verbatim (no separator normalization); pattern grants land under `pat`, exact grants under `res`. If
-         * the caller already supplied a `pn-projections` entry inside their own [meta] map it is preserved and the
-         * grant-derived entries are merged on top of it (last-wins on a colliding composite key). Returns the original
-         * meta untouched when no grant carries a projection.
+         * through verbatim (no separator normalization); pattern grants land under `pat`, exact grants under `res`. The
+         * caller's other [meta] keys are kept next to the generated block. Returns the original meta untouched when no
+         * grant carries a projection.
          *
-         * @throws PubNubException if a grant carries a projection but [meta] is a non-null, non-map value. Projections
-         * must live inside a map-shaped meta, so the SDK cannot merge them into an arbitrary object without silently
-         * discarding it — pass `null` or a map (e.g. via `createCustomObject(mapOf(...))`) instead.
+         * @throws PubNubException if [meta] is a map containing `pn-projections` (whether or not any grant carries a
+         * projection): that key is owned by the SDK and is set only through the grants' `projection`. Also thrown if a
+         * grant carries a projection but [meta] is a non-null, non-map value. Projections must live inside a map-shaped
+         * meta, so the SDK cannot merge them into an arbitrary object without silently discarding it — pass `null` or
+         * a map (e.g. via `createCustomObject(mapOf(...))`) instead.
          */
         @Throws(PubNubException::class)
         private fun mergeProjectionsIntoMeta(
             meta: Any?,
             dataSync: List<DataSyncGrantType>,
         ): Any {
+            if (meta is Map<*, *> && meta.containsKey(DataSyncNamespace.PN_PROJECTIONS)) {
+                throw PubNubException(
+                    "`meta` must not contain `${DataSyncNamespace.PN_PROJECTIONS}`: set projections through the " +
+                        "`projection` of DataSyncGrant.entity/relationship/channel/user (and their pattern variants).",
+                )
+            }
+
             // Each entry pairs a composite key with its projection; pattern grants route to `pat`, the rest to `res`.
             data class ProjectionEntry(val key: String, val projection: String, val isPattern: Boolean)
 
@@ -147,37 +155,8 @@ data class GrantTokenRequestBody(
                 ?: return mapOf(DataSyncNamespace.PN_PROJECTIONS to generatedBlock)
 
             val merged = LinkedHashMap<String, Any?>(callerMeta)
-            val existing = callerMeta[DataSyncNamespace.PN_PROJECTIONS]
-            merged[DataSyncNamespace.PN_PROJECTIONS] = deepMergeProjectionBlocks(existing, generatedBlock)
+            merged[DataSyncNamespace.PN_PROJECTIONS] = generatedBlock
             return merged
-        }
-
-        /**
-         * Merge two `pn-projections` blocks (each `{ "res": {...}, "pat": {...} }`), with [generated] grant-derived
-         * entries overriding any colliding key in the caller's [existing] block.
-         */
-        private fun deepMergeProjectionBlocks(existing: Any?, generated: Any?): Any? {
-            @Suppress("UNCHECKED_CAST")
-            val existingBlock = existing as? Map<String, Any?> ?: return generated
-
-            @Suppress("UNCHECKED_CAST")
-            val generatedBlock = generated as? Map<String, Any?> ?: return existing
-
-            val result = LinkedHashMap<String, Any?>(existingBlock)
-            for (subKey in listOf("res", "pat")) {
-                @Suppress("UNCHECKED_CAST")
-                val existingSub = existingBlock[subKey] as? Map<String, Any?>
-
-                @Suppress("UNCHECKED_CAST")
-                val generatedSub = generatedBlock[subKey] as? Map<String, Any?> ?: continue
-                val mergedSub = LinkedHashMap<String, Any?>()
-                if (existingSub != null) {
-                    mergedSub.putAll(existingSub)
-                }
-                mergedSub.putAll(generatedSub)
-                result[subKey] = mergedSub
-            }
-            return result
         }
 
         // Duplicate ids are OR-merged (not last-wins): a caller may naturally append two grants for the same id from

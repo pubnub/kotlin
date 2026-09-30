@@ -93,6 +93,7 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNAbstractGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
@@ -508,6 +509,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>
     ): GrantToken {
+        requireNoPnProjectionsInMeta(meta)
         return GrantTokenImpl(
             jsPubNub,
             createJsObject {
@@ -536,6 +538,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         meta: CustomObject?,
         grants: List<TokenGrant>
     ): GrantToken {
+        requireNoPnProjectionsInMeta(meta)
         // The underlying `pubnub` npm package exposes only the `channels`/`groups`/`uuids` buckets and no DataSync.
         // Only ChannelGrant/ChannelGroupGrant can be forwarded here (DataSyncGrant.subscribe/subscribePattern return a
         // ChannelGrant, so they work). Rather than silently drop a DataSyncGrantType — which would mint a *weaker token
@@ -571,6 +574,17 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 }
             }
         )
+    }
+
+    // Same rule as the JVM GrantTokenRequestBody: `pn-projections` is owned by the SDK and set only through the
+    // grants' `projection`, never through caller meta.
+    private fun requireNoPnProjectionsInMeta(meta: CustomObject?) {
+        if (meta != null && meta.containsKey(DataSyncNamespace.PN_PROJECTIONS)) {
+            throw PubNubException(
+                "`meta` must not contain `${DataSyncNamespace.PN_PROJECTIONS}`: set projections through the " +
+                    "`projection` of DataSyncGrant.entity/relationship/channel/user (and their pattern variants)."
+            )
+        }
     }
 
     override fun revokeToken(token: String): RevokeToken {

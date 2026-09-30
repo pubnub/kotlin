@@ -101,20 +101,60 @@ class GrantTokenRequestBodyTest {
     }
 
     @Test
-    fun mergesGrantProjectionsWithCallerMeta() {
-        // given caller meta with unrelated fields AND a pre-existing pn-projections entry
+    fun throwsWhenCallerMetaContainsPnProjectionsAndGrantCarriesProjection() {
         val callerMeta =
             mapOf(
                 "custom" to "keep-me",
                 "pn-projections" to mapOf("res" to mapOf("datasync:entities:pre.existing" to "reader")),
             )
+
+        // when / then — pn-projections is owned by the SDK; the caller can't add to it through meta
+        val exception =
+            assertThrows(PubNubException::class.java) {
+                GrantTokenRequestBody.of(
+                    ttl = 60,
+                    channels = emptyList(),
+                    groups = emptyList(),
+                    uuids = emptyList(),
+                    meta = callerMeta,
+                    uuid = null,
+                    dataSync = listOf(DataSyncGrant.entity("user.A", get = true, projection = "admin")),
+                )
+            }
+        assertTrue(exception.errorMessage!!.contains("pn-projections"))
+    }
+
+    @Test
+    fun throwsWhenCallerMetaContainsPnProjectionsWithoutProjectionGrants() {
+        // regression: the check must fire even when no grant carries a projection (the early return used to pass
+        // the caller's pn-projections through untouched)
+        val callerMeta = mapOf("pn-projections" to mapOf("res" to mapOf("datasync:entities:e1" to "admin")))
+
+        val exception =
+            assertThrows(PubNubException::class.java) {
+                GrantTokenRequestBody.of(
+                    ttl = 60,
+                    channels = listOf(ChannelGrant.name("ch-1", read = true)),
+                    groups = emptyList(),
+                    uuids = emptyList(),
+                    meta = callerMeta,
+                    uuid = null,
+                    dataSync = emptyList(),
+                )
+            }
+        assertTrue(exception.errorMessage!!.contains("pn-projections"))
+    }
+
+    @Test
+    fun keepsCallerMetaAlongsideGeneratedProjections() {
+        // given caller meta with an unrelated field
         val body =
             GrantTokenRequestBody.of(
                 ttl = 60,
                 channels = emptyList(),
                 groups = emptyList(),
                 uuids = emptyList(),
-                meta = callerMeta,
+                meta = mapOf("custom" to "keep-me"),
                 uuid = null,
                 dataSync = listOf(DataSyncGrant.entity("user.A", get = true, projection = "admin")),
             )
@@ -124,9 +164,9 @@ class GrantTokenRequestBodyTest {
         val meta = json["permissions"].asJsonObject["meta"].asJsonObject
         val res = meta["pn-projections"].asJsonObject["res"].asJsonObject
 
-        // then — caller's unrelated field and pre-existing projection are preserved; grant entry is added
+        // then — caller's field is kept and the block holds only the grant entry
         assertEquals("keep-me", meta["custom"].asString)
-        assertEquals("reader", res["datasync:entities:pre.existing"].asString)
+        assertEquals(setOf("datasync:entities:user.A"), res.keySet())
         assertEquals("admin", res["datasync:entities:user.A"].asString)
     }
 

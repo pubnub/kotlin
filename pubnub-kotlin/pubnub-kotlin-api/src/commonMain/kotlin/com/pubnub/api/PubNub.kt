@@ -283,7 +283,8 @@ expect interface PubNub {
      *
      * @param ttl Time in minutes for which granted permissions are valid.
      * @param authorizedUserId Single userId which is authorized to use the token, or `null` for an unbound token.
-     * @param meta Additional metadata. Must be `null` or a map when any grant carries a projection.
+     * @param meta Additional metadata. Must be `null` or a map when any grant carries a projection. Must not contain
+     * `pn-projections`: the SDK builds that key from the grants' `projection`.
      * @param grants Flat list of grants; each grant's type selects its wire bucket.
      */
     fun grantToken(

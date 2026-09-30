@@ -1112,7 +1112,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * overload that takes `authorizedUserId`, `users` and `dataSync`.
      *
      * @param ttl Time in minutes for which granted permissions are valid.
-     * @param meta Additional metadata
+     * @param meta Additional metadata. Must not contain `pn-projections`.
      * @param authorizedUUID Single uuid which is authorized to use the token to make API requests to PubNub
      * @param channels List of all channel grants
      * @param channelGroups List of all channel group grants
@@ -1142,7 +1142,8 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param ttl Time in minutes for which granted permissions are valid.
      * @param authorizedUserId Single userId which is authorized to use the token to make API requests to PubNub.
      * Pass `null` to mint a token not bound to a specific authorized userId.
-     * @param meta Additional metadata. Must be `null` or a map when any grant carries a projection.
+     * @param meta Additional metadata. Must be `null` or a map when any grant carries a projection. Must not contain
+     * `pn-projections`: the SDK builds that key from the grants' `projection`.
      * @param grants Flat list of grants; each grant's type selects its wire bucket.
      */
     actual fun grantToken(

@@ -24,11 +24,21 @@ import java.util.regex.Pattern;
  * id (and {@code get}/{@code delete} likewise). Grants on the same id are OR-merged, so combining a
  * {@link ChannelGrant} and a {@code channel(...)} grant on one id is safe: the token carries the union of both.
  *
- * <p>Each grant can also carry an optional {@code projection}: when this client uses the token to access this
- * resource, they see it <em>through</em> this projection. A projection is a named, filtered view of a resource's
- * fields, defined in the class schema under {@code projections}. When set, the SDK emits the matching
- * {@code pn-projections} entry into the token meta automatically. Leave it unset to use the implicit
- * {@code __default__} projection.
+ * <p>{@code entity}, {@code relationship}, {@code channel} and {@code user} grants (and their pattern variants) can
+ * also carry an optional {@code projection}: when this client uses the token to access this resource, they see it
+ * <em>through</em> this projection. A projection is a named, filtered view of a resource's fields, defined in the
+ * class schema under {@code projections}. When set, the SDK emits the matching {@code pn-projections} entry into the
+ * token meta automatically. Leave it unset to use the implicit {@code __default__} projection. Don't write
+ * {@code pn-projections} into the token meta yourself: {@code grantToken} rejects a caller meta that contains it.
+ *
+ * <p>Which projections a resource has depends on its class:
+ * <ul>
+ *     <li>entities and relationships: the projections declared by their custom class;</li>
+ *     <li>channels and users: only {@code __default__} for the built-in {@code Channel} / {@code User} classes. A
+ *     named projection only has an effect for a custom Channel / User subclass that declares it;</li>
+ *     <li>memberships: always {@code __default__} (the built-in {@code Membership} class has no named projections),
+ *     so {@code projection(...)} on a {@link #membership(String)} grant throws.</li>
+ * </ul>
  *
  * <p>These grants authorize DataSync <b>REST CRUD</b> ({@code get}/{@code create}/{@code update}/{@code delete}) on
  * the resource record only. They do <b>not</b> authorize subscribing to realtime events: a realtime subscribe is a
@@ -102,8 +112,17 @@ public class DataSyncGrant extends PNDataSyncResource<DataSyncGrant> implements 
 
     /**
      * Sets the projection the token holder looks through for this resource. Fluent; returns {@code this}.
+     *
+     * @throws IllegalStateException on a {@link #membership(String)} / {@link #membershipPattern(String)} grant:
+     * memberships always use the built-in {@code Membership} class, which has no named projections. For a custom
+     * membership-like class with projections, use a relationship class and {@link #relationship(String)}.
      */
     public DataSyncGrant projection(String projection) {
+        if (DATASYNC_MEMBERSHIPS.equals(namespace)) {
+            throw new IllegalStateException(
+                    "Membership grants take no projection: the built-in Membership class has no named projections. "
+                            + "Use DataSyncGrant.relationship(...) for a custom relationship class with projections.");
+        }
         this.projection = projection;
         return this;
     }
@@ -135,12 +154,21 @@ public class DataSyncGrant extends PNDataSyncResource<DataSyncGrant> implements 
     }
 
     // memberships
+
+    /**
+     * Grants DataSync REST CRUD on a membership record. Memberships always use the built-in {@code Membership} class,
+     * which declares no named projections, so they are always read through {@code __default__} and
+     * {@link #projection(String)} throws on this grant.
+     */
     public static DataSyncGrant membership(String name) {
         DataSyncGrant grant = new DataSyncGrant(DATASYNC_MEMBERSHIPS);
         grant.resourceName = name;
         return grant;
     }
 
+    /**
+     * Pattern (regex) variant of {@link #membership(String)}.
+     */
     public static DataSyncGrant membershipPattern(String pattern) {
         DataSyncGrant grant = new DataSyncGrant(DATASYNC_MEMBERSHIPS);
         grant.resourcePattern = pattern;
@@ -154,6 +182,8 @@ public class DataSyncGrant extends PNDataSyncResource<DataSyncGrant> implements 
      * shared with pub/sub and App Context v2: {@code update()} also authorizes App Context v2
      * {@code setChannelMetadata} for the same id. A {@code projection(...)} is emitted into the token meta as
      * {@code datasync:channels:<name>}; it does not affect realtime subscribe (see {@link #subscribe(String, String)}).
+     * A named projection only has an effect for channels of a custom Channel subclass that declares it: the built-in
+     * {@code Channel} class exposes its fields through {@code __default__} only.
      */
     public static DataSyncGrant channel(String name) {
         DataSyncGrant grant = new DataSyncGrant(DATASYNC_CHANNELS);
@@ -175,7 +205,9 @@ public class DataSyncGrant extends PNDataSyncResource<DataSyncGrant> implements 
     /**
      * Grants DataSync REST CRUD on a user record. The permission bits land in the plain {@code users} bucket. A
      * {@code projection(...)} is emitted into the token meta as {@code datasync:users:<name>}; it does not affect
-     * realtime subscribe (see {@link #subscribe(String, String)}).
+     * realtime subscribe (see {@link #subscribe(String, String)}). A named projection only has an effect for users of
+     * a custom User subclass that declares it: the built-in {@code User} class exposes its fields through
+     * {@code __default__} only.
      */
     public static DataSyncGrant user(String name) {
         DataSyncGrant grant = new DataSyncGrant(DATASYNC_USERS);

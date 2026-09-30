@@ -16,10 +16,12 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -248,8 +250,9 @@ public class GrantTokenIT extends BaseIntegrationTest {
                         DataSyncGrant.entityPattern(entityPatternId).get().projection(defaultProjection),
                         DataSyncGrant.relationship(relationshipId).get().projection(adminProjection),
                         DataSyncGrant.relationshipPattern(relationshipPatternId).get().projection(defaultProjection),
-                        DataSyncGrant.membership(membershipId).get().projection(adminProjection),
-                        DataSyncGrant.membershipPattern(membershipPatternId).get().projection(defaultProjection)))
+                        // memberships take no projection, so they must not add a pn-projections entry
+                        DataSyncGrant.membership(membershipId).get(),
+                        DataSyncGrant.membershipPattern(membershipPatternId).get()))
                 .sync();
 
         // then — the pn-projections block must survive the round-trip and surface on the typed projections field.
@@ -261,12 +264,15 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNDataSyncProjectionScope typedRes = projections.getResources();
         assertEquals(adminProjection, typedRes.getEntities().get(entityId));
         assertEquals(adminProjection, typedRes.getRelationships().get(relationshipId)); // colon in id survives verbatim
-        assertEquals(adminProjection, typedRes.getMemberships().get(membershipId)); // colon in id survives verbatim
+        assertTrue(typedRes.getMemberships().isEmpty());
 
         final PNDataSyncProjectionScope typedPat = projections.getPatterns();
         assertEquals(defaultProjection, typedPat.getEntities().get(entityPatternId));
         assertEquals(defaultProjection, typedPat.getRelationships().get(relationshipPatternId));
-        assertEquals(defaultProjection, typedPat.getMemberships().get(membershipPatternId));
+        assertTrue(typedPat.getMemberships().isEmpty());
+        // the membership grants themselves still land in the token
+        assertTrue(pnToken.getResources().getDatasyncMemberships().containsKey(membershipId));
+        assertTrue(pnToken.getPatterns().getDatasyncMemberships().containsKey(membershipPatternId));
 
         // the raw block also remains available under meta (additive, non-breaking).
         final Map<String, Object> meta = (Map<String, Object>) pnToken.getMeta();
@@ -276,20 +282,19 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final Map<String, Object> res = (Map<String, Object>) rawProjections.get("res");
         assertEquals(adminProjection, res.get(entityKey));
         assertEquals(adminProjection, res.get(relationshipKey)); // colon in the relationship id survives verbatim
-        assertEquals(adminProjection, res.get(membershipKey)); // colon in the membership id survives verbatim
+        assertFalse(res.containsKey(membershipKey));
 
         final Map<String, Object> pat = (Map<String, Object>) rawProjections.get("pat");
         assertEquals(defaultProjection, pat.get(entityPatternKey));
         assertEquals(defaultProjection, pat.get(relationshipPatternKey));
-        assertEquals(defaultProjection, pat.get(membershipPatternKey));
+        assertFalse(pat.containsKey(membershipPatternKey));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void grantToken_mergesCallerSuppliedProjectionsIntoMeta() throws PubNubException {
-        // given — the caller supplies their own meta carrying both a plain value and a pn-projections block. The SDK
-        // must overlay the grant-derived projections onto that meta: the plain value survives, a caller projection for
-        // a key no grant carries survives verbatim, and a caller projection colliding with a grant loses to the grant.
+    public void grantToken_keepsCallerMetaAlongsideProjections() throws PubNubException {
+        // given — the caller supplies their own plain meta (a pn-projections key in it is rejected). The SDK must add
+        // the grant-derived pn-projections block next to it without dropping the caller's keys.
         PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
         final String adminProjection = "admin";
@@ -297,20 +302,8 @@ public class GrantTokenIT extends BaseIntegrationTest {
 
         final String entityKey = DataSyncGrant.DATASYNC_ENTITIES + ":" + entityId;
 
-        // a projection the caller injects directly into meta for a resource NO grant carries — it must survive verbatim.
-        final String callerOnlyKey = DataSyncGrant.DATASYNC_MEMBERSHIPS + ":user-123:channel-X";
-        final String callerOnlyProjection = "caller-only";
-        // a projection the caller sets for the SAME key a grant also generates — the grant-derived value must win.
-        final String callerColliding = "caller-should-lose";
-
-        final Map<String, Object> callerRes = new HashMap<>();
-        callerRes.put(callerOnlyKey, callerOnlyProjection);
-        callerRes.put(entityKey, callerColliding);
-        final Map<String, Object> callerProjections = new HashMap<>();
-        callerProjections.put("res", callerRes);
         final Map<String, Object> callerMeta = new HashMap<>();
         callerMeta.put("caller-key", "caller-value");
-        callerMeta.put("pn-projections", callerProjections);
 
         // when
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
@@ -327,19 +320,15 @@ public class GrantTokenIT extends BaseIntegrationTest {
         assertEquals(expectedTTL, pnToken.getTtl());
 
         final Map<String, Object> meta = (Map<String, Object>) pnToken.getMeta();
-        // caller-supplied plain meta must survive the merge alongside the generated pn-projections block
+        // caller-supplied plain meta must survive alongside the generated pn-projections block
         assertEquals("caller-value", meta.get("caller-key"));
 
         final Map<String, Object> projections = (Map<String, Object>) meta.get("pn-projections");
         final Map<String, Object> res = (Map<String, Object>) projections.get("res");
-        assertEquals(adminProjection, res.get(entityKey)); // grant-derived value wins over the caller's colliding entry
-        assertEquals(callerOnlyProjection, res.get(callerOnlyKey)); // caller projection for a key no grant carries survives
+        assertEquals(Collections.singletonMap(entityKey, adminProjection), res);
 
-        // the merged block also surfaces on the typed field, split by namespace with bare ids as keys.
-        final PNDataSyncProjectionScope typedRes = pnToken.getProjections().getResources();
-        assertEquals(adminProjection, typedRes.getEntities().get(entityId)); // grant wins over caller's colliding entry
-        // callerOnlyKey = "datasync:memberships:user-123:channel-X" -> membership bare id "user-123:channel-X"
-        assertEquals(callerOnlyProjection, typedRes.getMemberships().get("user-123:channel-X"));
+        // the block also surfaces on the typed field, split by namespace with bare ids as keys.
+        assertEquals(adminProjection, pnToken.getProjections().getResources().getEntities().get(entityId));
     }
 
 }

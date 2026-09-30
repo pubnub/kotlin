@@ -15,6 +15,7 @@ import com.pubnub.test.CommonUtils
 import com.pubnub.test.Keys
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -365,12 +366,9 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                             get = true,
                             projection = DataSyncNamespace.DEFAULT_PROJECTION,
                         ),
-                        DataSyncGrant.membership(membershipId, get = true, projection = adminProjection),
-                        DataSyncGrant.membershipPattern(
-                            membershipPatternId,
-                            get = true,
-                            projection = DataSyncNamespace.DEFAULT_PROJECTION,
-                        ),
+                        // memberships take no projection, so they must not add a pn-projections entry
+                        DataSyncGrant.membership(membershipId, get = true),
+                        DataSyncGrant.membershipPattern(membershipPatternId, get = true),
                         ChannelGrant.name(name = "anyChannel", read = true),
                     ),
             ).sync().token
@@ -384,10 +382,13 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val projections = parsed.projections!!
         assertEquals(adminProjection, projections.resources.entities[entityId])
         assertEquals(adminProjection, projections.resources.relationships[relationshipId]) // colon in id survives verbatim
-        assertEquals(adminProjection, projections.resources.memberships[membershipId]) // colon in id survives verbatim
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, projections.patterns.entities[entityPatternId])
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, projections.patterns.relationships[relationshipPatternId])
-        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, projections.patterns.memberships[membershipPatternId])
+        assertTrue(projections.resources.memberships.isEmpty())
+        assertTrue(projections.patterns.memberships.isEmpty())
+        // the membership grants themselves still land in the token
+        assertTrue(parsed.resources.datasyncMemberships.containsKey(membershipId))
+        assertTrue(parsed.patterns.datasyncMemberships.containsKey(membershipPatternId))
 
         // the raw block also remains available under meta (additive, non-breaking).
         @Suppress("UNCHECKED_CAST")
@@ -398,20 +399,19 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val res = rawProjections["res"] as Map<String, Any?>
         assertEquals(adminProjection, res[entityKey])
         assertEquals(adminProjection, res[relationshipKey]) // colon in the relationship id survives verbatim
-        assertEquals(adminProjection, res[membershipKey]) // colon in the membership id survives verbatim
+        assertFalse(res.containsKey(membershipKey))
 
         @Suppress("UNCHECKED_CAST")
         val pat = rawProjections["pat"] as Map<String, Any?>
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[entityPatternKey])
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[relationshipPatternKey])
-        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[membershipPatternKey])
+        assertFalse(pat.containsKey(membershipPatternKey))
     }
 
     @Test
-    fun grantToken_mergesCallerSuppliedProjectionsIntoMeta() {
-        // given — the caller supplies their own meta carrying both a plain value and a pn-projections block. The SDK
-        // must overlay the grant-derived projections onto that meta: the plain value survives, a caller projection for
-        // a key no grant carries survives verbatim, and a caller projection colliding with a grant loses to the grant.
+    fun grantToken_keepsCallerMetaAlongsideProjections() {
+        // given — the caller supplies their own plain meta (a pn-projections key in it is rejected). The SDK must add
+        // the grant-derived pn-projections block next to it without dropping the caller's keys.
         val pubNubUnderTest = server
         val expectedTTL = 1337
         val adminProjection = "admin"
@@ -419,26 +419,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
 
         val entityKey = "${DataSyncNamespace.ENTITIES}:$entityId"
 
-        // a projection the caller injects directly into meta for a resource NO grant carries — it must survive verbatim.
-        val callerOnlyKey = "${DataSyncNamespace.MEMBERSHIPS}:user-123:channel-X"
-        val callerOnlyProjection = "caller-only"
-        // a projection the caller sets for the SAME key a grant also generates — the grant-derived value must win.
-        val callerColliding = "caller-should-lose"
-
-        val callerMeta =
-            createCustomObject(
-                mapOf(
-                    "caller-key" to "caller-value",
-                    DataSyncNamespace.PN_PROJECTIONS to
-                        mapOf(
-                            "res" to
-                                mapOf(
-                                    callerOnlyKey to callerOnlyProjection,
-                                    entityKey to callerColliding,
-                                ),
-                        ),
-                ),
-            )
+        val callerMeta = createCustomObject(mapOf("caller-key" to "caller-value"))
 
         // when
         val token =
@@ -460,7 +441,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         @Suppress("UNCHECKED_CAST")
         val meta = parsed.meta as Map<String, Any?>
 
-        // caller-supplied plain meta must survive the merge alongside the generated pn-projections block
+        // caller-supplied plain meta must survive alongside the generated pn-projections block
         assertEquals("caller-value", meta["caller-key"])
 
         @Suppress("UNCHECKED_CAST")
@@ -468,13 +449,9 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
 
         @Suppress("UNCHECKED_CAST")
         val res = projections["res"] as Map<String, Any?>
-        assertEquals(adminProjection, res[entityKey]) // grant-derived value wins over the caller's colliding entry
-        assertEquals(callerOnlyProjection, res[callerOnlyKey]) // caller projection for a key no grant carries survives
+        assertEquals(mapOf(entityKey to adminProjection), res)
 
-        // the merged block also surfaces on the typed field, split by namespace with bare ids as keys.
-        val typedProjections = parsed.projections!!
-        assertEquals(adminProjection, typedProjections.resources.entities[entityId]) // grant wins over caller's colliding entry
-        // callerOnlyKey = "datasync:memberships:user-123:channel-X" -> membership bare id "user-123:channel-X"
-        assertEquals(callerOnlyProjection, typedProjections.resources.memberships["user-123:channel-X"])
+        // the block also surfaces on the typed field, split by namespace with bare ids as keys.
+        assertEquals(adminProjection, parsed.projections!!.resources.entities[entityId])
     }
 }

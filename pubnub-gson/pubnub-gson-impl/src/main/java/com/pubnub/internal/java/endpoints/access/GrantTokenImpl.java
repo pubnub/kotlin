@@ -198,8 +198,8 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                         : factory.relationship(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
             case DataSyncGrant.DATASYNC_MEMBERSHIPS:
                 return pattern
-                        ? factory.membershipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
-                        : factory.membership(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
+                        ? factory.membershipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete())
+                        : factory.membership(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete());
             case DataSyncGrant.DATASYNC_CHANNELS:
                 return pattern
                         ? factory.channelPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
