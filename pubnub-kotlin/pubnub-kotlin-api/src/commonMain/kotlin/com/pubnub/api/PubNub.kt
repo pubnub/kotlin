@@ -627,6 +627,13 @@ expect interface PubNub {
         options: SubscriptionOptions = EmptyOptions,
     ): SubscriptionSet
 
+    /**
+     * Decodes a PAM v3 [token] into its permissions, meta and DataSync projections.
+     *
+     * On the JS target, `create` for `channels` and `uuids` always parses back as `false`, because the underlying
+     * npm SDK doesn't decode that bit for them. The permission is still in the token. `users` and the DataSync
+     * resources are unaffected.
+     */
     fun parseToken(token: String): PNToken
 
     fun reconnect(timetoken: Long = 0L)

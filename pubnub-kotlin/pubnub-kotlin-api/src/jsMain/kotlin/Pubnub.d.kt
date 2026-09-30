@@ -880,6 +880,36 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var groups: JsMap<GrantTokenPermissions>?
 
         var uuids: JsMap<GrantTokenPermissions>?
+
+        var users: JsMap<GrantTokenPermissions>?
+
+        var dataSync: DataSyncTokenScopes?
+    }
+
+    interface DataSyncTokenScopes {
+        var entities: JsMap<GrantTokenPermissions>?
+
+        var relationships: JsMap<GrantTokenPermissions>?
+
+        var memberships: JsMap<GrantTokenPermissions>?
+    }
+
+    interface DataSyncProjectionScope {
+        var entities: JsMap<String>?
+
+        var relationships: JsMap<String>?
+
+        var users: JsMap<String>?
+
+        var channels: JsMap<String>?
+
+        var memberships: JsMap<String>?
+    }
+
+    interface DataSyncProjections {
+        var resources: DataSyncProjectionScope?
+
+        var patterns: DataSyncProjectionScope?
     }
 
     interface GrantTokenParameters {
@@ -891,6 +921,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var patterns: PatternsOrResources?
 
         var meta: Json?
+
+        var dataSyncProjections: DataSyncProjections?
     }
 
     interface ParsedGrantToken : GrantTokenParameters {
@@ -913,6 +945,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var join: Boolean?
 
         var update: Boolean?
+
+        var create: Boolean?
     }
 
     interface RevokeTokenResponse {

@@ -84,7 +84,7 @@ data class GrantTokenRequestBody(
          * Fold any per-grant projection into the token [meta] as a `pn-projections` block.
          *
          * Only [DataSyncGrantType] carries a projection, keyed `"${grant.namespace}:${grant.id}"`
-         * (`datasync:entities`/`relationships`/`memberships`/`users`/`channels`).
+         * (`datasync:entities`/`relationships`/`users`/`channels`; membership grants never carry a projection).
          *
          * Note the User/Channel projection namespaces (`datasync:users`/`datasync:channels`) are projection-key-only:
          * the *permissions* for those grants land in the plain `users`/`channels` buckets. The id is passed

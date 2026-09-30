@@ -93,8 +93,11 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNAbstractGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScope
+import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjections
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNResourceGrant
@@ -137,8 +140,10 @@ import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.createJsObject
+import com.pubnub.kmp.entriesOf
 import com.pubnub.kmp.toJsMap
 import com.pubnub.kmp.toMap
+import kotlin.js.Json
 import kotlin.js.json
 import PubNub as PubNubJs
 
@@ -512,23 +517,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         requireNoPnProjectionsInMeta(meta)
         return GrantTokenImpl(
             jsPubNub,
-            createJsObject {
-                this.meta = meta?.let { metaNotNull ->
-                    json(*metaNotNull.entries.map { Pair(it.key, it.value) }.toTypedArray())
-                }
-                this.ttl = ttl
-                this.authorized_uuid = authorizedUUID
-                this.resources = createJsObject<PubNubJs.PatternsOrResources> {
-                    this.channels = getGrantTokenPermissions<PNResourceGrant>(channels)
-                    this.groups = getGrantTokenPermissions<PNResourceGrant>(channelGroups)
-                    this.uuids = getGrantTokenPermissions<PNResourceGrant>(uuids)
-                }
-                this.patterns = createJsObject<PubNubJs.PatternsOrResources> {
-                    this.channels = getGrantTokenPermissions<PNPatternGrant>(channels)
-                    this.groups = getGrantTokenPermissions<PNPatternGrant>(channelGroups)
-                    this.uuids = getGrantTokenPermissions<PNPatternGrant>(uuids)
-                }
-            }
+            buildLegacyGrantTokenParams(ttl, meta, authorizedUUID, channels, channelGroups, uuids)
         )
     }
 
@@ -539,40 +528,9 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         grants: List<TokenGrant>
     ): GrantToken {
         requireNoPnProjectionsInMeta(meta)
-        // The underlying `pubnub` npm package exposes only the `channels`/`groups`/`uuids` buckets and no DataSync.
-        // Only ChannelGrant/ChannelGroupGrant can be forwarded here (DataSyncGrant.subscribe/subscribePattern return a
-        // ChannelGrant, so they work). Rather than silently drop a DataSyncGrantType — which would mint a *weaker token
-        // than requested*, a security footgun — throw so the caller learns the JS target can't honor the request.
-        // (The Kotlin/JVM and Java/GSON SDKs carry every bucket.)
-        val channels = ArrayList<ChannelGrant>()
-        val channelGroups = ArrayList<ChannelGroupGrant>()
-        grants.forEach { grant ->
-            when (grant) {
-                is ChannelGrant -> channels.add(grant)
-                is ChannelGroupGrant -> channelGroups.add(grant)
-                else -> throw UnsupportedOperationException(
-                    "The JS target's grantToken only supports ChannelGrant and ChannelGroupGrant; " +
-                        "got ${grant::class.simpleName}."
-                )
-            }
-        }
         return GrantTokenImpl(
             jsPubNub,
-            createJsObject {
-                this.meta = meta?.let { metaNotNull ->
-                    json(*metaNotNull.entries.map { Pair(it.key, it.value) }.toTypedArray())
-                }
-                this.ttl = ttl
-                this.authorized_uuid = authorizedUserId?.value
-                this.resources = createJsObject<PubNubJs.PatternsOrResources> {
-                    this.channels = getGrantTokenPermissions<PNResourceGrant>(channels)
-                    this.groups = getGrantTokenPermissions<PNResourceGrant>(channelGroups)
-                }
-                this.patterns = createJsObject<PubNubJs.PatternsOrResources> {
-                    this.channels = getGrantTokenPermissions<PNPatternGrant>(channels)
-                    this.groups = getGrantTokenPermissions<PNPatternGrant>(channelGroups)
-                }
-            }
+            buildFlatGrantTokenParams(ttl, authorizedUserId, meta, grants)
         )
     }
 
@@ -1318,36 +1276,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     }
 
     override fun parseToken(token: String): PNToken {
-        val jsToken = jsPubNub.parseToken(token)
-        return PNToken(
-            jsToken.version.toInt(),
-            jsToken.timestamp.toLong(),
-            jsToken.ttl.toLong(),
-            jsToken.authorized_uuid,
-            jsToken.resources?.let {
-                PNToken.PNTokenResources(
-                    it.channels.toKmp(),
-                    it.groups.toKmp(),
-                    it.uuids.toKmp(),
-                )
-            } ?: PNToken.PNTokenResources(),
-            jsToken.patterns?.let {
-                PNToken.PNTokenResources()
-            } ?: PNToken.PNTokenResources()
-        )
+        return jsPubNub.parseToken(token).toPNToken()
     }
-
-    private fun JsMap<PubNubJs.GrantTokenPermissions>?.toKmp() = this?.toMap()?.mapValues { entry ->
-        PNToken.PNResourcePermissions(
-            entry.value.read ?: false,
-            entry.value.write ?: false,
-            entry.value.manage ?: false,
-            entry.value.delete ?: false,
-            entry.value.get ?: false,
-            entry.value.update ?: false,
-            entry.value.join ?: false
-        )
-    } ?: emptyMap()
 
     override fun sendFile(
         channel: String,
@@ -1486,19 +1416,265 @@ fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     return config
 }
 
-private inline fun <reified T : PNAbstractGrant> getGrantTokenPermissions(grants: List<PNGrant>) =
-    grants.filterIsInstance<T>().associate {
-        it.id to createJsObject<PubNubJs.GrantTokenPermissions> {
-            this.get = it.get
-            this.join = it.join
-            this.delete = it.delete
-            this.update = it.update
-            this.write = it.write
-            this.manage = it.manage
-            this.read = it.read
-            // todo what about create? any other?
+internal fun buildLegacyGrantTokenParams(
+    ttl: Int,
+    meta: CustomObject?,
+    authorizedUUID: String?,
+    channels: List<ChannelGrant>,
+    channelGroups: List<ChannelGroupGrant>,
+    uuids: List<UUIDGrant>,
+): PubNubJs.GrantTokenParameters =
+    createJsObject {
+        this.meta = meta?.toJsMeta()
+        this.ttl = ttl
+        this.authorized_uuid = authorizedUUID
+        this.resources = createJsObject<PubNubJs.PatternsOrResources> {
+            this.channels = getGrantTokenPermissions<PNResourceGrant>(channels).toJsMap()
+            this.groups = getGrantTokenPermissions<PNResourceGrant>(channelGroups).toJsMap()
+            this.uuids = getGrantTokenPermissions<PNResourceGrant>(uuids).toJsMap()
         }
-    }.toJsMap()
+        this.patterns = createJsObject<PubNubJs.PatternsOrResources> {
+            this.channels = getGrantTokenPermissions<PNPatternGrant>(channels).toJsMap()
+            this.groups = getGrantTokenPermissions<PNPatternGrant>(channelGroups).toJsMap()
+            this.uuids = getGrantTokenPermissions<PNPatternGrant>(uuids).toJsMap()
+        }
+    }
+
+/**
+ * Builds the npm `grantToken` parameters of the flat `grants` overload, routed like the JVM `GrantTokenRequestBody`:
+ * - [ChannelGrant]s and `DataSyncGrant.channel` grants share the `channels` bucket, `DataSyncGrant.user` grants go to
+ *   `users`, and entity/relationship/membership grants go to `dataSync.*`;
+ * - projections go to `dataSyncProjections`, from which npm builds `meta.pn-projections` (same
+ *   `datasync:<type>:<id>` keys as the JVM). The caller meta can't hold `pn-projections` (rejected before this), so
+ *   npm replacing that key wholesale drops nothing.
+ *
+ * Empty buckets are left out rather than set to `null`: npm checks buckets by key presence (e.g. it rejects `users`
+ * together with `uuids`). `uuids` is never sent, since the flat overload has no UUID grants.
+ */
+internal fun buildFlatGrantTokenParams(
+    ttl: Int,
+    authorizedUserId: UserId?,
+    meta: CustomObject?,
+    grants: List<TokenGrant>,
+): PubNubJs.GrantTokenParameters {
+    val buckets = FlatGrantBuckets()
+    grants.forEach { grant ->
+        when (grant) {
+            is ChannelGrant -> buckets.channels.add(grant)
+            is ChannelGroupGrant -> buckets.channelGroups.add(grant)
+            is DataSyncGrantType -> when (grant.namespace) {
+                DataSyncNamespace.CHANNELS_PROJECTION -> buckets.channels.add(grant)
+                DataSyncNamespace.USERS_PROJECTION -> buckets.users.add(grant)
+                DataSyncNamespace.ENTITIES -> buckets.entities.add(grant)
+                DataSyncNamespace.RELATIONSHIPS -> buckets.relationships.add(grant)
+                DataSyncNamespace.MEMBERSHIPS -> buckets.memberships.add(grant)
+                else -> throw UnsupportedOperationException("Unknown DataSync namespace: ${grant.namespace}.")
+            }
+            // Throw rather than silently drop a grant, which would mint a weaker token than requested.
+            else -> throw UnsupportedOperationException(
+                "The JS target's grantToken doesn't support ${grant::class.simpleName}."
+            )
+        }
+    }
+    val dataSyncGrants = grants.filterIsInstance<DataSyncGrantType>()
+    val resourceProjections = toJsProjectionScope<PNResourceGrant>(dataSyncGrants)
+    val patternProjections = toJsProjectionScope<PNPatternGrant>(dataSyncGrants)
+    return createJsObject {
+        this.meta = meta?.toJsMeta()
+        this.ttl = ttl
+        this.authorized_uuid = authorizedUserId?.value
+        this.resources = toJsGrantScopes<PNResourceGrant>(buckets)
+        this.patterns = toJsGrantScopes<PNPatternGrant>(buckets)
+        if (resourceProjections != null || patternProjections != null) {
+            this.dataSyncProjections = createJsObject<PubNubJs.DataSyncProjections> {
+                resourceProjections?.let { this.resources = it }
+                patternProjections?.let { this.patterns = it }
+            }
+        }
+    }
+}
+
+private class FlatGrantBuckets {
+    val channels = ArrayList<PNGrant>()
+    val channelGroups = ArrayList<PNGrant>()
+    val users = ArrayList<PNGrant>()
+    val entities = ArrayList<PNGrant>()
+    val relationships = ArrayList<PNGrant>()
+    val memberships = ArrayList<PNGrant>()
+}
+
+private inline fun <reified T : PNAbstractGrant> toJsGrantScopes(
+    buckets: FlatGrantBuckets
+): PubNubJs.PatternsOrResources =
+    createJsObject {
+        getGrantTokenPermissions<T>(buckets.channels).toJsMapOrNull()?.let { this.channels = it }
+        getGrantTokenPermissions<T>(buckets.channelGroups).toJsMapOrNull()?.let { this.groups = it }
+        getGrantTokenPermissions<T>(buckets.users).toJsMapOrNull()?.let { this.users = it }
+        val entityPermissions = getGrantTokenPermissions<T>(buckets.entities).toJsMapOrNull()
+        val relationshipPermissions = getGrantTokenPermissions<T>(buckets.relationships).toJsMapOrNull()
+        val membershipPermissions = getGrantTokenPermissions<T>(buckets.memberships).toJsMapOrNull()
+        if (entityPermissions != null || relationshipPermissions != null || membershipPermissions != null) {
+            this.dataSync = createJsObject<PubNubJs.DataSyncTokenScopes> {
+                entityPermissions?.let { this.entities = it }
+                relationshipPermissions?.let { this.relationships = it }
+                membershipPermissions?.let { this.memberships = it }
+            }
+        }
+    }
+
+// Projections are passed verbatim (only `null` is skipped) and the last one for an id wins, as in the JVM
+// `GrantTokenRequestBody.mergeProjectionsIntoMeta`.
+private inline fun <reified T : PNAbstractGrant> toJsProjectionScope(
+    grants: List<DataSyncGrantType>
+): PubNubJs.DataSyncProjectionScope? {
+    val withProjection = grants.filter { it is T && it.projection != null }
+    if (withProjection.isEmpty()) {
+        return null
+    }
+    return createJsObject<PubNubJs.DataSyncProjectionScope> {
+        projectionsIn(withProjection, DataSyncNamespace.ENTITIES)?.let { this.entities = it }
+        projectionsIn(withProjection, DataSyncNamespace.RELATIONSHIPS)?.let { this.relationships = it }
+        projectionsIn(withProjection, DataSyncNamespace.USERS_PROJECTION)?.let { this.users = it }
+        projectionsIn(withProjection, DataSyncNamespace.CHANNELS_PROJECTION)?.let { this.channels = it }
+        // No memberships: membership grants never carry a projection.
+    }
+}
+
+private fun projectionsIn(grants: List<DataSyncGrantType>, namespace: String): JsMap<String>? =
+    grants.filter { it.namespace == namespace }
+        .mapNotNull { grant -> grant.projection?.let { grant.id to it } }
+        .toMap()
+        .toJsMapOrNull()
+
+// Grants for the same id are OR-merged per flag, like the JVM `GrantTokenRequestBody`, so a later grant never clears
+// a bit that an earlier one set.
+private inline fun <reified T : PNAbstractGrant> getGrantTokenPermissions(
+    grants: List<PNGrant>
+): Map<String, PubNubJs.GrantTokenPermissions> =
+    grants.filterIsInstance<T>().groupBy { it.id }.mapValues { (_, sameId) ->
+        createJsObject<PubNubJs.GrantTokenPermissions> {
+            this.get = sameId.any { it.get }
+            this.join = sameId.any { it.join }
+            this.delete = sameId.any { it.delete }
+            this.update = sameId.any { it.update }
+            this.write = sameId.any { it.write }
+            this.manage = sameId.any { it.manage }
+            this.read = sameId.any { it.read }
+            this.create = sameId.any { it.create }
+        }
+    }
+
+private fun <V> Map<String, V>.toJsMapOrNull(): JsMap<V>? = takeIf { it.isNotEmpty() }?.toJsMap()
+
+private fun CustomObject.toJsMeta(): Json = toJsMetaValue().unsafeCast<Json>()
+
+// Deep conversion, so nested caller meta reaches npm as plain JSON: maps → JS objects, collections/arrays → JS arrays.
+private fun Any?.toJsMetaValue(): Any? =
+    when (this) {
+        is Map<*, *> -> {
+            val source = this
+            createJsObject<dynamic> {
+                source.forEach { (key, value) -> this[key.toString()] = value.toJsMetaValue() }
+            }
+        }
+        is Collection<*> -> map { it.toJsMetaValue() }.toTypedArray()
+        is Array<*> -> map { it.toJsMetaValue() }.toTypedArray()
+        else -> this
+    }
+
+/**
+ * Maps a token parsed by npm to [PNToken], including patterns, `users`, `dataSync.*`, [PNToken.meta] and
+ * [PNToken.projections]. Two npm differences from the JVM `TokenParser`:
+ * - npm doesn't decode the CREATE bit for `channels` / `uuids`, so their `create` is always `false` here; `users`
+ *   and `dataSync.*` do decode it.
+ * - numbers in [PNToken.meta] are JS numbers (`Double`), where the JVM gives `Long` / `BigInteger`.
+ */
+internal fun PubNubJs.ParsedGrantToken.toPNToken(): PNToken {
+    val kotlinMeta = meta?.fromJsMetaValue()
+    return PNToken(
+        version = version.toInt(),
+        timestamp = timestamp.toLong(),
+        ttl = ttl.toLong(),
+        authorizedUUID = authorized_uuid,
+        resources = resources.toPNTokenResources(),
+        patterns = patterns.toPNTokenResources(),
+        meta = kotlinMeta,
+        projections = parseProjections(kotlinMeta),
+    )
+}
+
+private fun PubNubJs.PatternsOrResources?.toPNTokenResources(): PNToken.PNTokenResources {
+    if (this == null) {
+        return PNToken.PNTokenResources()
+    }
+    return PNToken.PNTokenResources(
+        channels = channels.toKmp(),
+        channelGroups = groups.toKmp(),
+        uuids = uuids.toKmp(),
+        users = users.toKmp(),
+        datasyncEntities = dataSync?.entities.toKmp(),
+        datasyncRelationships = dataSync?.relationships.toKmp(),
+        datasyncMemberships = dataSync?.memberships.toKmp(),
+    )
+}
+
+private fun JsMap<PubNubJs.GrantTokenPermissions>?.toKmp() = this?.toMap()?.mapValues { entry ->
+    PNToken.PNResourcePermissions(
+        read = entry.value.read ?: false,
+        write = entry.value.write ?: false,
+        manage = entry.value.manage ?: false,
+        delete = entry.value.delete ?: false,
+        get = entry.value.get ?: false,
+        update = entry.value.update ?: false,
+        join = entry.value.join ?: false,
+        create = entry.value.create ?: false,
+    )
+} ?: emptyMap()
+
+// Inverse of `toJsMetaValue`: JS objects → maps, arrays → lists, the shape the JVM `TokenParser` gives.
+private fun Any?.fromJsMetaValue(): Any? =
+    when (this) {
+        null -> null
+        is Array<*> -> map { it.fromJsMetaValue() }
+        else -> if (jsTypeOf(this) == "object") {
+            entriesOf(unsafeCast<JsMap<Any?>>()).associate { (key, value) -> key to value.fromJsMetaValue() }
+        } else {
+            this
+        }
+    }
+
+// Same decode as the JVM `TokenParser.parseProjections`: match the known namespace prefix instead of splitting on `:`
+// (relationship and membership ids contain colons). `datasync:users:` / `datasync:channels:` keys are ignored, as
+// on the JVM; they stay visible under the raw meta only.
+private fun parseProjections(meta: Any?): PNDataSyncProjections? {
+    val projectionsBlock = (meta as? Map<*, *>)?.get(DataSyncNamespace.PN_PROJECTIONS) as? Map<*, *> ?: return null
+    return PNDataSyncProjections(
+        resources = (projectionsBlock["res"] as? Map<*, *>).toPNProjectionScope(),
+        patterns = (projectionsBlock["pat"] as? Map<*, *>).toPNProjectionScope(),
+    )
+}
+
+private fun Map<*, *>?.toPNProjectionScope(): PNDataSyncProjectionScope {
+    if (this == null) {
+        return PNDataSyncProjectionScope()
+    }
+    val entities = LinkedHashMap<String, String>()
+    val relationships = LinkedHashMap<String, String>()
+    val memberships = LinkedHashMap<String, String>()
+    for ((rawKey, rawValue) in this) {
+        val key = rawKey.toString()
+        val projection = rawValue.toString()
+        when {
+            key.startsWith("${DataSyncNamespace.ENTITIES}:") ->
+                entities[key.removePrefix("${DataSyncNamespace.ENTITIES}:")] = projection
+            key.startsWith("${DataSyncNamespace.RELATIONSHIPS}:") ->
+                relationships[key.removePrefix("${DataSyncNamespace.RELATIONSHIPS}:")] = projection
+            key.startsWith("${DataSyncNamespace.MEMBERSHIPS}:") ->
+                memberships[key.removePrefix("${DataSyncNamespace.MEMBERSHIPS}:")] = projection
+        }
+    }
+    return PNDataSyncProjectionScope(entities = entities, relationships = relationships, memberships = memberships)
+}
 
 private fun Collection<PNSortKey<out SortField>>.toJsMap() = associateBy(
     keySelector = { pnSortKey -> pnSortKey.key.fieldName },

@@ -248,8 +248,7 @@ object DataSyncGrant {
      * DataSyncGrant.subscribe("chat-1", projection = "admin")           // read on "__admin__chat-1"
      * ```
      *
-     * Returns a plain [ChannelGrant] (not a [DataSyncGrantType], which has no `read` bit), so it also works on
-     * targets whose `grantToken` supports only channel grants.
+     * Returns a plain [ChannelGrant] (not a [DataSyncGrantType], which has no `read` bit).
      *
      * @param projection `null` (or `"default"` / `"__default__"`) for the default projection.
      * @throws IllegalArgumentException if [projection] is blank.
