@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.datasync.entity
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
@@ -9,6 +10,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GetEntitiesEndpointTest : BaseTest() {
@@ -91,6 +93,28 @@ class GetEntitiesEndpointTest : BaseTest() {
         verify(
             getRequestedFor(urlPathEqualTo(path))
                 .withQueryParam("filter", equalTo("username LIKE \"a*\"")),
+        )
+    }
+
+    @Test
+    fun filters_percent_encode_literal_plus_and_percent() {
+        // Regression guard: the service uses @QueryMap(encoded = true), so an un-encoded `+` would reach the
+        // server as a space and `%` as the start of an escape sequence.
+        stubList()
+
+        pubnub.dataSync.getEntities(
+            className = "TestUser",
+            filterFast = "email == \"a+b@x.com\"",
+            filter = "note == \"50%\"",
+        ).sync()
+
+        val url = findAll(getRequestedFor(urlPathEqualTo(path))).single().url
+        assertTrue(url, url.contains("filter_fast=email%20%3D%3D%20%22a%2Bb%40x.com%22"))
+        assertTrue(url, url.contains("filter=note%20%3D%3D%20%2250%25%22"))
+        verify(
+            getRequestedFor(urlPathEqualTo(path))
+                .withQueryParam("filter_fast", equalTo("email == \"a+b@x.com\""))
+                .withQueryParam("filter", equalTo("note == \"50%\"")),
         )
     }
 }

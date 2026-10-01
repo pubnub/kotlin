@@ -223,8 +223,8 @@ actual interface PubNub {
     actual fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
     /**
-     * Use this overload for legacy App Context (grants into the `uuids` bucket). For DataSync operations, use the
-     * overload that takes `authorizedUserId`, `users` and `dataSync`.
+     * Legacy `grantToken` overload having the `uuids` bucket (App Context v2 UUID metadata).
+     * New code should prefer the flat-list overload taking `grants: List<TokenGrant>`.
      */
     actual fun grantToken(
         ttl: Int,

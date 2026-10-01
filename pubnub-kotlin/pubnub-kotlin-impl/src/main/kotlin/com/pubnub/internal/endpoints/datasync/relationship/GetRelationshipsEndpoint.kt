@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.datasync.relationship.PNDataSyncRelationsh
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.datasync.EntitiesEnvelope
@@ -75,8 +76,9 @@ class GetRelationshipsEndpoint internal constructor(
         entityAId?.let { queryParams["entity_a_id"] = it }
         entityBId?.let { queryParams["entity_b_id"] = it }
         classVersion?.let { queryParams["relationship_class_version"] = it.toString() }
-        filterFast?.let { queryParams["filter_fast"] = it }
-        filter?.let { queryParams["filter"] = it }
+        // Pre-encoded: the service uses @QueryMap(encoded = true), which would leave a literal `+` / `%` as-is.
+        filterFast?.let { queryParams["filter_fast"] = PubNubUtil.pamEncode(it) }
+        filter?.let { queryParams["filter"] = PubNubUtil.pamEncode(it) }
         if (sortParam.isNotEmpty()) {
             queryParams["sort"] = sortParam
         }

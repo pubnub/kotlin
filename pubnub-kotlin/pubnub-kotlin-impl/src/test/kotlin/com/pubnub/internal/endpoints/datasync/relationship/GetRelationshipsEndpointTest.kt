@@ -3,6 +3,7 @@ package com.pubnub.internal.endpoints.datasync.relationship
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.absent
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
@@ -12,6 +13,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GetRelationshipsEndpointTest : BaseTest() {
@@ -91,6 +93,21 @@ class GetRelationshipsEndpointTest : BaseTest() {
                 .withQueryParam("filter", equalTo("status == \"active\""))
                 .withQueryParam("filter_advanced", absent()),
         )
+    }
+
+    @Test
+    fun filters_percent_encode_literal_plus_and_percent() {
+        stubList()
+
+        pubnub.dataSync.getRelationships(
+            className = "Friendship",
+            filterFast = "status == \"a+b\"",
+            filter = "status == \"50%\"",
+        ).sync()
+
+        val url = findAll(getRequestedFor(urlPathEqualTo(path))).single().url
+        assertTrue(url, url.contains("filter_fast=status%20%3D%3D%20%22a%2Bb%22"))
+        assertTrue(url, url.contains("filter=status%20%3D%3D%20%2250%25%22"))
     }
 
     @Test
