@@ -187,6 +187,7 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
 
         final Map<String, Object> payload = new HashMap<>();
         payload.put("role", "admin");
+        payload.put("custom", "value");
 
         try {
             server.dataSync().createRelationship(entityAId, entityBId, M2M_CLASS, classVersion)
@@ -224,10 +225,14 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                     .sync();
             assertEquals("archived", setResult.getData().getStatus());
             assertEquals("member", setResult.getData().getPayload().get("role"));
+            assertNotEquals(patchResult.getData().getETag(), setResult.getData().getETag());
 
+            // get reflects the full replacement: `custom` was not re-sent, so it is gone rather than kept
             final PNDataSyncGetRelationshipResult afterSet = server.dataSync().getRelationship(relationshipId).sync();
             assertEquals("archived", afterSet.getData().getStatus());
             assertEquals("member", afterSet.getData().getPayload().get("role"));
+            assertFalse(afterSet.getData().getPayload().containsKey("custom"));
+            assertEquals(setResult.getData().getETag(), afterSet.getData().getETag());
 
             // delete
             server.dataSync().removeRelationship(relationshipId).sync();

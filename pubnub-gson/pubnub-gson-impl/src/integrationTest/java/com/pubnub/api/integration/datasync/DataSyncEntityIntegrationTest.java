@@ -234,6 +234,7 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         final Map<String, Object> payload = new HashMap<>();
         payload.put("username", "Alice");
         payload.put("custom", "value");
+        payload.put("hobby", "poetry");
 
         // create
         server.dataSync()
@@ -276,11 +277,14 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
                     .sync();
             assertEquals("archived", updateResult.getData().getStatus());
             assertEquals("updated", updateResult.getData().getPayload().get("custom"));
+            assertNotEquals(patchResult.getData().getETag(), updateResult.getData().getETag());
 
-            // get reflects the full replacement
+            // get reflects the full replacement: `hobby` was not re-sent, so it is gone rather than kept
             final PNDataSyncGetEntityResult afterUpdate = server.dataSync().getEntity(entityId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("updated", afterUpdate.getData().getPayload().get("custom"));
+            assertFalse(afterUpdate.getData().getPayload().containsKey("hobby"));
+            assertEquals(updateResult.getData().getETag(), afterUpdate.getData().getETag());
         } finally {
             server.dataSync().removeEntity(entityId).sync();
         }

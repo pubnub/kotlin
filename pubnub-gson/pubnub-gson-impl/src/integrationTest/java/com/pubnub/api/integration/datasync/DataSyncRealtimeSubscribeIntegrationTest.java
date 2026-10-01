@@ -12,6 +12,7 @@ import com.pubnub.api.java.v2.callbacks.EventListener;
 import com.pubnub.api.java.v2.callbacks.StatusListener;
 import com.pubnub.api.java.v2.subscriptions.Subscription;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventMessage;
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult;
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncSetEventType;
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDeleteDataSyncChannelEventMessage;
@@ -131,6 +132,16 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         assertTrue("subscribe loop did not connect", connected.await(15, TimeUnit.SECONDS));
     }
 
+    private static void assertEnvelope(PNDataSyncEventMessage leaf, String eventChannel, String type, String className, String classLevel, String expectedChannel) {
+        assertEquals("data-sync", leaf.getSource());
+        assertEquals("1.0", leaf.getVersion());
+        assertEquals(type, leaf.getType());
+        assertEquals(className, leaf.getClassName());
+        assertEquals(classLevel, leaf.getClassLevel());
+        assertEquals(Integer.valueOf(CLASS_VERSION), leaf.getClassVersion());
+        assertEquals(expectedChannel, eventChannel);
+    }
+
     @Test
     public void receivesUserEventsViaAddListener() throws PubNubException, InterruptedException {
         final String userId = "user-rt-" + RandomStringUtils.random(8, "abcdefgh");
@@ -138,6 +149,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         final CountDownLatch sawUpdate = new CountDownLatch(2); // patch + full replace both fire UPDATE
         final CountDownLatch sawDelete = new CountDownLatch(1);
         final AtomicReference<PNSetDataSyncUserEventMessage> createLeaf = new AtomicReference<>();
+        final AtomicReference<String> createChannel = new AtomicReference<>();
         final AtomicReference<PNDeleteDataSyncUserEventMessage> deleteLeaf = new AtomicReference<>();
 
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
@@ -150,6 +162,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                     final PNSetDataSyncUserEventMessage set = (PNSetDataSyncUserEventMessage) result.getExtractedMessage();
                     if (set.getEvent() == PNDataSyncSetEventType.CREATE) {
                         createLeaf.set(set);
+                        createChannel.set(result.getChannel());
                         sawCreate.countDown();
                     } else if (set.getEvent() == PNDataSyncSetEventType.UPDATE) {
                         sawUpdate.countDown();
@@ -163,7 +176,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         subscribeAndAwaitConnect(client, subscription);
 
         try {
-            server.dataSync().createUser(CLASS_VERSION).userId(userId).status("active").payload(payload("username", "Alice")).sync();
+            final String createdETag = server.dataSync().createUser(CLASS_VERSION).userId(userId).status("active").payload(payload("username", "Alice")).sync().getData().getETag();
             server.dataSync().updateUser(userId, Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build())).sync();
             server.dataSync().setUser(userId, CLASS_VERSION).status("archived").payload(payload("username", "Alice Cooper")).sync();
@@ -176,6 +189,8 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
             assertEquals(userId, createLeaf.get().getData().getId());
             assertEquals("active", createLeaf.get().getData().getStatus());
             assertEquals("Alice", createLeaf.get().getData().getPayload().get("username"));
+            assertEquals(createdETag, createLeaf.get().getData().getETag());
+            assertEnvelope(createLeaf.get(), createChannel.get(), "user", "User", "Global", userId);
             assertEquals(userId, deleteLeaf.get().getId());
             assertNotNull("delete leaf must carry deletedAt", deleteLeaf.get().getDeletedAt());
         } finally {
@@ -233,6 +248,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         final CountDownLatch sawUpdate = new CountDownLatch(2);
         final CountDownLatch sawDelete = new CountDownLatch(1);
         final AtomicReference<PNSetDataSyncChannelEventMessage> createLeaf = new AtomicReference<>();
+        final AtomicReference<String> createChannel = new AtomicReference<>();
         final AtomicReference<PNDeleteDataSyncChannelEventMessage> deleteLeaf = new AtomicReference<>();
 
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
@@ -245,6 +261,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                     final PNSetDataSyncChannelEventMessage set = (PNSetDataSyncChannelEventMessage) result.getExtractedMessage();
                     if (set.getEvent() == PNDataSyncSetEventType.CREATE) {
                         createLeaf.set(set);
+                        createChannel.set(result.getChannel());
                         sawCreate.countDown();
                     } else if (set.getEvent() == PNDataSyncSetEventType.UPDATE) {
                         sawUpdate.countDown();
@@ -258,7 +275,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         subscribeAndAwaitConnect(client, subscription);
 
         try {
-            server.dataSync().createChannel(CLASS_VERSION).channelId(channelId).status("active").payload(payload("name", "Chan-A")).sync();
+            final String createdETag = server.dataSync().createChannel(CLASS_VERSION).channelId(channelId).status("active").payload(payload("name", "Chan-A")).sync().getData().getETag();
             server.dataSync().updateChannel(channelId, Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build())).sync();
             server.dataSync().setChannel(channelId, CLASS_VERSION).status("archived").payload(payload("name", "Chan-B")).sync();
@@ -270,6 +287,8 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
 
             assertEquals(channelId, createLeaf.get().getData().getId());
             assertEquals("active", createLeaf.get().getData().getStatus());
+            assertEquals(createdETag, createLeaf.get().getData().getETag());
+            assertEnvelope(createLeaf.get(), createChannel.get(), "channel", "Channel", "Global", channelId);
             assertEquals(channelId, deleteLeaf.get().getId());
             assertNotNull("delete leaf must carry deletedAt", deleteLeaf.get().getDeletedAt());
         } finally {
@@ -326,6 +345,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         final CountDownLatch sawUpdate = new CountDownLatch(2);
         final CountDownLatch sawDelete = new CountDownLatch(1);
         final AtomicReference<PNSetDataSyncEntityEventMessage> createLeaf = new AtomicReference<>();
+        final AtomicReference<String> createChannel = new AtomicReference<>();
         final AtomicReference<PNDeleteDataSyncEntityEventMessage> deleteLeaf = new AtomicReference<>();
 
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
@@ -338,6 +358,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                     final PNSetDataSyncEntityEventMessage set = (PNSetDataSyncEntityEventMessage) result.getExtractedMessage();
                     if (set.getEvent() == PNDataSyncSetEventType.CREATE) {
                         createLeaf.set(set);
+                        createChannel.set(result.getChannel());
                         sawCreate.countDown();
                     } else if (set.getEvent() == PNDataSyncSetEventType.UPDATE) {
                         sawUpdate.countDown();
@@ -356,7 +377,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
             // `username` but NOT `email`. `server` holds the secretKey, so it bypasses the projection write-guard
             // and can write the admin-only `email` directly (a __default__-projection token would be rejected
             // with DS-0202).
-            server.dataSync().createEntity("TestUser", CLASS_VERSION).entityId(entityId).status("active").payload(userPayload("Alice", "alice@example.com")).sync();
+            final String createdETag = server.dataSync().createEntity("TestUser", CLASS_VERSION).entityId(entityId).status("active").payload(userPayload("Alice", "alice@example.com")).sync().getData().getETag();
             server.dataSync().updateEntity(entityId, Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build())).sync();
             server.dataSync().setEntity(entityId, CLASS_VERSION).status("archived").payload(userPayload("Alice Cooper", "cooper@example.com")).sync();
@@ -370,6 +391,8 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
             // default-projection ref carries `username` but hides the admin-only `email`.
             assertEquals("Alice", createLeaf.get().getData().getPayload().get("username"));
             assertNull("default projection must omit the admin-only email field", createLeaf.get().getData().getPayload().get("email"));
+            assertEquals(createdETag, createLeaf.get().getData().getETag());
+            assertEnvelope(createLeaf.get(), createChannel.get(), "entity", "TestUser", "SubKey", entityId);
             assertEquals(entityId, deleteLeaf.get().getId());
             assertNotNull("delete leaf must carry deletedAt", deleteLeaf.get().getDeletedAt());
         } finally {
@@ -436,6 +459,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         final CountDownLatch sawUpdate = new CountDownLatch(1);
         final CountDownLatch sawDelete = new CountDownLatch(1);
         final AtomicReference<PNSetDataSyncMembershipEventMessage> createLeaf = new AtomicReference<>();
+        final AtomicReference<String> createChannel = new AtomicReference<>();
         final AtomicReference<PNDeleteDataSyncMembershipEventMessage> deleteLeaf = new AtomicReference<>();
 
         server.dataSync().createChannel(CLASS_VERSION).channelId(channelId).payload(payload("name", "Chan-" + run)).sync();
@@ -452,6 +476,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                         final PNSetDataSyncMembershipEventMessage set = (PNSetDataSyncMembershipEventMessage) result.getExtractedMessage();
                         if (set.getEvent() == PNDataSyncSetEventType.CREATE) {
                             createLeaf.set(set);
+                            createChannel.set(result.getChannel());
                             sawCreate.countDown();
                         } else if (set.getEvent() == PNDataSyncSetEventType.UPDATE) {
                             sawUpdate.countDown();
@@ -464,7 +489,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
             });
             subscribeAndAwaitConnect(client, subscription);
 
-            server.dataSync().createMembership(channelId, userId, CLASS_VERSION).membershipId(membershipId).status("active").sync();
+            final String createdETag = server.dataSync().createMembership(channelId, userId, CLASS_VERSION).membershipId(membershipId).status("active").sync().getData().getETag();
             server.dataSync().setMembership(membershipId, CLASS_VERSION).status("archived").sync();
             server.dataSync().removeMembership(membershipId).sync();
 
@@ -475,6 +500,8 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
             assertEquals(membershipId, createLeaf.get().getData().getId());
             assertEquals(channelId, createLeaf.get().getData().getChannelId());
             assertEquals(userId, createLeaf.get().getData().getUserId());
+            assertEquals(createdETag, createLeaf.get().getData().getETag());
+            assertEnvelope(createLeaf.get(), createChannel.get(), "membership", "Membership", "Global", channelId);
             assertEquals(membershipId, deleteLeaf.get().getId());
             assertNotNull("delete leaf must carry deletedAt", deleteLeaf.get().getDeletedAt());
         } finally {
@@ -545,6 +572,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
         final CountDownLatch sawUpdate = new CountDownLatch(1);
         final CountDownLatch sawDelete = new CountDownLatch(1);
         final AtomicReference<PNSetDataSyncRelationshipEventMessage> createLeaf = new AtomicReference<>();
+        final AtomicReference<String> createChannel = new AtomicReference<>();
         final AtomicReference<PNDeleteDataSyncRelationshipEventMessage> deleteLeaf = new AtomicReference<>();
 
         server.dataSync().createEntity("TestNode", CLASS_VERSION).entityId(entityAId).payload(payload("name", "NodeA-" + run)).sync();
@@ -561,6 +589,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
                         final PNSetDataSyncRelationshipEventMessage set = (PNSetDataSyncRelationshipEventMessage) result.getExtractedMessage();
                         if (set.getEvent() == PNDataSyncSetEventType.CREATE) {
                             createLeaf.set(set);
+                            createChannel.set(result.getChannel());
                             sawCreate.countDown();
                         } else if (set.getEvent() == PNDataSyncSetEventType.UPDATE) {
                             sawUpdate.countDown();
@@ -573,7 +602,7 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
             });
             subscribeAndAwaitConnect(client, subscription);
 
-            server.dataSync().createRelationship(entityAId, entityBId, "TestFriendship", CLASS_VERSION).relationshipId(relationshipId).status("active").sync();
+            final String createdETag = server.dataSync().createRelationship(entityAId, entityBId, "TestFriendship", CLASS_VERSION).relationshipId(relationshipId).status("active").sync().getData().getETag();
             server.dataSync().setRelationship(relationshipId, CLASS_VERSION).status("archived").sync();
             server.dataSync().removeRelationship(relationshipId).sync();
 
@@ -584,6 +613,8 @@ public class DataSyncRealtimeSubscribeIntegrationTest extends BaseIntegrationTes
             assertEquals(relationshipId, createLeaf.get().getData().getId());
             assertEquals(entityAId, createLeaf.get().getData().getEntityAId());
             assertEquals(entityBId, createLeaf.get().getData().getEntityBId());
+            assertEquals(createdETag, createLeaf.get().getData().getETag());
+            assertEnvelope(createLeaf.get(), createChannel.get(), "relationship", "TestFriendship", "SubKey", entityAId);
             assertEquals(relationshipId, deleteLeaf.get().getId());
             assertNotNull("delete leaf must carry deletedAt", deleteLeaf.get().getDeletedAt());
         } finally {

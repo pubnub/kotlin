@@ -216,6 +216,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
     @Test
     public void createGetAllPatchUpdateAndDeleteUser() throws PubNubException {
         final Map<String, Object> payload = payload("Alice", "alice@example.com");
+        payload.put("hobby", "poetry");
 
         // create
         server.dataSync().createUser(entityClassVersion)
@@ -251,11 +252,14 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
                     .sync();
             assertEquals("archived", updateResult.getData().getStatus());
             assertEquals("Bob", updateResult.getData().getPayload().get("username"));
+            assertNotEquals(patchResult.getData().getETag(), updateResult.getData().getETag());
 
-            // get reflects the full replacement
+            // get reflects the full replacement: `hobby` was not re-sent, so it is gone rather than kept
             final PNDataSyncGetUserResult afterUpdate = server.dataSync().getUser(userId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("Bob", afterUpdate.getData().getPayload().get("username"));
+            assertFalse(afterUpdate.getData().getPayload().containsKey("hobby"));
+            assertEquals(updateResult.getData().getETag(), afterUpdate.getData().getETag());
         } finally {
             server.dataSync().removeUser(userId).sync();
         }

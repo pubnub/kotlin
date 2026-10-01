@@ -7,6 +7,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventMessage
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncSetEventType
 import com.pubnub.api.models.consumer.pubsub.datasync.PNDeleteDataSyncChannelEventMessage
@@ -94,6 +95,28 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         Assert.assertTrue("subscribe loop did not connect", connected.await(15, TimeUnit.SECONDS))
     }
 
+    /**
+     * Asserts the envelope metadata of an `e=5` event: the fixed `source`/`version`, the wire [type], the class the
+     * element belongs to ([className] at [classLevel], read straight from `metadata.classLevel` — never inferred from
+     * a `className` prefix) and the ref-channel the event arrived on.
+     */
+    private fun assertEnvelope(
+        leaf: PNDataSyncEventMessage,
+        eventChannel: String?,
+        type: String,
+        className: String,
+        classLevel: String,
+        expectedChannel: String,
+    ) {
+        Assert.assertEquals("data-sync", leaf.source)
+        Assert.assertEquals("1.0", leaf.version)
+        Assert.assertEquals(type, leaf.type)
+        Assert.assertEquals(className, leaf.className)
+        Assert.assertEquals(classLevel, leaf.classLevel)
+        Assert.assertEquals(classVersion, leaf.classVersion)
+        Assert.assertEquals(expectedChannel, eventChannel)
+    }
+
     @Test
     fun receivesUserEventsViaAddListener() {
         val userId = "user-rt-" + CommonUtils.randomValue()
@@ -102,6 +125,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         val sawDelete = CountDownLatch(1)
         var createLeaf: PNSetDataSyncUserEventMessage? = null
         var deleteLeaf: PNDeleteDataSyncUserEventMessage? = null
+        var createChannel: String? = null
 
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
         val client = authorizedSubscriber(DataSyncGrant.subscribe(userId))
@@ -115,6 +139,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                             when (msg.event) {
                                 PNDataSyncSetEventType.CREATE -> {
                                     createLeaf = msg
+                                    createChannel = result.channel
                                     sawCreate.countDown()
                                 }
                                 PNDataSyncSetEventType.UPDATE -> sawUpdate.countDown()
@@ -131,7 +156,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         subscribeAndAwaitConnect(client, subscription)
 
         try {
-            server.dataSync.createUser(
+            val created = server.dataSync.createUser(
                 classVersion = classVersion,
                 userId = userId,
                 status = "active",
@@ -159,6 +184,9 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             Assert.assertEquals(userId, createLeaf!!.data.id)
             Assert.assertEquals("active", createLeaf!!.data.status)
             Assert.assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
+            // the event snapshot is the row the create wrote, so it carries the same eTag the REST call returned
+            Assert.assertEquals(created.data.eTag, createLeaf!!.data.eTag)
+            assertEnvelope(createLeaf!!, createChannel, "user", "User", "Global", userId)
             Assert.assertEquals(userId, deleteLeaf!!.id)
             Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
@@ -236,6 +264,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         val sawDelete = CountDownLatch(1)
         var createLeaf: PNSetDataSyncChannelEventMessage? = null
         var deleteLeaf: PNDeleteDataSyncChannelEventMessage? = null
+        var createChannel: String? = null
 
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
         val client = authorizedSubscriber(DataSyncGrant.subscribe(channelId))
@@ -248,6 +277,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                             when (msg.event) {
                                 PNDataSyncSetEventType.CREATE -> {
                                     createLeaf = msg
+                                    createChannel = result.channel
                                     sawCreate.countDown()
                                 }
                                 PNDataSyncSetEventType.UPDATE -> sawUpdate.countDown()
@@ -264,7 +294,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         subscribeAndAwaitConnect(client, subscription)
 
         try {
-            server.dataSync.createChannel(
+            val created = server.dataSync.createChannel(
                 classVersion = classVersion,
                 channelId = channelId,
                 status = "active",
@@ -288,6 +318,8 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
 
             Assert.assertEquals(channelId, createLeaf!!.data.id)
             Assert.assertEquals("active", createLeaf!!.data.status)
+            Assert.assertEquals(created.data.eTag, createLeaf!!.data.eTag)
+            assertEnvelope(createLeaf!!, createChannel, "channel", "Channel", "Global", channelId)
             Assert.assertEquals(channelId, deleteLeaf!!.id)
             Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
@@ -361,6 +393,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         val sawDelete = CountDownLatch(1)
         var createLeaf: PNSetDataSyncEntityEventMessage? = null
         var deleteLeaf: PNDeleteDataSyncEntityEventMessage? = null
+        var createChannel: String? = null
 
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
         val client = authorizedSubscriber(DataSyncGrant.subscribe(entityId))
@@ -373,6 +406,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                             when (msg.event) {
                                 PNDataSyncSetEventType.CREATE -> {
                                     createLeaf = msg
+                                    createChannel = result.channel
                                     sawCreate.countDown()
                                 }
                                 PNDataSyncSetEventType.UPDATE -> sawUpdate.countDown()
@@ -394,7 +428,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             // `username` but NOT `email`. `server` holds the secretKey, so it bypasses the projection write-guard
             // and can write the admin-only `email` directly (a __default__-projection token would be rejected
             // with DS-0202).
-            server.dataSync.createEntity(
+            val created = server.dataSync.createEntity(
                 className = "TestUser",
                 classVersion = classVersion,
                 entityId = entityId,
@@ -424,6 +458,9 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 "default projection must omit the admin-only email field",
                 createLeaf!!.data.payload?.get("email")
             )
+            Assert.assertEquals(created.data.eTag, createLeaf!!.data.eTag)
+            // a custom class lives at the SubKey level (the built-in User/Channel/Membership are Global)
+            assertEnvelope(createLeaf!!, createChannel, "entity", "TestUser", "SubKey", entityId)
             Assert.assertEquals(entityId, deleteLeaf!!.id)
             Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
@@ -517,6 +554,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
         // A membership is published to both endpoint refs; subscribe to the Channel endpoint to hear it.
         val client = authorizedSubscriber(DataSyncGrant.subscribe(channelId))
+        var createChannel: String? = null
         try {
             val subscription = client.dataSyncChannel(channelId).subscription()
             subscription.addListener(
@@ -527,6 +565,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                                 when (msg.event) {
                                     PNDataSyncSetEventType.CREATE -> {
                                         createLeaf = msg
+                                        createChannel = result.channel
                                         sawCreate.countDown()
                                     }
                                     PNDataSyncSetEventType.UPDATE -> sawUpdate.countDown()
@@ -542,7 +581,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             )
             subscribeAndAwaitConnect(client, subscription)
 
-            server.dataSync.createMembership(
+            val created = server.dataSync.createMembership(
                 channelId = channelId,
                 userId = userId,
                 classVersion = classVersion,
@@ -563,6 +602,9 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             Assert.assertEquals(membershipId, createLeaf!!.data.id)
             Assert.assertEquals(channelId, createLeaf!!.data.channelId)
             Assert.assertEquals(userId, createLeaf!!.data.userId)
+            Assert.assertEquals(created.data.eTag, createLeaf!!.data.eTag)
+            // published to both endpoint refs; this subscriber only listens on the Channel one
+            assertEnvelope(createLeaf!!, createChannel, "membership", "Membership", "Global", channelId)
             Assert.assertEquals(membershipId, deleteLeaf!!.id)
             Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
@@ -676,6 +718,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         // A PAM-only client (no secretKey) subscribes under a server-minted token; `server` does the writes.
         // A relationship is published to both endpoint refs; subscribe to entity A's ref to hear it.
         val client = authorizedSubscriber(DataSyncGrant.subscribe(entityAId))
+        var createChannel: String? = null
         try {
             val subscription = client.dataSyncEntity(entityAId).subscription()
             subscription.addListener(
@@ -686,6 +729,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                                 when (msg.event) {
                                     PNDataSyncSetEventType.CREATE -> {
                                         createLeaf = msg
+                                        createChannel = result.channel
                                         sawCreate.countDown()
                                     }
                                     PNDataSyncSetEventType.UPDATE -> sawUpdate.countDown()
@@ -701,7 +745,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             )
             subscribeAndAwaitConnect(client, subscription)
 
-            server.dataSync.createRelationship(
+            val created = server.dataSync.createRelationship(
                 entityAId = entityAId,
                 entityBId = entityBId,
                 className = "TestFriendship",
@@ -723,6 +767,8 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             Assert.assertEquals(relationshipId, createLeaf!!.data.id)
             Assert.assertEquals(entityAId, createLeaf!!.data.entityAId)
             Assert.assertEquals(entityBId, createLeaf!!.data.entityBId)
+            Assert.assertEquals(created.data.eTag, createLeaf!!.data.eTag)
+            assertEnvelope(createLeaf!!, createChannel, "relationship", "TestFriendship", "SubKey", entityAId)
             Assert.assertEquals(relationshipId, deleteLeaf!!.id)
             Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {

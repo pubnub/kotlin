@@ -341,11 +341,14 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             ).sync()
             Assert.assertEquals("archived", updateResult.data.status)
             Assert.assertEquals("Bob", updateResult.data.payload?.get("username"))
+            Assert.assertNotEquals(patchResult.data.eTag, updateResult.data.eTag)
 
-            // get reflects the full replacement
+            // get reflects the full replacement: `hobby` was not re-sent, so it is gone rather than kept
             val afterUpdate = server.dataSync.getChannel(channelId).sync()
             Assert.assertEquals("archived", afterUpdate.data.status)
             Assert.assertEquals("Bob", afterUpdate.data.payload?.get("username"))
+            Assert.assertFalse(afterUpdate.data.payload.orEmpty().containsKey("hobby"))
+            Assert.assertEquals(updateResult.data.eTag, afterUpdate.data.eTag)
         } finally {
             server.dataSync.removeChannel(channelId).sync()
         }
@@ -394,6 +397,175 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
             }
+        } finally {
+            server.dataSync.removeChannel(channelId).sync()
+        }
+    }
+
+    @Test
+    fun setWithIfMatchAndStaleETagThrows412() {
+        val createResult = server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = channelId,
+            status = "active",
+            payload = TestChannelPayload(username = "Alice", email = "alice@example.com"),
+        ).sync()
+
+        try {
+            // set with the current eTag -> succeeds and bumps the eTag
+            val setResult = server.dataSync.setChannel(
+                channelId = channelId,
+                classVersion = classVersion,
+                status = "inactive",
+                payload = TestChannelPayload(username = "Bob", email = "bob@example.com"),
+                ifMatch = createResult.data.eTag,
+            ).sync()
+            Assert.assertEquals("inactive", setResult.data.status)
+            Assert.assertNotEquals(createResult.data.eTag, setResult.data.eTag)
+
+            // a patch in between moves the eTag on again
+            val patchResult = server.dataSync.updateChannel(
+                channelId = channelId,
+                operations = listOf(PNJsonPatchOperation(op = "replace", path = "/status", value = "archived")),
+                ifMatch = setResult.data.eTag,
+            ).sync()
+            Assert.assertNotEquals(setResult.data.eTag, patchResult.data.eTag)
+
+            // set with the eTag read before the patch -> 412, and the patched channel is left as it was
+            try {
+                server.dataSync.setChannel(
+                    channelId = channelId,
+                    classVersion = classVersion,
+                    status = "overwritten",
+                    payload = TestChannelPayload(username = "Carol", email = "carol@example.com"),
+                    ifMatch = setResult.data.eTag,
+                ).sync()
+                Assert.fail("Expected a 412 when setting with a stale ifMatch eTag")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(412, e.statusCode)
+            }
+            val current = server.dataSync.getChannel(channelId).sync()
+            Assert.assertEquals("archived", current.data.status)
+            Assert.assertEquals("Bob", current.data.payload?.get("username"))
+            Assert.assertEquals(patchResult.data.eTag, current.data.eTag)
+        } finally {
+            server.dataSync.removeChannel(channelId).sync()
+        }
+    }
+
+    @Test
+    fun removeWithIfMatchOnlyRemovesTheCurrentVersion() {
+        val createResult = server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = channelId,
+            status = "active",
+            payload = TestChannelPayload(username = "Alice", email = "alice@example.com"),
+        ).sync()
+
+        try {
+            val patchResult = server.dataSync.updateChannel(
+                channelId = channelId,
+                operations = listOf(PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive")),
+            ).sync()
+
+            // remove with the pre-patch eTag -> 412, and the channel is still there
+            try {
+                server.dataSync.removeChannel(channelId, ifMatch = createResult.data.eTag).sync()
+                Assert.fail("Expected a 412 when removing with a stale ifMatch eTag")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(412, e.statusCode)
+            }
+            Assert.assertEquals("inactive", server.dataSync.getChannel(channelId).sync().data.status)
+
+            // remove with the current eTag -> removed
+            server.dataSync.removeChannel(channelId, ifMatch = patchResult.data.eTag).sync()
+            try {
+                server.dataSync.getChannel(channelId).sync()
+                Assert.fail("Expected a 404 after removing the channel")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(404, e.statusCode)
+            }
+        } finally {
+            // best-effort cleanup: the happy path already removed the channel, so a 404 here is expected
+            try {
+                server.dataSync.removeChannel(channelId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
+    fun patchPayloadOperationsAreApplied() {
+        server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = channelId,
+            status = "active",
+            payload = TestChannelPayload(
+                username = "Alice",
+                email = "alice@example.com",
+                hobby = "poetry",
+                custom = "value",
+            ),
+        ).sync()
+
+        try {
+            val patchResult = server.dataSync.updateChannel(
+                channelId = channelId,
+                operations = listOf(
+                    // a passing `test` lets the rest of the patch through
+                    PNJsonPatchOperation(op = "test", path = "/payload/username", value = "Alice"),
+                    PNJsonPatchOperation(op = "add", path = "/payload/nickname", value = "Ali"),
+                    PNJsonPatchOperation(op = "remove", path = "/payload/custom"),
+                    PNJsonPatchOperation(op = "copy", from = "/payload/username", path = "/payload/alias"),
+                    PNJsonPatchOperation(op = "move", from = "/payload/hobby", path = "/payload/pastime"),
+                ),
+            ).sync()
+
+            listOf(patchResult.data.payload, server.dataSync.getChannel(channelId).sync().data.payload).forEach { payload ->
+                val fields = payload.orEmpty()
+                Assert.assertEquals("Ali", fields["nickname"])
+                Assert.assertFalse(fields.containsKey("custom"))
+                Assert.assertEquals("Alice", fields["alias"])
+                Assert.assertEquals("Alice", fields["username"]) // copy leaves the source in place
+                Assert.assertEquals("poetry", fields["pastime"])
+                Assert.assertFalse(fields.containsKey("hobby")) // move drops the source
+                Assert.assertEquals("alice@example.com", fields["email"]) // untouched by any op
+            }
+            Assert.assertEquals("active", patchResult.data.status)
+        } finally {
+            server.dataSync.removeChannel(channelId).sync()
+        }
+    }
+
+    @Test
+    fun patchWithFailingTestOpIsAtomic() {
+        val createResult = server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = channelId,
+            status = "active",
+            payload = TestChannelPayload(username = "Alice", email = "alice@example.com", hobby = "poetry"),
+        ).sync()
+
+        try {
+            // the `replace` before the failing `test` must be rolled back along with the one after it
+            try {
+                server.dataSync.updateChannel(
+                    channelId = channelId,
+                    operations = listOf(
+                        PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
+                        PNJsonPatchOperation(op = "test", path = "/payload/username", value = "Nobody"),
+                        PNJsonPatchOperation(op = "replace", path = "/payload/hobby", value = "chess"),
+                    ),
+                ).sync()
+                Assert.fail("Expected DS-0302 (409) when a JSON Patch `test` operation fails")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(409, e.statusCode)
+            }
+
+            val current = server.dataSync.getChannel(channelId).sync()
+            Assert.assertEquals("active", current.data.status)
+            Assert.assertEquals("poetry", current.data.payload?.get("hobby"))
+            Assert.assertEquals(createResult.data.eTag, current.data.eTag)
         } finally {
             server.dataSync.removeChannel(channelId).sync()
         }

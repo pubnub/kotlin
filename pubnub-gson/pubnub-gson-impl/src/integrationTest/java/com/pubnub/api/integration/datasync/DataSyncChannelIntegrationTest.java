@@ -223,6 +223,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
         final Map<String, Object> payload = new HashMap<>();
         payload.put("username", "Alice");
         payload.put("email", "alice@example.com");
+        payload.put("hobby", "poetry");
 
         // create
         server.dataSync().createChannel(classVersion)
@@ -260,11 +261,14 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                     .sync();
             assertEquals("archived", updateResult.getData().getStatus());
             assertEquals("Bob", updateResult.getData().getPayload().get("username"));
+            assertNotEquals(patchResult.getData().getETag(), updateResult.getData().getETag());
 
-            // get reflects the full replacement
+            // get reflects the full replacement: `hobby` was not re-sent, so it is gone rather than kept
             final PNDataSyncGetChannelResult afterUpdate = server.dataSync().getChannel(channelId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("Bob", afterUpdate.getData().getPayload().get("username"));
+            assertFalse(afterUpdate.getData().getPayload().containsKey("hobby"));
+            assertEquals(updateResult.getData().getETag(), afterUpdate.getData().getETag());
         } finally {
             server.dataSync().removeChannel(channelId).sync();
         }

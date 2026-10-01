@@ -244,7 +244,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             classVersion = classVersion,
             relationshipId = relationshipId,
             status = "active",
-            payload = TestRelationshipPayload(role = "admin"),
+            payload = TestRelationshipPayload(role = "admin", custom = "value"),
         ).sync()
 
         try {
@@ -276,10 +276,14 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             ).sync()
             Assert.assertEquals("archived", setResult.data.status)
             Assert.assertEquals("member", setResult.data.payload?.get("role"))
+            Assert.assertNotEquals(patchResult.data.eTag, setResult.data.eTag)
 
+            // get reflects the full replacement: `custom` was not re-sent, so it is gone rather than kept
             val afterSet = server.dataSync.getRelationship(relationshipId).sync()
             Assert.assertEquals("archived", afterSet.data.status)
             Assert.assertEquals("member", afterSet.data.payload?.get("role"))
+            Assert.assertFalse(afterSet.data.payload.orEmpty().containsKey("custom"))
+            Assert.assertEquals(setResult.data.eTag, afterSet.data.eTag)
 
             // delete
             server.dataSync.removeRelationship(relationshipId).sync()
@@ -337,6 +341,185 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
             }
+        } finally {
+            server.dataSync.removeRelationship(relationshipId).sync()
+        }
+    }
+
+    @Test
+    fun setWithIfMatchAndStaleETagThrows412() = withTwoEntities { entityAId, entityBId ->
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
+        val createResult = server.dataSync.createRelationship(
+            entityAId = entityAId,
+            entityBId = entityBId,
+            className = m2mClass,
+            classVersion = classVersion,
+            relationshipId = relationshipId,
+            status = "active",
+            payload = TestRelationshipPayload(role = "admin"),
+        ).sync()
+
+        try {
+            // set with the current eTag -> succeeds and bumps the eTag
+            val setResult = server.dataSync.setRelationship(
+                relationshipId = relationshipId,
+                classVersion = classVersion,
+                status = "inactive",
+                payload = TestRelationshipPayload(role = "member"),
+                ifMatch = createResult.data.eTag,
+            ).sync()
+            Assert.assertEquals("inactive", setResult.data.status)
+            Assert.assertNotEquals(createResult.data.eTag, setResult.data.eTag)
+
+            // a patch in between moves the eTag on again
+            val patchResult = server.dataSync.updateRelationship(
+                relationshipId = relationshipId,
+                operations = listOf(PNJsonPatchOperation(op = "replace", path = "/status", value = "archived")),
+                ifMatch = setResult.data.eTag,
+            ).sync()
+            Assert.assertNotEquals(setResult.data.eTag, patchResult.data.eTag)
+
+            // set with the eTag read before the patch -> 412, and the patched relationship is left as it was
+            try {
+                server.dataSync.setRelationship(
+                    relationshipId = relationshipId,
+                    classVersion = classVersion,
+                    status = "overwritten",
+                    payload = TestRelationshipPayload(role = "guest"),
+                    ifMatch = setResult.data.eTag,
+                ).sync()
+                Assert.fail("Expected a 412 when setting with a stale ifMatch eTag")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(412, e.statusCode)
+            }
+            val current = server.dataSync.getRelationship(relationshipId).sync()
+            Assert.assertEquals("archived", current.data.status)
+            Assert.assertEquals("member", current.data.payload?.get("role"))
+            Assert.assertEquals(patchResult.data.eTag, current.data.eTag)
+        } finally {
+            server.dataSync.removeRelationship(relationshipId).sync()
+        }
+    }
+
+    @Test
+    fun removeWithIfMatchOnlyRemovesTheCurrentVersion() = withTwoEntities { entityAId, entityBId ->
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
+        val createResult = server.dataSync.createRelationship(
+            entityAId = entityAId,
+            entityBId = entityBId,
+            className = m2mClass,
+            classVersion = classVersion,
+            relationshipId = relationshipId,
+            status = "active",
+        ).sync()
+
+        try {
+            val patchResult = server.dataSync.updateRelationship(
+                relationshipId = relationshipId,
+                operations = listOf(PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive")),
+            ).sync()
+
+            // remove with the pre-patch eTag -> 412, and the relationship is still there
+            try {
+                server.dataSync.removeRelationship(relationshipId, ifMatch = createResult.data.eTag).sync()
+                Assert.fail("Expected a 412 when removing with a stale ifMatch eTag")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(412, e.statusCode)
+            }
+            Assert.assertEquals("inactive", server.dataSync.getRelationship(relationshipId).sync().data.status)
+
+            // remove with the current eTag -> removed
+            server.dataSync.removeRelationship(relationshipId, ifMatch = patchResult.data.eTag).sync()
+            try {
+                server.dataSync.getRelationship(relationshipId).sync()
+                Assert.fail("Expected a 404 after removing the relationship")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(404, e.statusCode)
+            }
+        } finally {
+            // best-effort cleanup: the happy path already removed the relationship, so a 404 here is expected
+            try {
+                server.dataSync.removeRelationship(relationshipId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
+    fun patchPayloadOperationsAreApplied() = withTwoEntities { entityAId, entityBId ->
+        // only undeclared payload fields are touched: the class-declared `status` and admin-only `secret` stay out
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
+        server.dataSync.createRelationship(
+            entityAId = entityAId,
+            entityBId = entityBId,
+            className = m2mClass,
+            classVersion = classVersion,
+            relationshipId = relationshipId,
+            status = "active",
+            payload = mapOf("role" to "admin", "custom" to "value", "team" to "red"),
+        ).sync()
+
+        try {
+            val patchResult = server.dataSync.updateRelationship(
+                relationshipId = relationshipId,
+                operations = listOf(
+                    // a passing `test` lets the rest of the patch through
+                    PNJsonPatchOperation(op = "test", path = "/payload/role", value = "admin"),
+                    PNJsonPatchOperation(op = "add", path = "/payload/nickname", value = "Ali"),
+                    PNJsonPatchOperation(op = "remove", path = "/payload/custom"),
+                    PNJsonPatchOperation(op = "copy", from = "/payload/role", path = "/payload/previousRole"),
+                    PNJsonPatchOperation(op = "move", from = "/payload/team", path = "/payload/squad"),
+                ),
+            ).sync()
+
+            listOf(patchResult.data.payload, server.dataSync.getRelationship(relationshipId).sync().data.payload).forEach { payload ->
+                val fields = payload.orEmpty()
+                Assert.assertEquals("Ali", fields["nickname"])
+                Assert.assertFalse(fields.containsKey("custom"))
+                Assert.assertEquals("admin", fields["previousRole"])
+                Assert.assertEquals("admin", fields["role"]) // copy leaves the source in place
+                Assert.assertEquals("red", fields["squad"])
+                Assert.assertFalse(fields.containsKey("team")) // move drops the source
+            }
+            Assert.assertEquals("active", patchResult.data.status)
+        } finally {
+            server.dataSync.removeRelationship(relationshipId).sync()
+        }
+    }
+
+    @Test
+    fun patchWithFailingTestOpIsAtomic() = withTwoEntities { entityAId, entityBId ->
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
+        val createResult = server.dataSync.createRelationship(
+            entityAId = entityAId,
+            entityBId = entityBId,
+            className = m2mClass,
+            classVersion = classVersion,
+            relationshipId = relationshipId,
+            status = "active",
+            payload = TestRelationshipPayload(role = "admin", custom = "value"),
+        ).sync()
+
+        try {
+            // the `replace` before the failing `test` must be rolled back along with the one after it
+            try {
+                server.dataSync.updateRelationship(
+                    relationshipId = relationshipId,
+                    operations = listOf(
+                        PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
+                        PNJsonPatchOperation(op = "test", path = "/payload/role", value = "nobody"),
+                        PNJsonPatchOperation(op = "replace", path = "/payload/custom", value = "changed"),
+                    ),
+                ).sync()
+                Assert.fail("Expected DS-0302 (409) when a JSON Patch `test` operation fails")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(409, e.statusCode)
+            }
+
+            val current = server.dataSync.getRelationship(relationshipId).sync()
+            Assert.assertEquals("active", current.data.status)
+            Assert.assertEquals("value", current.data.payload?.get("custom"))
+            Assert.assertEquals(createResult.data.eTag, current.data.eTag)
         } finally {
             server.dataSync.removeRelationship(relationshipId).sync()
         }

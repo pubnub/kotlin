@@ -354,11 +354,14 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             ).sync()
             Assert.assertEquals("archived", updateResult.data.status)
             Assert.assertEquals("Bob", updateResult.data.payload?.get("username"))
+            Assert.assertNotEquals(patchResult.data.eTag, updateResult.data.eTag)
 
-            // get reflects the full replacement
+            // get reflects the full replacement: `hobby` was not re-sent, so it is gone rather than kept
             val afterUpdate = server.dataSync.getEntity(entityId).sync()
             Assert.assertEquals("archived", afterUpdate.data.status)
             Assert.assertEquals("Bob", afterUpdate.data.payload?.get("username"))
+            Assert.assertFalse(afterUpdate.data.payload.orEmpty().containsKey("hobby"))
+            Assert.assertEquals(updateResult.data.eTag, afterUpdate.data.eTag)
         } finally {
             server.dataSync.removeEntity(entityId).sync()
         }
@@ -408,6 +411,180 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
             }
+        } finally {
+            server.dataSync.removeEntity(entityId).sync()
+        }
+    }
+
+    @Test
+    fun setWithIfMatchAndStaleETagThrows412() {
+        val createResult = server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = entityId,
+            status = "active",
+            payload = TestUserPayload(username = "Alice", email = "alice@example.com"),
+        ).sync()
+
+        try {
+            // set with the current eTag -> succeeds and bumps the eTag
+            val setResult = server.dataSync.setEntity(
+                entityId = entityId,
+                classVersion = classVersion,
+                status = "inactive",
+                payload = TestUserPayload(username = "Bob", email = "bob@example.com"),
+                ifMatch = createResult.data.eTag,
+            ).sync()
+            Assert.assertEquals("inactive", setResult.data.status)
+            Assert.assertNotEquals(createResult.data.eTag, setResult.data.eTag)
+
+            // a patch in between moves the eTag on again
+            val patchResult = server.dataSync.updateEntity(
+                entityId = entityId,
+                operations = listOf(PNJsonPatchOperation(op = "replace", path = "/status", value = "archived")),
+                ifMatch = setResult.data.eTag,
+            ).sync()
+            Assert.assertNotEquals(setResult.data.eTag, patchResult.data.eTag)
+
+            // set with the eTag read before the patch -> 412, and the patched entity is left as it was
+            try {
+                server.dataSync.setEntity(
+                    entityId = entityId,
+                    classVersion = classVersion,
+                    status = "overwritten",
+                    payload = TestUserPayload(username = "Carol", email = "carol@example.com"),
+                    ifMatch = setResult.data.eTag,
+                ).sync()
+                Assert.fail("Expected a 412 when setting with a stale ifMatch eTag")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(412, e.statusCode)
+            }
+            val current = server.dataSync.getEntity(entityId).sync()
+            Assert.assertEquals("archived", current.data.status)
+            Assert.assertEquals("Bob", current.data.payload?.get("username"))
+            Assert.assertEquals(patchResult.data.eTag, current.data.eTag)
+        } finally {
+            server.dataSync.removeEntity(entityId).sync()
+        }
+    }
+
+    @Test
+    fun removeWithIfMatchOnlyRemovesTheCurrentVersion() {
+        val createResult = server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = entityId,
+            status = "active",
+            payload = TestUserPayload(username = "Alice", email = "alice@example.com"),
+        ).sync()
+
+        try {
+            val patchResult = server.dataSync.updateEntity(
+                entityId = entityId,
+                operations = listOf(PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive")),
+            ).sync()
+
+            // remove with the pre-patch eTag -> 412, and the entity is still there
+            try {
+                server.dataSync.removeEntity(entityId, ifMatch = createResult.data.eTag).sync()
+                Assert.fail("Expected a 412 when removing with a stale ifMatch eTag")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(412, e.statusCode)
+            }
+            Assert.assertEquals("inactive", server.dataSync.getEntity(entityId).sync().data.status)
+
+            // remove with the current eTag -> removed
+            server.dataSync.removeEntity(entityId, ifMatch = patchResult.data.eTag).sync()
+            try {
+                server.dataSync.getEntity(entityId).sync()
+                Assert.fail("Expected a 404 after removing the entity")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(404, e.statusCode)
+            }
+        } finally {
+            // best-effort cleanup: the happy path already removed the entity, so a 404 here is expected
+            try {
+                server.dataSync.removeEntity(entityId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
+    fun patchPayloadOperationsAreApplied() {
+        // `username` is non-nullable on TestUser, so it is only tested and copied, never moved or removed;
+        // the ops that drop a field act on the undeclared `hobby`/`custom`.
+        server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = entityId,
+            status = "active",
+            payload = TestUserPayload(
+                username = "Alice",
+                email = "alice@example.com",
+                hobby = "poetry",
+                custom = "value",
+            ),
+        ).sync()
+
+        try {
+            val patchResult = server.dataSync.updateEntity(
+                entityId = entityId,
+                operations = listOf(
+                    // a passing `test` lets the rest of the patch through
+                    PNJsonPatchOperation(op = "test", path = "/payload/username", value = "Alice"),
+                    PNJsonPatchOperation(op = "add", path = "/payload/nickname", value = "Ali"),
+                    PNJsonPatchOperation(op = "remove", path = "/payload/custom"),
+                    PNJsonPatchOperation(op = "copy", from = "/payload/username", path = "/payload/alias"),
+                    PNJsonPatchOperation(op = "move", from = "/payload/hobby", path = "/payload/pastime"),
+                ),
+            ).sync()
+
+            listOf(patchResult.data.payload, server.dataSync.getEntity(entityId).sync().data.payload).forEach { payload ->
+                val fields = payload.orEmpty()
+                Assert.assertEquals("Ali", fields["nickname"])
+                Assert.assertFalse(fields.containsKey("custom"))
+                Assert.assertEquals("Alice", fields["alias"])
+                Assert.assertEquals("Alice", fields["username"]) // copy leaves the source in place
+                Assert.assertEquals("poetry", fields["pastime"])
+                Assert.assertFalse(fields.containsKey("hobby")) // move drops the source
+            }
+            Assert.assertEquals("active", patchResult.data.status)
+        } finally {
+            server.dataSync.removeEntity(entityId).sync()
+        }
+    }
+
+    @Test
+    fun patchWithFailingTestOpIsAtomic() {
+        val createResult = server.dataSync.createEntity(
+            className = className,
+            classVersion = classVersion,
+            entityId = entityId,
+            status = "active",
+            payload = TestUserPayload(username = "Alice", email = "alice@example.com", hobby = "poetry"),
+        ).sync()
+
+        try {
+            // the `replace` before the failing `test` must be rolled back along with the one after it
+            try {
+                server.dataSync.updateEntity(
+                    entityId = entityId,
+                    operations = listOf(
+                        PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
+                        PNJsonPatchOperation(op = "test", path = "/payload/username", value = "Nobody"),
+                        PNJsonPatchOperation(op = "replace", path = "/payload/hobby", value = "chess"),
+                    ),
+                ).sync()
+                Assert.fail("Expected DS-0302 (409) when a JSON Patch `test` operation fails")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(409, e.statusCode)
+            }
+
+            val current = server.dataSync.getEntity(entityId).sync()
+            Assert.assertEquals("active", current.data.status)
+            Assert.assertEquals("poetry", current.data.payload?.get("hobby"))
+            Assert.assertEquals(createResult.data.eTag, current.data.eTag)
         } finally {
             server.dataSync.removeEntity(entityId).sync()
         }

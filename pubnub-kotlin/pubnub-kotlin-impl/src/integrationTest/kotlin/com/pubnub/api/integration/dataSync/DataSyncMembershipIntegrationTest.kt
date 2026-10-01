@@ -164,7 +164,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
             classVersion = classVersion,
             membershipId = membershipId,
             status = "active",
-            payload = TestMembershipPayload(role = "admin"),
+            payload = TestMembershipPayload(role = "admin", custom = "value"),
         ).sync()
 
         try {
@@ -195,10 +195,14 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
             ).sync()
             Assert.assertEquals("archived", updateResult.data.status)
             Assert.assertEquals("member", updateResult.data.payload?.get("role"))
+            Assert.assertNotEquals(patchResult.data.eTag, updateResult.data.eTag)
 
+            // get reflects the full replacement: `custom` was not re-sent, so it is gone rather than kept
             val afterUpdate = server.dataSync.getMembership(membershipId).sync()
             Assert.assertEquals("archived", afterUpdate.data.status)
             Assert.assertEquals("member", afterUpdate.data.payload?.get("role"))
+            Assert.assertFalse(afterUpdate.data.payload.orEmpty().containsKey("custom"))
+            Assert.assertEquals(updateResult.data.eTag, afterUpdate.data.eTag)
         } finally {
             server.dataSync.removeMembership(membershipId).sync()
         }
@@ -241,6 +245,180 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
             }
+        } finally {
+            server.dataSync.removeMembership(membershipId).sync()
+        }
+    }
+
+    @Test
+    fun setWithIfMatchAndStaleETagThrows412() = withChannelAndUser { channelId, userId ->
+        val membershipId = "membership-" + CommonUtils.randomValue()
+        val createResult = server.dataSync.createMembership(
+            channelId = channelId,
+            userId = userId,
+            classVersion = classVersion,
+            membershipId = membershipId,
+            status = "active",
+            payload = TestMembershipPayload(role = "admin"),
+        ).sync()
+
+        try {
+            // set with the current eTag -> succeeds and bumps the eTag
+            val setResult = server.dataSync.setMembership(
+                membershipId = membershipId,
+                classVersion = classVersion,
+                status = "inactive",
+                payload = TestMembershipPayload(role = "member"),
+                ifMatch = createResult.data.eTag,
+            ).sync()
+            Assert.assertEquals("inactive", setResult.data.status)
+            Assert.assertNotEquals(createResult.data.eTag, setResult.data.eTag)
+
+            // a patch in between moves the eTag on again
+            val patchResult = server.dataSync.updateMembership(
+                membershipId = membershipId,
+                operations = listOf(PNJsonPatchOperation(op = "replace", path = "/status", value = "archived")),
+                ifMatch = setResult.data.eTag,
+            ).sync()
+            Assert.assertNotEquals(setResult.data.eTag, patchResult.data.eTag)
+
+            // set with the eTag read before the patch -> 412, and the patched membership is left as it was
+            try {
+                server.dataSync.setMembership(
+                    membershipId = membershipId,
+                    classVersion = classVersion,
+                    status = "overwritten",
+                    payload = TestMembershipPayload(role = "guest"),
+                    ifMatch = setResult.data.eTag,
+                ).sync()
+                Assert.fail("Expected a 412 when setting with a stale ifMatch eTag")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(412, e.statusCode)
+            }
+            val current = server.dataSync.getMembership(membershipId).sync()
+            Assert.assertEquals("archived", current.data.status)
+            Assert.assertEquals("member", current.data.payload?.get("role"))
+            Assert.assertEquals(patchResult.data.eTag, current.data.eTag)
+        } finally {
+            server.dataSync.removeMembership(membershipId).sync()
+        }
+    }
+
+    @Test
+    fun removeWithIfMatchOnlyRemovesTheCurrentVersion() = withChannelAndUser { channelId, userId ->
+        val membershipId = "membership-" + CommonUtils.randomValue()
+        val createResult = server.dataSync.createMembership(
+            channelId = channelId,
+            userId = userId,
+            classVersion = classVersion,
+            membershipId = membershipId,
+            status = "active",
+        ).sync()
+
+        try {
+            val patchResult = server.dataSync.updateMembership(
+                membershipId = membershipId,
+                operations = listOf(PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive")),
+            ).sync()
+
+            // remove with the pre-patch eTag -> 412, and the membership is still there
+            try {
+                server.dataSync.removeMembership(membershipId, ifMatch = createResult.data.eTag).sync()
+                Assert.fail("Expected a 412 when removing with a stale ifMatch eTag")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(412, e.statusCode)
+            }
+            Assert.assertEquals("inactive", server.dataSync.getMembership(membershipId).sync().data.status)
+
+            // remove with the current eTag -> removed
+            server.dataSync.removeMembership(membershipId, ifMatch = patchResult.data.eTag).sync()
+            try {
+                server.dataSync.getMembership(membershipId).sync()
+                Assert.fail("Expected a 404 after removing the membership")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(404, e.statusCode)
+            }
+        } finally {
+            // best-effort cleanup: the happy path already removed the membership, so a 404 here is expected
+            try {
+                server.dataSync.removeMembership(membershipId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    @Test
+    fun patchPayloadOperationsAreApplied() = withChannelAndUser { channelId, userId ->
+        val membershipId = "membership-" + CommonUtils.randomValue()
+        server.dataSync.createMembership(
+            channelId = channelId,
+            userId = userId,
+            classVersion = classVersion,
+            membershipId = membershipId,
+            status = "active",
+            payload = mapOf("role" to "admin", "custom" to "value", "team" to "red"),
+        ).sync()
+
+        try {
+            val patchResult = server.dataSync.updateMembership(
+                membershipId = membershipId,
+                operations = listOf(
+                    // a passing `test` lets the rest of the patch through
+                    PNJsonPatchOperation(op = "test", path = "/payload/role", value = "admin"),
+                    PNJsonPatchOperation(op = "add", path = "/payload/nickname", value = "Ali"),
+                    PNJsonPatchOperation(op = "remove", path = "/payload/custom"),
+                    PNJsonPatchOperation(op = "copy", from = "/payload/role", path = "/payload/previousRole"),
+                    PNJsonPatchOperation(op = "move", from = "/payload/team", path = "/payload/squad"),
+                ),
+            ).sync()
+
+            listOf(patchResult.data.payload, server.dataSync.getMembership(membershipId).sync().data.payload).forEach { payload ->
+                val fields = payload.orEmpty()
+                Assert.assertEquals("Ali", fields["nickname"])
+                Assert.assertFalse(fields.containsKey("custom"))
+                Assert.assertEquals("admin", fields["previousRole"])
+                Assert.assertEquals("admin", fields["role"]) // copy leaves the source in place
+                Assert.assertEquals("red", fields["squad"])
+                Assert.assertFalse(fields.containsKey("team")) // move drops the source
+            }
+            Assert.assertEquals("active", patchResult.data.status)
+        } finally {
+            server.dataSync.removeMembership(membershipId).sync()
+        }
+    }
+
+    @Test
+    fun patchWithFailingTestOpIsAtomic() = withChannelAndUser { channelId, userId ->
+        val membershipId = "membership-" + CommonUtils.randomValue()
+        val createResult = server.dataSync.createMembership(
+            channelId = channelId,
+            userId = userId,
+            classVersion = classVersion,
+            membershipId = membershipId,
+            status = "active",
+            payload = TestMembershipPayload(role = "admin", custom = "value"),
+        ).sync()
+
+        try {
+            // the `replace` before the failing `test` must be rolled back along with the one after it
+            try {
+                server.dataSync.updateMembership(
+                    membershipId = membershipId,
+                    operations = listOf(
+                        PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
+                        PNJsonPatchOperation(op = "test", path = "/payload/role", value = "nobody"),
+                        PNJsonPatchOperation(op = "replace", path = "/payload/custom", value = "changed"),
+                    ),
+                ).sync()
+                Assert.fail("Expected DS-0302 (409) when a JSON Patch `test` operation fails")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(409, e.statusCode)
+            }
+
+            val current = server.dataSync.getMembership(membershipId).sync()
+            Assert.assertEquals("active", current.data.status)
+            Assert.assertEquals("value", current.data.payload?.get("custom"))
+            Assert.assertEquals(createResult.data.eTag, current.data.eTag)
         } finally {
             server.dataSync.removeMembership(membershipId).sync()
         }

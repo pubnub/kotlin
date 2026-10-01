@@ -168,6 +168,7 @@ public class DataSyncMembershipIntegrationTest extends BaseIntegrationTest {
 
         final Map<String, Object> payload = new HashMap<>();
         payload.put("role", "admin");
+        payload.put("custom", "value");
 
         try {
             server.dataSync().createMembership(channelId, userId, classVersion)
@@ -205,10 +206,14 @@ public class DataSyncMembershipIntegrationTest extends BaseIntegrationTest {
                     .sync();
             assertEquals("archived", updateResult.getData().getStatus());
             assertEquals("member", updateResult.getData().getPayload().get("role"));
+            assertNotEquals(patchResult.getData().getETag(), updateResult.getData().getETag());
 
+            // get reflects the full replacement: `custom` was not re-sent, so it is gone rather than kept
             final PNDataSyncGetMembershipResult afterUpdate = server.dataSync().getMembership(membershipId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("member", afterUpdate.getData().getPayload().get("role"));
+            assertFalse(afterUpdate.getData().getPayload().containsKey("custom"));
+            assertEquals(updateResult.getData().getETag(), afterUpdate.getData().getETag());
         } finally {
             bestEffortRemoveMembership(membershipId);
             bestEffortRemoveChannel(channelId);
