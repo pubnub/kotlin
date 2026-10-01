@@ -16,9 +16,8 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
+import org.junit.Ignore
 import org.junit.Test
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.TestInstance
 
 /**
  * Integration tests for the DataSync entity API. They depend on a pre-provisioned `TestUser` entity class
@@ -42,31 +41,34 @@ import org.junit.jupiter.api.TestInstance
  *   `admin`-projected write payload may contain only `admin` fields (no undeclared fields like `hobby`/`custom`).
  * - `signupDate` is `date`-kind → date-only `YYYY-MM-DD` literals (not RFC-3339 datetime).
  */
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     private val className = "TestUser"
     private val classVersion = 1
     private val entityId = "entity-" + randomValue()
 
     /**
-     * Wipes every entity of [className] on the keyset before the suite runs so leftover rows from earlier runs
-     * (or a crashed suite) can't skew list/filter assertions. Uses `server` (holds the secretKey), pages through
-     * `getEntities` until exhausted, and best-effort removes each id.
+     * On-demand maintenance, not a test: wipes every entity of [className] on the keyset, so leftover rows from
+     * earlier runs (or a crashed suite) can't skew list/filter assertions. To run it, remove [Ignore] and run just
+     * this method. Uses `server` (holds the secretKey), pages through `getEntities` and best-effort removes each id;
+     * stops when a page is empty or nothing on it could be removed.
      */
-    @BeforeAll
+    @Ignore("On-demand keyset cleanup; remove @Ignore to run")
+    @Test
     fun cleanupExistingEntities() {
-        /*while (true) {
+        while (true) {
             val page = server.dataSync.getEntities(className = className, limit = 100).sync()
-            if (page.data.isEmpty()) {
-                break
-            }
+            var removed = 0
             page.data.forEach { entity ->
                 try {
                     server.dataSync.removeEntity(entity.id).sync()
+                    removed++
                 } catch (ignored: PubNubException) {
                 }
             }
-        }*/
+            if (removed == 0) {
+                break
+            }
+        }
     }
 
     data class TestUserPayload(

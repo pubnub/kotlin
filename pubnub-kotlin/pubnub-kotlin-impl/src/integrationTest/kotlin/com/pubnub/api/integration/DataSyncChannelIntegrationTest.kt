@@ -16,34 +16,36 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
+import org.junit.Ignore
 import org.junit.Test
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     private val classVersion = 1
     private val channelId = "channel-" + randomValue()
 
     /**
-     * Wipes every channel on the keyset before the suite runs so leftover rows from earlier runs (or a crashed
-     * suite) can't skew list/filter assertions. Uses `server` (holds the secretKey), pages through `getChannels`
-     * until exhausted, and best-effort removes each id.
+     * On-demand maintenance, not a test: wipes every channel on the keyset, so leftover rows from earlier runs (or a
+     * crashed suite) can't skew list/filter assertions. To run it, remove [Ignore] and run just this method. Uses
+     * `server` (holds the secretKey), pages through `getChannels` and best-effort removes each id; stops when a page
+     * is empty or nothing on it could be removed.
      */
-    @BeforeAll
+    @Ignore("On-demand keyset cleanup; remove @Ignore to run")
+    @Test
     fun cleanupExistingChannels() {
-        /*while (true) {
+        while (true) {
             val page = server.dataSync.getChannels(limit = 100).sync()
-            if (page.data.isEmpty()) {
-                break
-            }
+            var removed = 0
             page.data.forEach { channel ->
                 try {
                     server.dataSync.removeChannel(channel.id).sync()
+                    removed++
                 } catch (ignored: PubNubException) {
                 }
             }
-        }*/
+            if (removed == 0) {
+                break
+            }
+        }
     }
 
     data class TestChannelPayload(

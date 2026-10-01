@@ -16,34 +16,36 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
+import org.junit.Ignore
 import org.junit.Test
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataSyncUserIntegrationTest : BaseIntegrationTest() {
     private val classVersion = 1
     private val userId = "user-" + randomValue()
 
     /**
-     * Wipes every user on the keyset before the suite runs so leftover rows from earlier runs (or a crashed
-     * suite) can't skew list/filter assertions. Uses `server` (holds the secretKey), pages through `getUsers`
-     * until exhausted, and best-effort removes each id.
+     * On-demand maintenance, not a test: wipes every user on the keyset, so leftover rows from earlier runs (or a
+     * crashed suite) can't skew list/filter assertions. To run it, remove [Ignore] and run just this method. Uses
+     * `server` (holds the secretKey), pages through `getUsers` and best-effort removes each id; stops when a page is
+     * empty or nothing on it could be removed.
      */
-    @BeforeAll
+    @Ignore("On-demand keyset cleanup; remove @Ignore to run")
+    @Test
     fun cleanupExistingUsers() {
-        /*while (true) {
+        while (true) {
             val page = server.dataSync.getUsers(limit = 100).sync()
-            if (page.data.isEmpty()) {
-                break
-            }
+            var removed = 0
             page.data.forEach { user ->
                 try {
                     server.dataSync.removeUser(user.id).sync()
+                    removed++
                 } catch (ignored: PubNubException) {
                 }
             }
-        }*/
+            if (removed == 0) {
+                break
+            }
+        }
     }
 
     data class TestUserPayload(
