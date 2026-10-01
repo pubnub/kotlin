@@ -51,15 +51,15 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun happyPath_SUM() {
+    fun happyPath_channelsAndUuids() {
         // given
         val pubNubUnderTest = server
         val expectedTTL = 1337
-        val expectedAuthorizedUUID = "authorizedUser01"
-        val expectedSpaceIdValue = "mySpace01"
-        val expectedSpaceIdPattern = "mySpace.*"
-        val expectedUserIdValue = "myUser01"
-        val expectedUserIdPattern = "myUser.*"
+        val expectedAuthorizedUUID = "authorizedUuid01"
+        val expectedChannelName = "myChannel01"
+        val expectedChannelPattern = "myChannel.*"
+        val expectedUuidValue = "myUuid01"
+        val expectedUuidPattern = "myUuid.*"
 
         // when
         val grantTokenEndpoint =
@@ -68,13 +68,13 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                 authorizedUUID = expectedAuthorizedUUID,
                 channels =
                     listOf(
-                        ChannelGrant.name(name = expectedSpaceIdValue, read = true, delete = true),
-                        ChannelGrant.pattern(pattern = expectedSpaceIdPattern, write = true, manage = true),
+                        ChannelGrant.name(name = expectedChannelName, read = true, delete = true),
+                        ChannelGrant.pattern(pattern = expectedChannelPattern, write = true, manage = true),
                     ),
                 uuids =
                     listOf(
-                        UUIDGrant.id(id = expectedUserIdValue, delete = true),
-                        UUIDGrant.pattern(pattern = expectedUserIdPattern, update = true),
+                        UUIDGrant.id(id = expectedUuidValue, delete = true),
+                        UUIDGrant.pattern(pattern = expectedUuidPattern, update = true),
                     ),
             )
 
@@ -90,17 +90,17 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                 read = true,
                 delete = true,
             ),
-            resources.channels[expectedSpaceIdValue],
+            resources.channels[expectedChannelName],
         )
         assertEquals(
             PNResourcePermissions(
                 write = true,
                 manage = true,
             ),
-            patterns.channels[expectedSpaceIdPattern],
+            patterns.channels[expectedChannelPattern],
         )
-        assertEquals(PNResourcePermissions(delete = true), resources.uuids[expectedUserIdValue])
-        assertEquals(PNResourcePermissions(update = true), patterns.uuids[expectedUserIdPattern])
+        assertEquals(PNResourcePermissions(delete = true), resources.uuids[expectedUuidValue])
+        assertEquals(PNResourcePermissions(update = true), patterns.uuids[expectedUuidPattern])
     }
 
     @Test

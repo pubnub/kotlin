@@ -28,31 +28,31 @@ import static org.junit.Assert.assertTrue;
 public class GrantTokenIT extends BaseIntegrationTest {
 
     @Test
-    public void happyPath_SUM() throws PubNubException {
+    public void happyPath_channelsAndUuids() throws PubNubException {
         PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
-        String expectedSpaceIdValue = "space01";
-        String expectedUser01Value = "user01";
-        String expectedSpaceIdPattern = "space.*";
-        String expectedUserIdPattern = "user.*";
-        String expectedAuthorizedUser = "authorizedUser";
+        String expectedChannelName = "channel01";
+        String expectedUuidValue = "uuid01";
+        String expectedChannelPattern = "channel.*";
+        String expectedUuidPattern = "uuid.*";
+        String expectedAuthorizedUuid = "authorizedUuid";
         PNGrantTokenResult grantTokenResult = pubNubUnderTest
                 .grantToken(expectedTTL)
-                .channels(Arrays.asList(ChannelGrant.name(expectedSpaceIdValue).delete(), ChannelGrant.pattern(expectedSpaceIdPattern).read()))
-                .uuids(Arrays.asList(UUIDGrant.id(expectedUser01Value).get(), UUIDGrant.pattern(expectedUserIdPattern).get()))
-                .authorizedUUID(expectedAuthorizedUser)
+                .channels(Arrays.asList(ChannelGrant.name(expectedChannelName).delete(), ChannelGrant.pattern(expectedChannelPattern).read()))
+                .uuids(Arrays.asList(UUIDGrant.id(expectedUuidValue).get(), UUIDGrant.pattern(expectedUuidPattern).get()))
+                .authorizedUUID(expectedAuthorizedUuid)
                 .sync();
         PNToken pnToken = pubNubUnderTest.parseToken(grantTokenResult.getToken());
 
         assertEquals(expectedTTL, pnToken.getTtl());
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, true, false, false, false),
-                pnToken.getResources().getChannels().get(expectedSpaceIdValue));
+                pnToken.getResources().getChannels().get(expectedChannelName));
         assertEquals(new PNToken.PNResourcePermissions(true, false, false, false, false, false, false),
-                pnToken.getPatterns().getChannels().get(expectedSpaceIdPattern));
+                pnToken.getPatterns().getChannels().get(expectedChannelPattern));
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false),
-                pnToken.getResources().getUuids().get(expectedUser01Value));
+                pnToken.getResources().getUuids().get(expectedUuidValue));
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false),
-                pnToken.getPatterns().getUuids().get(expectedUserIdPattern));
+                pnToken.getPatterns().getUuids().get(expectedUuidPattern));
 
     }
 
