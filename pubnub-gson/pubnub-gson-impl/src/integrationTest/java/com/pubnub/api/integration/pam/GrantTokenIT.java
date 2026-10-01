@@ -167,7 +167,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
                         DataSyncGrant.channelPattern(dataSyncChannelPattern).get().create(),
                         DataSyncGrant.user(userId).get().update(),
                         DataSyncGrant.userPattern(userPattern).get().create(),
-                        DataSyncGrant.subscribe(userId,"adminProjection"),
+                        DataSyncGrant.subscribe(userId, "adminProjection"),
                         DataSyncGrant.entity(entityId).get().update(),
                         DataSyncGrant.entityPattern(entityPattern).get(),
                         DataSyncGrant.relationship(relationshipId).get(),
@@ -196,6 +196,10 @@ public class GrantTokenIT extends BaseIntegrationTest {
                 pnToken.getResources().getChannels().get(dataSyncChannelId));
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, true),
                 pnToken.getPatterns().getChannels().get(dataSyncChannelPattern));
+
+        // DataSyncGrant.subscribe(id, projection) is a pub/sub read on the projection's ref-channel.
+        assertEquals(new PNToken.PNResourcePermissions(true, false, false, false, false, false, false, false),
+                pnToken.getResources().getChannels().get("__adminProjection__" + userId));
 
         // DataSyncGrant.user permissions land in the plain `users` bucket (not `uuids`).
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, true, false, false),

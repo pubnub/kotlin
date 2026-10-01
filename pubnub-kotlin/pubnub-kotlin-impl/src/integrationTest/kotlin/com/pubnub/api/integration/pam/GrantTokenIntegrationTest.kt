@@ -271,6 +271,9 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         assertEquals(PNResourcePermissions(get = true, update = true), resources.channels[dataSyncChannelId])
         assertEquals(PNResourcePermissions(get = true, create = true), patterns.channels[dataSyncChannelPattern])
 
+        // DataSyncGrant.subscribe(id, projection) is a pub/sub read on the projection's ref-channel.
+        assertEquals(PNResourcePermissions(read = true), resources.channels["__admin__$userId"])
+
         // DataSyncGrant.user permissions land in the plain `users` bucket (not `uuids`).
         assertEquals(PNResourcePermissions(get = true, update = true), resources.users[userId])
         assertEquals(PNResourcePermissions(get = true, create = true), patterns.users[userPattern])
