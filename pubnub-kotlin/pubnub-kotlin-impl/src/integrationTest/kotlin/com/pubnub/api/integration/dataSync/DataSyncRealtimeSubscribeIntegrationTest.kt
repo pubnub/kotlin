@@ -1,7 +1,8 @@
-package com.pubnub.api.integration
+package com.pubnub.api.integration.dataSync
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.integration.BaseIntegrationTest
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
@@ -21,11 +22,8 @@ import com.pubnub.api.models.consumer.pubsub.datasync.PNSetDataSyncUserEventMess
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.Subscription
-import com.pubnub.test.CommonUtils.randomValue
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
+import com.pubnub.test.CommonUtils
+import org.junit.Assert
 import org.junit.Test
 import org.junit.jupiter.api.TestInstance
 import java.util.concurrent.CountDownLatch
@@ -61,7 +59,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
      * Mints a token carrying [grants] and hands back a PAM-only client authenticated with it. A realtime
      * subscribe on a DataSync ref-channel is authorized by the ordinary channel-`read` PAM check — the backend
      * only *publishes* the events; no DataSync-specific grant is consulted on the subscribe/receive path — so
-     * [DataSyncGrant.subscribe] / [DataSyncGrant.subscribePattern] (channel `read` on the resolved ref-channel)
+     * [com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.subscribe] / [com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.subscribePattern] (channel `read` on the resolved ref-channel)
      * is all the subscriber needs. `server` (secretKey) still performs every CRUD write.
      */
     private fun authorizedSubscriber(vararg grants: TokenGrant): PubNub {
@@ -79,7 +77,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
     /**
      * Subscribes and blocks until [client]'s subscribe loop is actually connected, instead of sleeping on a
      * fixed guess. Publishing before the receive loop is up would drop the realtime CREATE (e=5 events are not
-     * replayed from history on connect), so the writes must wait for [PNStatusCategory.PNConnectedCategory].
+     * replayed from history on connect), so the writes must wait for [com.pubnub.api.enums.PNStatusCategory.PNConnectedCategory].
      */
     private fun subscribeAndAwaitConnect(client: PubNub, subscription: Subscription) {
         val connected = CountDownLatch(1)
@@ -93,12 +91,12 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             },
         )
         subscription.subscribe()
-        assertTrue("subscribe loop did not connect", connected.await(15, TimeUnit.SECONDS))
+        Assert.assertTrue("subscribe loop did not connect", connected.await(15, TimeUnit.SECONDS))
     }
 
     @Test
     fun receivesUserEventsViaAddListener() {
-        val userId = "user-rt-" + randomValue()
+        val userId = "user-rt-" + CommonUtils.randomValue()
         val sawCreate = CountDownLatch(1)
         val sawUpdate = CountDownLatch(2) // patch + full replace both fire UPDATE
         val sawDelete = CountDownLatch(1)
@@ -151,15 +149,18 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             ).sync()
             server.dataSync.removeUser(userId).sync()
 
-            assertTrue("Expected a create user event", sawCreate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected two update user events (patch + full replace)", sawUpdate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected a delete user event", sawDelete.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a create user event", sawCreate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue(
+                "Expected two update user events (patch + full replace)",
+                sawUpdate.await(15, TimeUnit.SECONDS)
+            )
+            Assert.assertTrue("Expected a delete user event", sawDelete.await(15, TimeUnit.SECONDS))
 
-            assertEquals(userId, createLeaf!!.data.id)
-            assertEquals("active", createLeaf!!.data.status)
-            assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
-            assertEquals(userId, deleteLeaf!!.id)
-            assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+            Assert.assertEquals(userId, createLeaf!!.data.id)
+            Assert.assertEquals("active", createLeaf!!.data.status)
+            Assert.assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
+            Assert.assertEquals(userId, deleteLeaf!!.id)
+            Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
             client.unsubscribeAll()
             client.destroy()
@@ -168,7 +169,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun receivesUserEventsViaOnDataSync() {
-        val userId = "user-rt-" + randomValue()
+        val userId = "user-rt-" + CommonUtils.randomValue()
         val sawCreate = CountDownLatch(1)
         val sawUpdate = CountDownLatch(2)
         val sawDelete = CountDownLatch(1)
@@ -213,20 +214,23 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         ).sync()
         server.dataSync.removeUser(userId).sync()
 
-        assertTrue("Expected a create user event", sawCreate.await(15, TimeUnit.SECONDS))
-        assertTrue("Expected two update user events (patch + full replace)", sawUpdate.await(15, TimeUnit.SECONDS))
-        assertTrue("Expected a delete user event", sawDelete.await(15, TimeUnit.SECONDS))
+        Assert.assertTrue("Expected a create user event", sawCreate.await(15, TimeUnit.SECONDS))
+        Assert.assertTrue(
+            "Expected two update user events (patch + full replace)",
+            sawUpdate.await(15, TimeUnit.SECONDS)
+        )
+        Assert.assertTrue("Expected a delete user event", sawDelete.await(15, TimeUnit.SECONDS))
 
-        assertEquals(userId, createLeaf!!.data.id)
-        assertEquals("active", createLeaf!!.data.status)
-        assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
-        assertEquals(userId, deleteLeaf!!.id)
-        assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+        Assert.assertEquals(userId, createLeaf!!.data.id)
+        Assert.assertEquals("active", createLeaf!!.data.status)
+        Assert.assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
+        Assert.assertEquals(userId, deleteLeaf!!.id)
+        Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
     }
 
     @Test
     fun receivesChannelEventsViaAddListener() {
-        val channelId = "channel-rt-" + randomValue()
+        val channelId = "channel-rt-" + CommonUtils.randomValue()
         val sawCreate = CountDownLatch(1)
         val sawUpdate = CountDownLatch(2)
         val sawDelete = CountDownLatch(1)
@@ -278,14 +282,14 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             ).sync()
             server.dataSync.removeChannel(channelId).sync()
 
-            assertTrue("Expected a create channel event", sawCreate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected two update channel events", sawUpdate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected a delete channel event", sawDelete.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a create channel event", sawCreate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected two update channel events", sawUpdate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a delete channel event", sawDelete.await(15, TimeUnit.SECONDS))
 
-            assertEquals(channelId, createLeaf!!.data.id)
-            assertEquals("active", createLeaf!!.data.status)
-            assertEquals(channelId, deleteLeaf!!.id)
-            assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+            Assert.assertEquals(channelId, createLeaf!!.data.id)
+            Assert.assertEquals("active", createLeaf!!.data.status)
+            Assert.assertEquals(channelId, deleteLeaf!!.id)
+            Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
             client.unsubscribeAll()
             client.destroy()
@@ -294,7 +298,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun receivesChannelEventsViaOnDataSync() {
-        val channelId = "channel-rt-" + randomValue()
+        val channelId = "channel-rt-" + CommonUtils.randomValue()
         val sawCreate = CountDownLatch(1)
         val sawUpdate = CountDownLatch(2)
         val sawDelete = CountDownLatch(1)
@@ -339,19 +343,19 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         ).sync()
         server.dataSync.removeChannel(channelId).sync()
 
-        assertTrue("Expected a create channel event", sawCreate.await(15, TimeUnit.SECONDS))
-        assertTrue("Expected two update channel events", sawUpdate.await(15, TimeUnit.SECONDS))
-        assertTrue("Expected a delete channel event", sawDelete.await(15, TimeUnit.SECONDS))
+        Assert.assertTrue("Expected a create channel event", sawCreate.await(15, TimeUnit.SECONDS))
+        Assert.assertTrue("Expected two update channel events", sawUpdate.await(15, TimeUnit.SECONDS))
+        Assert.assertTrue("Expected a delete channel event", sawDelete.await(15, TimeUnit.SECONDS))
 
-        assertEquals(channelId, createLeaf!!.data.id)
-        assertEquals("active", createLeaf!!.data.status)
-        assertEquals(channelId, deleteLeaf!!.id)
-        assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+        Assert.assertEquals(channelId, createLeaf!!.data.id)
+        Assert.assertEquals("active", createLeaf!!.data.status)
+        Assert.assertEquals(channelId, deleteLeaf!!.id)
+        Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
     }
 
     @Test
     fun receivesEntityEventsViaAddListener() {
-        val entityId = "entity-rt-" + randomValue()
+        val entityId = "entity-rt-" + CommonUtils.randomValue()
         val sawCreate = CountDownLatch(1)
         val sawUpdate = CountDownLatch(2)
         val sawDelete = CountDownLatch(1)
@@ -409,16 +413,19 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             ).sync()
             server.dataSync.removeEntity(entityId).sync()
 
-            assertTrue("Expected a create entity event", sawCreate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected two update entity events", sawUpdate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected a delete entity event", sawDelete.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a create entity event", sawCreate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected two update entity events", sawUpdate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a delete entity event", sawDelete.await(15, TimeUnit.SECONDS))
 
-            assertEquals(entityId, createLeaf!!.data.id)
+            Assert.assertEquals(entityId, createLeaf!!.data.id)
             // default-projection ref carries `username` but hides the admin-only `email`.
-            assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
-            assertNull("default projection must omit the admin-only email field", createLeaf!!.data.payload?.get("email"))
-            assertEquals(entityId, deleteLeaf!!.id)
-            assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+            Assert.assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
+            Assert.assertNull(
+                "default projection must omit the admin-only email field",
+                createLeaf!!.data.payload?.get("email")
+            )
+            Assert.assertEquals(entityId, deleteLeaf!!.id)
+            Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
             client.unsubscribeAll()
             client.destroy()
@@ -427,7 +434,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun receivesEntityEventsViaOnDataSync() {
-        val entityId = "entity-rt-" + randomValue()
+        val entityId = "entity-rt-" + CommonUtils.randomValue()
         val sawCreate = CountDownLatch(1)
         val sawUpdate = CountDownLatch(2)
         val sawDelete = CountDownLatch(1)
@@ -478,21 +485,24 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         ).sync()
         server.dataSync.removeEntity(entityId).sync()
 
-        assertTrue("Expected a create entity event", sawCreate.await(15, TimeUnit.SECONDS))
-        assertTrue("Expected two update entity events", sawUpdate.await(15, TimeUnit.SECONDS))
-        assertTrue("Expected a delete entity event", sawDelete.await(15, TimeUnit.SECONDS))
+        Assert.assertTrue("Expected a create entity event", sawCreate.await(15, TimeUnit.SECONDS))
+        Assert.assertTrue("Expected two update entity events", sawUpdate.await(15, TimeUnit.SECONDS))
+        Assert.assertTrue("Expected a delete entity event", sawDelete.await(15, TimeUnit.SECONDS))
 
-        assertEquals(entityId, createLeaf!!.data.id)
+        Assert.assertEquals(entityId, createLeaf!!.data.id)
         // default-projection ref carries `username` but hides the admin-only `email`.
-        assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
-        assertNull("default projection must omit the admin-only email field", createLeaf!!.data.payload?.get("email"))
-        assertEquals(entityId, deleteLeaf!!.id)
-        assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+        Assert.assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
+        Assert.assertNull(
+            "default projection must omit the admin-only email field",
+            createLeaf!!.data.payload?.get("email")
+        )
+        Assert.assertEquals(entityId, deleteLeaf!!.id)
+        Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
     }
 
     @Test
     fun receivesMembershipEventsViaAddListener() {
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val channelId = "channel-m-$run"
         val userId = "user-m-$run"
         val membershipId = "membership-$run"
@@ -546,15 +556,15 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             ).sync()
             server.dataSync.removeMembership(membershipId).sync()
 
-            assertTrue("Expected a create membership event", sawCreate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected an update membership event", sawUpdate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected a delete membership event", sawDelete.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a create membership event", sawCreate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected an update membership event", sawUpdate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a delete membership event", sawDelete.await(15, TimeUnit.SECONDS))
 
-            assertEquals(membershipId, createLeaf!!.data.id)
-            assertEquals(channelId, createLeaf!!.data.channelId)
-            assertEquals(userId, createLeaf!!.data.userId)
-            assertEquals(membershipId, deleteLeaf!!.id)
-            assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+            Assert.assertEquals(membershipId, createLeaf!!.data.id)
+            Assert.assertEquals(channelId, createLeaf!!.data.channelId)
+            Assert.assertEquals(userId, createLeaf!!.data.userId)
+            Assert.assertEquals(membershipId, deleteLeaf!!.id)
+            Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
             client.unsubscribeAll()
             client.destroy()
@@ -571,7 +581,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun receivesMembershipEventsViaOnDataSync() {
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val channelId = "channel-m-$run"
         val userId = "user-m-$run"
         val membershipId = "membership-$run"
@@ -618,15 +628,15 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             ).sync()
             server.dataSync.removeMembership(membershipId).sync()
 
-            assertTrue("Expected a create membership event", sawCreate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected an update membership event", sawUpdate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected a delete membership event", sawDelete.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a create membership event", sawCreate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected an update membership event", sawUpdate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a delete membership event", sawDelete.await(15, TimeUnit.SECONDS))
 
-            assertEquals(membershipId, createLeaf!!.data.id)
-            assertEquals(channelId, createLeaf!!.data.channelId)
-            assertEquals(userId, createLeaf!!.data.userId)
-            assertEquals(membershipId, deleteLeaf!!.id)
-            assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+            Assert.assertEquals(membershipId, createLeaf!!.data.id)
+            Assert.assertEquals(channelId, createLeaf!!.data.channelId)
+            Assert.assertEquals(userId, createLeaf!!.data.userId)
+            Assert.assertEquals(membershipId, deleteLeaf!!.id)
+            Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
             try {
                 server.dataSync.removeChannel(channelId).sync()
@@ -641,7 +651,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun receivesRelationshipEventsViaAddListener() {
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val entityAId = "node-a-$run"
         val entityBId = "node-b-$run"
         val relationshipId = "relationship-$run"
@@ -706,15 +716,15 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             ).sync()
             server.dataSync.removeRelationship(relationshipId).sync()
 
-            assertTrue("Expected a create relationship event", sawCreate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected an update relationship event", sawUpdate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected a delete relationship event", sawDelete.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a create relationship event", sawCreate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected an update relationship event", sawUpdate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a delete relationship event", sawDelete.await(15, TimeUnit.SECONDS))
 
-            assertEquals(relationshipId, createLeaf!!.data.id)
-            assertEquals(entityAId, createLeaf!!.data.entityAId)
-            assertEquals(entityBId, createLeaf!!.data.entityBId)
-            assertEquals(relationshipId, deleteLeaf!!.id)
-            assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+            Assert.assertEquals(relationshipId, createLeaf!!.data.id)
+            Assert.assertEquals(entityAId, createLeaf!!.data.entityAId)
+            Assert.assertEquals(entityBId, createLeaf!!.data.entityBId)
+            Assert.assertEquals(relationshipId, deleteLeaf!!.id)
+            Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
             client.unsubscribeAll()
             client.destroy()
@@ -731,7 +741,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun receivesRelationshipEventsViaOnDataSync() {
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val entityAId = "node-a-$run"
         val entityBId = "node-b-$run"
         val relationshipId = "relationship-$run"
@@ -789,15 +799,15 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
             ).sync()
             server.dataSync.removeRelationship(relationshipId).sync()
 
-            assertTrue("Expected a create relationship event", sawCreate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected an update relationship event", sawUpdate.await(15, TimeUnit.SECONDS))
-            assertTrue("Expected a delete relationship event", sawDelete.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a create relationship event", sawCreate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected an update relationship event", sawUpdate.await(15, TimeUnit.SECONDS))
+            Assert.assertTrue("Expected a delete relationship event", sawDelete.await(15, TimeUnit.SECONDS))
 
-            assertEquals(relationshipId, createLeaf!!.data.id)
-            assertEquals(entityAId, createLeaf!!.data.entityAId)
-            assertEquals(entityBId, createLeaf!!.data.entityBId)
-            assertEquals(relationshipId, deleteLeaf!!.id)
-            assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
+            Assert.assertEquals(relationshipId, createLeaf!!.data.id)
+            Assert.assertEquals(entityAId, createLeaf!!.data.entityAId)
+            Assert.assertEquals(entityBId, createLeaf!!.data.entityBId)
+            Assert.assertEquals(relationshipId, deleteLeaf!!.id)
+            Assert.assertNotNull("delete leaf must carry deletedAt", deleteLeaf!!.deletedAt)
         } finally {
             try {
                 server.dataSync.removeEntity(entityAId).sync()
@@ -817,7 +827,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         // `subscription("admin")` resolves to the `__admin__{id}` channel, which carries the admin-projection
         // fields — so the realtime snapshot DOES include `email`. `TestUser` declares `email` in the `admin`
         // projection only.
-        val entityId = "entity-proj-" + randomValue()
+        val entityId = "entity-proj-" + CommonUtils.randomValue()
         val sawCreate = CountDownLatch(1)
         var createLeaf: PNSetDataSyncEntityEventMessage? = null
 
@@ -840,10 +850,13 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 payload = mapOf("username" to "Alice", "email" to "alice@example.com"),
             ).sync()
 
-            assertTrue("Expected a create entity event on the admin projection", sawCreate.await(15, TimeUnit.SECONDS))
-            assertEquals(entityId, createLeaf!!.data.id)
-            assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
-            assertEquals("alice@example.com", createLeaf!!.data.payload?.get("email"))
+            Assert.assertTrue(
+                "Expected a create entity event on the admin projection",
+                sawCreate.await(15, TimeUnit.SECONDS)
+            )
+            Assert.assertEquals(entityId, createLeaf!!.data.id)
+            Assert.assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
+            Assert.assertEquals("alice@example.com", createLeaf!!.data.payload?.get("email"))
         } finally {
             try {
                 server.dataSync.removeEntity(entityId).sync()
@@ -863,7 +876,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         // `adminProjectionSubscribeGrantAloneReceivesAdminOnlyField`), so the REST read below is what exercises
         // it. `server` (secretKey) does the CRUD write, since a `__default__` token cannot write the admin-only
         // `email`.
-        val entityId = "entity-proj-token-" + randomValue()
+        val entityId = "entity-proj-token-" + CommonUtils.randomValue()
         val client =
             authorizedSubscriber(
                 DataSyncGrant.subscribe(entityId, projection = "admin"),
@@ -872,7 +885,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
 
         assertAdminCreateReceived(client, entityId) {
             val fetched = client.dataSync.getEntity(entityId).sync()
-            assertEquals("alice@example.com", fetched.data.payload?.get("email")) // REST read through "admin"
+            Assert.assertEquals("alice@example.com", fetched.data.payload?.get("email")) // REST read through "admin"
         }
     }
 
@@ -881,7 +894,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         // The token carries ONLY `DataSyncGrant.subscribe(id, "admin")` — no DataSync entity grant at all. The
         // realtime subscribe is a plain pub/sub read of `__admin__{id}`, and the admin projection is baked into
         // what the backend publishes on that channel, so the event still carries the admin-only `email`.
-        val entityId = "entity-proj-sub-only-" + randomValue()
+        val entityId = "entity-proj-sub-only-" + CommonUtils.randomValue()
         val client = authorizedSubscriber(DataSyncGrant.subscribe(entityId, projection = "admin"))
 
         assertAdminCreateReceived(client, entityId)
@@ -893,7 +906,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         // granted as `^(?:<prefix>-.*)`. If this test fails (no event under a token that should match), PAM does
         // not accept the anchored form and the anchoring in `DataSyncNamespace.refChannelPattern` must be
         // revisited. Counterpart: `subscribePatternGrantDoesNotCoverProjectionMirror`.
-        val prefix = "entity-pat-" + randomValue()
+        val prefix = "entity-pat-" + CommonUtils.randomValue()
         val entityId = "$prefix-1"
         val client = authorizedSubscriber(DataSyncGrant.subscribePattern("$prefix-.*"))
 
@@ -918,13 +931,16 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 payload = mapOf("username" to "Alice", "email" to "alice@example.com"),
             ).sync()
 
-            assertTrue(
+            Assert.assertTrue(
                 "Expected a create entity event under a subscribePattern token",
                 sawCreate.await(15, TimeUnit.SECONDS),
             )
-            assertEquals(entityId, createLeaf!!.data.id)
-            assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
-            assertNull("default projection must not expose the admin-only email", createLeaf!!.data.payload?.get("email"))
+            Assert.assertEquals(entityId, createLeaf!!.data.id)
+            Assert.assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
+            Assert.assertNull(
+                "default projection must not expose the admin-only email",
+                createLeaf!!.data.payload?.get("email")
+            )
         } finally {
             client.unsubscribeAll()
             client.destroy()
@@ -941,7 +957,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         // `^(?:<prefix>-.*)` must NOT match the admin mirror `__admin__<prefix>-1`. An unanchored
         // `<prefix>-.*` would match it, leaking admin-only fields to a default-projection token. Together with
         // `subscribePatternGrantReceivesDefaultProjectionEvents` this pins the anchoring behaviour;
-        val prefix = "entity-pat-deny-" + randomValue()
+        val prefix = "entity-pat-deny-" + CommonUtils.randomValue()
         val entityId = "$prefix-1"
         val client = authorizedSubscriber(DataSyncGrant.subscribePattern("$prefix-.*"))
 
@@ -961,11 +977,11 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         try {
             client.dataSyncEntity(entityId).subscription("admin").subscribe()
 
-            assertTrue(
+            Assert.assertTrue(
                 "Expected the admin-mirror subscribe to be rejected under a default-projection pattern token",
                 denied.await(15, TimeUnit.SECONDS),
             )
-            assertEquals(403, deniedStatus!!.exception?.statusCode)
+            Assert.assertEquals(403, deniedStatus!!.exception?.statusCode)
         } finally {
             client.unsubscribeAll()
             client.destroy()
@@ -977,7 +993,7 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
         // `subscribePattern("<prefix>-.*", "admin")` is granted as `^__admin__(?:<prefix>-.*)`, which covers the
         // admin mirror `__admin__<prefix>-1`. The `entityPattern(..., projection = "admin")` grant sets the REST
         // read lens for the same ids (the usual pairing); the realtime event carries the admin-only `email`.
-        val prefix = "entity-pat-proj-" + randomValue()
+        val prefix = "entity-pat-proj-" + CommonUtils.randomValue()
         val entityId = "$prefix-1"
         val client =
             authorizedSubscriber(
@@ -1017,13 +1033,13 @@ class DataSyncRealtimeSubscribeIntegrationTest : BaseIntegrationTest() {
                 payload = mapOf("username" to "Alice", "email" to "alice@example.com"),
             ).sync()
 
-            assertTrue(
+            Assert.assertTrue(
                 "Expected a create entity event on the admin projection under a PAM token",
                 sawCreate.await(15, TimeUnit.SECONDS),
             )
-            assertEquals(entityId, createLeaf!!.data.id)
-            assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
-            assertEquals("alice@example.com", createLeaf!!.data.payload?.get("email"))
+            Assert.assertEquals(entityId, createLeaf!!.data.id)
+            Assert.assertEquals("Alice", createLeaf!!.data.payload?.get("username"))
+            Assert.assertEquals("alice@example.com", createLeaf!!.data.payload?.get("email"))
 
             afterEvent()
         } finally {

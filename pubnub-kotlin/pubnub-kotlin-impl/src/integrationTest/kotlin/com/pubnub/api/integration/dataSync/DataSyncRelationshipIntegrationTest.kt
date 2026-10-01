@@ -1,19 +1,16 @@
-package com.pubnub.api.integration
+package com.pubnub.api.integration.dataSync
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
+import com.pubnub.api.integration.BaseIntegrationTest
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
-import com.pubnub.test.CommonUtils.randomValue
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
+import com.pubnub.test.CommonUtils
+import org.junit.Assert
 import org.junit.Test
 import org.junit.jupiter.api.TestInstance
 
@@ -106,7 +103,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
      * relationships that reference it, so the relationship does not have to be removed first.
      */
     private fun withTwoEntities(block: (entityAId: String, entityBId: String) -> Unit) {
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val entityAId = "node-a-$run"
         val entityBId = "node-b-$run"
         server.dataSync.createEntity(
@@ -137,7 +134,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun createGetAndDeleteRelationship() = withTwoEntities { entityAId, entityBId ->
-        val relationshipId = "relationship-" + randomValue()
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
         val payload = TestRelationshipPayload(role = "admin", custom = "value")
 
         val createResult = server.dataSync.createRelationship(
@@ -151,14 +148,14 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            assertEquals(relationshipId, createResult.data.id)
-            assertEquals(entityAId, createResult.data.entityAId)
-            assertEquals(entityBId, createResult.data.entityBId)
-            assertEquals(classVersion, createResult.data.classVersion)
+            Assert.assertEquals(relationshipId, createResult.data.id)
+            Assert.assertEquals(entityAId, createResult.data.entityAId)
+            Assert.assertEquals(entityBId, createResult.data.entityBId)
+            Assert.assertEquals(classVersion, createResult.data.classVersion)
             // guards the @SerializedName mapping: wire `relationshipClass` -> `.className`
-            assertEquals(m2mClass, createResult.data.className)
-            assertNotNull(createResult.data.eTag)
-            assertEquals("admin", createResult.data.payload?.get("role"))
+            Assert.assertEquals(m2mClass, createResult.data.className)
+            Assert.assertNotNull(createResult.data.eTag)
+            Assert.assertEquals("admin", createResult.data.payload?.get("role"))
 
             // DS-0301: create again with the SAME id -> 409 (create is create-only)
             try {
@@ -171,9 +168,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                     status = "active",
                     payload = payload,
                 ).sync()
-                fail("Expected a 409 when creating a relationship with an existing id")
+                Assert.fail("Expected a 409 when creating a relationship with an existing id")
             } catch (e: PubNubException) {
-                assertEquals(409, e.statusCode)
+                Assert.assertEquals(409, e.statusCode)
             }
 
             // DS-0301: create with a DIFFERENT id but the SAME (class, entityA, entityB) pair -> 409. On a
@@ -184,21 +181,21 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                     entityBId = entityBId,
                     className = m2mClass,
                     classVersion = classVersion,
-                    relationshipId = "relationship-" + randomValue(),
+                    relationshipId = "relationship-" + CommonUtils.randomValue(),
                     status = "active",
                     payload = payload,
                 ).sync()
-                fail("Expected a 409 when creating a relationship for an existing (class, entityA, entityB) pair")
+                Assert.fail("Expected a 409 when creating a relationship for an existing (class, entityA, entityB) pair")
             } catch (e: PubNubException) {
-                assertEquals(409, e.statusCode)
+                Assert.assertEquals(409, e.statusCode)
             }
 
             // get
             val getResult = server.dataSync.getRelationship(relationshipId).sync()
-            assertEquals(relationshipId, getResult.data.id)
-            assertEquals(entityAId, getResult.data.entityAId)
-            assertEquals(entityBId, getResult.data.entityBId)
-            assertEquals("active", getResult.data.status)
+            Assert.assertEquals(relationshipId, getResult.data.id)
+            Assert.assertEquals(entityAId, getResult.data.entityAId)
+            Assert.assertEquals(entityBId, getResult.data.entityBId)
+            Assert.assertEquals("active", getResult.data.status)
 
             // delete
             server.dataSync.removeRelationship(relationshipId).sync()
@@ -206,9 +203,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             // get after delete -> 404
             try {
                 server.dataSync.getRelationship(relationshipId).sync()
-                fail("Expected a 404 after deleting the relationship")
+                Assert.fail("Expected a 404 after deleting the relationship")
             } catch (e: PubNubException) {
-                assertEquals(404, e.statusCode)
+                Assert.assertEquals(404, e.statusCode)
             }
         } finally {
             try {
@@ -229,9 +226,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
 
         val generatedId = createResult.data.id
         try {
-            assertTrue(generatedId.isNotBlank())
-            assertEquals(entityAId, createResult.data.entityAId)
-            assertEquals(entityBId, createResult.data.entityBId)
+            Assert.assertTrue(generatedId.isNotBlank())
+            Assert.assertEquals(entityAId, createResult.data.entityAId)
+            Assert.assertEquals(entityBId, createResult.data.entityBId)
         } finally {
             server.dataSync.removeRelationship(generatedId).sync()
         }
@@ -239,7 +236,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun createGetAllPatchUpdateAndDeleteRelationship() = withTwoEntities { entityAId, entityBId ->
-        val relationshipId = "relationship-" + randomValue()
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
         server.dataSync.createRelationship(
             entityAId = entityAId,
             entityBId = entityBId,
@@ -258,7 +255,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 entityBId = entityBId,
                 limit = 100,
             ).sync()
-            assertTrue(getAllResult.data.any { it.id == relationshipId })
+            Assert.assertTrue(getAllResult.data.any { it.id == relationshipId })
 
             // patch -> replace /status
             val patchResult = server.dataSync.updateRelationship(
@@ -267,8 +264,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
                 ),
             ).sync()
-            assertEquals("inactive", patchResult.data.status)
-            assertEquals("inactive", server.dataSync.getRelationship(relationshipId).sync().data.status)
+            Assert.assertEquals("inactive", patchResult.data.status)
+            Assert.assertEquals("inactive", server.dataSync.getRelationship(relationshipId).sync().data.status)
 
             // set -> full replace of status + payload
             val setResult = server.dataSync.setRelationship(
@@ -277,12 +274,12 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 status = "archived",
                 payload = TestRelationshipPayload(role = "member"),
             ).sync()
-            assertEquals("archived", setResult.data.status)
-            assertEquals("member", setResult.data.payload?.get("role"))
+            Assert.assertEquals("archived", setResult.data.status)
+            Assert.assertEquals("member", setResult.data.payload?.get("role"))
 
             val afterSet = server.dataSync.getRelationship(relationshipId).sync()
-            assertEquals("archived", afterSet.data.status)
-            assertEquals("member", afterSet.data.payload?.get("role"))
+            Assert.assertEquals("archived", afterSet.data.status)
+            Assert.assertEquals("member", afterSet.data.payload?.get("role"))
 
             // delete
             server.dataSync.removeRelationship(relationshipId).sync()
@@ -290,9 +287,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             // get after delete -> 404
             try {
                 server.dataSync.getRelationship(relationshipId).sync()
-                fail("Expected a 404 after deleting the relationship")
+                Assert.fail("Expected a 404 after deleting the relationship")
             } catch (e: PubNubException) {
-                assertEquals(404, e.statusCode)
+                Assert.assertEquals(404, e.statusCode)
             }
         } finally {
             try {
@@ -304,7 +301,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun patchWithIfMatchAndStaleETagThrows412() = withTwoEntities { entityAId, entityBId ->
-        val relationshipId = "relationship-" + randomValue()
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
         val createResult = server.dataSync.createRelationship(
             entityAId = entityAId,
             entityBId = entityBId,
@@ -316,7 +313,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
 
         try {
             val originalETag = createResult.data.eTag
-            assertNotNull(originalETag)
+            Assert.assertNotNull(originalETag)
 
             val patch1 = server.dataSync.updateRelationship(
                 relationshipId = relationshipId,
@@ -325,8 +322,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 ),
                 ifMatch = originalETag,
             ).sync()
-            assertEquals("inactive", patch1.data.status)
-            assertNotEquals(originalETag, patch1.data.eTag)
+            Assert.assertEquals("inactive", patch1.data.status)
+            Assert.assertNotEquals(originalETag, patch1.data.eTag)
 
             try {
                 server.dataSync.updateRelationship(
@@ -336,9 +333,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                     ),
                     ifMatch = originalETag,
                 ).sync()
-                fail("Expected a 412 when patching with a stale ifMatch eTag")
+                Assert.fail("Expected a 412 when patching with a stale ifMatch eTag")
             } catch (e: PubNubException) {
-                assertEquals(412, e.statusCode)
+                Assert.assertEquals(412, e.statusCode)
             }
         } finally {
             server.dataSync.removeRelationship(relationshipId).sync()
@@ -350,7 +347,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         // DS-0800: the seeded classes declare entityAClass/entityBClass == TestNode. Point entity A at an entity
         // of a different class (a Channel, class `Channel`) -> the backend's checkEntityClass rejects it.
         // DS-0800 is NOT relationship-only: POST /memberships trips the same code path.
-        val wrongClassEntityId = "channel-wrongclass-" + randomValue()
+        val wrongClassEntityId = "channel-wrongclass-" + CommonUtils.randomValue()
         server.dataSync.createChannel(
             classVersion = classVersion,
             channelId = wrongClassEntityId,
@@ -363,9 +360,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 className = m2mClass,
                 classVersion = classVersion,
             ).sync()
-            fail("Expected DS-0800 (400) when entity A's class does not match the relationship class's entityAClass")
+            Assert.fail("Expected DS-0800 (400) when entity A's class does not match the relationship class's entityAClass")
         } catch (e: PubNubException) {
-            assertEquals(400, e.statusCode)
+            Assert.assertEquals(400, e.statusCode)
         } finally {
             try {
                 server.dataSync.removeChannel(wrongClassEntityId).sync()
@@ -380,8 +377,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         // most one such relationship. A second ONE_TO_ONE anchored on the same entity A (different entity B) must
         // be rejected with a 409. This is effectively relationship-only: /memberships (MANY_TO_MANY) skips the
         // cardinality check, so it is not reachable there.
-        val firstId = "relationship-" + randomValue()
-        val otherBId = "node-b2-" + randomValue()
+        val firstId = "relationship-" + CommonUtils.randomValue()
+        val otherBId = "node-b2-" + CommonUtils.randomValue()
         server.dataSync.createEntity(
             className = nodeClass,
             classVersion = classVersion,
@@ -403,11 +400,11 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 entityBId = otherBId,
                 className = oneToOneClass,
                 classVersion = classVersion,
-                relationshipId = "relationship-" + randomValue(),
+                relationshipId = "relationship-" + CommonUtils.randomValue(),
             ).sync()
-            fail("Expected DS-0801 (409) for a second ONE_TO_ONE relationship on the same entity A")
+            Assert.fail("Expected DS-0801 (409) for a second ONE_TO_ONE relationship on the same entity A")
         } catch (e: PubNubException) {
-            assertEquals(409, e.statusCode)
+            Assert.assertEquals(409, e.statusCode)
         } finally {
             try {
                 server.dataSync.removeRelationship(firstId).sync()
@@ -424,9 +421,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
     fun getBlankRelationshipIdThrows() {
         try {
             server.dataSync.getRelationship("").sync()
-            fail("Expected validation to reject a blank relationshipId")
+            Assert.fail("Expected validation to reject a blank relationshipId")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
         }
     }
 
@@ -435,13 +432,13 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         try {
             server.dataSync.createRelationship(
                 entityAId = "",
-                entityBId = "node-" + randomValue(),
+                entityBId = "node-" + CommonUtils.randomValue(),
                 className = m2mClass,
                 classVersion = classVersion,
             ).sync()
-            fail("Expected validation to reject a blank entityAId on create")
+            Assert.fail("Expected validation to reject a blank entityAId on create")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
         }
     }
 
@@ -449,14 +446,14 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
     fun createBlankEntityBIdThrows() {
         try {
             server.dataSync.createRelationship(
-                entityAId = "node-" + randomValue(),
+                entityAId = "node-" + CommonUtils.randomValue(),
                 entityBId = "",
                 className = m2mClass,
                 classVersion = classVersion,
             ).sync()
-            fail("Expected validation to reject a blank entityBId on create")
+            Assert.fail("Expected validation to reject a blank entityBId on create")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
         }
     }
 
@@ -464,14 +461,14 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
     fun createBlankClassNameThrows() {
         try {
             server.dataSync.createRelationship(
-                entityAId = "node-" + randomValue(),
-                entityBId = "node-" + randomValue(),
+                entityAId = "node-" + CommonUtils.randomValue(),
+                entityBId = "node-" + CommonUtils.randomValue(),
                 className = "",
                 classVersion = classVersion,
             ).sync()
-            fail("Expected validation to reject a blank className on create")
+            Assert.fail("Expected validation to reject a blank className on create")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_CLASS_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_CLASS_MISSING, e.pubnubError)
         }
     }
 
@@ -479,9 +476,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
     fun getAllBlankClassNameThrows() {
         try {
             server.dataSync.getRelationships(className = "").sync()
-            fail("Expected validation to reject a blank className on list")
+            Assert.fail("Expected validation to reject a blank className on list")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_CLASS_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_CLASS_MISSING, e.pubnubError)
         }
     }
 
@@ -493,7 +490,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         // field carried by the implicit `__default__` view. So the two views are complementary: the `admin`-projected
         // read exposes `secret` but NOT `status`; the `__default__` read exposes `status` but NOT `secret`.
         // Mirrors DataSyncEntityIntegrationTest.getEntityAppliesProjectionCarriedByTheToken.
-        val relationshipId = "relationship-" + randomValue()
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
         server.dataSync.createRelationship(
             entityAId = entityAId,
             entityBId = entityBId,
@@ -517,13 +514,13 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 DataSyncGrant.relationship(name = relationshipId, get = true, projection = "admin")
             )
             val adminView = client.dataSync.getRelationship(relationshipId).sync()
-            assertEquals(relationshipId, adminView.data.id)
-            assertEquals(
+            Assert.assertEquals(relationshipId, adminView.data.id)
+            Assert.assertEquals(
                 "The admin-projected token must expose the admin-only `secret` field",
                 "top-secret",
                 adminView.data.payload?.get("secret"),
             )
-            assertTrue(
+            Assert.assertTrue(
                 "`status` is not in the `admin` projection, so it must NOT appear under an admin-projected read",
                 adminView.data.status == null,
             )
@@ -531,13 +528,13 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             // no projection -> implicit `__default__` view: `secret` is omitted, `status` is present.
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = relationshipId, get = true))
             val defaultView = client.dataSync.getRelationship(relationshipId).sync()
-            assertEquals(relationshipId, defaultView.data.id)
-            assertEquals(
+            Assert.assertEquals(relationshipId, defaultView.data.id)
+            Assert.assertEquals(
                 "The __default__ projection must still expose the built-in `status` field",
                 "active",
                 defaultView.data.status,
             )
-            assertTrue(
+            Assert.assertTrue(
                 "The admin-only `secret` field must NOT leak through the __default__ projection",
                 defaultView.data.payload?.get("secret") == null,
             )
@@ -564,7 +561,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         val authorizedUUID = client.configuration.userId.value
 
         // negative leg: __default__-projected create writing the admin-only `secret` -> 403 (DS-0202).
-        val rejectedId = "relationship-" + randomValue()
+        val rejectedId = "relationship-" + CommonUtils.randomValue()
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = rejectedId, create = true))
         try {
             client.dataSync.createRelationship(
@@ -575,14 +572,18 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 relationshipId = rejectedId,
                 payload = TestRelationshipPayload(secret = "top-secret"),
             ).sync()
-            fail("Expected a 403 when writing an admin-only field under the __default__ projection")
+            Assert.fail("Expected a 403 when writing an admin-only field under the __default__ projection")
         } catch (e: PubNubException) {
-            assertEquals("Writing an admin-only field under __default__ must be rejected by the projection write-guard", 403, e.statusCode)
+            Assert.assertEquals(
+                "Writing an admin-only field under __default__ must be rejected by the projection write-guard",
+                403,
+                e.statusCode
+            )
         }
 
         // positive leg: admin-projected create of the SAME admin-only field -> succeeds. Payload must contain
         // ONLY admin-projected fields, so it carries `secret` alone.
-        val acceptedId = "relationship-" + randomValue()
+        val acceptedId = "relationship-" + CommonUtils.randomValue()
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = acceptedId, create = true, projection = "admin"))
         try {
             val createResult = client.dataSync.createRelationship(
@@ -593,8 +594,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 relationshipId = acceptedId,
                 payload = TestRelationshipPayload(secret = "top-secret"),
             ).sync()
-            assertEquals(acceptedId, createResult.data.id)
-            assertEquals("top-secret", createResult.data.payload?.get("secret"))
+            Assert.assertEquals(acceptedId, createResult.data.id)
+            Assert.assertEquals("top-secret", createResult.data.payload?.get("secret"))
         } finally {
             try {
                 server.dataSync.removeRelationship(acceptedId).sync()
@@ -606,20 +607,20 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
     @Test
     fun patchEmptyOperationsThrows() {
         try {
-            server.dataSync.updateRelationship("relationship-" + randomValue(), emptyList()).sync()
-            fail("Expected validation to reject an empty patch operations list")
+            server.dataSync.updateRelationship("relationship-" + CommonUtils.randomValue(), emptyList()).sync()
+            Assert.fail("Expected validation to reject an empty patch operations list")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)
         }
     }
 
     @Test
     fun getRelationshipsReturnsOnlyRelationshipsTheTokenCanRead() = withTwoEntities { entityAId, entityBId ->
-        val grantedRelationshipId = "relationship-granted-" + randomValue()
-        val ungrantedRelationshipId = "relationship-ungranted-" + randomValue()
+        val grantedRelationshipId = "relationship-granted-" + CommonUtils.randomValue()
+        val ungrantedRelationshipId = "relationship-ungranted-" + CommonUtils.randomValue()
 
         // Two relationships on the same entity A but different entity B, so both can coexist on the M2M class.
-        val otherBId = "node-other-" + randomValue()
+        val otherBId = "node-other-" + CommonUtils.randomValue()
         server.dataSync.createEntity(
             className = nodeClass,
             classVersion = classVersion,
@@ -657,11 +658,11 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 limit = 100,
             ).sync()
 
-            assertTrue(
+            Assert.assertTrue(
                 "Expected the granted relationship to be present in the filtered listing",
                 getAllResult.data.any { it.id == grantedRelationshipId },
             )
-            assertTrue(
+            Assert.assertTrue(
                 "The ungranted relationship must not leak to a token that cannot read it",
                 getAllResult.data.none { it.id == ungrantedRelationshipId },
             )
@@ -686,7 +687,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         // A client on the same keyset as `server` but without the secretKey, so it can only authenticate via
         // setToken. DataSync /relationships authorizes via `DataSyncGrant.relationship` (the
         // `datasync:relationships` resource type), and the grant name is the relationship id.
-        val relationshipId = "relationship-" + randomValue()
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
         val client = createAuthorizedClient()
         val authorizedUUID = client.configuration.userId.value
 
@@ -703,15 +704,15 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            assertEquals(relationshipId, createResult.data.id)
-            assertEquals(entityAId, createResult.data.entityAId)
-            assertEquals(entityBId, createResult.data.entityBId)
+            Assert.assertEquals(relationshipId, createResult.data.id)
+            Assert.assertEquals(entityAId, createResult.data.entityAId)
+            Assert.assertEquals(entityBId, createResult.data.entityBId)
 
             // get -> `get` on this specific relationship
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = relationshipId, get = true))
             val getResult = client.dataSync.getRelationship(relationshipId).sync()
-            assertEquals(relationshipId, getResult.data.id)
-            assertEquals("active", getResult.data.status)
+            Assert.assertEquals(relationshipId, getResult.data.id)
+            Assert.assertEquals("active", getResult.data.status)
 
             // patch -> `update` on this specific relationship (PATCH maps to `update`)
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = relationshipId, update = true))
@@ -721,7 +722,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
                 ),
             ).sync()
-            assertEquals("inactive", patchResult.data.status)
+            Assert.assertEquals("inactive", patchResult.data.status)
 
             // set -> `update` on this specific relationship (PUT maps to `update`)
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = relationshipId, update = true))
@@ -731,8 +732,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 status = "archived",
                 payload = TestRelationshipPayload(role = "member"),
             ).sync()
-            assertEquals("archived", setResult.data.status)
-            assertEquals("member", setResult.data.payload?.get("role"))
+            Assert.assertEquals("archived", setResult.data.status)
+            Assert.assertEquals("member", setResult.data.payload?.get("role"))
 
             // delete -> `delete` on this specific relationship
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = relationshipId, delete = true))
@@ -742,9 +743,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = relationshipId, get = true))
             try {
                 client.dataSync.getRelationship(relationshipId).sync()
-                fail("Expected a 404 after deleting the relationship")
+                Assert.fail("Expected a 404 after deleting the relationship")
             } catch (e: PubNubException) {
-                assertEquals(404, e.statusCode)
+                Assert.assertEquals(404, e.statusCode)
             }
         } finally {
             try {
@@ -760,7 +761,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         // /relationships authorizes against `datasync:relationships`. A grant on the SAME id but under
         // `datasync:memberships` must NOT authorize a relationship op. Namespaces are disjoint (PAM is path-based),
         // even though uniqueness is on a shared, path-agnostic pair table.
-        val relationshipId = "relationship-" + randomValue()
+        val relationshipId = "relationship-" + CommonUtils.randomValue()
         server.dataSync.createRelationship(
             entityAId = entityAId,
             entityBId = entityBId,
@@ -778,9 +779,9 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.membership(name = relationshipId, get = true))
             try {
                 client.dataSync.getRelationship(relationshipId).sync()
-                fail("Expected a 403: a datasync:memberships grant must not authorize a /relationships op")
+                Assert.fail("Expected a 403: a datasync:memberships grant must not authorize a /relationships op")
             } catch (e: PubNubException) {
-                assertEquals(403, e.statusCode)
+                Assert.assertEquals(403, e.statusCode)
             }
         } finally {
             try {
@@ -794,7 +795,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
     fun getAllWithFilterSortLimitAndCursor() = withTwoEntities { entityAId, _ ->
         // Built-in fields (id, createdAt, updatedAt, status) are always filterable and sortable. Tag three
         // relationships on the same entity A (distinct entity B) with sortable statuses a < b < c.
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val statusA = "st-$run-a"
         val statusB = "st-$run-b"
         val statusC = "st-$run-c"
@@ -825,7 +826,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 entityAId = entityAId,
                 filterFast = "status == \"$statusA\"",
             ).sync()
-            assertEquals(setOf(idA), filtered.data.map { it.id }.toSet())
+            Assert.assertEquals(setOf(idA), filtered.data.map { it.id }.toSet())
 
             // sort ascending by status -> a-b-c
             val sortedAsc = server.dataSync.getRelationships(
@@ -834,7 +835,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 filterFast = "status LIKE \"st-$run-*\"",
                 sort = listOf(PNDataSyncSortField("status")),
             ).sync()
-            assertEquals(listOf(idA, idB, idC), sortedAsc.data.map { it.id })
+            Assert.assertEquals(listOf(idA, idB, idC), sortedAsc.data.map { it.id })
 
             // sort descending -> c-b-a
             val sortedDesc = server.dataSync.getRelationships(
@@ -843,7 +844,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 filterFast = "status LIKE \"st-$run-*\"",
                 sort = listOf(PNDataSyncSortField("status", ascending = false)),
             ).sync()
-            assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
+            Assert.assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
 
             // limit + cursor -> page one at a time
             val firstPage = server.dataSync.getRelationships(
@@ -853,10 +854,10 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 sort = listOf(PNDataSyncSortField("status")),
                 limit = 1,
             ).sync()
-            assertEquals(1, firstPage.data.size)
-            assertEquals(idA, firstPage.data.first().id)
-            assertTrue("Expected more pages after the first", firstPage.next.hasNext)
-            assertNotNull(firstPage.next.cursor)
+            Assert.assertEquals(1, firstPage.data.size)
+            Assert.assertEquals(idA, firstPage.data.first().id)
+            Assert.assertTrue("Expected more pages after the first", firstPage.next.hasNext)
+            Assert.assertNotNull(firstPage.next.cursor)
 
             val secondPage = server.dataSync.getRelationships(
                 className = m2mClass,
@@ -866,8 +867,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 limit = 1,
                 cursor = firstPage.next.cursor,
             ).sync()
-            assertEquals(1, secondPage.data.size)
-            assertEquals(idB, secondPage.data.first().id)
+            Assert.assertEquals(1, secondPage.data.size)
+            Assert.assertEquals(idB, secondPage.data.first().id)
         } finally {
             listOf(idA, idB, idC).forEach {
                 try {
@@ -890,7 +891,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
         // is queryable via BOTH `filterFast` (Postgres, strongly consistent) and `filter` (OpenSearch). This test
         // exercises the `filter` (OpenSearch) path, which is EVENTUALLY consistent: there is a write-to-index
         // delay, so the assertion must poll with a bounded retry ([awaitRelationshipIds]) rather than read once.
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val statusA = "adv-$run-a"
         val statusB = "adv-$run-b"
         val idA = "relationship-$run-a"
@@ -919,7 +920,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                     filter = "status == \"$statusA\"",
                 ).sync().data.map { it.id }.toSet()
             }
-            assertEquals(setOf(idA), matched)
+            Assert.assertEquals(setOf(idA), matched)
 
             // a prefix LIKE over the same param captures both rows once indexed
             val both = awaitRelationshipIds(setOf(idA, idB)) {
@@ -929,7 +930,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                     filter = "status LIKE \"adv-$run-*\"",
                 ).sync().data.map { it.id }.toSet()
             }
-            assertEquals(setOf(idA, idB), both)
+            Assert.assertEquals(setOf(idA, idB), both)
         } finally {
             listOf(idA, idB).forEach {
                 try {

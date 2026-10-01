@@ -10,7 +10,8 @@
 # A 409 on POST means the class version already exists — run delete-classes.sh first
 # if you need to change a schema, then re-run this.
 #
-# NEVER touches User/Channel (built-in Global classes) or Membership (not a class here).
+# NEVER touches User/Channel (built-in Global classes) or Membership (not a class here). It only
+# registers SubKey subclasses that extend them (TestSubUser, TestSubChannel).
 #
 # Usage:
 #   SDK_DS_API_KEY=... SDK_DS_SUB_KEY=... ./create-classes.sh
@@ -49,6 +50,40 @@ meta_post "$META/entity-classes/TestUser/versions/1" "$ENTITY_CLASS_MT" "$(cat <
       { "name": "email",      "path": "/payload/email",      "valueKind": "string", "filtering": "simple", "isNullable": true,  "projections": [{ "name": "admin" }] },
       { "name": "status",     "path": "/status",             "valueKind": "string", "filtering": "simple", "isNullable": true,  "projections": [{ "name": "__default__" }, { "name": "admin" }] },
       { "name": "signupDate", "path": "/payload/signupDate", "valueKind": "date",   "filtering": "simple", "isNullable": true,  "projections": [{ "name": "__default__" }, { "name": "admin" }] }
+    ]
+  }
+}
+JSON
+)"
+
+# TestSubUser — SubKey subclass of the built-in Global User v1. Inherits User's `name`/`type` (full) and adds
+# `email` (simple), which is only filterable/sortable when getUsers is scoped to className = TestSubUser.
+say "entity-class: TestSubUser v1 (extends User v1; email simple)"
+meta_post "$META/entity-classes/TestSubUser/versions/1" "$ENTITY_CLASS_MT" "$(cat <<JSON
+{
+  "data": {
+    "description": "IT User subclass",
+    "extends": { "name": "User", "version": 1 },
+    "config": { "ttlSec": $TTL_SEC },
+    "properties": [
+      { "name": "email", "path": "/payload/email", "valueKind": "string", "filtering": "simple", "isNullable": true, "projections": [{ "name": "__default__" }] }
+    ]
+  }
+}
+JSON
+)"
+
+# TestSubChannel — SubKey subclass of the built-in Global Channel v1. Inherits Channel's `name`/`type` (full) and
+# adds `topic` (simple), which is only filterable/sortable when getChannels is scoped to className = TestSubChannel.
+say "entity-class: TestSubChannel v1 (extends Channel v1; topic simple)"
+meta_post "$META/entity-classes/TestSubChannel/versions/1" "$ENTITY_CLASS_MT" "$(cat <<JSON
+{
+  "data": {
+    "description": "IT Channel subclass",
+    "extends": { "name": "Channel", "version": 1 },
+    "config": { "ttlSec": $TTL_SEC },
+    "properties": [
+      { "name": "topic", "path": "/payload/topic", "valueKind": "string", "filtering": "simple", "isNullable": true, "projections": [{ "name": "__default__" }] }
     ]
   }
 }

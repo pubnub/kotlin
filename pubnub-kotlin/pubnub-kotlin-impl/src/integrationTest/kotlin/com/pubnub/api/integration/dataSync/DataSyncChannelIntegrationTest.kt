@@ -1,31 +1,28 @@
-package com.pubnub.api.integration
+package com.pubnub.api.integration.dataSync
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
+import com.pubnub.api.integration.BaseIntegrationTest
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncCreateChannelResult
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
-import com.pubnub.test.CommonUtils.randomValue
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
+import com.pubnub.test.CommonUtils
+import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
 
 class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     private val classVersion = 1
-    private val channelId = "channel-" + randomValue()
+    private val channelId = "channel-" + CommonUtils.randomValue()
 
     /**
      * On-demand maintenance, not a test: wipes every channel on the keyset, so leftover rows from earlier runs (or a
-     * crashed suite) can't skew list/filter assertions. To run it, remove [Ignore] and run just this method. Uses
+     * crashed suite) can't skew list/filter assertions. To run it, remove [org.junit.Ignore] and run just this method. Uses
      * `server` (holds the secretKey), pages through `getChannels` and best-effort removes each id; stops when a page
      * is empty or nothing on it could be removed.
      */
@@ -75,15 +72,15 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            assertEquals(channelId, createResult.data.id)
-            assertEquals(classVersion, createResult.data.classVersion)
+            Assert.assertEquals(channelId, createResult.data.id)
+            Assert.assertEquals(classVersion, createResult.data.classVersion)
             // guards the @SerializedName mapping: wire `entityClass` -> `.className`
-            assertEquals("Channel", createResult.data.className)
-            assertNotNull(createResult.data.eTag)
+            Assert.assertEquals("Channel", createResult.data.className)
+            Assert.assertNotNull(createResult.data.eTag)
             // expiresAt is a required, server-computed field: proves the server always returns it
-            assertTrue(createResult.data.expiresAt.isNotBlank())
-            assertEquals(payload.username, createResult.data.payload?.get("username"))
-            assertEquals(payload.email, createResult.data.payload?.get("email"))
+            Assert.assertTrue(createResult.data.expiresAt.isNotBlank())
+            Assert.assertEquals(payload.username, createResult.data.payload?.get("username"))
+            Assert.assertEquals(payload.email, createResult.data.payload?.get("email"))
 
             // create again with the same id -> 409 (create is create-only)
             try {
@@ -93,15 +90,15 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                     status = "active",
                     payload = payload,
                 ).sync()
-                fail("Expected a 409 when creating a channel with an existing id")
+                Assert.fail("Expected a 409 when creating a channel with an existing id")
             } catch (e: PubNubException) {
-                assertEquals(409, e.statusCode)
+                Assert.assertEquals(409, e.statusCode)
             }
 
             // get
             val getResult = server.dataSync.getChannel(channelId).sync()
-            assertEquals(channelId, getResult.data.id)
-            assertEquals("active", getResult.data.status)
+            Assert.assertEquals(channelId, getResult.data.id)
+            Assert.assertEquals("active", getResult.data.status)
 
             // delete
             server.dataSync.removeChannel(channelId).sync()
@@ -109,9 +106,9 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             // get after delete -> 404
             try {
                 server.dataSync.getChannel(channelId).sync()
-                fail("Expected a 404 after deleting the channel")
+                Assert.fail("Expected a 404 after deleting the channel")
             } catch (e: PubNubException) {
-                assertEquals(404, e.statusCode)
+                Assert.assertEquals(404, e.statusCode)
             }
         } finally {
             // best-effort cleanup: the happy path already deleted the channel, so a 404 here is expected
@@ -147,24 +144,24 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            assertEquals(channelId, createResult.data.id)
-            assertEquals(classVersion, createResult.data.classVersion)
-            assertNotNull(createResult.data.eTag)
-            assertEquals(payload.username, createResult.data.payload?.get("username"))
-            assertEquals(payload.email, createResult.data.payload?.get("email"))
+            Assert.assertEquals(channelId, createResult.data.id)
+            Assert.assertEquals(classVersion, createResult.data.classVersion)
+            Assert.assertNotNull(createResult.data.eTag)
+            Assert.assertEquals(payload.username, createResult.data.payload?.get("username"))
+            Assert.assertEquals(payload.email, createResult.data.payload?.get("email"))
 
             // get -> token scoped to `get` on this specific channel
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, get = true))
             val getResult = client.dataSync.getChannel(channelId).sync()
-            assertEquals(channelId, getResult.data.id)
-            assertEquals("active", getResult.data.status)
+            Assert.assertEquals(channelId, getResult.data.id)
+            Assert.assertEquals("active", getResult.data.status)
 
             // getAll -> token scoped to `get` on this specific channel id
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, get = true))
             val getAllResult = client.dataSync.getChannels(
                 limit = 100,
             ).sync()
-            assertTrue(getAllResult.data.any { it.id == channelId })
+            Assert.assertTrue(getAllResult.data.any { it.id == channelId })
 
             // patch -> token scoped to `update` on this specific channel (PATCH maps to `update`)
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, update = true))
@@ -174,7 +171,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
                 ),
             ).sync()
-            assertEquals("inactive", patchResult.data.status)
+            Assert.assertEquals("inactive", patchResult.data.status)
 
             // update -> token scoped to `update` on this specific channel (PUT maps to `update`)
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, update = true))
@@ -185,8 +182,8 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 status = "archived",
                 payload = newPayload,
             ).sync()
-            assertEquals("archived", updateResult.data.status)
-            assertEquals("Bob", updateResult.data.payload?.get("username"))
+            Assert.assertEquals("archived", updateResult.data.status)
+            Assert.assertEquals("Bob", updateResult.data.payload?.get("username"))
 
             // delete -> token scoped to `delete` on this specific channel
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, delete = true))
@@ -196,9 +193,9 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(name = channelId, get = true))
             try {
                 client.dataSync.getChannel(channelId).sync()
-                fail("Expected a 404 after deleting the channel")
+                Assert.fail("Expected a 404 after deleting the channel")
             } catch (e: PubNubException) {
-                assertEquals(404, e.statusCode)
+                Assert.assertEquals(404, e.statusCode)
             }
         } finally {
             // best-effort cleanup via `server` (holds the secretKey; the client's token may be scoped
@@ -223,8 +220,8 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     @Test
     fun getChannelsReturnsOnlyChannelsTheTokenCanRead() {
         // Two channels created with `server` (has the secretKey, so no token needed).
-        val grantedChannelId = "channel-granted-" + randomValue()
-        val ungrantedChannelId = "channel-ungranted-" + randomValue()
+        val grantedChannelId = "channel-granted-" + CommonUtils.randomValue()
+        val ungrantedChannelId = "channel-ungranted-" + CommonUtils.randomValue()
 
         server.dataSync.createChannel(
             classVersion = classVersion,
@@ -253,11 +250,11 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             // leaking to a client that has no permission to read it.
             val getAllResult = client.dataSync.getChannels(limit = 100).sync()
 
-            assertTrue(
+            Assert.assertTrue(
                 "Expected the granted channel to be present in the filtered listing",
                 getAllResult.data.any { it.id == grantedChannelId },
             )
-            assertTrue(
+            Assert.assertTrue(
                 "The ungranted channel must not leak to a token that cannot read it",
                 getAllResult.data.none { it.id == ungrantedChannelId },
             )
@@ -283,7 +280,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
 
         val generatedId = createResult.data.id
         try {
-            assertTrue(generatedId.isNotBlank())
+            Assert.assertTrue(generatedId.isNotBlank())
         } finally {
             // cleanup
             server.dataSync.removeChannel(generatedId).sync()
@@ -294,9 +291,9 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     fun getBlankChannelIdThrows() {
         try {
             server.dataSync.getChannel("").sync()
-            fail("Expected validation to reject a blank channelId")
+            Assert.fail("Expected validation to reject a blank channelId")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
         }
     }
 
@@ -320,7 +317,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             val getAllResult = server.dataSync.getChannels(
                 limit = 100,
             ).sync()
-            assertTrue(getAllResult.data.any { it.id == channelId })
+            Assert.assertTrue(getAllResult.data.any { it.id == channelId })
 
             // patch -> replace /status
             val patchResult = server.dataSync.updateChannel(
@@ -329,10 +326,10 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
                 ),
             ).sync()
-            assertEquals("inactive", patchResult.data.status)
+            Assert.assertEquals("inactive", patchResult.data.status)
 
             // get reflects the patched status
-            assertEquals("inactive", server.dataSync.getChannel(channelId).sync().data.status)
+            Assert.assertEquals("inactive", server.dataSync.getChannel(channelId).sync().data.status)
 
             // update -> full replace of status + payload
             val newPayload = TestChannelPayload(username = "Bob", email = "bob@example.com")
@@ -342,13 +339,13 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 status = "archived",
                 payload = newPayload,
             ).sync()
-            assertEquals("archived", updateResult.data.status)
-            assertEquals("Bob", updateResult.data.payload?.get("username"))
+            Assert.assertEquals("archived", updateResult.data.status)
+            Assert.assertEquals("Bob", updateResult.data.payload?.get("username"))
 
             // get reflects the full replacement
             val afterUpdate = server.dataSync.getChannel(channelId).sync()
-            assertEquals("archived", afterUpdate.data.status)
-            assertEquals("Bob", afterUpdate.data.payload?.get("username"))
+            Assert.assertEquals("archived", afterUpdate.data.status)
+            Assert.assertEquals("Bob", afterUpdate.data.payload?.get("username"))
         } finally {
             server.dataSync.removeChannel(channelId).sync()
         }
@@ -370,7 +367,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
 
         try {
             val originalETag = createResult.data.eTag
-            assertNotNull(originalETag)
+            Assert.assertNotNull(originalETag)
 
             // patch #1 with a matching ifMatch -> succeeds and bumps the eTag
             val patch1 = server.dataSync.updateChannel(
@@ -380,9 +377,9 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 ),
                 ifMatch = originalETag,
             ).sync()
-            assertEquals("inactive", patch1.data.status)
+            Assert.assertEquals("inactive", patch1.data.status)
             val newETag = patch1.data.eTag
-            assertNotEquals(originalETag, newETag)
+            Assert.assertNotEquals(originalETag, newETag)
 
             // patch #2 with the now-stale ifMatch -> 412 (optimistic concurrency conflict)
             try {
@@ -393,9 +390,9 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                     ),
                     ifMatch = originalETag,
                 ).sync()
-                fail("Expected a 412 when patching with a stale ifMatch eTag")
+                Assert.fail("Expected a 412 when patching with a stale ifMatch eTag")
             } catch (e: PubNubException) {
-                assertEquals(412, e.statusCode)
+                Assert.assertEquals(412, e.statusCode)
             }
         } finally {
             server.dataSync.removeChannel(channelId).sync()
@@ -406,9 +403,9 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
     fun patchEmptyOperationsThrows() {
         try {
             server.dataSync.updateChannel(channelId, emptyList()).sync()
-            fail("Expected validation to reject an empty patch operations list")
+            Assert.fail("Expected validation to reject an empty patch operations list")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)
         }
     }
 
@@ -422,7 +419,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
         // `classLevel = PNDataSyncClassLevel.GLOBAL` (the level the built-in Channel class is defined at, not
         // the raw "SubKey" string) and `sort = listOf(PNDataSyncSortField(...))` (not a "name:desc" string),
         // and returns a non-null `next: PNDataSyncPage` (read `next.cursor` / `next.hasNext`, not flat fields).
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val nameA = "chan-$run-a"
         val nameB = "chan-$run-b"
         val nameC = "chan-$run-c"
@@ -456,8 +453,8 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 filterFast = "name == \"$nameA\"",
             ).sync()
             val filteredIds = filtered.data.map { it.id }
-            assertEquals(setOf(idA), filteredIds.toSet())
-            assertTrue("Expected the un-matched channel to be filtered out", !filteredIds.contains(idB))
+            Assert.assertEquals(setOf(idA), filteredIds.toSet())
+            Assert.assertTrue("Expected the un-matched channel to be filtered out", !filteredIds.contains(idB))
 
             // classLevel -> the built-in Channel class is defined at the Global level, so scoping the list to
             // it still returns the row
@@ -465,33 +462,33 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 classLevel = PNDataSyncClassLevel.GLOBAL,
                 filterFast = "name == \"$nameA\"",
             ).sync()
-            assertEquals(setOf(idA), scoped.data.map { it.id }.toSet())
+            Assert.assertEquals(setOf(idA), scoped.data.map { it.id }.toSet())
 
             // LIKE prefix match with a `*` wildcard, capturing all three rows
             val advanced = server.dataSync.getChannels(
                 filterFast = "name LIKE \"$namePrefix*\"",
             ).sync()
-            assertEquals(setOf(idA, idB, idC), advanced.data.map { it.id }.toSet())
+            Assert.assertEquals(setOf(idA, idB, idC), advanced.data.map { it.id }.toSet())
 
             // sort -> ascending by name (default direction); this run's rows appear in a-b-c order
             val sortedDefault = server.dataSync.getChannels(
                 filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name")),
             ).sync()
-            assertEquals(listOf(idA, idB, idC), sortedDefault.data.map { it.id })
+            Assert.assertEquals(listOf(idA, idB, idC), sortedDefault.data.map { it.id })
 
             val sorted = server.dataSync.getChannels(
                 filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name", ascending = true)),
             ).sync()
-            assertEquals(listOf(idA, idB, idC), sorted.data.map { it.id })
+            Assert.assertEquals(listOf(idA, idB, idC), sorted.data.map { it.id })
 
             // sort descending -> the same rows in reverse (c-b-a) order
             val sortedDesc = server.dataSync.getChannels(
                 filterFast = "name LIKE \"$namePrefix*\"",
                 sort = listOf(PNDataSyncSortField("name", ascending = false)),
             ).sync()
-            assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
+            Assert.assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
 
             // limit + cursor -> page through this run's rows one channel at a time
             val firstPage = server.dataSync.getChannels(
@@ -499,10 +496,10 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 sort = listOf(PNDataSyncSortField("name")),
                 limit = 1,
             ).sync()
-            assertEquals(1, firstPage.data.size)
-            assertEquals(idA, firstPage.data.first().id)
-            assertTrue("Expected more pages after the first", firstPage.next.hasNext)
-            assertNotNull(firstPage.next.cursor)
+            Assert.assertEquals(1, firstPage.data.size)
+            Assert.assertEquals(idA, firstPage.data.first().id)
+            Assert.assertTrue("Expected more pages after the first", firstPage.next.hasNext)
+            Assert.assertNotNull(firstPage.next.cursor)
 
             val secondPage = server.dataSync.getChannels(
                 filterFast = "name LIKE \"$namePrefix*\"",
@@ -510,8 +507,8 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 limit = 1,
                 cursor = firstPage.next.cursor,
             ).sync()
-            assertEquals(1, secondPage.data.size)
-            assertEquals(idB, secondPage.data.first().id)
+            Assert.assertEquals(1, secondPage.data.size)
+            Assert.assertEquals(idB, secondPage.data.first().id)
         } finally {
             server.dataSync.removeChannel(idA).sync()
             server.dataSync.removeChannel(idB).sync()
@@ -533,12 +530,258 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            assertEquals(channelId, createResult.data.id)
-            assertEquals(classVersion, createResult.data.classVersion)
+            Assert.assertEquals(channelId, createResult.data.id)
+            Assert.assertEquals(classVersion, createResult.data.classVersion)
             // round-trips: the channel is fetchable after a class-level-scoped create
-            assertEquals(channelId, server.dataSync.getChannel(channelId).sync().data.id)
+            Assert.assertEquals(channelId, server.dataSync.getChannel(channelId).sync().data.id)
         } finally {
             server.dataSync.removeChannel(channelId).sync()
         }
+    }
+
+    // The tests below use `TestSubChannel` (scripts/datasync/create-classes.sh): a SubKey-level class that
+    // `extends` the built-in Global `Channel` v1, inherits its `name`/`type` indexes and adds a `simple` `topic`.
+
+    @Test
+    fun createChannelWithSubclassKeepsTheSubclassAcrossReadsAndWrites() {
+        val createResult = server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = channelId,
+            className = SUBCLASS,
+            status = "active",
+            payload = mapOf("name" to "Sub", "topic" to "kotlin"),
+        ).sync()
+
+        try {
+            // a subclass is always registered at the SubKey level, whatever level its parent is defined at
+            Assert.assertEquals(SUBCLASS, createResult.data.className)
+            Assert.assertEquals(classVersion, createResult.data.classVersion)
+            Assert.assertEquals(PNDataSyncClassLevel.SUBKEY.value, createResult.data.classLevel)
+            Assert.assertEquals("kotlin", createResult.data.payload?.get("topic"))
+
+            // readable both as a Channel and as a plain entity, with the subclass intact
+            val getResult = server.dataSync.getChannel(channelId).sync()
+            Assert.assertEquals(SUBCLASS, getResult.data.className)
+            Assert.assertEquals(PNDataSyncClassLevel.SUBKEY.value, getResult.data.classLevel)
+            Assert.assertEquals(SUBCLASS, server.dataSync.getEntity(channelId).sync().data.className)
+
+            // patch and full replace don't take a class, so the instance must stay a TestSubChannel
+            val patchResult = server.dataSync.updateChannel(
+                channelId = channelId,
+                operations = listOf(
+                    PNJsonPatchOperation(op = "replace", path = "/payload/topic", value = "swift"),
+                ),
+            ).sync()
+            Assert.assertEquals(SUBCLASS, patchResult.data.className)
+            Assert.assertEquals("swift", patchResult.data.payload?.get("topic"))
+
+            val setResult = server.dataSync.setChannel(
+                channelId = channelId,
+                classVersion = classVersion,
+                status = "archived",
+                payload = mapOf("name" to "Sub", "topic" to "java"),
+            ).sync()
+            Assert.assertEquals(SUBCLASS, setResult.data.className)
+            Assert.assertEquals(PNDataSyncClassLevel.SUBKEY.value, setResult.data.classLevel)
+        } finally {
+            server.dataSync.removeChannel(channelId).sync()
+        }
+    }
+
+    @Test
+    fun getChannelsReturnsSubclassInstancesAsPartOfTheChannelFamily() {
+        // one plain Channel and one TestSubChannel, tagged with a run-unique `name` (inherited index) so the
+        // assertions stay isolated from other channels on the keyset; "plain" sorts before "sub"
+        val run = CommonUtils.randomValue()
+        val byName = "name LIKE \"family-$run-*\""
+        val plainId = "channel-$run-plain"
+        val subId = "channel-$run-sub"
+
+        server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = plainId,
+            payload = mapOf("name" to "family-$run-plain"),
+        ).sync()
+        server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = subId,
+            className = SUBCLASS,
+            payload = mapOf("name" to "family-$run-sub", "topic" to "kotlin"),
+        ).sync()
+
+        try {
+            val family = setOf(plainId, subId)
+
+            // no className -> the server defaults to Channel, which includes every subclass instance
+            Assert.assertEquals(
+                family,
+                server.dataSync.getChannels(filterFast = byName).sync().data.map { it.id }.toSet()
+            )
+
+            // className = Channel, with and without its Global level -> still the whole family
+            Assert.assertEquals(
+                family,
+                server.dataSync.getChannels(className = "Channel", filterFast = byName).sync().data.map { it.id }
+                    .toSet(),
+            )
+            Assert.assertEquals(
+                family,
+                server.dataSync.getChannels(
+                    className = "Channel",
+                    classLevel = PNDataSyncClassLevel.GLOBAL,
+                    filterFast = byName,
+                ).sync().data.map { it.id }.toSet(),
+            )
+
+            // each row reports its own class, not the class the list was scoped to
+            val rows = server.dataSync.getChannels(className = "Channel", filterFast = byName).sync().data
+            Assert.assertEquals("Channel", rows.single { it.id == plainId }.className)
+            Assert.assertEquals(SUBCLASS, rows.single { it.id == subId }.className)
+
+            // className = subclass (with and without its SubKey level) -> only the subclass instance
+            Assert.assertEquals(
+                setOf(subId),
+                server.dataSync.getChannels(className = SUBCLASS, filterFast = byName).sync().data.map { it.id }
+                    .toSet(),
+            )
+            Assert.assertEquals(
+                setOf(subId),
+                server.dataSync.getChannels(
+                    className = SUBCLASS,
+                    classLevel = PNDataSyncClassLevel.SUBKEY,
+                    filterFast = byName,
+                ).sync().data.map { it.id }.toSet(),
+            )
+
+            // the inherited `name` index sorts across the family
+            Assert.assertEquals(
+                listOf(plainId, subId),
+                server.dataSync.getChannels(
+                    filterFast = byName,
+                    sort = listOf(PNDataSyncSortField("name")),
+                ).sync().data.map { it.id },
+            )
+        } finally {
+            server.dataSync.removeChannel(plainId).sync()
+            server.dataSync.removeChannel(subId).sync()
+        }
+    }
+
+    @Test
+    fun subclassPropertyIsFilterableAndSortableOnlyWhenScopedToTheSubclass() {
+        val run = CommonUtils.randomValue()
+        val byName = "name LIKE \"topic-$run-*\""
+        val idA = "channel-$run-a"
+        val idB = "channel-$run-b"
+
+        server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = idA,
+            className = SUBCLASS,
+            payload = mapOf("name" to "topic-$run-a", "topic" to "a-$run"),
+        ).sync()
+        server.dataSync.createChannel(
+            classVersion = classVersion,
+            channelId = idB,
+            className = SUBCLASS,
+            payload = mapOf("name" to "topic-$run-b", "topic" to "b-$run"),
+        ).sync()
+
+        try {
+            // `topic` is declared by TestSubChannel, so filtering on it works once the list is scoped to it
+            val filtered = server.dataSync.getChannels(
+                className = SUBCLASS,
+                filterFast = "topic == \"a-$run\"",
+            ).sync()
+            Assert.assertEquals(setOf(idA), filtered.data.map { it.id }.toSet())
+
+            // ...and so does sorting on it (descending -> b before a)
+            val sorted = server.dataSync.getChannels(
+                className = SUBCLASS,
+                filterFast = byName,
+                sort = listOf(PNDataSyncSortField("topic", ascending = false)),
+            ).sync()
+            Assert.assertEquals(listOf(idB, idA), sorted.data.map { it.id })
+
+            // scoped to Channel (the default), the allowed fields are Channel's own: `topic` is unknown -> 400
+            try {
+                server.dataSync.getChannels(filterFast = "topic == \"a-$run\"").sync()
+                Assert.fail("Expected a 400 when filtering the Channel family on a subclass-only property")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(400, e.statusCode)
+            }
+            try {
+                server.dataSync.getChannels(
+                    filterFast = byName,
+                    sort = listOf(PNDataSyncSortField("topic")),
+                ).sync()
+                Assert.fail("Expected a 400 when sorting the Channel family on a subclass-only property")
+            } catch (e: PubNubException) {
+                Assert.assertEquals(400, e.statusCode)
+            }
+        } finally {
+            server.dataSync.removeChannel(idA).sync()
+            server.dataSync.removeChannel(idB).sync()
+        }
+    }
+
+    @Test
+    fun createAndListWithAClassOutsideTheChannelFamilyThrows400() {
+        // TestSubUser extends User, not Channel -> DS-0006 "is not a subclass of 'Channel'"
+        try {
+            server.dataSync.createChannel(
+                classVersion = classVersion,
+                channelId = channelId,
+                className = "TestSubUser",
+            ).sync()
+            Assert.fail("Expected a 400 when creating a channel with a User subclass")
+        } catch (e: PubNubException) {
+            Assert.assertEquals(400, e.statusCode)
+        } finally {
+            // best-effort: nothing should have been created
+            try {
+                server.dataSync.removeChannel(channelId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+
+        try {
+            server.dataSync.getChannels(className = "TestSubUser").sync()
+            Assert.fail("Expected a 400 when listing channels with a User subclass")
+        } catch (e: PubNubException) {
+            Assert.assertEquals(400, e.statusCode)
+        }
+    }
+
+    @Test
+    fun subclassAtTheGlobalLevelThrows404() {
+        // classLevel is a hard filter and TestSubChannel only exists at SubKey -> DS-0100 "class definition not found"
+        try {
+            server.dataSync.getChannels(className = SUBCLASS, classLevel = PNDataSyncClassLevel.GLOBAL).sync()
+            Assert.fail("Expected a 404 when listing a SubKey subclass at the Global level")
+        } catch (e: PubNubException) {
+            Assert.assertEquals(404, e.statusCode)
+        }
+
+        try {
+            server.dataSync.createChannel(
+                classVersion = classVersion,
+                channelId = channelId,
+                className = SUBCLASS,
+                classLevel = PNDataSyncClassLevel.GLOBAL,
+            ).sync()
+            Assert.fail("Expected a 404 when creating a SubKey subclass at the Global level")
+        } catch (e: PubNubException) {
+            Assert.assertEquals(404, e.statusCode)
+        } finally {
+            try {
+                server.dataSync.removeChannel(channelId).sync()
+            } catch (ignored: PubNubException) {
+            }
+        }
+    }
+
+    private companion object {
+        const val SUBCLASS = "TestSubChannel"
     }
 }

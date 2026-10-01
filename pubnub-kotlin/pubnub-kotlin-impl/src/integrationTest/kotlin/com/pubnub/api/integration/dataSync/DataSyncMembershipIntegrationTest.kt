@@ -1,19 +1,16 @@
-package com.pubnub.api.integration
+package com.pubnub.api.integration.dataSync
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
+import com.pubnub.api.integration.BaseIntegrationTest
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
-import com.pubnub.test.CommonUtils.randomValue
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
+import com.pubnub.test.CommonUtils
+import org.junit.Assert
 import org.junit.Test
 import org.junit.jupiter.api.TestInstance
 
@@ -32,7 +29,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
      * any memberships that reference them, so the membership does not have to be removed first.
      */
     private fun withChannelAndUser(block: (channelId: String, userId: String) -> Unit) {
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val channelId = "channel-$run"
         val userId = "user-$run"
         server.dataSync.createChannel(
@@ -61,7 +58,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun createGetAndDeleteMembership() = withChannelAndUser { channelId, userId ->
-        val membershipId = "membership-" + randomValue()
+        val membershipId = "membership-" + CommonUtils.randomValue()
         val payload = TestMembershipPayload(role = "admin", custom = "value")
 
         val createResult = server.dataSync.createMembership(
@@ -74,14 +71,14 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            assertEquals(membershipId, createResult.data.id)
-            assertEquals(channelId, createResult.data.channelId)
-            assertEquals(userId, createResult.data.userId)
-            assertEquals(classVersion, createResult.data.classVersion)
+            Assert.assertEquals(membershipId, createResult.data.id)
+            Assert.assertEquals(channelId, createResult.data.channelId)
+            Assert.assertEquals(userId, createResult.data.userId)
+            Assert.assertEquals(classVersion, createResult.data.classVersion)
             // guards the @SerializedName mapping: wire `relationshipClass` -> `.className`
-            assertEquals("Membership", createResult.data.className)
-            assertNotNull(createResult.data.eTag)
-            assertEquals("admin", createResult.data.payload?.get("role"))
+            Assert.assertEquals("Membership", createResult.data.className)
+            Assert.assertNotNull(createResult.data.eTag)
+            Assert.assertEquals("admin", createResult.data.payload?.get("role"))
 
             // create again with the SAME id -> 409 (create is create-only)
             try {
@@ -93,9 +90,9 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                     status = "active",
                     payload = payload,
                 ).sync()
-                fail("Expected a 409 when creating a membership with an existing id")
+                Assert.fail("Expected a 409 when creating a membership with an existing id")
             } catch (e: PubNubException) {
-                assertEquals(409, e.statusCode)
+                Assert.assertEquals(409, e.statusCode)
             }
 
             // create again with a DIFFERENT id but the SAME (channel, user) pair -> 409 (a Membership is
@@ -106,21 +103,21 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                     channelId = channelId,
                     userId = userId,
                     classVersion = classVersion,
-                    membershipId = "membership-" + randomValue(),
+                    membershipId = "membership-" + CommonUtils.randomValue(),
                     status = "active",
                     payload = payload,
                 ).sync()
-                fail("Expected a 409 when creating a membership for an existing (channel, user) pair")
+                Assert.fail("Expected a 409 when creating a membership for an existing (channel, user) pair")
             } catch (e: PubNubException) {
-                assertEquals(409, e.statusCode)
+                Assert.assertEquals(409, e.statusCode)
             }
 
             // get
             val getResult = server.dataSync.getMembership(membershipId).sync()
-            assertEquals(membershipId, getResult.data.id)
-            assertEquals(channelId, getResult.data.channelId)
-            assertEquals(userId, getResult.data.userId)
-            assertEquals("active", getResult.data.status)
+            Assert.assertEquals(membershipId, getResult.data.id)
+            Assert.assertEquals(channelId, getResult.data.channelId)
+            Assert.assertEquals(userId, getResult.data.userId)
+            Assert.assertEquals("active", getResult.data.status)
 
             // delete
             server.dataSync.removeMembership(membershipId).sync()
@@ -128,9 +125,9 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
             // get after delete -> 404
             try {
                 server.dataSync.getMembership(membershipId).sync()
-                fail("Expected a 404 after deleting the membership")
+                Assert.fail("Expected a 404 after deleting the membership")
             } catch (e: PubNubException) {
-                assertEquals(404, e.statusCode)
+                Assert.assertEquals(404, e.statusCode)
             }
         } finally {
             try {
@@ -150,9 +147,9 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
 
         val generatedId = createResult.data.id
         try {
-            assertTrue(generatedId.isNotBlank())
-            assertEquals(channelId, createResult.data.channelId)
-            assertEquals(userId, createResult.data.userId)
+            Assert.assertTrue(generatedId.isNotBlank())
+            Assert.assertEquals(channelId, createResult.data.channelId)
+            Assert.assertEquals(userId, createResult.data.userId)
         } finally {
             server.dataSync.removeMembership(generatedId).sync()
         }
@@ -160,7 +157,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun createGetAllPatchUpdateAndDeleteMembership() = withChannelAndUser { channelId, userId ->
-        val membershipId = "membership-" + randomValue()
+        val membershipId = "membership-" + CommonUtils.randomValue()
         server.dataSync.createMembership(
             channelId = channelId,
             userId = userId,
@@ -177,7 +174,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 userId = userId,
                 limit = 100,
             ).sync()
-            assertTrue(getAllResult.data.any { it.id == membershipId })
+            Assert.assertTrue(getAllResult.data.any { it.id == membershipId })
 
             // patch -> replace /status
             val patchResult = server.dataSync.updateMembership(
@@ -186,8 +183,8 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
                 ),
             ).sync()
-            assertEquals("inactive", patchResult.data.status)
-            assertEquals("inactive", server.dataSync.getMembership(membershipId).sync().data.status)
+            Assert.assertEquals("inactive", patchResult.data.status)
+            Assert.assertEquals("inactive", server.dataSync.getMembership(membershipId).sync().data.status)
 
             // update -> full replace of status + payload
             val updateResult = server.dataSync.setMembership(
@@ -196,12 +193,12 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 status = "archived",
                 payload = TestMembershipPayload(role = "member"),
             ).sync()
-            assertEquals("archived", updateResult.data.status)
-            assertEquals("member", updateResult.data.payload?.get("role"))
+            Assert.assertEquals("archived", updateResult.data.status)
+            Assert.assertEquals("member", updateResult.data.payload?.get("role"))
 
             val afterUpdate = server.dataSync.getMembership(membershipId).sync()
-            assertEquals("archived", afterUpdate.data.status)
-            assertEquals("member", afterUpdate.data.payload?.get("role"))
+            Assert.assertEquals("archived", afterUpdate.data.status)
+            Assert.assertEquals("member", afterUpdate.data.payload?.get("role"))
         } finally {
             server.dataSync.removeMembership(membershipId).sync()
         }
@@ -209,7 +206,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun patchWithIfMatchAndStaleETagThrows412() = withChannelAndUser { channelId, userId ->
-        val membershipId = "membership-" + randomValue()
+        val membershipId = "membership-" + CommonUtils.randomValue()
         val createResult = server.dataSync.createMembership(
             channelId = channelId,
             userId = userId,
@@ -220,7 +217,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
 
         try {
             val originalETag = createResult.data.eTag
-            assertNotNull(originalETag)
+            Assert.assertNotNull(originalETag)
 
             val patch1 = server.dataSync.updateMembership(
                 membershipId = membershipId,
@@ -229,8 +226,8 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 ),
                 ifMatch = originalETag,
             ).sync()
-            assertEquals("inactive", patch1.data.status)
-            assertNotEquals(originalETag, patch1.data.eTag)
+            Assert.assertEquals("inactive", patch1.data.status)
+            Assert.assertNotEquals(originalETag, patch1.data.eTag)
 
             try {
                 server.dataSync.updateMembership(
@@ -240,9 +237,9 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                     ),
                     ifMatch = originalETag,
                 ).sync()
-                fail("Expected a 412 when patching with a stale ifMatch eTag")
+                Assert.fail("Expected a 412 when patching with a stale ifMatch eTag")
             } catch (e: PubNubException) {
-                assertEquals(412, e.statusCode)
+                Assert.assertEquals(412, e.statusCode)
             }
         } finally {
             server.dataSync.removeMembership(membershipId).sync()
@@ -253,9 +250,9 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
     fun getBlankMembershipIdThrows() {
         try {
             server.dataSync.getMembership("").sync()
-            fail("Expected validation to reject a blank membershipId")
+            Assert.fail("Expected validation to reject a blank membershipId")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
         }
     }
 
@@ -264,12 +261,12 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
         try {
             server.dataSync.createMembership(
                 channelId = "",
-                userId = "user-" + randomValue(),
+                userId = "user-" + CommonUtils.randomValue(),
                 classVersion = classVersion,
             ).sync()
-            fail("Expected validation to reject a blank channelId on create")
+            Assert.fail("Expected validation to reject a blank channelId on create")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
         }
     }
 
@@ -277,33 +274,33 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
     fun createBlankUserIdThrows() {
         try {
             server.dataSync.createMembership(
-                channelId = "channel-" + randomValue(),
+                channelId = "channel-" + CommonUtils.randomValue(),
                 userId = "",
                 classVersion = classVersion,
             ).sync()
-            fail("Expected validation to reject a blank userId on create")
+            Assert.fail("Expected validation to reject a blank userId on create")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
         }
     }
 
     @Test
     fun patchEmptyOperationsThrows() {
         try {
-            server.dataSync.updateMembership("membership-" + randomValue(), emptyList()).sync()
-            fail("Expected validation to reject an empty patch operations list")
+            server.dataSync.updateMembership("membership-" + CommonUtils.randomValue(), emptyList()).sync()
+            Assert.fail("Expected validation to reject an empty patch operations list")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)
         }
     }
 
     @Test
     fun getMembershipsReturnsOnlyMembershipsTheTokenCanRead() = withChannelAndUser { channelId, userId ->
-        val grantedMembershipId = "membership-granted-" + randomValue()
-        val ungrantedMembershipId = "membership-ungranted-" + randomValue()
+        val grantedMembershipId = "membership-granted-" + CommonUtils.randomValue()
+        val ungrantedMembershipId = "membership-ungranted-" + CommonUtils.randomValue()
 
         // Two memberships on the same channel but different users, so both can coexist (unique per pair).
-        val otherUserId = "user-other-" + randomValue()
+        val otherUserId = "user-other-" + CommonUtils.randomValue()
         server.dataSync.createUser(
             classVersion = classVersion,
             userId = otherUserId,
@@ -334,11 +331,11 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
         try {
             val getAllResult = client.dataSync.getMemberships(channelId = channelId, limit = 100).sync()
 
-            assertTrue(
+            Assert.assertTrue(
                 "Expected the granted membership to be present in the filtered listing",
                 getAllResult.data.any { it.id == grantedMembershipId },
             )
-            assertTrue(
+            Assert.assertTrue(
                 "The ungranted membership must not leak to a token that cannot read it",
                 getAllResult.data.none { it.id == ungrantedMembershipId },
             )
@@ -363,7 +360,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
         // A client on the same keyset as `server` but without the secretKey, so it can only authenticate via
         // setToken. DataSync /memberships authorizes via `DataSyncGrant.membership` (the `datasync:memberships`
         // resource type), and the grant name is the membership id.
-        val membershipId = "membership-" + randomValue()
+        val membershipId = "membership-" + CommonUtils.randomValue()
         val client = createAuthorizedClient()
         val authorizedUUID = client.configuration.userId.value
 
@@ -379,15 +376,15 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            assertEquals(membershipId, createResult.data.id)
-            assertEquals(channelId, createResult.data.channelId)
-            assertEquals(userId, createResult.data.userId)
+            Assert.assertEquals(membershipId, createResult.data.id)
+            Assert.assertEquals(channelId, createResult.data.channelId)
+            Assert.assertEquals(userId, createResult.data.userId)
 
             // get -> `get` on this specific membership
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.membership(name = membershipId, get = true))
             val getResult = client.dataSync.getMembership(membershipId).sync()
-            assertEquals(membershipId, getResult.data.id)
-            assertEquals("active", getResult.data.status)
+            Assert.assertEquals(membershipId, getResult.data.id)
+            Assert.assertEquals("active", getResult.data.status)
 
             // patch -> `update` on this specific membership (PATCH maps to `update`)
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.membership(name = membershipId, update = true))
@@ -397,7 +394,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
                 ),
             ).sync()
-            assertEquals("inactive", patchResult.data.status)
+            Assert.assertEquals("inactive", patchResult.data.status)
 
             // update -> `update` on this specific membership (PUT maps to `update`)
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.membership(name = membershipId, update = true))
@@ -407,8 +404,8 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 status = "archived",
                 payload = TestMembershipPayload(role = "member"),
             ).sync()
-            assertEquals("archived", updateResult.data.status)
-            assertEquals("member", updateResult.data.payload?.get("role"))
+            Assert.assertEquals("archived", updateResult.data.status)
+            Assert.assertEquals("member", updateResult.data.payload?.get("role"))
 
             // delete -> `delete` on this specific membership
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.membership(name = membershipId, delete = true))
@@ -418,9 +415,9 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.membership(name = membershipId, get = true))
             try {
                 client.dataSync.getMembership(membershipId).sync()
-                fail("Expected a 404 after deleting the membership")
+                Assert.fail("Expected a 404 after deleting the membership")
             } catch (e: PubNubException) {
-                assertEquals(404, e.statusCode)
+                Assert.assertEquals(404, e.statusCode)
             }
         } finally {
             try {
@@ -437,7 +434,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
         // key divergence from the Channel API) must NOT authorize a membership op. Without this, a wrong
         // resource type in the SDK's PAM wiring (or a backend routing change) would slip past the happy-path
         // grants, which only prove that the matching grant works — never that a mismatching one is rejected.
-        val membershipId = "membership-" + randomValue()
+        val membershipId = "membership-" + CommonUtils.randomValue()
         server.dataSync.createMembership(
             channelId = channelId,
             userId = userId,
@@ -454,9 +451,9 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.relationship(name = membershipId, get = true))
             try {
                 client.dataSync.getMembership(membershipId).sync()
-                fail("Expected a 403: a datasync:relationships grant must not authorize a /memberships op")
+                Assert.fail("Expected a 403: a datasync:relationships grant must not authorize a /memberships op")
             } catch (e: PubNubException) {
-                assertEquals(403, e.statusCode)
+                Assert.assertEquals(403, e.statusCode)
             }
         } finally {
             try {
@@ -470,7 +467,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
     fun getAllWithFilterSortLimitAndCursor() = withChannelAndUser { channelId, _ ->
         // Built-in fields (id, createdAt, updatedAt, status) are always filterable and sortable. Tag three
         // memberships on the same channel (distinct users) with sortable statuses a < b < c.
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val statusA = "st-$run-a"
         val statusB = "st-$run-b"
         val statusC = "st-$run-c"
@@ -499,7 +496,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 channelId = channelId,
                 filterFast = "status == \"$statusA\"",
             ).sync()
-            assertEquals(setOf(idA), filtered.data.map { it.id }.toSet())
+            Assert.assertEquals(setOf(idA), filtered.data.map { it.id }.toSet())
 
             // sort ascending by status -> a-b-c
             val sortedAsc = server.dataSync.getMemberships(
@@ -507,7 +504,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 filterFast = "status LIKE \"st-$run-*\"",
                 sort = listOf(PNDataSyncSortField("status")),
             ).sync()
-            assertEquals(listOf(idA, idB, idC), sortedAsc.data.map { it.id })
+            Assert.assertEquals(listOf(idA, idB, idC), sortedAsc.data.map { it.id })
 
             // sort descending -> c-b-a
             val sortedDesc = server.dataSync.getMemberships(
@@ -515,7 +512,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 filterFast = "status LIKE \"st-$run-*\"",
                 sort = listOf(PNDataSyncSortField("status", ascending = false)),
             ).sync()
-            assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
+            Assert.assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
 
             // limit + cursor -> page one at a time
             val firstPage = server.dataSync.getMemberships(
@@ -524,10 +521,10 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 sort = listOf(PNDataSyncSortField("status")),
                 limit = 1,
             ).sync()
-            assertEquals(1, firstPage.data.size)
-            assertEquals(idA, firstPage.data.first().id)
-            assertTrue("Expected more pages after the first", firstPage.next.hasNext)
-            assertNotNull(firstPage.next.cursor)
+            Assert.assertEquals(1, firstPage.data.size)
+            Assert.assertEquals(idA, firstPage.data.first().id)
+            Assert.assertTrue("Expected more pages after the first", firstPage.next.hasNext)
+            Assert.assertNotNull(firstPage.next.cursor)
 
             val secondPage = server.dataSync.getMemberships(
                 channelId = channelId,
@@ -536,8 +533,8 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 limit = 1,
                 cursor = firstPage.next.cursor,
             ).sync()
-            assertEquals(1, secondPage.data.size)
-            assertEquals(idB, secondPage.data.first().id)
+            Assert.assertEquals(1, secondPage.data.size)
+            Assert.assertEquals(idB, secondPage.data.first().id)
         } finally {
             listOf(idA, idB, idC).forEach {
                 try {

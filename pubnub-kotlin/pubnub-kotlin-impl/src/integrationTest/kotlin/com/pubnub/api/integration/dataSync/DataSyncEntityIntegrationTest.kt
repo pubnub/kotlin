@@ -1,21 +1,18 @@
-package com.pubnub.api.integration
+package com.pubnub.api.integration.dataSync
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
+import com.pubnub.api.integration.BaseIntegrationTest
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.entity.PNDataSyncCreateEntityResult
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
-import com.pubnub.test.CommonUtils.randomValue
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
+import com.pubnub.test.CommonUtils
+import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
 
@@ -44,11 +41,11 @@ import org.junit.Test
 class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     private val className = "TestUser"
     private val classVersion = 1
-    private val entityId = "entity-" + randomValue()
+    private val entityId = "entity-" + CommonUtils.randomValue()
 
     /**
      * On-demand maintenance, not a test: wipes every entity of [className] on the keyset, so leftover rows from
-     * earlier runs (or a crashed suite) can't skew list/filter assertions. To run it, remove [Ignore] and run just
+     * earlier runs (or a crashed suite) can't skew list/filter assertions. To run it, remove [org.junit.Ignore] and run just
      * this method. Uses `server` (holds the secretKey), pages through `getEntities` and best-effort removes each id;
      * stops when a page is empty or nothing on it could be removed.
      */
@@ -95,14 +92,14 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             payload = payload,
         ).sync()
 
-        assertEquals(entityId, createResult.data.id)
-        assertEquals(className, createResult.data.className)
-        assertEquals(classVersion, createResult.data.classVersion)
-        assertNotNull(createResult.data.eTag)
+        Assert.assertEquals(entityId, createResult.data.id)
+        Assert.assertEquals(className, createResult.data.className)
+        Assert.assertEquals(classVersion, createResult.data.classVersion)
+        Assert.assertNotNull(createResult.data.eTag)
         // expiresAt is a required, server-computed field: proves the server always returns it
-        assertTrue(createResult.data.expiresAt.isNotBlank())
-        assertEquals(payload.username, createResult.data.payload?.get("username"))
-        assertEquals(payload.email, createResult.data.payload?.get("email"))
+        Assert.assertTrue(createResult.data.expiresAt.isNotBlank())
+        Assert.assertEquals(payload.username, createResult.data.payload?.get("username"))
+        Assert.assertEquals(payload.email, createResult.data.payload?.get("email"))
 
         // create again with the same id -> 409 (create is create-only)
         try {
@@ -113,16 +110,16 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 status = "active",
                 payload = payload,
             ).sync()
-            fail("Expected a 409 when creating an entity with an existing id")
+            Assert.fail("Expected a 409 when creating an entity with an existing id")
         } catch (e: PubNubException) {
-            assertEquals(409, e.statusCode)
+            Assert.assertEquals(409, e.statusCode)
         }
 
         // get
         val getResult = server.dataSync.getEntity(entityId).sync()
-        assertEquals(entityId, getResult.data.id)
-        assertEquals(className, getResult.data.className)
-        assertEquals("active", getResult.data.status)
+        Assert.assertEquals(entityId, getResult.data.id)
+        Assert.assertEquals(className, getResult.data.className)
+        Assert.assertEquals("active", getResult.data.status)
 
         // delete
         val pnRemoveEntityResult = server.dataSync.removeEntity(entityId).sync()
@@ -130,9 +127,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         // get after delete -> 404
         try {
             server.dataSync.getEntity(entityId).sync()
-            fail("Expected a 404 after deleting the entity")
+            Assert.fail("Expected a 404 after deleting the entity")
         } catch (e: PubNubException) {
-            assertEquals(404, e.statusCode)
+            Assert.assertEquals(404, e.statusCode)
         }
     }
 
@@ -162,19 +159,19 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             payload = payload,
         ).sync()
 
-        assertEquals(entityId, createResult.data.id)
-        assertEquals(className, createResult.data.className)
-        assertEquals(classVersion, createResult.data.classVersion)
-        assertNotNull(createResult.data.eTag)
-        assertEquals(payload.username, createResult.data.payload?.get("username"))
-        assertEquals(payload.email, createResult.data.payload?.get("email"))
+        Assert.assertEquals(entityId, createResult.data.id)
+        Assert.assertEquals(className, createResult.data.className)
+        Assert.assertEquals(classVersion, createResult.data.classVersion)
+        Assert.assertNotNull(createResult.data.eTag)
+        Assert.assertEquals(payload.username, createResult.data.payload?.get("username"))
+        Assert.assertEquals(payload.email, createResult.data.payload?.get("email"))
 
         // get -> token scoped to `get` on this specific entity
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, get = true))
         val getResult = client.dataSync.getEntity(entityId).sync()
-        assertEquals(entityId, getResult.data.id)
-        assertEquals(className, getResult.data.className)
-        assertEquals("active", getResult.data.status)
+        Assert.assertEquals(entityId, getResult.data.id)
+        Assert.assertEquals(className, getResult.data.className)
+        Assert.assertEquals("active", getResult.data.status)
 
         // getAll -> token scoped to `get` on this specific entity id
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, get = true))
@@ -182,7 +179,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             className = className,
             limit = 100,
         ).sync()
-        assertTrue(getAllResult.data.any { it.id == entityId })
+        Assert.assertTrue(getAllResult.data.any { it.id == entityId })
 
         // patch -> token scoped to `update` on this specific entity (PATCH maps to `update`)
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, update = true))
@@ -192,7 +189,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
             ),
         ).sync()
-        assertEquals("inactive", patchResult.data.status)
+        Assert.assertEquals("inactive", patchResult.data.status)
 
         // update -> token scoped to `update` on this specific entity (PUT maps to `update`).
         // projection = "admin" for the same reason as create: the new payload writes `email`.
@@ -204,8 +201,8 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             status = "archived",
             payload = newPayload,
         ).sync()
-        assertEquals("archived", updateResult.data.status)
-        assertEquals("Bob", updateResult.data.payload?.get("username"))
+        Assert.assertEquals("archived", updateResult.data.status)
+        Assert.assertEquals("Bob", updateResult.data.payload?.get("username"))
 
         // delete -> token scoped to `delete` on this specific entity
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, delete = true))
@@ -215,9 +212,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, get = true))
         try {
             client.dataSync.getEntity(entityId).sync()
-            fail("Expected a 404 after deleting the entity")
+            Assert.fail("Expected a 404 after deleting the entity")
         } catch (e: PubNubException) {
-            assertEquals(404, e.statusCode)
+            Assert.assertEquals(404, e.statusCode)
         }
     }
 
@@ -233,8 +230,8 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     @Test
     fun getEntitiesReturnsOnlyEntitiesTheTokenCanRead() {
         // Two entities created with `server` (has the secretKey, so no token needed).
-        val grantedEntityId = "entity-granted-" + randomValue()
-        val ungrantedEntityId = "entity-ungranted-" + randomValue()
+        val grantedEntityId = "entity-granted-" + CommonUtils.randomValue()
+        val ungrantedEntityId = "entity-ungranted-" + CommonUtils.randomValue()
 
         server.dataSync.createEntity(
             className = className,
@@ -265,11 +262,11 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             // leaking to a client that has no permission to read it.
             val getAllResult = client.dataSync.getEntities(className = className, limit = 100).sync()
 
-            assertTrue(
+            Assert.assertTrue(
                 "Expected the granted entity to be present in the filtered listing",
                 getAllResult.data.any { it.id == grantedEntityId },
             )
-            assertTrue(
+            Assert.assertTrue(
                 "The ungranted entity must not leak to a token that cannot read it",
                 getAllResult.data.none { it.id == ungrantedEntityId },
             )
@@ -295,7 +292,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         val generatedId = createResult.data.id
-        assertTrue(generatedId.isNotBlank())
+        Assert.assertTrue(generatedId.isNotBlank())
 
         // cleanup
         server.dataSync.removeEntity(generatedId).sync()
@@ -305,9 +302,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     fun getBlankEntityIdThrows() {
         try {
             server.dataSync.getEntity("").sync()
-            fail("Expected validation to reject a blank entityId")
+            Assert.fail("Expected validation to reject a blank entityId")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_ID_MISSING, e.pubnubError)
         }
     }
 
@@ -333,7 +330,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 className = className,
                 limit = 100,
             ).sync()
-            assertTrue(getAllResult.data.any { it.id == entityId })
+            Assert.assertTrue(getAllResult.data.any { it.id == entityId })
 
             // patch -> replace /status
             val patchResult = server.dataSync.updateEntity(
@@ -342,10 +339,10 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                     PNJsonPatchOperation(op = "replace", path = "/status", value = "inactive"),
                 ),
             ).sync()
-            assertEquals("inactive", patchResult.data.status)
+            Assert.assertEquals("inactive", patchResult.data.status)
 
             // get reflects the patched status
-            assertEquals("inactive", server.dataSync.getEntity(entityId).sync().data.status)
+            Assert.assertEquals("inactive", server.dataSync.getEntity(entityId).sync().data.status)
 
             // update -> full replace of status + payload
             val newPayload = TestUserPayload(username = "Bob", email = "bob@example.com")
@@ -355,13 +352,13 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 status = "archived",
                 payload = newPayload,
             ).sync()
-            assertEquals("archived", updateResult.data.status)
-            assertEquals("Bob", updateResult.data.payload?.get("username"))
+            Assert.assertEquals("archived", updateResult.data.status)
+            Assert.assertEquals("Bob", updateResult.data.payload?.get("username"))
 
             // get reflects the full replacement
             val afterUpdate = server.dataSync.getEntity(entityId).sync()
-            assertEquals("archived", afterUpdate.data.status)
-            assertEquals("Bob", afterUpdate.data.payload?.get("username"))
+            Assert.assertEquals("archived", afterUpdate.data.status)
+            Assert.assertEquals("Bob", afterUpdate.data.payload?.get("username"))
         } finally {
             server.dataSync.removeEntity(entityId).sync()
         }
@@ -384,7 +381,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
 
         try {
             val originalETag = createResult.data.eTag
-            assertNotNull(originalETag)
+            Assert.assertNotNull(originalETag)
 
             // patch #1 with a matching ifMatch -> succeeds and bumps the eTag
             val patch1 = server.dataSync.updateEntity(
@@ -394,9 +391,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 ),
                 ifMatch = originalETag,
             ).sync()
-            assertEquals("inactive", patch1.data.status)
+            Assert.assertEquals("inactive", patch1.data.status)
             val newETag = patch1.data.eTag
-            assertNotEquals(originalETag, newETag)
+            Assert.assertNotEquals(originalETag, newETag)
 
             // patch #2 with the now-stale ifMatch -> 412 (optimistic concurrency conflict)
             try {
@@ -407,9 +404,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                     ),
                     ifMatch = originalETag,
                 ).sync()
-                fail("Expected a 412 when patching with a stale ifMatch eTag")
+                Assert.fail("Expected a 412 when patching with a stale ifMatch eTag")
             } catch (e: PubNubException) {
-                assertEquals(412, e.statusCode)
+                Assert.assertEquals(412, e.statusCode)
             }
         } finally {
             server.dataSync.removeEntity(entityId).sync()
@@ -420,9 +417,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     fun getAllBlankEntityClassThrows() {
         try {
             server.dataSync.getEntities("").sync()
-            fail("Expected validation to reject a blank entityClass")
+            Assert.fail("Expected validation to reject a blank entityClass")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.ENTITY_CLASS_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.ENTITY_CLASS_MISSING, e.pubnubError)
         }
     }
 
@@ -434,7 +431,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         // declares `username` (filtering "full", so it supports LIKE) and `email` (filtering "simple").
         // Each row is tagged with a run-unique username so the assertions stay isolated from any other
         // entities on the keyset, and the usernames sort a < b < c for deterministic ordering.
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val userA = "user-$run-a"
         val userB = "user-$run-b"
         val userC = "user-$run-c"
@@ -472,8 +469,8 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 filterFast = "username == \"$userA\"",
             ).sync()
             val filteredIds = filtered.data.map { it.id }
-            assertEquals(setOf(idA), filteredIds.toSet())
-            assertTrue("Expected the un-matched entity to be filtered out", !filteredIds.contains(idB))
+            Assert.assertEquals(setOf(idA), filteredIds.toSet())
+            Assert.assertTrue("Expected the un-matched entity to be filtered out", !filteredIds.contains(idB))
 
             // classLevel -> class is defined at the SubKey level, so scoping the list to it still returns the row
             val scoped = server.dataSync.getEntities(
@@ -481,14 +478,14 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 classLevel = PNDataSyncClassLevel.SUBKEY,
                 filterFast = "username == \"$userA\"",
             ).sync()
-            assertEquals(setOf(idA), scoped.data.map { it.id }.toSet())
+            Assert.assertEquals(setOf(idA), scoped.data.map { it.id }.toSet())
 
             // filterFast -> prefix match via LIKE with a `*` wildcard, capturing all three rows
             val advanced = server.dataSync.getEntities(
                 className = className,
                 filterFast = "username LIKE \"$userPrefix*\"",
             ).sync()
-            assertEquals(setOf(idA, idB, idC), advanced.data.map { it.id }.toSet())
+            Assert.assertEquals(setOf(idA, idB, idC), advanced.data.map { it.id }.toSet())
 
             // sort -> ascending by username (bare property, no direction suffix); a-b-c order
             val sortedDefault = server.dataSync.getEntities(
@@ -496,14 +493,14 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username")),
             ).sync()
-            assertEquals(listOf(idA, idB, idC), sortedDefault.data.map { it.id })
+            Assert.assertEquals(listOf(idA, idB, idC), sortedDefault.data.map { it.id })
 
             val sorted = server.dataSync.getEntities(
                 className = className,
                 filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username", ascending = true)),
             ).sync()
-            assertEquals(listOf(idA, idB, idC), sorted.data.map { it.id })
+            Assert.assertEquals(listOf(idA, idB, idC), sorted.data.map { it.id })
 
             // sort descending -> the same rows in reverse (c-b-a) order
             val sortedDesc = server.dataSync.getEntities(
@@ -511,7 +508,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("username", ascending = false)),
             ).sync()
-            assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
+            Assert.assertEquals(listOf(idC, idB, idA), sortedDesc.data.map { it.id })
 
             // limit + cursor -> page through this run's rows one entity at a time
             val firstPage = server.dataSync.getEntities(
@@ -520,10 +517,10 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 sort = listOf(PNDataSyncSortField("username")),
                 limit = 1,
             ).sync()
-            assertEquals(1, firstPage.data.size)
-            assertEquals(idA, firstPage.data.first().id)
-            assertTrue("Expected more pages after the first", firstPage.next.hasNext)
-            assertNotNull(firstPage.next.cursor)
+            Assert.assertEquals(1, firstPage.data.size)
+            Assert.assertEquals(idA, firstPage.data.first().id)
+            Assert.assertTrue("Expected more pages after the first", firstPage.next.hasNext)
+            Assert.assertNotNull(firstPage.next.cursor)
 
             val secondPage = server.dataSync.getEntities(
                 className = className,
@@ -532,8 +529,8 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 limit = 1,
                 cursor = firstPage.next.cursor,
             ).sync()
-            assertEquals(1, secondPage.data.size)
-            assertEquals(idB, secondPage.data.first().id)
+            Assert.assertEquals(1, secondPage.data.size)
+            Assert.assertEquals(idB, secondPage.data.first().id)
         } finally {
             server.dataSync.removeEntity(idA).sync()
             server.dataSync.removeEntity(idB).sync()
@@ -567,9 +564,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             // admin-projected `get` token -> the `email` (admin-only) field is visible.
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, get = true, projection = "admin"))
             val adminView = client.dataSync.getEntity(entityId).sync()
-            assertEquals(entityId, adminView.data.id)
-            assertEquals("Alice", adminView.data.payload?.get("username"))
-            assertEquals(
+            Assert.assertEquals(entityId, adminView.data.id)
+            Assert.assertEquals("Alice", adminView.data.payload?.get("username"))
+            Assert.assertEquals(
                 "The admin-projected token must expose the admin-only `email` field",
                 "alice@example.com",
                 adminView.data.payload?.get("email"),
@@ -578,13 +575,13 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
             // no projection -> implicit `__default__` view: `email` is omitted, `username` is still present.
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(entityId, get = true))
             val defaultView = client.dataSync.getEntity(entityId).sync()
-            assertEquals(entityId, defaultView.data.id)
-            assertEquals(
+            Assert.assertEquals(entityId, defaultView.data.id)
+            Assert.assertEquals(
                 "The __default__ projection must still expose `username`",
                 "Alice",
                 defaultView.data.payload?.get("username"),
             )
-            assertTrue(
+            Assert.assertTrue(
                 "The admin-only `email` field must NOT leak through the __default__ projection",
                 defaultView.data.payload?.get("email") == null,
             )
@@ -613,7 +610,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         val authorizedUUID = client.configuration.userId.value
 
         // negative A: __default__-projected create writing the admin-only `email` -> 403 (DS-0202).
-        val defaultRejectedId = "entity-" + randomValue()
+        val defaultRejectedId = "entity-" + CommonUtils.randomValue()
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(defaultRejectedId, create = true))
         try {
             client.dataSync.createEntity(
@@ -623,9 +620,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 status = "active",
                 payload = TestUserPayload(username = "Alice", email = "alice@example.com"),
             ).sync()
-            fail("Expected a 403 when writing the admin-only email under the __default__ projection")
+            Assert.fail("Expected a 403 when writing the admin-only email under the __default__ projection")
         } catch (e: PubNubException) {
-            assertEquals(
+            Assert.assertEquals(
                 "Writing an admin-only field under __default__ must be rejected by the projection write-guard",
                 403,
                 e.statusCode,
@@ -636,7 +633,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         // Isolates a single variable: `username` is admin-declared (and non-nullable, so required) and `email`
         // is deliberately omitted, leaving `hobby` (uncontrolled) as the only field that can trip the guard.
         // A raw map payload is used so `email` can be left out entirely (TestUserPayload.email is non-null).
-        val adminRejectedId = "entity-" + randomValue()
+        val adminRejectedId = "entity-" + CommonUtils.randomValue()
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(adminRejectedId, create = true, projection = "admin"))
         try {
             client.dataSync.createEntity(
@@ -646,9 +643,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 status = "active",
                 payload = mapOf("username" to "Alice", "hobby" to "poetry"),
             ).sync()
-            fail("Expected a 403 when writing an undeclared field under the non-default admin projection")
+            Assert.fail("Expected a 403 when writing an undeclared field under the non-default admin projection")
         } catch (e: PubNubException) {
-            assertEquals(
+            Assert.assertEquals(
                 "An undeclared field under a non-default projection must be rejected by the projection write-guard",
                 403,
                 e.statusCode,
@@ -657,7 +654,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
 
         // positive leg: admin-projected create carrying ONLY admin-declared fields (`username` + `email`,
         // no undeclared fields) -> succeeds, proving the guard rejects on projection membership, not blanket.
-        val acceptedId = "entity-" + randomValue()
+        val acceptedId = "entity-" + CommonUtils.randomValue()
         grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(acceptedId, create = true, projection = "admin"))
         try {
             val createResult = client.dataSync.createEntity(
@@ -667,9 +664,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 status = "active",
                 payload = TestUserPayload(username = "Alice", email = "alice@example.com"),
             ).sync()
-            assertEquals(acceptedId, createResult.data.id)
-            assertEquals("Alice", createResult.data.payload?.get("username"))
-            assertEquals("alice@example.com", createResult.data.payload?.get("email"))
+            Assert.assertEquals(acceptedId, createResult.data.id)
+            Assert.assertEquals("Alice", createResult.data.payload?.get("username"))
+            Assert.assertEquals("alice@example.com", createResult.data.payload?.get("email"))
         } finally {
             try {
                 server.dataSync.removeEntity(acceptedId).sync()
@@ -687,7 +684,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         //
         // The `date` value kind expects a date-only `YYYY-MM-DD` literal on the wire; a full RFC-3339 datetime is
         // rejected with DS-0008 ("not of expected type 'date'").
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val userPrefix = "user-$run-"
         val idOld = "entity-$run-old"
         val idMid = "entity-$run-mid"
@@ -727,7 +724,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 className = className,
                 filterFast = "username LIKE \"$userPrefix*\" && signupDate >= \"$cutoff\"",
             ).sync()
-            assertEquals(setOf(idMid, idNew), ranged.data.map { it.id }.toSet())
+            Assert.assertEquals(setOf(idMid, idNew), ranged.data.map { it.id }.toSet())
 
             // sort ascending by the date property -> old, mid, new
             val sortedAsc = server.dataSync.getEntities(
@@ -735,7 +732,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("signupDate", ascending = true)),
             ).sync()
-            assertEquals(listOf(idOld, idMid, idNew), sortedAsc.data.map { it.id })
+            Assert.assertEquals(listOf(idOld, idMid, idNew), sortedAsc.data.map { it.id })
 
             // sort descending -> new, mid, old
             val sortedDesc = server.dataSync.getEntities(
@@ -743,7 +740,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
                 filterFast = "username LIKE \"$userPrefix*\"",
                 sort = listOf(PNDataSyncSortField("signupDate", ascending = false)),
             ).sync()
-            assertEquals(listOf(idNew, idMid, idOld), sortedDesc.data.map { it.id })
+            Assert.assertEquals(listOf(idNew, idMid, idOld), sortedDesc.data.map { it.id })
         } finally {
             server.dataSync.removeEntity(idOld).sync()
             server.dataSync.removeEntity(idMid).sync()
@@ -761,7 +758,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         // declares no projections, a default-projection grant is enough and the projection write-guard (DS-0202)
         // does not apply.
         val nodeClass = "TestNode"
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val nodeId = "node-arbitrary-$run"
 
         val client = createAuthorizedClient()
@@ -784,21 +781,21 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            assertEquals(nodeId, createResult.data.id)
-            assertEquals(nodeClass, createResult.data.className)
+            Assert.assertEquals(nodeId, createResult.data.id)
+            Assert.assertEquals(nodeClass, createResult.data.className)
             // undeclared fields are echoed back on the create response
-            assertEquals("Node-$run", createResult.data.payload?.get("name"))
-            assertEquals("admin", createResult.data.payload?.get("role"))
-            assertEquals("value", createResult.data.payload?.get("custom"))
+            Assert.assertEquals("Node-$run", createResult.data.payload?.get("name"))
+            Assert.assertEquals("admin", createResult.data.payload?.get("role"))
+            Assert.assertEquals("value", createResult.data.payload?.get("custom"))
 
             // and they round-trip on a subsequent token-authorized get
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(nodeId, get = true))
             val getResult = client.dataSync.getEntity(nodeId).sync()
-            assertEquals(nodeId, getResult.data.id)
-            assertEquals("Node-$run", getResult.data.payload?.get("name"))
-            assertEquals("admin", getResult.data.payload?.get("role"))
-            assertEquals("value", getResult.data.payload?.get("custom"))
-            assertEquals("active", getResult.data.status)
+            Assert.assertEquals(nodeId, getResult.data.id)
+            Assert.assertEquals("Node-$run", getResult.data.payload?.get("name"))
+            Assert.assertEquals("admin", getResult.data.payload?.get("role"))
+            Assert.assertEquals("value", getResult.data.payload?.get("custom"))
+            Assert.assertEquals("active", getResult.data.status)
         } finally {
             try {
                 server.dataSync.removeEntity(nodeId).sync()
@@ -820,7 +817,7 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         // projection the write-guard rejects EVERY field not in that projection, including undeclared ones. Here
         // the payload deliberately omits `email` so the write stays on `__default__`, where undeclared fields are
         // allowed. `username` is non-nullable, so it must be present (else DS-0650).
-        val run = randomValue()
+        val run = CommonUtils.randomValue()
         val userId = "entity-default-proj-$run"
 
         val client = createAuthorizedClient()
@@ -841,22 +838,22 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         try {
-            assertEquals(userId, createResult.data.id)
-            assertEquals(className, createResult.data.className)
-            assertEquals("Alice-$run", createResult.data.payload?.get("username"))
+            Assert.assertEquals(userId, createResult.data.id)
+            Assert.assertEquals(className, createResult.data.className)
+            Assert.assertEquals("Alice-$run", createResult.data.payload?.get("username"))
             // undeclared fields are echoed back on the create response
-            assertEquals("poetry", createResult.data.payload?.get("hobby"))
-            assertEquals("value", createResult.data.payload?.get("custom"))
+            Assert.assertEquals("poetry", createResult.data.payload?.get("hobby"))
+            Assert.assertEquals("value", createResult.data.payload?.get("custom"))
 
             // and they round-trip on a subsequent __default__-projection get
             grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.entity(userId, get = true))
             val getResult = client.dataSync.getEntity(userId).sync()
-            assertEquals(userId, getResult.data.id)
-            assertEquals("Alice-$run", getResult.data.payload?.get("username"))
-            assertEquals("poetry", getResult.data.payload?.get("hobby"))
-            assertEquals("value", getResult.data.payload?.get("custom"))
+            Assert.assertEquals(userId, getResult.data.id)
+            Assert.assertEquals("Alice-$run", getResult.data.payload?.get("username"))
+            Assert.assertEquals("poetry", getResult.data.payload?.get("hobby"))
+            Assert.assertEquals("value", getResult.data.payload?.get("custom"))
             // sanity: the admin-only `email` was never written and is absent under __default__
-            assertTrue(
+            Assert.assertTrue(
                 "email was not written and must not appear under the __default__ projection",
                 getResult.data.payload?.get("email") == null,
             )
@@ -872,9 +869,9 @@ class DataSyncEntityIntegrationTest : BaseIntegrationTest() {
     fun patchEmptyOperationsThrows() {
         try {
             server.dataSync.updateEntity(entityId, emptyList()).sync()
-            fail("Expected validation to reject an empty patch operations list")
+            Assert.fail("Expected validation to reject an empty patch operations list")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)
+            Assert.assertEquals(PubNubError.JSON_PATCH_OPERATIONS_MISSING, e.pubnubError)
         }
     }
 }
