@@ -87,6 +87,32 @@ class GetMembershipsEndpointTest : BaseTest() {
     }
 
     @Test
+    fun query_values_with_reserved_characters_round_trip() {
+        // Regression guard: every free-text query value (not only filters) must be percent-encoded, otherwise
+        // `+` decodes to a space, `%41` to `A`, and a bare `%` makes the URL invalid.
+        stubList()
+
+        pubnub.dataSync.getMemberships(
+            channelId = "ch+1",
+            userId = "user+tag@x.com",
+            sort = listOf(PNDataSyncSortField("x y&z=1#f")),
+            cursor = "a+b/100%a%41==",
+        ).sync()
+
+        val url = findAll(getRequestedFor(urlPathEqualTo(path))).single().url
+        assertTrue(url, url.contains("channel_id=ch%2B1"))
+        assertTrue(url, url.contains("user_id=user%2Btag"))
+        assertTrue(url, url.contains("cursor=a%2Bb"))
+        verify(
+            getRequestedFor(urlPathEqualTo(path))
+                .withQueryParam("channel_id", equalTo("ch+1"))
+                .withQueryParam("user_id", equalTo("user+tag@x.com"))
+                .withQueryParam("sort", equalTo("x y&z=1#f"))
+                .withQueryParam("cursor", equalTo("a+b/100%a%41==")),
+        )
+    }
+
+    @Test
     fun mixed_multi_field_sort_joins_with_comma() {
         stubList()
 

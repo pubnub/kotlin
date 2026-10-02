@@ -73,4 +73,27 @@ class GetUsersEndpointTest : BaseTest() {
         assertTrue(url, url.contains("filter_fast=name%20%3D%3D%20%22a%2Bb%22"))
         assertTrue(url, url.contains("filter=name%20%3D%3D%20%2250%25%22"))
     }
+
+    @Test
+    fun query_values_with_reserved_characters_round_trip() {
+        // Regression guard: every free-text query value (not only filters) must be percent-encoded, otherwise
+        // `+` decodes to a space, `%41` to `A`, and a bare `%` makes the URL invalid.
+        stubList()
+
+        pubnub.dataSync.getUsers(
+            className = "Test+Class",
+            sort = listOf(PNDataSyncSortField("x y&z=1#f")),
+            cursor = "a+b/100%a%41==",
+        ).sync()
+
+        val url = findAll(getRequestedFor(urlPathEqualTo(path))).single().url
+        assertTrue(url, url.contains("entity_class=Test%2BClass"))
+        assertTrue(url, url.contains("cursor=a%2Bb"))
+        verify(
+            getRequestedFor(urlPathEqualTo(path))
+                .withQueryParam("entity_class", equalTo("Test+Class"))
+                .withQueryParam("sort", equalTo("x y&z=1#f"))
+                .withQueryParam("cursor", equalTo("a+b/100%a%41==")),
+        )
+    }
 }

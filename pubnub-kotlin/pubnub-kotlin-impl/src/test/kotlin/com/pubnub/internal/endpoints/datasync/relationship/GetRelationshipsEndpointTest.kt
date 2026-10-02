@@ -111,6 +111,35 @@ class GetRelationshipsEndpointTest : BaseTest() {
     }
 
     @Test
+    fun query_values_with_reserved_characters_round_trip() {
+        // Regression guard: every free-text query value (not only filters) must be percent-encoded, otherwise
+        // `+` decodes to a space, `%41` to `A`, and a bare `%` makes the URL invalid.
+        stubList()
+
+        pubnub.dataSync.getRelationships(
+            className = "Test+Class",
+            entityAId = "a+1",
+            entityBId = "100%b%41",
+            sort = listOf(PNDataSyncSortField("x y&z=1#f")),
+            cursor = "a+b/100%a%41==",
+        ).sync()
+
+        val url = findAll(getRequestedFor(urlPathEqualTo(path))).single().url
+        assertTrue(url, url.contains("relationship_class=Test%2BClass"))
+        assertTrue(url, url.contains("entity_a_id=a%2B1"))
+        assertTrue(url, url.contains("entity_b_id=100%25b%2541"))
+        assertTrue(url, url.contains("cursor=a%2Bb"))
+        verify(
+            getRequestedFor(urlPathEqualTo(path))
+                .withQueryParam("relationship_class", equalTo("Test+Class"))
+                .withQueryParam("entity_a_id", equalTo("a+1"))
+                .withQueryParam("entity_b_id", equalTo("100%b%41"))
+                .withQueryParam("sort", equalTo("x y&z=1#f"))
+                .withQueryParam("cursor", equalTo("a+b/100%a%41==")),
+        )
+    }
+
+    @Test
     fun mixed_multi_field_sort_joins_with_comma() {
         stubList()
 

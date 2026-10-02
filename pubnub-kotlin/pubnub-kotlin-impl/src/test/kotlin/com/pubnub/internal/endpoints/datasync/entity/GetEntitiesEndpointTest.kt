@@ -8,8 +8,10 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.verify
+import com.pubnub.api.UserId
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
+import com.pubnub.test.SignatureUtils.decomposeAndVerifySignature
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -98,8 +100,8 @@ class GetEntitiesEndpointTest : BaseTest() {
 
     @Test
     fun filters_percent_encode_literal_plus_and_percent() {
-        // Regression guard: the service uses @QueryMap(encoded = true), so an un-encoded `+` would reach the
-        // server as a space and `%` as the start of an escape sequence.
+        // Regression guard: an un-encoded `+` would reach the server as a space and `%` as the start of an
+        // escape sequence. The service relies on Retrofit/OkHttp to encode query values (bare @QueryMap).
         stubList()
 
         pubnub.dataSync.getEntities(
@@ -116,5 +118,56 @@ class GetEntitiesEndpointTest : BaseTest() {
                 .withQueryParam("filter_fast", equalTo("email == \"a+b@x.com\""))
                 .withQueryParam("filter", equalTo("note == \"50%\"")),
         )
+    }
+
+    @Test
+    fun query_values_with_reserved_characters_round_trip() {
+        // Regression guard: every free-text query value (not only filters) must be percent-encoded, otherwise
+        // `+` decodes to a space, `%41` to `A`, and a bare `%` makes the URL invalid.
+        stubList()
+
+        pubnub.dataSync.getEntities(
+            className = "Test+Class",
+            sort = listOf(PNDataSyncSortField("x y&z=1#f")),
+            cursor = "a+b/100%a%41==",
+        ).sync()
+
+        val url = findAll(getRequestedFor(urlPathEqualTo(path))).single().url
+        assertTrue(url, url.contains("entity_class=Test%2BClass"))
+        assertTrue(url, url.contains("cursor=a%2Bb"))
+        verify(
+            getRequestedFor(urlPathEqualTo(path))
+                .withQueryParam("entity_class", equalTo("Test+Class"))
+                .withQueryParam("sort", equalTo("x y&z=1#f"))
+                .withQueryParam("cursor", equalTo("a+b/100%a%41==")),
+        )
+    }
+
+    @Test
+    fun user_id_with_reserved_characters_round_trips_as_uuid() {
+        config.userId = UserId("u+1%41")
+        stubList()
+
+        pubnub.dataSync.getEntities(className = "TestUser").sync()
+
+        val url = findAll(getRequestedFor(urlPathEqualTo(path))).single().url
+        assertTrue(url, url.contains("uuid=u%2B1%2541"))
+        verify(getRequestedFor(urlPathEqualTo(path)).withQueryParam("uuid", equalTo("u+1%41")))
+    }
+
+    @Test
+    fun signature_is_valid_for_query_values_with_reserved_characters() {
+        config.secretKey = "mySecretKey"
+        stubList()
+
+        pubnub.dataSync.getEntities(
+            className = "TestUser",
+            filterFast = "email == \"a+b@x.com\"",
+            filter = "note == \"50%\"",
+            cursor = "c+d",
+        ).sync()
+
+        val request = findAll(getRequestedFor(urlPathEqualTo(path))).single()
+        decomposeAndVerifySignature(pubnub.configuration, request)
     }
 }

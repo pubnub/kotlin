@@ -448,6 +448,38 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun getUsersFilterWithPlusAndPercentMatchesLiterally() {
+        // Regression guard for query-value encoding: a `+` must reach the server as a literal plus (not a space)
+        // and a `%` as a literal percent. The decoy's name is what a mis-decoded `+` would turn into, so an
+        // encoding regression matches the decoy instead of the target. `server` signs with the secretKey, so this
+        // also proves the backend accepts the signature for such values.
+        val run = CommonUtils.randomValue()
+        val targetName = "enc-$run a+b 50%"
+        val decoyName = "enc-$run a b 50%"
+        val targetId = "user-$run-enc-target"
+        val decoyId = "user-$run-enc-decoy"
+
+        server.dataSync.createUser(
+            classVersion = classVersion,
+            userId = targetId,
+            payload = mapOf("name" to targetName),
+        ).sync()
+        server.dataSync.createUser(
+            classVersion = classVersion,
+            userId = decoyId,
+            payload = mapOf("name" to decoyName),
+        ).sync()
+
+        try {
+            val filtered = server.dataSync.getUsers(filterFast = "name == \"$targetName\"").sync()
+            Assert.assertEquals(setOf(targetId), filtered.data.map { it.id }.toSet())
+        } finally {
+            server.dataSync.removeUser(targetId).sync()
+            server.dataSync.removeUser(decoyId).sync()
+        }
+    }
+
+    @Test
     fun patchWithIfMatchAndStaleETagThrows412() {
         // create
         val payload = TestUserPayload(

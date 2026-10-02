@@ -11,7 +11,6 @@ import com.pubnub.api.models.consumer.datasync.membership.PNDataSyncMembership
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.datasync.EntitiesEnvelope
@@ -63,9 +62,8 @@ class GetMembershipsEndpoint internal constructor(
         channelId?.let { queryParams["channel_id"] = it }
         userId?.let { queryParams["user_id"] = it }
         classVersion?.let { queryParams["relationship_class_version"] = it.toString() }
-        // Pre-encoded: the service uses @QueryMap(encoded = true), which would leave a literal `+` / `%` as-is.
-        filterFast?.let { queryParams["filter_fast"] = PubNubUtil.pamEncode(it) }
-        filter?.let { queryParams["filter"] = PubNubUtil.pamEncode(it) }
+        filterFast?.let { queryParams["filter_fast"] = it }
+        filter?.let { queryParams["filter"] = it }
         if (sortParam.isNotEmpty()) {
             queryParams["sort"] = sortParam
         }
