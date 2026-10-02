@@ -173,7 +173,8 @@ object DataSyncGrant {
      * `null` for the implicit `__default__` projection. Emitted into the token meta as the `pn-projections` entry
      * `datasync:channels:<name>`. It does not affect realtime subscribe (see [subscribe]). A named projection only
      * has an effect for channels of a custom Channel subclass that declares it: the built-in `Channel` class exposes
-     * its fields through `__default__` only.
+     * its fields through `__default__` only. `parseToken` returns it in `PNToken.projections.resources.channels`
+     * (`patterns.channels` for [channelPattern]).
      */
     fun channel(
         name: String,
@@ -207,7 +208,8 @@ object DataSyncGrant {
      * for the implicit `__default__` projection. Emitted into the token meta as the `pn-projections` entry
      * `datasync:users:<name>`. It does not affect realtime subscribe (see [subscribe]). A named projection only has
      * an effect for users of a custom User subclass that declares it: the built-in `User` class exposes its fields
-     * through `__default__` only.
+     * through `__default__` only. `parseToken` returns it in `PNToken.projections.resources.users`
+     * (`patterns.users` for [userPattern]).
      */
     fun user(
         name: String,

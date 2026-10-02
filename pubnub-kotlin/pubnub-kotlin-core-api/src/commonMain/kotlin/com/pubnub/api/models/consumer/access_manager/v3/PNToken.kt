@@ -67,9 +67,17 @@ data class PNDataSyncProjections(
  * Per-namespace projection assignments (resource id -> projection name) for one side (`res` or `pat`) of a token's
  * `pn-projections` block. Keys are the bare resource ids (e.g. `user.A`, `user.A:channel.X`), not the composite
  * `datasync:<type>:<id>` wire keys.
+ *
+ * [users] and [channels] hold the projections of `DataSyncGrant.user` / `DataSyncGrant.channel` grants (and their
+ * pattern variants), keyed by user / channel id. A named projection there only has an effect for instances of a custom
+ * User / Channel subclass that declares it: the built-in `User` and `Channel` classes expose `__default__` only. A user
+ * or channel subclass instance is still a user or channel, so its projection is granted and stored under [users] /
+ * [channels], not under [entities].
  */
 data class PNDataSyncProjectionScope(
     val entities: Map<String, String> = emptyMap(),
     val relationships: Map<String, String> = emptyMap(),
     val memberships: Map<String, String> = emptyMap(),
+    val users: Map<String, String> = emptyMap(),
+    val channels: Map<String, String> = emptyMap(),
 )

@@ -412,6 +412,51 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun grantToken_carriesDataSyncUserAndChannelProjections() {
+        // given — user/channel projections only matter for custom User/Channel subclass instances, but the token must
+        // still round-trip them into the typed users/channels maps. The token carries no class information: the ids
+        // below are named after subclass instances (e.g. of TestSubUser / TestSubChannel) for readability only.
+        val pubNubUnderTest = server
+        val adminProjection = "admin"
+        val userId = "subUser-123"
+        val userPatternId = "subUser-.*"
+        val channelId = "subChannel-lobby"
+        val channelPatternId = "subChannel-.*"
+
+        // when
+        val token =
+            pubNubUnderTest.grantToken(
+                ttl = 1337,
+                authorizedUserId = null,
+                grants =
+                    listOf(
+                        DataSyncGrant.user(userId, get = true, projection = adminProjection),
+                        DataSyncGrant.userPattern(
+                            userPatternId,
+                            get = true,
+                            projection = DataSyncNamespace.DEFAULT_PROJECTION,
+                        ),
+                        DataSyncGrant.channel(channelId, get = true, projection = adminProjection),
+                        DataSyncGrant.channelPattern(
+                            channelPatternId,
+                            get = true,
+                            projection = DataSyncNamespace.DEFAULT_PROJECTION,
+                        ),
+                    ),
+            ).sync().token
+
+        // then
+        val projections = pubNubUnderTest.parseToken(token).projections!!
+        assertEquals(mapOf(userId to adminProjection), projections.resources.users)
+        assertEquals(mapOf(channelId to adminProjection), projections.resources.channels)
+        assertEquals(mapOf(userPatternId to DataSyncNamespace.DEFAULT_PROJECTION), projections.patterns.users)
+        assertEquals(mapOf(channelPatternId to DataSyncNamespace.DEFAULT_PROJECTION), projections.patterns.channels)
+        // they must not leak into the entities namespace
+        assertTrue(projections.resources.entities.isEmpty())
+        assertTrue(projections.patterns.entities.isEmpty())
+    }
+
+    @Test
     fun grantToken_keepsCallerMetaAlongsideProjections() {
         // given — the caller supplies their own plain meta (a pn-projections key in it is rejected). The SDK must add
         // the grant-derived pn-projections block next to it without dropping the caller's keys.

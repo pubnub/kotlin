@@ -106,8 +106,9 @@ class GrantTokenRoundTripJsTest : BaseIntegrationTest() {
             assertEquals(mapOf(entity to "admin"), projections.resources.entities)
             assertEquals(mapOf(relationship to "admin"), projections.resources.relationships)
             assertTrue(projections.resources.memberships.isEmpty())
+            assertEquals(mapOf(dataSyncChannel to "admin"), projections.resources.channels)
 
-            // Channel projections aren't lifted into `projections` (same as the JVM); they stay in the raw meta.
+            // The raw block also stays in the meta (additive decode).
             val rawProjections = (parsed.meta as Map<*, *>)[DataSyncNamespace.PN_PROJECTIONS] as Map<*, *>
             val rawResources = rawProjections["res"] as Map<*, *>
             assertEquals("admin", rawResources["${DataSyncNamespace.CHANNELS_PROJECTION}:$dataSyncChannel"])

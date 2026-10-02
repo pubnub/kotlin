@@ -295,6 +295,43 @@ public class GrantTokenIT extends BaseIntegrationTest {
     }
 
     @Test
+    public void grantToken_carriesDataSyncUserAndChannelProjections() throws PubNubException {
+        // given — user/channel projections only matter for custom User/Channel subclass instances, but the token must
+        // still round-trip them into the typed users/channels maps. The token carries no class information: the ids
+        // below are named after subclass instances (e.g. of TestSubUser / TestSubChannel) for readability only.
+        PubNub pubNubUnderTest = getServer();
+        final String adminProjection = "admin";
+        final String defaultProjection = "__default__";
+        final String userId = "subUser-123";
+        final String userPatternId = "subUser-.*";
+        final String channelId = "subChannel-lobby";
+        final String channelPatternId = "subChannel-.*";
+
+        // when
+        final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
+                .grantToken(1337)
+                .grants(Arrays.<TokenGrant>asList(
+                        DataSyncGrant.user(userId).get().projection(adminProjection),
+                        DataSyncGrant.userPattern(userPatternId).get().projection(defaultProjection),
+                        DataSyncGrant.channel(channelId).get().projection(adminProjection),
+                        DataSyncGrant.channelPattern(channelPatternId).get().projection(defaultProjection)))
+                .sync();
+
+        // then
+        final PNDataSyncProjections projections =
+                pubNubUnderTest.parseToken(grantTokenResponse.getToken()).getProjections();
+        final PNDataSyncProjectionScope typedRes = projections.getResources();
+        assertEquals(Collections.singletonMap(userId, adminProjection), typedRes.getUsers());
+        assertEquals(Collections.singletonMap(channelId, adminProjection), typedRes.getChannels());
+        assertTrue(typedRes.getEntities().isEmpty()); // must not leak into the entities namespace
+
+        final PNDataSyncProjectionScope typedPat = projections.getPatterns();
+        assertEquals(Collections.singletonMap(userPatternId, defaultProjection), typedPat.getUsers());
+        assertEquals(Collections.singletonMap(channelPatternId, defaultProjection), typedPat.getChannels());
+        assertTrue(typedPat.getEntities().isEmpty());
+    }
+
+    @Test
     @SuppressWarnings("unchecked")
     public void grantToken_keepsCallerMetaAlongsideProjections() throws PubNubException {
         // given — the caller supplies their own plain meta (a pn-projections key in it is rejected). The SDK must add

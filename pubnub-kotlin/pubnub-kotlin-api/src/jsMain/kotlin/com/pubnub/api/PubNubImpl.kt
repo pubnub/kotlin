@@ -1644,8 +1644,7 @@ private fun Any?.fromJsMetaValue(): Any? =
     }
 
 // Same decode as the JVM `TokenParser.parseProjections`: match the known namespace prefix instead of splitting on `:`
-// (relationship and membership ids contain colons). `datasync:users:` / `datasync:channels:` keys are ignored, as
-// on the JVM; they stay visible under the raw meta only.
+// (relationship and membership ids contain colons). Keys of an unknown namespace are ignored, as on the JVM.
 private fun parseProjections(meta: Any?): PNDataSyncProjections? {
     val projectionsBlock = (meta as? Map<*, *>)?.get(DataSyncNamespace.PN_PROJECTIONS) as? Map<*, *> ?: return null
     return PNDataSyncProjections(
@@ -1661,6 +1660,8 @@ private fun Map<*, *>?.toPNProjectionScope(): PNDataSyncProjectionScope {
     val entities = LinkedHashMap<String, String>()
     val relationships = LinkedHashMap<String, String>()
     val memberships = LinkedHashMap<String, String>()
+    val users = LinkedHashMap<String, String>()
+    val channels = LinkedHashMap<String, String>()
     for ((rawKey, rawValue) in this) {
         val key = rawKey.toString()
         val projection = rawValue.toString()
@@ -1671,9 +1672,19 @@ private fun Map<*, *>?.toPNProjectionScope(): PNDataSyncProjectionScope {
                 relationships[key.removePrefix("${DataSyncNamespace.RELATIONSHIPS}:")] = projection
             key.startsWith("${DataSyncNamespace.MEMBERSHIPS}:") ->
                 memberships[key.removePrefix("${DataSyncNamespace.MEMBERSHIPS}:")] = projection
+            key.startsWith("${DataSyncNamespace.USERS_PROJECTION}:") ->
+                users[key.removePrefix("${DataSyncNamespace.USERS_PROJECTION}:")] = projection
+            key.startsWith("${DataSyncNamespace.CHANNELS_PROJECTION}:") ->
+                channels[key.removePrefix("${DataSyncNamespace.CHANNELS_PROJECTION}:")] = projection
         }
     }
-    return PNDataSyncProjectionScope(entities = entities, relationships = relationships, memberships = memberships)
+    return PNDataSyncProjectionScope(
+        entities = entities,
+        relationships = relationships,
+        memberships = memberships,
+        users = users,
+        channels = channels,
+    )
 }
 
 private fun Collection<PNSortKey<out SortField>>.toJsMap() = associateBy(

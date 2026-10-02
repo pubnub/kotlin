@@ -342,5 +342,9 @@ class GrantTokenParamsTest {
         assertEquals(mapOf("e.*" to "public"), projections.patterns.entities)
         assertEquals(mapOf("user.A:.*" to "public"), projections.patterns.relationships)
         assertEquals(mapOf("m.*" to "__default__"), projections.patterns.memberships)
+        assertEquals(mapOf("u1" to "admin"), projections.resources.users)
+        assertEquals(mapOf("ch1" to "admin"), projections.resources.channels)
+        assertEquals(mapOf("u.*" to "public"), projections.patterns.users)
+        assertEquals(mapOf("ch.*" to "public"), projections.patterns.channels)
     }
 }
