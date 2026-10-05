@@ -17,15 +17,7 @@ public enum PNDataSyncClassLevel {
     /**
      * Class defined at the subscribe-key level.
      */
-    SUBKEY("SubKey"),
-
-    /**
-     * Class defined at the account level.
-     *
-     * <p>⚠️ Not yet supported by the server — passing this currently results in a {@code 400} response.
-     * Reserved for a planned future release; use {@link #GLOBAL} or {@link #SUBKEY} for now.
-     */
-    ACCOUNT("Account");
+    SUBKEY("SubKey");
 
     private final String value;
 
