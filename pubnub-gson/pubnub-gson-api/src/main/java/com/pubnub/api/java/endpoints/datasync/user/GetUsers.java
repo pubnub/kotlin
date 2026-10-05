@@ -19,7 +19,9 @@ public interface GetUsers extends Endpoint<PNDataSyncGetUsersResult> {
     GetUsers className(@Nullable String className);
 
     /**
-     * Optional entity class version. When not set the server uses the latest.
+     * Restricts results to a single version of the entity class (and its subclasses). If not set, items of every
+     * version are returned, while {@code filterFast}, {@code filter} and {@code sort} fields are checked against the
+     * latest version. Set a version to make results stable when new class versions are published.
      */
     GetUsers classVersion(@Nullable Integer classVersion);
 

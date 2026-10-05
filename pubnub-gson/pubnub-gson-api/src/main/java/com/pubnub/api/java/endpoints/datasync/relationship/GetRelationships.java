@@ -25,7 +25,9 @@ public interface GetRelationships extends Endpoint<PNDataSyncGetRelationshipsRes
     GetRelationships entityBId(@Nullable String entityBId);
 
     /**
-     * Restricts results to a single version of the relationship class. If not set, every version is returned.
+     * Restricts results to a single version of the relationship class. If not set, items of every version are
+     * returned, while {@code filterFast}, {@code filter} and {@code sort} fields are checked against the latest
+     * version. Set a version to make results stable when new class versions are published.
      */
     GetRelationships classVersion(@Nullable Integer classVersion);
 

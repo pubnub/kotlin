@@ -85,7 +85,9 @@ interface DataSync {
      * [filterFast] / [filter] / [sort] and [limit] paging.
      *
      * @param className Entity class identifier.
-     * @param classVersion Optional entity class version. When `null` the server uses the latest.
+     * @param classVersion Restricts results to a single version of the entity class (and its subclasses). If
+     *   `null`, items of every version are returned, while [filterFast], [filter] and [sort] fields are checked
+     *   against the latest version. Pass a version to make results stable when new class versions are published.
      * @param classLevel Optional level at which the entity class is defined (e.g. `SubKey` / `Global`).
      * @param filterFast Optional filter expression. Filtering is only allowed on properties the entity class
      *   marks as filterable; filtering on any other property returns a server error. Each property in the class
@@ -217,7 +219,9 @@ interface DataSync {
      *
      * @param className Optional entity class identifier. When `null` the whole User family is returned;
      *   when set it narrows the results to that `User` subclass.
-     * @param classVersion Optional entity class version. When `null` the server uses the latest.
+     * @param classVersion Restricts results to a single version of the entity class (and its subclasses). If
+     *   `null`, items of every version are returned, while [filterFast], [filter] and [sort] fields are checked
+     *   against the latest version. Pass a version to make results stable when new class versions are published.
      * @param classLevel Optional level at which the entity class is defined. The built-in `User` class is
      *   defined at the `GLOBAL` level.
      * @param filterFast Optional filter expression. Filtering is only allowed on properties the entity class
@@ -354,7 +358,9 @@ interface DataSync {
      *
      * @param className Optional entity class identifier. When `null` the whole Channel family is returned;
      *   when set it narrows the results to that `Channel` subclass.
-     * @param classVersion Optional entity class version. When `null` the server uses the latest.
+     * @param classVersion Restricts results to a single version of the entity class (and its subclasses). If
+     *   `null`, items of every version are returned, while [filterFast], [filter] and [sort] fields are checked
+     *   against the latest version. Pass a version to make results stable when new class versions are published.
      * @param classLevel Optional level at which the entity class is defined. The built-in `Channel` class is
      *   defined at the `GLOBAL` level.
      * @param filterFast Optional filter expression. Filtering is only allowed on properties the entity class
@@ -499,8 +505,9 @@ interface DataSync {
      *   side; supplying both returns the membership(s) matching both (i.e. that specific channel-user pair);
      *   supplying neither lists all readable memberships.
      * @param userId Optional User identifier to filter by. See [channelId] for how the two combine.
-     * @param classVersion Restricts results to a single version of the `Membership` class. If omitted, every
-     *   version is returned.
+     * @param classVersion Restricts results to a single version of the `Membership` class. If `null`, items of
+     *   every version are returned, while [filterFast], [filter] and [sort] fields are checked against the latest
+     *   version. Pass a version to make results stable when new class versions are published.
      * @param filterFast Optional filter expression. For the built-in `Membership` class, filtering is allowed
      *   only on the built-in fields `id`, `createdAt`, `updatedAt`, and `status` (case-sensitive, exactly as
      *   spelled), which are filterable and sortable on both the `filterFast` and [filter] paths — except that
@@ -647,8 +654,9 @@ interface DataSync {
      *   on that side; supplying both returns the relationships matching both; supplying neither lists all
      *   readable relationships in the class. This is not a pair-only lookup API.
      * @param entityBId Optional entity B identifier to filter by. See [entityAId] for how the two combine.
-     * @param classVersion Restricts results to a single version of the relationship class. If omitted, every
-     *   version is returned.
+     * @param classVersion Restricts results to a single version of the relationship class. If `null`, items of
+     *   every version are returned, while [filterFast], [filter] and [sort] fields are checked against the latest
+     *   version. Pass a version to make results stable when new class versions are published.
      * @param filterFast Optional filter expression. `filterFast` is strongly consistent — it always reflects the
      *   latest writes — but accepts fewer conditions than [filter]; a limit on the number of conditions applies
      *   and can be adjusted by PubNub support (see the PubNub DataSync documentation for the current limit). For
