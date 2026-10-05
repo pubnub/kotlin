@@ -102,19 +102,20 @@ interface DataSync {
      *   than [filter]; a limit on the number of conditions applies and can be adjusted by PubNub support
      *   (see the PubNub DataSync documentation for the current limit). For larger or more complex queries use
      *   [filter]. At most one of [filterFast] and [filter] may be supplied; sending both is
-     *   rejected with an error.
+     *   rejected by the server (HTTP 400).
      * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast], but only
      *   properties whose `filtering` mode is `full` (plus the built-in fields) are usable here — a `simple`
      *   property that works with [filterFast] is rejected by `filter`. It is not subject to the same condition
      *   limit, so use it for larger or more complex queries. The trade-off is consistency: `filter` is eventually
      *   consistent (recent writes may not yet be reflected), whereas [filterFast] is strongly consistent. At most
-     *   one of [filterFast] and [filter] may be supplied; sending both is rejected with an error.
+     *   one of [filterFast] and [filter] may be supplied; sending both is rejected by the server (HTTP 400).
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
      *   property either ascending (default) or descending. Sorting is governed by the same `filtering`-mode gate
      *   as filtering: a `simple` property is sortable on the strongly-consistent path ([filterFast], or a
      *   sort-only / [cursor] request with neither filter); a `full` property is sortable on that path and on the
      *   [filter] path. The built-in fields `id`, `createdAt`, `updatedAt`, and `status` are always sortable.
-     * @param limit Optional page size (1–100, server default 20).
+     * @param limit Optional page size, 1–100 (server default 20). A value outside that range is rejected by the
+     *   server (HTTP 400), not clamped.
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
     fun getEntities(
@@ -240,20 +241,21 @@ interface DataSync {
      *   but accepts fewer conditions than [filter]; a limit on the number of conditions applies and can
      *   be adjusted by PubNub support (see the PubNub DataSync documentation for the current limit). For larger
      *   or more complex queries use [filter]. At most one of [filterFast] and [filter] may be
-     *   supplied; sending both is rejected with an error.
+     *   supplied; sending both is rejected by the server (HTTP 400).
      * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast], but only
      *   properties whose `filtering` mode is `full` (plus the built-in fields) are usable here — a `simple`
      *   property that works with [filterFast] is rejected by `filter`. It is not subject to the same condition
      *   limit, so use it for larger or more complex queries. The trade-off is consistency: `filter` is eventually
      *   consistent (recent writes may not yet be reflected), whereas [filterFast] is strongly consistent. At most
-     *   one of [filterFast] and [filter] may be supplied; sending both is rejected with an error.
+     *   one of [filterFast] and [filter] may be supplied; sending both is rejected by the server (HTTP 400).
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
      *   property either ascending (default) or descending. Sorting is governed by the same `filtering`-mode gate
      *   as filtering: a `simple` property is sortable on the strongly-consistent path ([filterFast], or a
      *   sort-only / [cursor] request with neither filter); a `full` property is sortable on that path and on the
      *   [filter] path. The built-in fields `id`, `createdAt`, `updatedAt`, and `status` are always sortable
      *   (built-in `User` class filterable/sortable properties: `name` and `type`).
-     * @param limit Optional page size (1–100, server default 20).
+     * @param limit Optional page size, 1–100 (server default 20). A value outside that range is rejected by the
+     *   server (HTTP 400), not clamped.
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
     fun getUsers(
@@ -378,20 +380,21 @@ interface DataSync {
      *   latest writes — but accepts fewer conditions than [filter]; a limit on the number of conditions
      *   applies and can be adjusted by PubNub support (see the PubNub DataSync documentation for the current
      *   limit). For larger or more complex queries use [filter]. At most one of [filterFast] and
-     *   [filter] may be supplied; sending both is rejected with an error.
+     *   [filter] may be supplied; sending both is rejected by the server (HTTP 400).
      * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast], but only
      *   properties whose `filtering` mode is `full` (plus the built-in fields) are usable here — a `simple`
      *   property that works with [filterFast] is rejected by `filter`. It is not subject to the same condition
      *   limit, so use it for larger or more complex queries. The trade-off is consistency: `filter` is eventually
      *   consistent (recent writes may not yet be reflected), whereas [filterFast] is strongly consistent. At most
-     *   one of [filterFast] and [filter] may be supplied; sending both is rejected with an error.
+     *   one of [filterFast] and [filter] may be supplied; sending both is rejected by the server (HTTP 400).
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a payload
      *   property either ascending (default) or descending. Sorting is governed by the same `filtering`-mode gate
      *   as filtering: a `simple` property is sortable on the strongly-consistent path ([filterFast], or a
      *   sort-only / [cursor] request with neither filter); a `full` property is sortable on that path and on the
      *   [filter] path. The built-in fields `id`, `createdAt`, `updatedAt`, and `status` are always sortable
      *   (default `Channel` class filterable/sortable properties: `name` and `type`).
-     * @param limit Optional page size (1–100, server default 20).
+     * @param limit Optional page size, 1–100 (server default 20). A value outside that range is rejected by the
+     *   server (HTTP 400), not clamped.
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
     fun getChannels(
@@ -516,18 +519,19 @@ interface DataSync {
      *   reflects the latest writes — but accepts fewer conditions than [filter]; a limit on the number of
      *   conditions applies and can be adjusted by PubNub support (see the PubNub DataSync documentation for the
      *   current limit). For larger or more complex queries use [filter]. At most one of [filterFast] and
-     *   [filter] may be supplied; sending both is rejected with an error.
+     *   [filter] may be supplied; sending both is rejected by the server (HTTP 400).
      * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast] and, for the
      *   built-in `Membership` class, targets the same built-in fields. It is not subject to the same condition
      *   limit, so use it for larger or more complex queries. The trade-off is consistency: `filter` is
      *   eventually consistent (recent writes may not yet be reflected), whereas [filterFast] is strongly
-     *   consistent. At most one of [filterFast] and [filter] may be supplied; sending both is rejected with an
-     *   error.
+     *   consistent. At most one of [filterFast] and [filter] may be supplied; sending both is rejected by the
+     *   server (HTTP 400).
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a property
      *   either ascending (default) or descending. For the built-in `Membership` class, the sortable set is the
      *   built-in fields `id`, `createdAt`, `updatedAt`, and `status` (with the same `status` caveat as
      *   [filterFast]).
-     * @param limit Optional page size (1–100, server default 20).
+     * @param limit Optional page size, 1–100 (server default 20). A value outside that range is rejected by the
+     *   server (HTTP 400), not clamped.
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
     fun getMemberships(
@@ -661,15 +665,16 @@ interface DataSync {
      *   latest writes — but accepts fewer conditions than [filter]; a limit on the number of conditions applies
      *   and can be adjusted by PubNub support (see the PubNub DataSync documentation for the current limit). For
      *   larger or more complex queries use [filter]. At most one of [filterFast] and [filter] may be supplied;
-     *   sending both is rejected with an error.
+     *   sending both is rejected by the server (HTTP 400).
      * @param filter Optional advanced filter expression. Uses the same syntax as [filterFast]. It is not subject
      *   to the same condition limit, so use it for larger or more complex queries. The trade-off is consistency:
      *   `filter` is eventually consistent (recent writes may not yet be reflected), whereas [filterFast] is
      *   strongly consistent. At most one of [filterFast] and [filter] may be supplied; sending both is rejected
-     *   with an error.
+     *   by the server (HTTP 400).
      * @param sort Optional sort criteria applied in order; each [PNDataSyncSortField] sorts on a property either
      *   ascending (default) or descending.
-     * @param limit Optional page size (1–100, server default 20).
+     * @param limit Optional page size, 1–100 (server default 20). A value outside that range is rejected by the
+     *   server (HTTP 400), not clamped.
      * @param cursor Optional opaque cursor for pagination (from a previous result's `next.cursor`).
      */
     fun getRelationships(

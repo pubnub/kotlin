@@ -41,7 +41,7 @@ public interface GetEntities extends Endpoint<PNDataSyncGetEntitiesResult> {
      * conditions than {@link #filter(String)}; a limit on the number of conditions applies and can be
      * adjusted by PubNub support (see the PubNub DataSync documentation for the current limit). For larger or
      * more complex queries use {@link #filter(String)}. At most one of {@code filterFast} and
-     * {@code filter} may be supplied; sending both is rejected with an error.
+     * {@code filter} may be supplied; sending both is rejected by the server (HTTP 400).
      */
     GetEntities filterFast(@Nullable String filterFast);
 
@@ -52,7 +52,7 @@ public interface GetEntities extends Endpoint<PNDataSyncGetEntitiesResult> {
      * not subject to the same condition limit, so use it for larger or more complex queries. The trade-off is
      * consistency: {@code filter} is eventually consistent (recent writes may not yet be reflected), whereas
      * {@link #filterFast(String)} is strongly consistent. At most one of {@code filterFast} and {@code filter}
-     * may be supplied; sending both is rejected with an error.
+     * may be supplied; sending both is rejected by the server (HTTP 400).
      */
     GetEntities filter(@Nullable String filter);
 
@@ -67,7 +67,8 @@ public interface GetEntities extends Endpoint<PNDataSyncGetEntitiesResult> {
     GetEntities sort(@Nullable List<PNDataSyncSortField> sort);
 
     /**
-     * Optional page size (1–100, server default 20).
+     * Optional page size, 1–100 (server default 20). A value outside that range is rejected by the server
+     * (HTTP 400), not clamped.
      */
     GetEntities limit(@Nullable Integer limit);
 

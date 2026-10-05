@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.datasync.membership.PNDataSyncMembership
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.datasync.requireNoBlankSortProperty
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.datasync.EntitiesEnvelope
@@ -32,6 +33,11 @@ class GetMembershipsEndpoint internal constructor(
     private val cursor: String?,
 ) : EndpointCore<EntitiesEnvelope<PNDataSyncMembership>, PNDataSyncGetMembershipsResult>(pubnub), GetMemberships {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
+    override fun validateParams() {
+        super.validateParams()
+        sort.requireNoBlankSortProperty()
+    }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntitiesEnvelope<PNDataSyncMembership>> {
         val sortParam = sort.joinToString(",") {

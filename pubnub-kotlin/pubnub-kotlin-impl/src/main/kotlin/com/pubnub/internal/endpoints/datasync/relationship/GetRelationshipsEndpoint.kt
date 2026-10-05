@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.datasync.relationship.PNDataSyncRelationsh
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.datasync.requireNoBlankSortProperty
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.datasync.EntitiesEnvelope
@@ -41,6 +42,7 @@ class GetRelationshipsEndpoint internal constructor(
         if (className.isBlank()) {
             throw PubNubException(PubNubError.ENTITY_CLASS_MISSING)
         }
+        sort.requireNoBlankSortProperty()
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntitiesEnvelope<PNDataSyncRelationship>> {
