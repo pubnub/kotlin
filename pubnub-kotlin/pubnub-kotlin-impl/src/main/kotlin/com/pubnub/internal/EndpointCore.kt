@@ -10,6 +10,7 @@ import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import com.pubnub.api.v2.PNConfigurationOverride
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.internal.datasync.withDataSyncError
 import com.pubnub.internal.logging.ConfigurationLogger.logConfiguration
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.managers.RetrofitManager
@@ -318,7 +319,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
                     clientRequest = response.raw().request,
                 ),
             remoteAction = this,
-        )
+        ).withDataSyncError()
     }
 
     override fun retry() {

@@ -1,5 +1,6 @@
 package com.pubnub.api.integration.datasync;
 
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
@@ -13,6 +14,7 @@ import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncGetChannel
 import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncSetChannelResult;
 import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncUpdateChannelResult;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
+import com.pubnub.api.models.consumer.datasync.DataSyncErrors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -74,6 +76,8 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 409 when creating a channel with an existing id");
             } catch (PubNubException e) {
                 assertEquals(409, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
+                assertEquals("DS-0301", DataSyncErrors.firstCode(e));
             }
 
             // get
@@ -90,6 +94,8 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 404 after deleting the channel");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
+                assertEquals("DS-0100", DataSyncErrors.from(e).get(0).getCode());
             }
         } finally {
             // best-effort cleanup: the happy path already deleted the channel, so a 404 here is expected
@@ -178,6 +184,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 404 after deleting the channel");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
             }
         } finally {
             // best-effort cleanup via `server` (holds the secretKey; the client's token may be scoped
@@ -312,6 +319,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 412 when patching with a stale ifMatch eTag");
             } catch (PubNubException e) {
                 assertEquals(412, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.getPubnubError());
             }
         } finally {
             server.dataSync().removeChannel(channelId).sync();

@@ -8,6 +8,7 @@ import com.pubnub.api.integration.BaseIntegrationTest
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
+import com.pubnub.api.models.consumer.datasync.dataSyncErrorCode
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.test.CommonUtils
 import org.junit.Assert
@@ -171,6 +172,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 409 when creating a relationship with an existing id")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
             }
 
             // DS-0301: create with a DIFFERENT id but the SAME (class, entityA, entityB) pair -> 409. On a
@@ -188,6 +190,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 409 when creating a relationship for an existing (class, entityA, entityB) pair")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
             }
 
             // get
@@ -206,6 +209,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after deleting the relationship")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             try {
@@ -294,6 +298,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after deleting the relationship")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             try {
@@ -340,6 +345,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when patching with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
         } finally {
             server.dataSync.removeRelationship(relationshipId).sync()
@@ -391,6 +397,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when setting with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
             val current = server.dataSync.getRelationship(relationshipId).sync()
             Assert.assertEquals("archived", current.data.status)
@@ -425,6 +432,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when removing with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
             Assert.assertEquals("inactive", server.dataSync.getRelationship(relationshipId).sync().data.status)
 
@@ -435,6 +443,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after removing the relationship")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             // best-effort cleanup: the happy path already removed the relationship, so a 404 here is expected
@@ -514,6 +523,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected DS-0302 (409) when a JSON Patch `test` operation fails")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
+                Assert.assertEquals("DS-0302", e.dataSyncErrorCode())
             }
 
             val current = server.dataSync.getRelationship(relationshipId).sync()
@@ -546,6 +557,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected DS-0800 (400) when entity A's class does not match the relationship class's entityAClass")
         } catch (e: PubNubException) {
             Assert.assertEquals(400, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.pubnubError)
+            Assert.assertEquals("DS-0800", e.dataSyncErrorCode())
         } finally {
             try {
                 server.dataSync.removeChannel(wrongClassEntityId).sync()
@@ -588,6 +601,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected DS-0801 (409) for a second ONE_TO_ONE relationship on the same entity A")
         } catch (e: PubNubException) {
             Assert.assertEquals(409, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
+            Assert.assertEquals("DS-0801", e.dataSyncErrorCode())
         } finally {
             try {
                 server.dataSync.removeRelationship(firstId).sync()
@@ -762,6 +777,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 403,
                 e.statusCode
             )
+            Assert.assertEquals(PubNubError.DATASYNC_ACCESS_DENIED, e.pubnubError)
+            Assert.assertEquals("DS-0202", e.dataSyncErrorCode())
         }
 
         // positive leg: admin-projected create of the SAME admin-only field -> succeeds. Payload must contain
@@ -929,6 +946,7 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after deleting the relationship")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             try {
@@ -964,6 +982,8 @@ class DataSyncRelationshipIntegrationTest : BaseIntegrationTest() {
                 client.dataSync.getRelationship(relationshipId).sync()
                 Assert.fail("Expected a 403: a datasync:memberships grant must not authorize a /relationships op")
             } catch (e: PubNubException) {
+                // Status only: resource-level PAM denials are decided upstream of the DataSync service, so the body
+                // may carry no DS-xxxx code and the error then (correctly) stays PubNubError.HTTP_ERROR.
                 Assert.assertEquals(403, e.statusCode)
             }
         } finally {

@@ -10,6 +10,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncCreateChannelResult
+import com.pubnub.api.models.consumer.datasync.dataSyncErrorCode
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.test.CommonUtils
 import org.junit.Assert
@@ -93,6 +94,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 409 when creating a channel with an existing id")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
             }
 
             // get
@@ -109,6 +111,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after deleting the channel")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             // best-effort cleanup: the happy path already deleted the channel, so a 404 here is expected
@@ -196,6 +199,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after deleting the channel")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             // best-effort cleanup via `server` (holds the secretKey; the client's token may be scoped
@@ -396,6 +400,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when patching with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
         } finally {
             server.dataSync.removeChannel(channelId).sync()
@@ -443,6 +448,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when setting with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
             val current = server.dataSync.getChannel(channelId).sync()
             Assert.assertEquals("archived", current.data.status)
@@ -474,6 +480,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when removing with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
             Assert.assertEquals("inactive", server.dataSync.getChannel(channelId).sync().data.status)
 
@@ -484,6 +491,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after removing the channel")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             // best-effort cleanup: the happy path already removed the channel, so a 404 here is expected
@@ -560,6 +568,8 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected DS-0302 (409) when a JSON Patch `test` operation fails")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
+                Assert.assertEquals("DS-0302", e.dataSyncErrorCode())
             }
 
             val current = server.dataSync.getChannel(channelId).sync()
@@ -881,6 +891,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 400 when filtering the Channel family on a subclass-only property")
             } catch (e: PubNubException) {
                 Assert.assertEquals(400, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.pubnubError)
             }
             try {
                 server.dataSync.getChannels(
@@ -890,6 +901,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 400 when sorting the Channel family on a subclass-only property")
             } catch (e: PubNubException) {
                 Assert.assertEquals(400, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.pubnubError)
             }
         } finally {
             server.dataSync.removeChannel(idA).sync()
@@ -909,6 +921,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected a 400 when creating a channel with a User subclass")
         } catch (e: PubNubException) {
             Assert.assertEquals(400, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.pubnubError)
         } finally {
             // best-effort: nothing should have been created
             try {
@@ -922,6 +935,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected a 400 when listing channels with a User subclass")
         } catch (e: PubNubException) {
             Assert.assertEquals(400, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.pubnubError)
         }
     }
 
@@ -933,6 +947,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected a 404 when listing a SubKey subclass at the Global level")
         } catch (e: PubNubException) {
             Assert.assertEquals(404, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
         }
 
         try {
@@ -945,6 +960,7 @@ class DataSyncChannelIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected a 404 when creating a SubKey subclass at the Global level")
         } catch (e: PubNubException) {
             Assert.assertEquals(404, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
         } finally {
             try {
                 server.dataSync.removeChannel(channelId).sync()

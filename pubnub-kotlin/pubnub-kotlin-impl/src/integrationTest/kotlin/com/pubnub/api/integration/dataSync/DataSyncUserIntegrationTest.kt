@@ -9,6 +9,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.datasync.PNDataSyncClassLevel
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
+import com.pubnub.api.models.consumer.datasync.dataSyncErrorCode
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.api.models.consumer.datasync.user.PNDataSyncCreateUserResult
 import com.pubnub.test.CommonUtils
@@ -90,6 +91,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 409 when creating a user with an existing id")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
             }
 
             // get
@@ -106,6 +108,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after deleting the user")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             // best-effort cleanup: the happy path already deleted the user, so a 404 here is expected
@@ -190,6 +193,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected a 404 after deleting the user")
         } catch (e: PubNubException) {
             Assert.assertEquals(404, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
         }
     }
 
@@ -521,6 +525,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when patching with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
         } finally {
             server.dataSync.removeUser(userId).sync()
@@ -568,6 +573,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when setting with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
             val current = server.dataSync.getUser(userId).sync()
             Assert.assertEquals("archived", current.data.status)
@@ -599,6 +605,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when removing with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
             Assert.assertEquals("inactive", server.dataSync.getUser(userId).sync().data.status)
 
@@ -609,6 +616,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after removing the user")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             // best-effort cleanup: the happy path already removed the user, so a 404 here is expected
@@ -685,6 +693,8 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected DS-0302 (409) when a JSON Patch `test` operation fails")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
+                Assert.assertEquals("DS-0302", e.dataSyncErrorCode())
             }
 
             val current = server.dataSync.getUser(userId).sync()
@@ -871,6 +881,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 400 when filtering the User family on a subclass-only property")
             } catch (e: PubNubException) {
                 Assert.assertEquals(400, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.pubnubError)
             }
             try {
                 server.dataSync.getUsers(
@@ -880,6 +891,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 400 when sorting the User family on a subclass-only property")
             } catch (e: PubNubException) {
                 Assert.assertEquals(400, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.pubnubError)
             }
         } finally {
             server.dataSync.removeUser(idA).sync()
@@ -895,6 +907,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected a 400 when creating a user with a non-User class")
         } catch (e: PubNubException) {
             Assert.assertEquals(400, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.pubnubError)
         } finally {
             // best-effort: nothing should have been created
             try {
@@ -908,6 +921,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected a 400 when listing users with a non-User class")
         } catch (e: PubNubException) {
             Assert.assertEquals(400, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.pubnubError)
         }
     }
 
@@ -919,6 +933,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected a 404 when listing a SubKey subclass at the Global level")
         } catch (e: PubNubException) {
             Assert.assertEquals(404, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
         }
 
         try {
@@ -931,6 +946,7 @@ class DataSyncUserIntegrationTest : BaseIntegrationTest() {
             Assert.fail("Expected a 404 when creating a SubKey subclass at the Global level")
         } catch (e: PubNubException) {
             Assert.assertEquals(404, e.statusCode)
+            Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
         } finally {
             try {
                 server.dataSync.removeUser(userId).sync()

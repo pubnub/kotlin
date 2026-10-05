@@ -8,6 +8,7 @@ import com.pubnub.api.integration.BaseIntegrationTest
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
+import com.pubnub.api.models.consumer.datasync.dataSyncErrorCode
 import com.pubnub.api.models.consumer.datasync.entity.PNJsonPatchOperation
 import com.pubnub.test.CommonUtils
 import org.junit.Assert
@@ -93,6 +94,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 409 when creating a membership with an existing id")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
             }
 
             // create again with a DIFFERENT id but the SAME (channel, user) pair -> 409 (a Membership is
@@ -110,6 +112,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 409 when creating a membership for an existing (channel, user) pair")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
             }
 
             // get
@@ -128,6 +131,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after deleting the membership")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             try {
@@ -244,6 +248,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when patching with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
         } finally {
             server.dataSync.removeMembership(membershipId).sync()
@@ -294,6 +299,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when setting with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
             val current = server.dataSync.getMembership(membershipId).sync()
             Assert.assertEquals("archived", current.data.status)
@@ -327,6 +333,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 412 when removing with a stale ifMatch eTag")
             } catch (e: PubNubException) {
                 Assert.assertEquals(412, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.pubnubError)
             }
             Assert.assertEquals("inactive", server.dataSync.getMembership(membershipId).sync().data.status)
 
@@ -337,6 +344,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after removing the membership")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             // best-effort cleanup: the happy path already removed the membership, so a 404 here is expected
@@ -413,6 +421,8 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected DS-0302 (409) when a JSON Patch `test` operation fails")
             } catch (e: PubNubException) {
                 Assert.assertEquals(409, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_CONFLICT, e.pubnubError)
+                Assert.assertEquals("DS-0302", e.dataSyncErrorCode())
             }
 
             val current = server.dataSync.getMembership(membershipId).sync()
@@ -596,6 +606,7 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 Assert.fail("Expected a 404 after deleting the membership")
             } catch (e: PubNubException) {
                 Assert.assertEquals(404, e.statusCode)
+                Assert.assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.pubnubError)
             }
         } finally {
             try {
@@ -631,6 +642,8 @@ class DataSyncMembershipIntegrationTest : BaseIntegrationTest() {
                 client.dataSync.getMembership(membershipId).sync()
                 Assert.fail("Expected a 403: a datasync:relationships grant must not authorize a /memberships op")
             } catch (e: PubNubException) {
+                // Status only: resource-level PAM denials are decided upstream of the DataSync service, so the body
+                // may carry no DS-xxxx code and the error then (correctly) stays PubNubError.HTTP_ERROR.
                 Assert.assertEquals(403, e.statusCode)
             }
         } finally {

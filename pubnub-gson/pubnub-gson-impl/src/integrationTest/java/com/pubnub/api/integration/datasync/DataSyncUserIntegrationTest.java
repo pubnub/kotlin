@@ -1,5 +1,6 @@
 package com.pubnub.api.integration.datasync;
 
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
@@ -79,6 +80,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 409 when creating a user with an existing id");
             } catch (PubNubException e) {
                 assertEquals(409, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
             }
 
             // get
@@ -95,6 +97,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 404 after deleting the user");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
             }
         } finally {
             // best-effort cleanup: the happy path already deleted the user, so a 404 here is expected
@@ -184,6 +187,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
             fail("Expected a 404 after deleting the user");
         } catch (PubNubException e) {
             assertEquals(404, e.getStatusCode());
+            assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
         }
     }
 
@@ -402,6 +406,7 @@ public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 412 when patching with a stale ifMatch eTag");
             } catch (PubNubException e) {
                 assertEquals(412, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.getPubnubError());
             }
         } finally {
             server.dataSync().removeUser(userId).sync();
