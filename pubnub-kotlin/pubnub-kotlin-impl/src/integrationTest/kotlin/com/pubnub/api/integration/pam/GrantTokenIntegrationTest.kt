@@ -10,12 +10,12 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.CommonUtils
 import com.pubnub.test.Keys
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -51,15 +51,15 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun happyPath_SUM() {
+    fun happyPath_channelsAndUuids() {
         // given
         val pubNubUnderTest = server
         val expectedTTL = 1337
-        val expectedAuthorizedUUID = "authorizedUser01"
-        val expectedSpaceIdValue = "mySpace01"
-        val expectedSpaceIdPattern = "mySpace.*"
-        val expectedUserIdValue = "myUser01"
-        val expectedUserIdPattern = "myUser.*"
+        val expectedAuthorizedUUID = "authorizedUuid01"
+        val expectedChannelName = "myChannel01"
+        val expectedChannelPattern = "myChannel.*"
+        val expectedUuidValue = "myUuid01"
+        val expectedUuidPattern = "myUuid.*"
 
         // when
         val grantTokenEndpoint =
@@ -68,13 +68,13 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                 authorizedUUID = expectedAuthorizedUUID,
                 channels =
                     listOf(
-                        ChannelGrant.name(name = expectedSpaceIdValue, read = true, delete = true),
-                        ChannelGrant.pattern(pattern = expectedSpaceIdPattern, write = true, manage = true),
+                        ChannelGrant.name(name = expectedChannelName, read = true, delete = true),
+                        ChannelGrant.pattern(pattern = expectedChannelPattern, write = true, manage = true),
                     ),
                 uuids =
                     listOf(
-                        UUIDGrant.id(id = expectedUserIdValue, delete = true),
-                        UUIDGrant.pattern(pattern = expectedUserIdPattern, update = true),
+                        UUIDGrant.id(id = expectedUuidValue, delete = true),
+                        UUIDGrant.pattern(pattern = expectedUuidPattern, update = true),
                     ),
             )
 
@@ -90,17 +90,17 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                 read = true,
                 delete = true,
             ),
-            resources.channels[expectedSpaceIdValue],
+            resources.channels[expectedChannelName],
         )
         assertEquals(
             PNResourcePermissions(
                 write = true,
                 manage = true,
             ),
-            patterns.channels[expectedSpaceIdPattern],
+            patterns.channels[expectedChannelPattern],
         )
-        assertEquals(PNResourcePermissions(delete = true), resources.uuids[expectedUserIdValue])
-        assertEquals(PNResourcePermissions(update = true), patterns.uuids[expectedUserIdPattern])
+        assertEquals(PNResourcePermissions(delete = true), resources.uuids[expectedUuidValue])
+        assertEquals(PNResourcePermissions(update = true), patterns.uuids[expectedUuidPattern])
     }
 
     @Test
@@ -212,8 +212,8 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
     @Test
     fun grantToken_withAllGrantTypes_viaFlatList() {
         // given — mint a single token through the new flat `grants` overload carrying EVERY grant type that
-        // implements TokenGrant: ChannelGrant, ChannelGroupGrant, UserGrant and DataSyncGrant. Each grant type is
-        // exercised in both exact and pattern form, and DataSync covers all three namespaces (entities,
+        // implements TokenGrant: ChannelGrant, ChannelGroupGrant and DataSyncGrant. Each grant type is
+        // exercised in both exact and pattern form, and DataSync covers every namespace (channels, users, entities,
         // relationships, memberships).
         val pubNubUnderTest = server
         val expectedTTL = 1337
@@ -221,6 +221,8 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val channelPattern = "channel.*"
         val channelGroupId = "channelGroup"
         val channelGroupPattern = "channelGroup.*"
+        val dataSyncChannelId = "dsChannel01"
+        val dataSyncChannelPattern = "dsChannel.*"
         val userId = "user01"
         val userPattern = "user.*"
         val entityId = "capy-001"
@@ -241,8 +243,11 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                         ChannelGrant.pattern(pattern = channelPattern, read = true),
                         ChannelGroupGrant.id(id = channelGroupId, read = true, manage = true),
                         ChannelGroupGrant.pattern(pattern = channelGroupPattern, read = true),
-                        UserGrant.id(id = userId, get = true, update = true),
-                        UserGrant.pattern(pattern = userPattern, get = true, create = true),
+                        DataSyncGrant.subscribe(userId, projection = "admin"),
+                        DataSyncGrant.channel(dataSyncChannelId, get = true, update = true),
+                        DataSyncGrant.channelPattern(dataSyncChannelPattern, get = true, create = true),
+                        DataSyncGrant.user(name = userId, get = true, update = true),
+                        DataSyncGrant.userPattern(pattern = userPattern, get = true, create = true),
                         DataSyncGrant.entity(entityId, get = true, update = true),
                         DataSyncGrant.entityPattern(entityPattern, get = true),
                         DataSyncGrant.relationship(relationshipId, get = true),
@@ -262,7 +267,14 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         assertEquals(PNResourcePermissions(read = true, manage = true), resources.channelGroups[channelGroupId])
         assertEquals(PNResourcePermissions(read = true), patterns.channelGroups[channelGroupPattern])
 
-        // UserGrant permissions land in the plain `users` bucket (not `uuids`).
+        // DataSyncGrant.channel permissions land in the plain `channels` bucket.
+        assertEquals(PNResourcePermissions(get = true, update = true), resources.channels[dataSyncChannelId])
+        assertEquals(PNResourcePermissions(get = true, create = true), patterns.channels[dataSyncChannelPattern])
+
+        // DataSyncGrant.subscribe(id, projection) is a pub/sub read on the projection's ref-channel.
+        assertEquals(PNResourcePermissions(read = true), resources.channels["__admin__$userId"])
+
+        // DataSyncGrant.user permissions land in the plain `users` bucket (not `uuids`).
         assertEquals(PNResourcePermissions(get = true, update = true), resources.users[userId])
         assertEquals(PNResourcePermissions(get = true, create = true), patterns.users[userPattern])
 
@@ -357,12 +369,9 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                             get = true,
                             projection = DataSyncNamespace.DEFAULT_PROJECTION,
                         ),
-                        DataSyncGrant.membership(membershipId, get = true, projection = adminProjection),
-                        DataSyncGrant.membershipPattern(
-                            membershipPatternId,
-                            get = true,
-                            projection = DataSyncNamespace.DEFAULT_PROJECTION,
-                        ),
+                        // memberships take no projection, so they must not add a pn-projections entry
+                        DataSyncGrant.membership(membershipId, get = true),
+                        DataSyncGrant.membershipPattern(membershipPatternId, get = true),
                         ChannelGrant.name(name = "anyChannel", read = true),
                     ),
             ).sync().token
@@ -376,10 +385,13 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val projections = parsed.projections!!
         assertEquals(adminProjection, projections.resources.entities[entityId])
         assertEquals(adminProjection, projections.resources.relationships[relationshipId]) // colon in id survives verbatim
-        assertEquals(adminProjection, projections.resources.memberships[membershipId]) // colon in id survives verbatim
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, projections.patterns.entities[entityPatternId])
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, projections.patterns.relationships[relationshipPatternId])
-        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, projections.patterns.memberships[membershipPatternId])
+        assertTrue(projections.resources.memberships.isEmpty())
+        assertTrue(projections.patterns.memberships.isEmpty())
+        // the membership grants themselves still land in the token
+        assertTrue(parsed.resources.datasyncMemberships.containsKey(membershipId))
+        assertTrue(parsed.patterns.datasyncMemberships.containsKey(membershipPatternId))
 
         // the raw block also remains available under meta (additive, non-breaking).
         @Suppress("UNCHECKED_CAST")
@@ -390,20 +402,64 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val res = rawProjections["res"] as Map<String, Any?>
         assertEquals(adminProjection, res[entityKey])
         assertEquals(adminProjection, res[relationshipKey]) // colon in the relationship id survives verbatim
-        assertEquals(adminProjection, res[membershipKey]) // colon in the membership id survives verbatim
+        assertFalse(res.containsKey(membershipKey))
 
         @Suppress("UNCHECKED_CAST")
         val pat = rawProjections["pat"] as Map<String, Any?>
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[entityPatternKey])
         assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[relationshipPatternKey])
-        assertEquals(DataSyncNamespace.DEFAULT_PROJECTION, pat[membershipPatternKey])
+        assertFalse(pat.containsKey(membershipPatternKey))
     }
 
     @Test
-    fun grantToken_mergesCallerSuppliedProjectionsIntoMeta() {
-        // given — the caller supplies their own meta carrying both a plain value and a pn-projections block. The SDK
-        // must overlay the grant-derived projections onto that meta: the plain value survives, a caller projection for
-        // a key no grant carries survives verbatim, and a caller projection colliding with a grant loses to the grant.
+    fun grantToken_carriesDataSyncUserAndChannelProjections() {
+        // given — user/channel projections only matter for custom User/Channel subclass instances, but the token must
+        // still round-trip them into the typed users/channels maps. The token carries no class information: the ids
+        // below are named after subclass instances (e.g. of TestSubUser / TestSubChannel) for readability only.
+        val pubNubUnderTest = server
+        val adminProjection = "admin"
+        val userId = "subUser-123"
+        val userPatternId = "subUser-.*"
+        val channelId = "subChannel-lobby"
+        val channelPatternId = "subChannel-.*"
+
+        // when
+        val token =
+            pubNubUnderTest.grantToken(
+                ttl = 1337,
+                authorizedUserId = null,
+                grants =
+                    listOf(
+                        DataSyncGrant.user(userId, get = true, projection = adminProjection),
+                        DataSyncGrant.userPattern(
+                            userPatternId,
+                            get = true,
+                            projection = DataSyncNamespace.DEFAULT_PROJECTION,
+                        ),
+                        DataSyncGrant.channel(channelId, get = true, projection = adminProjection),
+                        DataSyncGrant.channelPattern(
+                            channelPatternId,
+                            get = true,
+                            projection = DataSyncNamespace.DEFAULT_PROJECTION,
+                        ),
+                    ),
+            ).sync().token
+
+        // then
+        val projections = pubNubUnderTest.parseToken(token).projections!!
+        assertEquals(mapOf(userId to adminProjection), projections.resources.users)
+        assertEquals(mapOf(channelId to adminProjection), projections.resources.channels)
+        assertEquals(mapOf(userPatternId to DataSyncNamespace.DEFAULT_PROJECTION), projections.patterns.users)
+        assertEquals(mapOf(channelPatternId to DataSyncNamespace.DEFAULT_PROJECTION), projections.patterns.channels)
+        // they must not leak into the entities namespace
+        assertTrue(projections.resources.entities.isEmpty())
+        assertTrue(projections.patterns.entities.isEmpty())
+    }
+
+    @Test
+    fun grantToken_keepsCallerMetaAlongsideProjections() {
+        // given — the caller supplies their own plain meta (a pn-projections key in it is rejected). The SDK must add
+        // the grant-derived pn-projections block next to it without dropping the caller's keys.
         val pubNubUnderTest = server
         val expectedTTL = 1337
         val adminProjection = "admin"
@@ -411,26 +467,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
 
         val entityKey = "${DataSyncNamespace.ENTITIES}:$entityId"
 
-        // a projection the caller injects directly into meta for a resource NO grant carries — it must survive verbatim.
-        val callerOnlyKey = "${DataSyncNamespace.MEMBERSHIPS}:user-123:channel-X"
-        val callerOnlyProjection = "caller-only"
-        // a projection the caller sets for the SAME key a grant also generates — the grant-derived value must win.
-        val callerColliding = "caller-should-lose"
-
-        val callerMeta =
-            createCustomObject(
-                mapOf(
-                    "caller-key" to "caller-value",
-                    DataSyncNamespace.PN_PROJECTIONS to
-                        mapOf(
-                            "res" to
-                                mapOf(
-                                    callerOnlyKey to callerOnlyProjection,
-                                    entityKey to callerColliding,
-                                ),
-                        ),
-                ),
-            )
+        val callerMeta = createCustomObject(mapOf("caller-key" to "caller-value"))
 
         // when
         val token =
@@ -452,7 +489,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         @Suppress("UNCHECKED_CAST")
         val meta = parsed.meta as Map<String, Any?>
 
-        // caller-supplied plain meta must survive the merge alongside the generated pn-projections block
+        // caller-supplied plain meta must survive alongside the generated pn-projections block
         assertEquals("caller-value", meta["caller-key"])
 
         @Suppress("UNCHECKED_CAST")
@@ -460,13 +497,9 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
 
         @Suppress("UNCHECKED_CAST")
         val res = projections["res"] as Map<String, Any?>
-        assertEquals(adminProjection, res[entityKey]) // grant-derived value wins over the caller's colliding entry
-        assertEquals(callerOnlyProjection, res[callerOnlyKey]) // caller projection for a key no grant carries survives
+        assertEquals(mapOf(entityKey to adminProjection), res)
 
-        // the merged block also surfaces on the typed field, split by namespace with bare ids as keys.
-        val typedProjections = parsed.projections!!
-        assertEquals(adminProjection, typedProjections.resources.entities[entityId]) // grant wins over caller's colliding entry
-        // callerOnlyKey = "datasync:memberships:user-123:channel-X" -> membership bare id "user-123:channel-X"
-        assertEquals(callerOnlyProjection, typedProjections.resources.memberships["user-123:channel-X"])
+        // the block also surfaces on the typed field, split by namespace with bare ids as keys.
+        assertEquals(adminProjection, parsed.projections!!.resources.entities[entityId])
     }
 }

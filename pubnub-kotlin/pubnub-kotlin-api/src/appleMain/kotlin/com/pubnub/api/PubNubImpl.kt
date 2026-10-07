@@ -138,6 +138,9 @@ import com.pubnub.api.v2.createPNConfiguration
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -1026,6 +1029,15 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     override fun userMetadata(id: String): UserMetadata {
         return UserMetadataImpl(userMetadata = pubNubObjC.userMetadataWith(id = id))
     }
+
+    override fun dataSyncUser(id: String): DataSyncUser =
+        throw NotImplementedError("DataSync realtime subscribe is not implemented on the Apple target")
+
+    override fun dataSyncChannel(id: String): DataSyncChannel =
+        throw NotImplementedError("DataSync realtime subscribe is not implemented on the Apple target")
+
+    override fun dataSyncEntity(id: String): DataSyncEntity =
+        throw NotImplementedError("DataSync realtime subscribe is not implemented on the Apple target")
 
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
         return SubscriptionSetImpl(

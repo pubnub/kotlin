@@ -5,6 +5,7 @@ import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -73,6 +74,22 @@ actual interface EventListener : Listener {
     fun objects(
         pubnub: PubNub,
         result: PNObjectEventResult,
+    ) {}
+
+    /**
+     * Receive DataSync realtime events — create/update/delete of DataSync elements (User,
+     * Channel, Entity, Relationship, Membership) — on subscribed ref-channels.
+     *
+     * A single subscribed ref-channel delivers a mix of leaf types, and a plain
+     * [PubNub.channel]`(id).subscription()` on the same ref also delivers these events. Branch on the
+     * sealed [PNDataSyncEventResult.extractedMessage].
+     *
+     * @param pubnub The client instance which has this listener attached.
+     * @param result Wrapper around the DataSync event.
+     */
+    fun dataSync(
+        pubnub: PubNub,
+        result: PNDataSyncEventResult,
     ) {}
 
     /**

@@ -1,9 +1,10 @@
 package com.pubnub.api.integration.datasync;
 
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
-import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
 import com.pubnub.api.java.models.consumer.datasync.PNDataSyncSortField;
@@ -13,6 +14,7 @@ import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncGetChannel
 import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncSetChannelResult;
 import com.pubnub.api.java.models.consumer.datasync.channel.PNDataSyncUpdateChannelResult;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
+import com.pubnub.api.models.consumer.datasync.DataSyncErrors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -74,6 +76,8 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 409 when creating a channel with an existing id");
             } catch (PubNubException e) {
                 assertEquals(409, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
+                assertEquals("DS-0301", DataSyncErrors.firstCode(e));
             }
 
             // get
@@ -90,6 +94,8 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 404 after deleting the channel");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
+                assertEquals("DS-0100", DataSyncErrors.from(e).get(0).getCode());
             }
         } finally {
             // best-effort cleanup: the happy path already deleted the channel, so a 404 here is expected
@@ -105,8 +111,8 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
      * Same create/get/getAll/patch/update/delete flow as {@link #createGetAllPatchUpdateAndDeleteChannel()}, but the
      * "server" (the only party holding the secretKey) mints scoped PAM tokens and the client authenticates with them.
      *
-     * <p>O1 PAM probe: a DataSync Channel authorizes under the classic {@code channels} PAM resource type, so the
-     * grant is a {@link ChannelGrant} keyed by the channelId (NOT a DataSyncGrant).
+     * <p>PAM check: a DataSync Channel is authorized by the plain {@code channels} bucket;
+     * {@link DataSyncGrant#channel(String)} keyed by the channelId writes its bits there.
      */
     @Test
     public void createGetAndDeleteUpdatePatchGetAllChannelsWithServerGrantedToken() throws PubNubException {
@@ -118,7 +124,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
         payload.put("email", "alice@example.com");
 
         // create -> token scoped to `create` on this specific channel id
-        grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).create());
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).create());
         final PNDataSyncCreateChannelResult createResult = client.dataSync().createChannel(classVersion)
                 .channelId(channelId)
                 .status("active")
@@ -133,13 +139,13 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertEquals("Alice", createResult.getData().getPayload().get("username"));
 
             // get -> token scoped to `get` on this specific channel
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).get());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).get());
             final PNDataSyncGetChannelResult getResult = client.dataSync().getChannel(channelId).sync();
             assertEquals(channelId, getResult.getData().getId());
             assertEquals("active", getResult.getData().getStatus());
 
             // getAll -> token scoped to `get` on this specific channel id
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).get());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).get());
             final PNDataSyncGetChannelsResult getAllResult = client.dataSync().getChannels()
                     .limit(100)
                     .sync();
@@ -147,7 +153,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertTrue(getAllResult.getData().stream().anyMatch(c -> channelId.equals(c.getId())));
 
             // patch -> token scoped to `update` on this specific channel (PATCH maps to `update`)
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).update());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).update());
             final List<PNJsonPatchOperation> operations = Collections.singletonList(
                     PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
             );
@@ -156,7 +162,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertEquals("inactive", patchResult.getData().getStatus());
 
             // update -> token scoped to `update` on this specific channel (PUT maps to `update`)
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).update());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).update());
             final Map<String, Object> newPayload = new HashMap<>();
             newPayload.put("username", "Bob");
             newPayload.put("email", "bob@example.com");
@@ -168,16 +174,17 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
             assertEquals("Bob", updateResult.getData().getPayload().get("username"));
 
             // delete -> token scoped to `delete` on this specific channel
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).delete());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).delete());
             client.dataSync().removeChannel(channelId).sync();
 
             // get after delete -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
-            grantAndAuthenticate(client, authorizedUUID, ChannelGrant.name(channelId).get());
+            grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.channel(channelId).get());
             try {
                 client.dataSync().getChannel(channelId).sync();
                 fail("Expected a 404 after deleting the channel");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
             }
         } finally {
             // best-effort cleanup via `server` (holds the secretKey; the client's token may be scoped
@@ -223,6 +230,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
         final Map<String, Object> payload = new HashMap<>();
         payload.put("username", "Alice");
         payload.put("email", "alice@example.com");
+        payload.put("hobby", "poetry");
 
         // create
         server.dataSync().createChannel(classVersion)
@@ -260,11 +268,14 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                     .sync();
             assertEquals("archived", updateResult.getData().getStatus());
             assertEquals("Bob", updateResult.getData().getPayload().get("username"));
+            assertNotEquals(patchResult.getData().getETag(), updateResult.getData().getETag());
 
-            // get reflects the full replacement
+            // get reflects the full replacement: `hobby` was not re-sent, so it is gone rather than kept
             final PNDataSyncGetChannelResult afterUpdate = server.dataSync().getChannel(channelId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("Bob", afterUpdate.getData().getPayload().get("username"));
+            assertFalse(afterUpdate.getData().getPayload().containsKey("hobby"));
+            assertEquals(updateResult.getData().getETag(), afterUpdate.getData().getETag());
         } finally {
             server.dataSync().removeChannel(channelId).sync();
         }
@@ -308,6 +319,7 @@ public class DataSyncChannelIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 412 when patching with a stale ifMatch eTag");
             } catch (PubNubException e) {
                 assertEquals(412, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.getPubnubError());
             }
         } finally {
             server.dataSync().removeChannel(channelId).sync();

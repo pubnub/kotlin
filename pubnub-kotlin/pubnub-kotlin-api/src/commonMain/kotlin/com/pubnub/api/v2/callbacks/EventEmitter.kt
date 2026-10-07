@@ -4,6 +4,7 @@ import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -153,6 +154,23 @@ interface EventEmitter {
      * ```
      */
     var onObjects: ((PNObjectEventResult) -> Unit)?
+        get() = error("Not supported")
+        set(value) = error("Not supported")
+
+    /**
+     * A nullable property to set a function or lambda for responding to DataSync realtime events.
+     * This function is invoked whenever a DataSync create/update/delete event is received.
+     *
+     * A single subscribed ref-channel delivers a mix of DataSync leaf types (user/channel/entity plus the
+     * membership/relationship and propagated events about it), so branch on the sealed
+     * [com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult.extractedMessage].
+     *
+     * Note that this property allows for the assignment of a singular behavior at a time, as any new assignment will override the previous one.
+     * For scenarios requiring multiple behaviors, it is advisable to utilize [EventEmitter.addListener].
+     *
+     * To deactivate the current behavior, simply set this property to `null`.
+     */
+    var onDataSync: ((PNDataSyncEventResult) -> Unit)?
         get() = error("Not supported")
         set(value) = error("Not supported")
 

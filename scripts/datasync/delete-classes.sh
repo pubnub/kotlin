@@ -6,6 +6,7 @@
 # Deleting a class does NOT delete the entities/relationships registered under it —
 # they are simply left orphaned (no instance-driven 409). Bounded to the known Test*
 # names only; there is no bulk delete and this must never touch User/Channel/Membership.
+# Orphaned instances can no longer be read or removed, so run the ITs' cleanup before deleting a class.
 #
 # Usage:
 #   SDK_DS_API_KEY=... SDK_DS_SUB_KEY=... ./delete-classes.sh
@@ -17,6 +18,8 @@ set -euo pipefail
 require_environment
 
 CLASS_PATHS=(
+  "entity-classes/TestSubChannel/versions/1"
+  "entity-classes/TestSubUser/versions/1"
   "relationship-classes/TestOwnership/versions/1"
   "relationship-classes/TestFriendship/versions/1"
   "entity-classes/TestUser/versions/1"

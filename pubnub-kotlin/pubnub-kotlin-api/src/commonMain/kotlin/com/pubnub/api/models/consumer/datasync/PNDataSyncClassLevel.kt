@@ -20,12 +20,4 @@ enum class PNDataSyncClassLevel(val value: String) {
      * Class defined at the subscribe-key level.
      */
     SUBKEY("SubKey"),
-
-    /**
-     * Class defined at the account level.
-     *
-     * ⚠️ Not yet supported by the server — passing this currently results in a `400` response.
-     * Reserved for a planned future release; use [GLOBAL] or [SUBKEY] for now.
-     */
-    ACCOUNT("Account"),
 }

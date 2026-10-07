@@ -3,6 +3,7 @@ package com.pubnub.internal.managers
 import co.nstant.`in`.cbor.CborBuilder
 import co.nstant.`in`.cbor.CborEncoder
 import com.pubnub.api.models.TokenBitmask
+import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScope
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -251,6 +252,46 @@ class TokenParserTest {
         @Suppress("UNCHECKED_CAST")
         val rawRes = rawBlock["res"] as Map<String, Any>
         assertEquals("admin", rawRes["datasync:entities:user.A"].toString())
+    }
+
+    /**
+     * `datasync:users:<id>` / `datasync:channels:<id>` keys (emitted by `DataSyncGrant.user` / `.channel` and their
+     * pattern variants) must be lifted into [PNDataSyncProjectionScope.users] / [PNDataSyncProjectionScope.channels]
+     * on both the `res` and `pat` sides, and must not leak into the other namespaces.
+     */
+    @Test
+    fun parseTokenWithUserAndChannelProjections() {
+        val token =
+            encodeToken { map ->
+                map.put("v", 2L)
+                map.put("t", 1632335843L)
+                map.put("ttl", 1440L)
+                map.put("uuid", "myauthuuid1")
+                map.putMap("res").end()
+                map.putMap("pat").end()
+                map.putMap("meta")
+                    .putMap("pn-projections")
+                    .putMap("res")
+                    .put("datasync:users:u1", "admin")
+                    .put("datasync:channels:ch1", "admin")
+                    .end()
+                    .putMap("pat")
+                    .put("datasync:users:u.*", "public")
+                    .put("datasync:channels:ch.*", "public")
+                    .end()
+                    .end()
+                    .end()
+            }
+
+        val projections = TokenParser().unwrapToken(token).projections!!
+
+        assertEquals(mapOf("u1" to "admin"), projections.resources.users)
+        assertEquals(mapOf("ch1" to "admin"), projections.resources.channels)
+        assertEquals(mapOf("u.*" to "public"), projections.patterns.users)
+        assertEquals(mapOf("ch.*" to "public"), projections.patterns.channels)
+        assertTrue(projections.resources.entities.isEmpty())
+        assertTrue(projections.resources.relationships.isEmpty())
+        assertTrue(projections.resources.memberships.isEmpty())
     }
 
     /**

@@ -55,7 +55,6 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UserGrant
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -75,6 +74,9 @@ import com.pubnub.api.v2.callbacks.StatusEmitter
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -151,6 +153,33 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @return a [UserMetadata] instance representing the channel metadata with the given [id]
      */
     actual fun userMetadata(id: String): UserMetadata
+
+    /**
+     * Create a handle to a [DataSyncUser] object that can be used to obtain a [Subscription] to DataSync
+     * realtime events about the user with the given [id].
+     *
+     * @param id the user's ref/id.
+     * @return a [DataSyncUser] handle for the given [id].
+     */
+    actual fun dataSyncUser(id: String): DataSyncUser
+
+    /**
+     * Create a handle to a [DataSyncChannel] object that can be used to obtain a [Subscription] to
+     * DataSync realtime events about the channel with the given [id].
+     *
+     * @param id the channel's ref/id.
+     * @return a [DataSyncChannel] handle for the given [id].
+     */
+    actual fun dataSyncChannel(id: String): DataSyncChannel
+
+    /**
+     * Create a handle to a [DataSyncEntity] object that can be used to obtain a [Subscription] to
+     * DataSync realtime events about the entity with the given [id].
+     *
+     * @param id the entity's ref/id.
+     * @return a [DataSyncEntity] handle for the given [id].
+     */
+    actual fun dataSyncEntity(id: String): DataSyncEntity
 
     /**
      * Create a [SubscriptionSet] from the given [subscriptions].
@@ -1079,11 +1108,11 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * Each type of resource have different set of permissions. To know what's possible for each of them
      * check ChannelGrant, ChannelGroupGrant and UUIDGrant.
      *
-     * Use this overload for legacy App Context (grants into the `uuids` bucket). For DataSync operations, use the
-     * overload that takes `authorizedUserId`, `users` and `dataSync`.
+     * Legacy `grantToken` overload having the `uuids` bucket (App Context v2 UUID metadata).
+     * New code should prefer the flat-list overload taking `grants: List<TokenGrant>`.
      *
      * @param ttl Time in minutes for which granted permissions are valid.
-     * @param meta Additional metadata
+     * @param meta Additional metadata. Must not contain `pn-projections`.
      * @param authorizedUUID Single uuid which is authorized to use the token to make API requests to PubNub
      * @param channels List of all channel grants
      * @param channelGroups List of all channel group grants
@@ -1101,9 +1130,11 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     /**
      * The modern `grantToken`: mint a token from a single flat list of grants for PubNub Access Manager (PAM).
      *
-     * Every grant carries its own resource type ([ChannelGrant], [ChannelGroupGrant], [UserGrant] or a
-     * [DataSyncGrantType] from [DataSyncGrant]), so a pub/sub-only customer, an App Context customer and a DataSync
-     * customer all use the same product-neutral method. Each grant type exposes only the permissions relevant to it.
+     * Every grant carries its own resource type ([ChannelGrant], [ChannelGroupGrant] or a [DataSyncGrantType] from
+     * [DataSyncGrant]), so a pub/sub-only customer, an App Context customer and a DataSync customer all use the same
+     * product-neutral method. Each grant type exposes only the permissions relevant to it. DataSync realtime subscribe
+     * is granted with [DataSyncGrant.subscribe] / [DataSyncGrant.subscribePattern], which return a [ChannelGrant] on the
+     * resolved ref-channel.
      *
      * The legacy `uuids` bucket is intentionally not reachable here — [UUIDGrant] does not implement [TokenGrant].
      * Use the legacy overload for `uuids`.
@@ -1111,7 +1142,8 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param ttl Time in minutes for which granted permissions are valid.
      * @param authorizedUserId Single userId which is authorized to use the token to make API requests to PubNub.
      * Pass `null` to mint a token not bound to a specific authorized userId.
-     * @param meta Additional metadata. Must be `null` or a map when any grant carries a projection.
+     * @param meta Additional metadata. Must be `null` or a map when any grant carries a projection. Must not contain
+     * `pn-projections`: the SDK builds that key from the grants' `projection`.
      * @param grants Flat list of grants; each grant's type selects its wire bucket.
      */
     actual fun grantToken(

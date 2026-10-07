@@ -62,8 +62,7 @@ public interface GrantTokenBuilder extends AbstractGrantTokenBuilder {
 
     /**
      * Supplies the flat list of grants for the modern grant path. Each {@link TokenGrant} carries its own resource
-     * bucket ({@link ChannelGrant}, {@link ChannelGroupGrant},
-     * {@link com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant} or
+     * bucket ({@link ChannelGrant}, {@link ChannelGroupGrant} or
      * {@link com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant}). Additive with
      * {@code channels(...)}/{@code channelGroups(...)}; cannot be combined with the legacy {@code uuids(...)} bucket.
      */

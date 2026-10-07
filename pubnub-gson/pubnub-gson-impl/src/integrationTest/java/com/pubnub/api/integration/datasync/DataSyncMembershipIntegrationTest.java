@@ -1,5 +1,6 @@
 package com.pubnub.api.integration.datasync;
 
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
@@ -93,6 +94,7 @@ public class DataSyncMembershipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 409 when creating a membership with an existing id");
             } catch (PubNubException e) {
                 assertEquals(409, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
             }
 
             // create again with a DIFFERENT id but the SAME (channel, user) pair -> 409 (unique per pair,
@@ -107,6 +109,7 @@ public class DataSyncMembershipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 409 when creating a membership for an existing (channel, user) pair");
             } catch (PubNubException e) {
                 assertEquals(409, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
             }
 
             // get
@@ -125,6 +128,7 @@ public class DataSyncMembershipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 404 after deleting the membership");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
             }
         } finally {
             bestEffortRemoveMembership(membershipId);
@@ -168,6 +172,7 @@ public class DataSyncMembershipIntegrationTest extends BaseIntegrationTest {
 
         final Map<String, Object> payload = new HashMap<>();
         payload.put("role", "admin");
+        payload.put("custom", "value");
 
         try {
             server.dataSync().createMembership(channelId, userId, classVersion)
@@ -205,10 +210,14 @@ public class DataSyncMembershipIntegrationTest extends BaseIntegrationTest {
                     .sync();
             assertEquals("archived", updateResult.getData().getStatus());
             assertEquals("member", updateResult.getData().getPayload().get("role"));
+            assertNotEquals(patchResult.getData().getETag(), updateResult.getData().getETag());
 
+            // get reflects the full replacement: `custom` was not re-sent, so it is gone rather than kept
             final PNDataSyncGetMembershipResult afterUpdate = server.dataSync().getMembership(membershipId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("member", afterUpdate.getData().getPayload().get("role"));
+            assertFalse(afterUpdate.getData().getPayload().containsKey("custom"));
+            assertEquals(updateResult.getData().getETag(), afterUpdate.getData().getETag());
         } finally {
             bestEffortRemoveMembership(membershipId);
             bestEffortRemoveChannel(channelId);
@@ -255,6 +264,7 @@ public class DataSyncMembershipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 412 when patching with a stale ifMatch eTag");
             } catch (PubNubException e) {
                 assertEquals(412, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.getPubnubError());
             }
         } finally {
             bestEffortRemoveMembership(membershipId);
@@ -419,6 +429,7 @@ public class DataSyncMembershipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 404 after deleting the membership");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
             }
         } finally {
             bestEffortRemoveMembership(membershipId);

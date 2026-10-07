@@ -1,5 +1,6 @@
 package com.pubnub.api.integration.datasync;
 
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
@@ -100,6 +101,7 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             fail("Expected a 409 when creating an entity with an existing id");
         } catch (PubNubException e) {
             assertEquals(409, e.getStatusCode());
+            assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
         }
 
         // get
@@ -117,6 +119,7 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             fail("Expected a 404 after deleting the entity");
         } catch (PubNubException e) {
             assertEquals(404, e.getStatusCode());
+            assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
         }
     }
 
@@ -198,6 +201,7 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
             fail("Expected a 404 after deleting the entity");
         } catch (PubNubException e) {
             assertEquals(404, e.getStatusCode());
+            assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
         }
     }
 
@@ -234,6 +238,7 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
         final Map<String, Object> payload = new HashMap<>();
         payload.put("username", "Alice");
         payload.put("custom", "value");
+        payload.put("hobby", "poetry");
 
         // create
         server.dataSync()
@@ -276,11 +281,14 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
                     .sync();
             assertEquals("archived", updateResult.getData().getStatus());
             assertEquals("updated", updateResult.getData().getPayload().get("custom"));
+            assertNotEquals(patchResult.getData().getETag(), updateResult.getData().getETag());
 
-            // get reflects the full replacement
+            // get reflects the full replacement: `hobby` was not re-sent, so it is gone rather than kept
             final PNDataSyncGetEntityResult afterUpdate = server.dataSync().getEntity(entityId).sync();
             assertEquals("archived", afterUpdate.getData().getStatus());
             assertEquals("updated", afterUpdate.getData().getPayload().get("custom"));
+            assertFalse(afterUpdate.getData().getPayload().containsKey("hobby"));
+            assertEquals(updateResult.getData().getETag(), afterUpdate.getData().getETag());
         } finally {
             server.dataSync().removeEntity(entityId).sync();
         }
@@ -449,6 +457,7 @@ public class DataSyncEntityIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 412 when patching with a stale ifMatch eTag");
             } catch (PubNubException e) {
                 assertEquals(412, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.getPubnubError());
             }
         } finally {
             server.dataSync().removeEntity(entityId).sync();

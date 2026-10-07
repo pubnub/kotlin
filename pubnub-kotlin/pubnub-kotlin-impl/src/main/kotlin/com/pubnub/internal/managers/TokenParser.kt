@@ -150,7 +150,8 @@ internal class TokenParser {
      * Split composite `datasync:<type>:<id>` keys back into per-namespace maps of bare id -> projection name, exactly
      * inverting the encoder's `"$namespace:$id"`. The namespace prefix is matched against the known namespaces rather
      * than split naively on `:`, because relationship/membership ids themselves contain colons (`user.A:channel.X`).
-     * Keys that match no known namespace are ignored.
+     * The known namespaces are entities, relationships, memberships, users and channels; keys that match none of them
+     * are ignored.
      */
     private fun Map<*, *>?.toProjectionScope(): PNDataSyncProjectionScope {
         if (this == null) {
@@ -159,6 +160,8 @@ internal class TokenParser {
         val entities = LinkedHashMap<String, String>()
         val relationships = LinkedHashMap<String, String>()
         val memberships = LinkedHashMap<String, String>()
+        val users = LinkedHashMap<String, String>()
+        val channels = LinkedHashMap<String, String>()
         for ((rawKey, rawValue) in this) {
             val key = rawKey.toString()
             val projection = rawValue.toString()
@@ -169,12 +172,18 @@ internal class TokenParser {
                     relationships[key.removePrefix("${DataSyncNamespace.RELATIONSHIPS}:")] = projection
                 key.startsWith("${DataSyncNamespace.MEMBERSHIPS}:") ->
                     memberships[key.removePrefix("${DataSyncNamespace.MEMBERSHIPS}:")] = projection
+                key.startsWith("${DataSyncNamespace.USERS_PROJECTION}:") ->
+                    users[key.removePrefix("${DataSyncNamespace.USERS_PROJECTION}:")] = projection
+                key.startsWith("${DataSyncNamespace.CHANNELS_PROJECTION}:") ->
+                    channels[key.removePrefix("${DataSyncNamespace.CHANNELS_PROJECTION}:")] = projection
             }
         }
         return PNDataSyncProjectionScope(
             entities = entities,
             relationships = relationships,
             memberships = memberships,
+            users = users,
+            channels = channels,
         )
     }
 

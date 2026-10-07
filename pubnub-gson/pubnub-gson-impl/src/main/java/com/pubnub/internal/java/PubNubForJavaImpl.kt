@@ -127,6 +127,9 @@ import com.pubnub.internal.java.v2.callbacks.EventEmitterInternal
 import com.pubnub.internal.java.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.java.v2.entities.ChannelImpl
 import com.pubnub.internal.java.v2.entities.ChannelMetadataImpl
+import com.pubnub.internal.java.v2.entities.DataSyncChannelImpl
+import com.pubnub.internal.java.v2.entities.DataSyncEntityImpl
+import com.pubnub.internal.java.v2.entities.DataSyncUserImpl
 import com.pubnub.internal.java.v2.entities.UserMetadataImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
@@ -490,6 +493,18 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
 
     override fun channelMetadata(id: String): ChannelMetadataImpl {
         return ChannelMetadataImpl(this, ChannelName(id))
+    }
+
+    override fun dataSyncUser(id: String): DataSyncUserImpl {
+        return DataSyncUserImpl(this, id)
+    }
+
+    override fun dataSyncChannel(id: String): DataSyncChannelImpl {
+        return DataSyncChannelImpl(this, id)
+    }
+
+    override fun dataSyncEntity(id: String): DataSyncEntityImpl {
+        return DataSyncEntityImpl(this, id)
     }
 
     override fun userMetadata(id: String): UserMetadataImpl {

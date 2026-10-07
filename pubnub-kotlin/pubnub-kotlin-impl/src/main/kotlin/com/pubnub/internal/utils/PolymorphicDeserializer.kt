@@ -23,6 +23,30 @@ internal class PolymorphicDeserializer<T>(
                 mappingWithList[fieldsValues]
             }
         }
+
+        /**
+         * Like [dispatchByFieldsValues] but reads the discriminator [fields] from a nested [parent] object
+         * (e.g. `metadata.event` / `metadata.type`). Reads are null-safe: a missing [parent], missing field
+         * or `JsonNull` value returns `null` (→ [defaultClass]) rather than throwing, so a malformed
+         * envelope falls back to the default class instead of escaping the annotation-driven adapter.
+         */
+        inline fun <reified T> dispatchByNestedFieldsValues(
+            parent: String,
+            fields: List<String>,
+            mappingFieldValuesToClass: Map<List<String>, Class<out T>>,
+            defaultClass: Class<out T>? = null,
+        ): JsonDeserializer<T> {
+            val mappingWithList: Map<List<String>, Class<out T>> = mappingFieldValuesToClass.mapKeys { it.key.toList() }
+            return PolymorphicDeserializer(defaultClass = defaultClass) { jsonElement, _ ->
+                val parentObject = jsonElement.asJsonObject.getAsJsonObject(parent) ?: return@PolymorphicDeserializer null
+                val fieldsValues: List<String>? =
+                    fields.map { field ->
+                        parentObject.get(field)?.takeIf { !it.isJsonNull }?.asString
+                            ?: return@PolymorphicDeserializer null
+                    }
+                mappingWithList[fieldsValues]
+            }
+        }
     }
 
     override fun deserialize(

@@ -3,6 +3,7 @@ package com.pubnub.internal.endpoints.datasync.relationship
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.absent
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
@@ -12,6 +13,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.datasync.PNDataSyncSortField
 import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GetRelationshipsEndpointTest : BaseTest() {
@@ -90,6 +92,50 @@ class GetRelationshipsEndpointTest : BaseTest() {
             getRequestedFor(urlPathEqualTo(path))
                 .withQueryParam("filter", equalTo("status == \"active\""))
                 .withQueryParam("filter_advanced", absent()),
+        )
+    }
+
+    @Test
+    fun filters_percent_encode_literal_plus_and_percent() {
+        stubList()
+
+        pubnub.dataSync.getRelationships(
+            className = "Friendship",
+            filterFast = "status == \"a+b\"",
+            filter = "status == \"50%\"",
+        ).sync()
+
+        val url = findAll(getRequestedFor(urlPathEqualTo(path))).single().url
+        assertTrue(url, url.contains("filter_fast=status%20%3D%3D%20%22a%2Bb%22"))
+        assertTrue(url, url.contains("filter=status%20%3D%3D%20%2250%25%22"))
+    }
+
+    @Test
+    fun query_values_with_reserved_characters_round_trip() {
+        // Regression guard: every free-text query value (not only filters) must be percent-encoded, otherwise
+        // `+` decodes to a space, `%41` to `A`, and a bare `%` makes the URL invalid.
+        stubList()
+
+        pubnub.dataSync.getRelationships(
+            className = "Test+Class",
+            entityAId = "a+1",
+            entityBId = "100%b%41",
+            sort = listOf(PNDataSyncSortField("x y&z=1#f")),
+            cursor = "a+b/100%a%41==",
+        ).sync()
+
+        val url = findAll(getRequestedFor(urlPathEqualTo(path))).single().url
+        assertTrue(url, url.contains("relationship_class=Test%2BClass"))
+        assertTrue(url, url.contains("entity_a_id=a%2B1"))
+        assertTrue(url, url.contains("entity_b_id=100%25b%2541"))
+        assertTrue(url, url.contains("cursor=a%2Bb"))
+        verify(
+            getRequestedFor(urlPathEqualTo(path))
+                .withQueryParam("relationship_class", equalTo("Test+Class"))
+                .withQueryParam("entity_a_id", equalTo("a+1"))
+                .withQueryParam("entity_b_id", equalTo("100%b%41"))
+                .withQueryParam("sort", equalTo("x y&z=1#f"))
+                .withQueryParam("cursor", equalTo("a+b/100%a%41==")),
         )
     }
 

@@ -61,7 +61,8 @@ class DataSyncChannelTest {
     fun classLevel_wire_values() {
         assertEquals("Global", PNDataSyncClassLevel.GLOBAL.value)
         assertEquals("SubKey", PNDataSyncClassLevel.SUBKEY.value)
-        assertEquals("Account", PNDataSyncClassLevel.ACCOUNT.value)
+        // Only levels the server accepts are exposed; `Account` is deliberately absent until the server supports it.
+        assertEquals(listOf("Global", "SubKey"), PNDataSyncClassLevel.values().map { it.value })
     }
 
     @Test

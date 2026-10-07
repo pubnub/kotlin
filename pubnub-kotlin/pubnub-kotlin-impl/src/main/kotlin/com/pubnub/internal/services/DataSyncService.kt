@@ -33,7 +33,7 @@ internal interface DataSyncService {
     fun getEntity(
         @Path("subKey") subKey: String,
         @Path("entityId") entityId: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncEntity>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.entity+json;version=1")
@@ -41,7 +41,7 @@ internal interface DataSyncService {
     fun createEntity(
         @Path("subKey") subKey: String,
         @Body body: CreateEntityRequest,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncEntity>>
 
     @DELETE("v1/datasync/subkeys/{subKey}/entities/{entityId}")
@@ -49,13 +49,13 @@ internal interface DataSyncService {
         @Path("subKey") subKey: String,
         @Path("entityId") entityId: String,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<Void>
 
     @GET("v1/datasync/subkeys/{subKey}/entities")
     fun getEntities(
         @Path("subKey") subKey: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntitiesEnvelope<PNDataSyncEntity>>
 
     @Headers("Content-Type: application/json-patch+json")
@@ -65,7 +65,7 @@ internal interface DataSyncService {
         @Path("entityId") entityId: String,
         @Body body: List<JsonPatchOperation>,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncEntity>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.entity+json;version=1")
@@ -75,14 +75,14 @@ internal interface DataSyncService {
         @Path("entityId") entityId: String,
         @Body body: SetEntityRequest,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncEntity>>
 
     @GET("v1/datasync/subkeys/{subKey}/users/{userId}")
     fun getUser(
         @Path("subKey") subKey: String,
         @Path("userId") userId: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncUser>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.user+json;version=1")
@@ -90,7 +90,7 @@ internal interface DataSyncService {
     fun createUser(
         @Path("subKey") subKey: String,
         @Body body: CreateUserRequest,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncUser>>
 
     @DELETE("v1/datasync/subkeys/{subKey}/users/{userId}")
@@ -98,13 +98,13 @@ internal interface DataSyncService {
         @Path("subKey") subKey: String,
         @Path("userId") userId: String,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<Void>
 
     @GET("v1/datasync/subkeys/{subKey}/users")
     fun getUsers(
         @Path("subKey") subKey: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntitiesEnvelope<PNDataSyncUser>>
 
     @Headers("Content-Type: application/json-patch+json")
@@ -114,7 +114,7 @@ internal interface DataSyncService {
         @Path("userId") userId: String,
         @Body body: List<JsonPatchOperation>,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncUser>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.user+json;version=1")
@@ -124,14 +124,14 @@ internal interface DataSyncService {
         @Path("userId") userId: String,
         @Body body: SetEntityRequest,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncUser>>
 
     @GET("v1/datasync/subkeys/{subKey}/channels/{channelId}")
     fun getChannel(
         @Path("subKey") subKey: String,
         @Path("channelId") channelId: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncChannel>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.channel+json;version=1")
@@ -139,7 +139,7 @@ internal interface DataSyncService {
     fun createChannel(
         @Path("subKey") subKey: String,
         @Body body: CreateChannelRequest,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncChannel>>
 
     @DELETE("v1/datasync/subkeys/{subKey}/channels/{channelId}")
@@ -147,13 +147,13 @@ internal interface DataSyncService {
         @Path("subKey") subKey: String,
         @Path("channelId") channelId: String,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<Void>
 
     @GET("v1/datasync/subkeys/{subKey}/channels")
     fun getChannels(
         @Path("subKey") subKey: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntitiesEnvelope<PNDataSyncChannel>>
 
     @Headers("Content-Type: application/json-patch+json")
@@ -163,7 +163,7 @@ internal interface DataSyncService {
         @Path("channelId") channelId: String,
         @Body body: List<JsonPatchOperation>,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncChannel>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.channel+json;version=1")
@@ -173,14 +173,14 @@ internal interface DataSyncService {
         @Path("channelId") channelId: String,
         @Body body: SetEntityRequest,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncChannel>>
 
     @GET("v1/datasync/subkeys/{subKey}/memberships/{membershipId}")
     fun getMembership(
         @Path("subKey") subKey: String,
         @Path("membershipId") membershipId: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncMembership>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.membership+json;version=1")
@@ -188,7 +188,7 @@ internal interface DataSyncService {
     fun createMembership(
         @Path("subKey") subKey: String,
         @Body body: CreateMembershipRequest,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncMembership>>
 
     @DELETE("v1/datasync/subkeys/{subKey}/memberships/{membershipId}")
@@ -196,13 +196,13 @@ internal interface DataSyncService {
         @Path("subKey") subKey: String,
         @Path("membershipId") membershipId: String,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<Void>
 
     @GET("v1/datasync/subkeys/{subKey}/memberships")
     fun getMemberships(
         @Path("subKey") subKey: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntitiesEnvelope<PNDataSyncMembership>>
 
     @Headers("Content-Type: application/json-patch+json")
@@ -212,7 +212,7 @@ internal interface DataSyncService {
         @Path("membershipId") membershipId: String,
         @Body body: List<JsonPatchOperation>,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncMembership>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.membership+json;version=1")
@@ -222,14 +222,14 @@ internal interface DataSyncService {
         @Path("membershipId") membershipId: String,
         @Body body: SetMembershipRequest,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncMembership>>
 
     @GET("v1/datasync/subkeys/{subKey}/relationships/{relationshipId}")
     fun getRelationship(
         @Path("subKey") subKey: String,
         @Path("relationshipId") relationshipId: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncRelationship>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.relationship+json;version=1")
@@ -237,7 +237,7 @@ internal interface DataSyncService {
     fun createRelationship(
         @Path("subKey") subKey: String,
         @Body body: CreateRelationshipRequest,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncRelationship>>
 
     @DELETE("v1/datasync/subkeys/{subKey}/relationships/{relationshipId}")
@@ -245,13 +245,13 @@ internal interface DataSyncService {
         @Path("subKey") subKey: String,
         @Path("relationshipId") relationshipId: String,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<Void>
 
     @GET("v1/datasync/subkeys/{subKey}/relationships")
     fun getRelationships(
         @Path("subKey") subKey: String,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntitiesEnvelope<PNDataSyncRelationship>>
 
     @Headers("Content-Type: application/json-patch+json")
@@ -261,7 +261,7 @@ internal interface DataSyncService {
         @Path("relationshipId") relationshipId: String,
         @Body body: List<JsonPatchOperation>,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncRelationship>>
 
     @Headers("Content-Type: application/vnd.pubnub.objects.relationship+json;version=1")
@@ -271,6 +271,6 @@ internal interface DataSyncService {
         @Path("relationshipId") relationshipId: String,
         @Body body: SetRelationshipRequest,
         @Header("If-Match") ifMatch: String?,
-        @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @QueryMap options: Map<String, String> = mapOf(),
     ): Call<EntityEnvelope<PNDataSyncRelationship>>
 }

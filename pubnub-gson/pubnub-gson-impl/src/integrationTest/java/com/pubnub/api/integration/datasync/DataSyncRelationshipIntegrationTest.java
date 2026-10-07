@@ -1,5 +1,6 @@
 package com.pubnub.api.integration.datasync;
 
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
@@ -12,6 +13,7 @@ import com.pubnub.api.java.models.consumer.datasync.relationship.PNDataSyncGetRe
 import com.pubnub.api.java.models.consumer.datasync.relationship.PNDataSyncGetRelationshipsResult;
 import com.pubnub.api.java.models.consumer.datasync.relationship.PNDataSyncSetRelationshipResult;
 import com.pubnub.api.java.models.consumer.datasync.relationship.PNDataSyncUpdateRelationshipResult;
+import com.pubnub.api.models.consumer.datasync.DataSyncErrors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -113,6 +115,7 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 409 when creating a relationship with an existing id");
             } catch (PubNubException e) {
                 assertEquals(409, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
             }
 
             // DS-0301: DIFFERENT id, SAME (class, entityA, entityB) pair -> 409. No DS-0801 on a MANY_TO_MANY
@@ -126,6 +129,7 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 409 when creating a relationship for an existing (class, entityA, entityB) pair");
             } catch (PubNubException e) {
                 assertEquals(409, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
             }
 
             // get
@@ -144,6 +148,7 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 404 after deleting the relationship");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
             }
         } finally {
             bestEffortRemoveRelationship(relationshipId);
@@ -187,6 +192,7 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
 
         final Map<String, Object> payload = new HashMap<>();
         payload.put("role", "admin");
+        payload.put("custom", "value");
 
         try {
             server.dataSync().createRelationship(entityAId, entityBId, M2M_CLASS, classVersion)
@@ -224,10 +230,14 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                     .sync();
             assertEquals("archived", setResult.getData().getStatus());
             assertEquals("member", setResult.getData().getPayload().get("role"));
+            assertNotEquals(patchResult.getData().getETag(), setResult.getData().getETag());
 
+            // get reflects the full replacement: `custom` was not re-sent, so it is gone rather than kept
             final PNDataSyncGetRelationshipResult afterSet = server.dataSync().getRelationship(relationshipId).sync();
             assertEquals("archived", afterSet.getData().getStatus());
             assertEquals("member", afterSet.getData().getPayload().get("role"));
+            assertFalse(afterSet.getData().getPayload().containsKey("custom"));
+            assertEquals(setResult.getData().getETag(), afterSet.getData().getETag());
 
             // delete
             server.dataSync().removeRelationship(relationshipId).sync();
@@ -238,6 +248,7 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 404 after deleting the relationship");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
             }
         } finally {
             bestEffortRemoveRelationship(relationshipId);
@@ -285,6 +296,7 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 412 when patching with a stale ifMatch eTag");
             } catch (PubNubException e) {
                 assertEquals(412, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.getPubnubError());
             }
         } finally {
             bestEffortRemoveRelationship(relationshipId);
@@ -310,6 +322,8 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
             fail("Expected DS-0800 (400) when entity A's class does not match the relationship class's entityAClass");
         } catch (PubNubException e) {
             assertEquals(400, e.getStatusCode());
+            assertEquals(PubNubError.DATASYNC_BAD_REQUEST, e.getPubnubError());
+            assertEquals("DS-0800", DataSyncErrors.firstCode(e));
         } finally {
             try {
                 server.dataSync().removeChannel(wrongClassEntityId).sync();
@@ -345,6 +359,8 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
             fail("Expected DS-0801 (409) for a second ONE_TO_ONE relationship on the same entity A");
         } catch (PubNubException e) {
             assertEquals(409, e.getStatusCode());
+            assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
+            assertEquals("DS-0801", DataSyncErrors.firstCode(e));
         } finally {
             bestEffortRemoveRelationship(firstId);
             bestEffortRemoveEntity(entityAId);
@@ -509,6 +525,7 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 404 after deleting the relationship");
             } catch (PubNubException e) {
                 assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
             }
         } finally {
             bestEffortRemoveRelationship(relationshipId);
@@ -546,6 +563,8 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                 client.dataSync().getRelationship(relationshipId).sync();
                 fail("Expected a 403: a datasync:memberships grant must not authorize a /relationships op");
             } catch (PubNubException e) {
+                // Status only: resource-level PAM denials are decided upstream of the DataSync service, so the body
+                // may carry no DS-xxxx code and the error then (correctly) stays PubNubError.HTTP_ERROR.
                 assertEquals(403, e.getStatusCode());
             }
         } finally {
@@ -643,6 +662,8 @@ public class DataSyncRelationshipIntegrationTest extends BaseIntegrationTest {
                 fail("Expected a 403 when writing an admin-only field under the __default__ projection");
             } catch (PubNubException e) {
                 assertEquals(403, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_ACCESS_DENIED, e.getPubnubError());
+                assertEquals("DS-0202", DataSyncErrors.firstCode(e));
             }
 
             // positive leg: admin-projected create of the SAME admin-only field -> succeeds.

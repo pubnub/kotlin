@@ -9,7 +9,9 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
+import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
 import com.pubnub.internal.endpoints.access.GrantTokenEndpoint
 import io.mockk.CapturingSlot
 import io.mockk.every
@@ -18,6 +20,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class GrantTokenImplTest {
@@ -164,7 +167,7 @@ class GrantTokenImplTest {
         objectUnderTest.ttl(ttl)
             .channels(channels)
             .channelGroups(channelGroups)
-            .grants(listOf<TokenGrant>(UserGrant.id("user-A").get(), DataSyncGrant.entity("capy-001").get()))
+            .grants(listOf<TokenGrant>(DataSyncGrant.user("user-A").get(), DataSyncGrant.entity("capy-001").get()))
         every {
             pubNubCore.grantToken(ttl, any(), meta, capture(grantsCapture))
         } returns grantTokenEndpoint
@@ -187,5 +190,99 @@ class GrantTokenImplTest {
 
         // when / then
         assertThrows(PubNubException::class.java) { objectUnderTest.sync() }
+    }
+
+    @Test
+    fun dataSyncChannelUserAndSubscribeGrantsConvertToKotlinEquivalents() {
+        // given — Java DataSync channel/user grants (exact + pattern) and subscribe helpers
+        objectUnderTest = GrantTokenImpl(pubNubCore)
+        objectUnderTest.ttl(ttl)
+            .grants(
+                listOf<TokenGrant>(
+                    DataSyncGrant.channel("chat-1").get().update().projection("admin"),
+                    DataSyncGrant.channelPattern("chat-.*").get(),
+                    DataSyncGrant.user("user-A").get().delete(),
+                    DataSyncGrant.userPattern("user-.*").create().projection("admin"),
+                    DataSyncGrant.subscribe("chat-1", "admin"),
+                    DataSyncGrant.subscribePattern("chat-.*"),
+                ),
+            )
+        every {
+            pubNubCore.grantToken(ttl, any(), meta, capture(grantsCapture))
+        } returns grantTokenEndpoint
+
+        // when
+        objectUnderTest.createRemoteAction()
+
+        // then — channel/user grants keep their namespace, bits and projection; subscribe becomes a channel read
+        val grants = grantsCapture.captured
+        assertEquals(6, grants.size)
+
+        val channel = grants[0] as DataSyncGrantType
+        assertEquals(DataSyncNamespace.CHANNELS_PROJECTION, channel.namespace)
+        assertEquals("chat-1", channel.id)
+        assertTrue(channel.get && channel.update && !channel.create && !channel.delete)
+        assertEquals("admin", channel.projection)
+        assertTrue(channel !is PNPatternGrant)
+
+        val channelPattern = grants[1] as DataSyncGrantType
+        assertEquals(DataSyncNamespace.CHANNELS_PROJECTION, channelPattern.namespace)
+        assertEquals("chat-.*", channelPattern.id)
+        assertTrue(channelPattern is PNPatternGrant)
+
+        val user = grants[2] as DataSyncGrantType
+        assertEquals(DataSyncNamespace.USERS_PROJECTION, user.namespace)
+        assertTrue(user.get && user.delete)
+        assertEquals(null, user.projection)
+
+        val userPattern = grants[3] as DataSyncGrantType
+        assertEquals(DataSyncNamespace.USERS_PROJECTION, userPattern.namespace)
+        assertTrue(userPattern.create && userPattern is PNPatternGrant)
+        assertEquals("admin", userPattern.projection)
+
+        val subscribe = grants[4] as com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
+        assertEquals("__admin__chat-1", subscribe.id)
+        assertTrue(subscribe.read && !subscribe.get)
+        assertTrue(subscribe !is DataSyncGrantType && subscribe !is PNPatternGrant)
+
+        val subscribePattern = grants[5] as com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
+        assertEquals("^(?:chat-.*)", subscribePattern.id)
+        assertTrue(subscribePattern.read && subscribePattern is PNPatternGrant)
+    }
+
+    @Test
+    fun projectionOnMembershipGrantThrows() {
+        // memberships use the built-in Membership class, which has no named projections
+        assertThrows(IllegalStateException::class.java) { DataSyncGrant.membership("user-1:chat-1").projection("admin") }
+        assertThrows(IllegalStateException::class.java) { DataSyncGrant.membershipPattern("user-1:.*").projection("admin") }
+    }
+
+    @Test
+    fun membershipGrantConvertsWithoutProjection() {
+        objectUnderTest = GrantTokenImpl(pubNubCore)
+        objectUnderTest.ttl(ttl)
+            .grants(
+                listOf<TokenGrant>(
+                    DataSyncGrant.membership("user-1:chat-1").get().delete(),
+                    DataSyncGrant.membershipPattern("user-1:.*").get(),
+                ),
+            )
+        every {
+            pubNubCore.grantToken(ttl, any(), meta, capture(grantsCapture))
+        } returns grantTokenEndpoint
+
+        // when
+        objectUnderTest.createRemoteAction()
+
+        // then
+        val membership = grantsCapture.captured[0] as DataSyncGrantType
+        assertEquals(DataSyncNamespace.MEMBERSHIPS, membership.namespace)
+        assertTrue(membership.get && membership.delete)
+        assertEquals(null, membership.projection)
+
+        val membershipPattern = grantsCapture.captured[1] as DataSyncGrantType
+        assertEquals(DataSyncNamespace.MEMBERSHIPS, membershipPattern.namespace)
+        assertTrue(membershipPattern is PNPatternGrant)
+        assertEquals(null, membershipPattern.projection)
     }
 }

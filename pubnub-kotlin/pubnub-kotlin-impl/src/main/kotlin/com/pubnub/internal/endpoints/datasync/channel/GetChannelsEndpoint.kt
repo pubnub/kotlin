@@ -12,6 +12,8 @@ import com.pubnub.api.models.consumer.datasync.channel.PNDataSyncGetChannelsResu
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.datasync.requireClassNameNotBlankIfSet
+import com.pubnub.internal.datasync.requireNoBlankSortProperty
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.datasync.EntitiesEnvelope
@@ -33,6 +35,12 @@ class GetChannelsEndpoint internal constructor(
     private val cursor: String?,
 ) : EndpointCore<EntitiesEnvelope<PNDataSyncChannel>, PNDataSyncGetChannelsResult>(pubnub), GetChannels {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
+    override fun validateParams() {
+        super.validateParams()
+        className.requireClassNameNotBlankIfSet()
+        sort.requireNoBlankSortProperty()
+    }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntitiesEnvelope<PNDataSyncChannel>> {
         val sortParam = sort.joinToString(",") {

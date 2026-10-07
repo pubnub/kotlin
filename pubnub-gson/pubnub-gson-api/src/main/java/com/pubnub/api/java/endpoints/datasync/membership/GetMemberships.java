@@ -26,8 +26,9 @@ public interface GetMemberships extends Endpoint<PNDataSyncGetMembershipsResult>
     GetMemberships userId(@Nullable String userId);
 
     /**
-     * Restricts results to a single version of the {@code Membership} class. If not set, every version is
-     * returned.
+     * Restricts results to a single version of the {@code Membership} class. If not set, items of every version
+     * are returned, while {@code filterFast}, {@code filter} and {@code sort} fields are checked against the latest
+     * version. Set a version to make results stable when new class versions are published.
      */
     GetMemberships classVersion(@Nullable Integer classVersion);
 
@@ -42,7 +43,7 @@ public interface GetMemberships extends Endpoint<PNDataSyncGetMembershipsResult>
      * conditions than {@link #filter(String)}; a limit on the number of conditions applies and can be adjusted
      * by PubNub support (see the PubNub DataSync documentation for the current limit). For larger or more
      * complex queries use {@link #filter(String)}. At most one of {@code filterFast} and {@code filter} may be
-     * supplied; sending both is rejected with an error.
+     * supplied; sending both is rejected by the server (HTTP 400).
      */
     GetMemberships filterFast(@Nullable String filterFast);
 
@@ -52,7 +53,7 @@ public interface GetMemberships extends Endpoint<PNDataSyncGetMembershipsResult>
      * condition limit, so use it for larger or more complex queries. The trade-off is consistency:
      * {@code filter} is eventually consistent (recent writes may not yet be reflected), whereas
      * {@link #filterFast(String)} is strongly consistent. At most one of {@code filterFast} and {@code filter}
-     * may be supplied; sending both is rejected with an error.
+     * may be supplied; sending both is rejected by the server (HTTP 400).
      */
     GetMemberships filter(@Nullable String filter);
 
@@ -65,7 +66,8 @@ public interface GetMemberships extends Endpoint<PNDataSyncGetMembershipsResult>
     GetMemberships sort(@Nullable List<PNDataSyncSortField> sort);
 
     /**
-     * Optional page size (1–100, server default 20).
+     * Optional page size, 1–100 (server default 20). A value outside that range is rejected by the server
+     * (HTTP 400), not clamped.
      */
     GetMemberships limit(@Nullable Integer limit);
 

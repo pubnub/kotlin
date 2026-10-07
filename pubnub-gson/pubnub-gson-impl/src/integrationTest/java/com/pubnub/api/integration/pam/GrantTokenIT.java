@@ -9,7 +9,6 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
-import com.pubnub.api.java.models.consumer.access_manager.v3.UserGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScope;
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjections;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
@@ -17,41 +16,43 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
 public class GrantTokenIT extends BaseIntegrationTest {
 
     @Test
-    public void happyPath_SUM() throws PubNubException {
+    public void happyPath_channelsAndUuids() throws PubNubException {
         PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
-        String expectedSpaceIdValue = "space01";
-        String expectedUser01Value = "user01";
-        String expectedSpaceIdPattern = "space.*";
-        String expectedUserIdPattern = "user.*";
-        String expectedAuthorizedUser = "authorizedUser";
+        String expectedChannelName = "channel01";
+        String expectedUuidValue = "uuid01";
+        String expectedChannelPattern = "channel.*";
+        String expectedUuidPattern = "uuid.*";
+        String expectedAuthorizedUuid = "authorizedUuid";
         PNGrantTokenResult grantTokenResult = pubNubUnderTest
                 .grantToken(expectedTTL)
-                .channels(Arrays.asList(ChannelGrant.name(expectedSpaceIdValue).delete(), ChannelGrant.pattern(expectedSpaceIdPattern).read()))
-                .uuids(Arrays.asList(UUIDGrant.id(expectedUser01Value).get(), UUIDGrant.pattern(expectedUserIdPattern).get()))
-                .authorizedUUID(expectedAuthorizedUser)
+                .channels(Arrays.asList(ChannelGrant.name(expectedChannelName).delete(), ChannelGrant.pattern(expectedChannelPattern).read()))
+                .uuids(Arrays.asList(UUIDGrant.id(expectedUuidValue).get(), UUIDGrant.pattern(expectedUuidPattern).get()))
+                .authorizedUUID(expectedAuthorizedUuid)
                 .sync();
         PNToken pnToken = pubNubUnderTest.parseToken(grantTokenResult.getToken());
 
         assertEquals(expectedTTL, pnToken.getTtl());
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, true, false, false, false),
-                pnToken.getResources().getChannels().get(expectedSpaceIdValue));
+                pnToken.getResources().getChannels().get(expectedChannelName));
         assertEquals(new PNToken.PNResourcePermissions(true, false, false, false, false, false, false),
-                pnToken.getPatterns().getChannels().get(expectedSpaceIdPattern));
+                pnToken.getPatterns().getChannels().get(expectedChannelPattern));
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false),
-                pnToken.getResources().getUuids().get(expectedUser01Value));
+                pnToken.getResources().getUuids().get(expectedUuidValue));
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false),
-                pnToken.getPatterns().getUuids().get(expectedUserIdPattern));
+                pnToken.getPatterns().getUuids().get(expectedUuidPattern));
 
     }
 
@@ -133,8 +134,8 @@ public class GrantTokenIT extends BaseIntegrationTest {
     @Test
     public void grantToken_withAllGrantTypes_viaFlatList() throws PubNubException {
         // given — mint a single token through the new flat `.grants(...)` overload carrying EVERY grant type that
-        // implements TokenGrant: ChannelGrant, ChannelGroupGrant, UserGrant and DataSyncGrant. Each grant type is
-        // exercised in both exact and pattern form, and DataSync covers all three namespaces (entities,
+        // implements TokenGrant: ChannelGrant, ChannelGroupGrant and DataSyncGrant. Each grant type is
+        // exercised in both exact and pattern form, and DataSync covers every namespace (channels, users, entities,
         // relationships, memberships).
         PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
@@ -142,6 +143,8 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final String channelPattern = "channel.*";
         final String channelGroupId = "channelGroup";
         final String channelGroupPattern = "channelGroup.*";
+        final String dataSyncChannelId = "dsChannel01";
+        final String dataSyncChannelPattern = "dsChannel.*";
         final String userId = "user01";
         final String userPattern = "user.*";
         final String entityId = "capy-001";
@@ -160,8 +163,11 @@ public class GrantTokenIT extends BaseIntegrationTest {
                         ChannelGrant.pattern(channelPattern).read(),
                         ChannelGroupGrant.id(channelGroupId).read().manage(),
                         ChannelGroupGrant.pattern(channelGroupPattern).read(),
-                        UserGrant.id(userId).get().update(),
-                        UserGrant.pattern(userPattern).get().create(),
+                        DataSyncGrant.channel(dataSyncChannelId).get().update(),
+                        DataSyncGrant.channelPattern(dataSyncChannelPattern).get().create(),
+                        DataSyncGrant.user(userId).get().update(),
+                        DataSyncGrant.userPattern(userPattern).get().create(),
+                        DataSyncGrant.subscribe(userId, "adminProjection"),
                         DataSyncGrant.entity(entityId).get().update(),
                         DataSyncGrant.entityPattern(entityPattern).get(),
                         DataSyncGrant.relationship(relationshipId).get(),
@@ -185,7 +191,17 @@ public class GrantTokenIT extends BaseIntegrationTest {
         assertEquals(new PNToken.PNResourcePermissions(true, false, false, false, false, false, false, false),
                 pnToken.getPatterns().getChannelGroups().get(channelGroupPattern));
 
-        // UserGrant permissions land in the plain `users` bucket (not `uuids`).
+        // DataSyncGrant.channel permissions land in the plain `channels` bucket.
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, true, false, false),
+                pnToken.getResources().getChannels().get(dataSyncChannelId));
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, true),
+                pnToken.getPatterns().getChannels().get(dataSyncChannelPattern));
+
+        // DataSyncGrant.subscribe(id, projection) is a pub/sub read on the projection's ref-channel.
+        assertEquals(new PNToken.PNResourcePermissions(true, false, false, false, false, false, false, false),
+                pnToken.getResources().getChannels().get("__adminProjection__" + userId));
+
+        // DataSyncGrant.user permissions land in the plain `users` bucket (not `uuids`).
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, true, false, false),
                 pnToken.getResources().getUsers().get(userId));
         assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true, false, false, true),
@@ -238,8 +254,9 @@ public class GrantTokenIT extends BaseIntegrationTest {
                         DataSyncGrant.entityPattern(entityPatternId).get().projection(defaultProjection),
                         DataSyncGrant.relationship(relationshipId).get().projection(adminProjection),
                         DataSyncGrant.relationshipPattern(relationshipPatternId).get().projection(defaultProjection),
-                        DataSyncGrant.membership(membershipId).get().projection(adminProjection),
-                        DataSyncGrant.membershipPattern(membershipPatternId).get().projection(defaultProjection)))
+                        // memberships take no projection, so they must not add a pn-projections entry
+                        DataSyncGrant.membership(membershipId).get(),
+                        DataSyncGrant.membershipPattern(membershipPatternId).get()))
                 .sync();
 
         // then — the pn-projections block must survive the round-trip and surface on the typed projections field.
@@ -251,12 +268,15 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final PNDataSyncProjectionScope typedRes = projections.getResources();
         assertEquals(adminProjection, typedRes.getEntities().get(entityId));
         assertEquals(adminProjection, typedRes.getRelationships().get(relationshipId)); // colon in id survives verbatim
-        assertEquals(adminProjection, typedRes.getMemberships().get(membershipId)); // colon in id survives verbatim
+        assertTrue(typedRes.getMemberships().isEmpty());
 
         final PNDataSyncProjectionScope typedPat = projections.getPatterns();
         assertEquals(defaultProjection, typedPat.getEntities().get(entityPatternId));
         assertEquals(defaultProjection, typedPat.getRelationships().get(relationshipPatternId));
-        assertEquals(defaultProjection, typedPat.getMemberships().get(membershipPatternId));
+        assertTrue(typedPat.getMemberships().isEmpty());
+        // the membership grants themselves still land in the token
+        assertTrue(pnToken.getResources().getDatasyncMemberships().containsKey(membershipId));
+        assertTrue(pnToken.getPatterns().getDatasyncMemberships().containsKey(membershipPatternId));
 
         // the raw block also remains available under meta (additive, non-breaking).
         final Map<String, Object> meta = (Map<String, Object>) pnToken.getMeta();
@@ -266,20 +286,56 @@ public class GrantTokenIT extends BaseIntegrationTest {
         final Map<String, Object> res = (Map<String, Object>) rawProjections.get("res");
         assertEquals(adminProjection, res.get(entityKey));
         assertEquals(adminProjection, res.get(relationshipKey)); // colon in the relationship id survives verbatim
-        assertEquals(adminProjection, res.get(membershipKey)); // colon in the membership id survives verbatim
+        assertFalse(res.containsKey(membershipKey));
 
         final Map<String, Object> pat = (Map<String, Object>) rawProjections.get("pat");
         assertEquals(defaultProjection, pat.get(entityPatternKey));
         assertEquals(defaultProjection, pat.get(relationshipPatternKey));
-        assertEquals(defaultProjection, pat.get(membershipPatternKey));
+        assertFalse(pat.containsKey(membershipPatternKey));
+    }
+
+    @Test
+    public void grantToken_carriesDataSyncUserAndChannelProjections() throws PubNubException {
+        // given — user/channel projections only matter for custom User/Channel subclass instances, but the token must
+        // still round-trip them into the typed users/channels maps. The token carries no class information: the ids
+        // below are named after subclass instances (e.g. of TestSubUser / TestSubChannel) for readability only.
+        PubNub pubNubUnderTest = getServer();
+        final String adminProjection = "admin";
+        final String defaultProjection = "__default__";
+        final String userId = "subUser-123";
+        final String userPatternId = "subUser-.*";
+        final String channelId = "subChannel-lobby";
+        final String channelPatternId = "subChannel-.*";
+
+        // when
+        final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
+                .grantToken(1337)
+                .grants(Arrays.<TokenGrant>asList(
+                        DataSyncGrant.user(userId).get().projection(adminProjection),
+                        DataSyncGrant.userPattern(userPatternId).get().projection(defaultProjection),
+                        DataSyncGrant.channel(channelId).get().projection(adminProjection),
+                        DataSyncGrant.channelPattern(channelPatternId).get().projection(defaultProjection)))
+                .sync();
+
+        // then
+        final PNDataSyncProjections projections =
+                pubNubUnderTest.parseToken(grantTokenResponse.getToken()).getProjections();
+        final PNDataSyncProjectionScope typedRes = projections.getResources();
+        assertEquals(Collections.singletonMap(userId, adminProjection), typedRes.getUsers());
+        assertEquals(Collections.singletonMap(channelId, adminProjection), typedRes.getChannels());
+        assertTrue(typedRes.getEntities().isEmpty()); // must not leak into the entities namespace
+
+        final PNDataSyncProjectionScope typedPat = projections.getPatterns();
+        assertEquals(Collections.singletonMap(userPatternId, defaultProjection), typedPat.getUsers());
+        assertEquals(Collections.singletonMap(channelPatternId, defaultProjection), typedPat.getChannels());
+        assertTrue(typedPat.getEntities().isEmpty());
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void grantToken_mergesCallerSuppliedProjectionsIntoMeta() throws PubNubException {
-        // given — the caller supplies their own meta carrying both a plain value and a pn-projections block. The SDK
-        // must overlay the grant-derived projections onto that meta: the plain value survives, a caller projection for
-        // a key no grant carries survives verbatim, and a caller projection colliding with a grant loses to the grant.
+    public void grantToken_keepsCallerMetaAlongsideProjections() throws PubNubException {
+        // given — the caller supplies their own plain meta (a pn-projections key in it is rejected). The SDK must add
+        // the grant-derived pn-projections block next to it without dropping the caller's keys.
         PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
         final String adminProjection = "admin";
@@ -287,20 +343,8 @@ public class GrantTokenIT extends BaseIntegrationTest {
 
         final String entityKey = DataSyncGrant.DATASYNC_ENTITIES + ":" + entityId;
 
-        // a projection the caller injects directly into meta for a resource NO grant carries — it must survive verbatim.
-        final String callerOnlyKey = DataSyncGrant.DATASYNC_MEMBERSHIPS + ":user-123:channel-X";
-        final String callerOnlyProjection = "caller-only";
-        // a projection the caller sets for the SAME key a grant also generates — the grant-derived value must win.
-        final String callerColliding = "caller-should-lose";
-
-        final Map<String, Object> callerRes = new HashMap<>();
-        callerRes.put(callerOnlyKey, callerOnlyProjection);
-        callerRes.put(entityKey, callerColliding);
-        final Map<String, Object> callerProjections = new HashMap<>();
-        callerProjections.put("res", callerRes);
         final Map<String, Object> callerMeta = new HashMap<>();
         callerMeta.put("caller-key", "caller-value");
-        callerMeta.put("pn-projections", callerProjections);
 
         // when
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
@@ -317,19 +361,15 @@ public class GrantTokenIT extends BaseIntegrationTest {
         assertEquals(expectedTTL, pnToken.getTtl());
 
         final Map<String, Object> meta = (Map<String, Object>) pnToken.getMeta();
-        // caller-supplied plain meta must survive the merge alongside the generated pn-projections block
+        // caller-supplied plain meta must survive alongside the generated pn-projections block
         assertEquals("caller-value", meta.get("caller-key"));
 
         final Map<String, Object> projections = (Map<String, Object>) meta.get("pn-projections");
         final Map<String, Object> res = (Map<String, Object>) projections.get("res");
-        assertEquals(adminProjection, res.get(entityKey)); // grant-derived value wins over the caller's colliding entry
-        assertEquals(callerOnlyProjection, res.get(callerOnlyKey)); // caller projection for a key no grant carries survives
+        assertEquals(Collections.singletonMap(entityKey, adminProjection), res);
 
-        // the merged block also surfaces on the typed field, split by namespace with bare ids as keys.
-        final PNDataSyncProjectionScope typedRes = pnToken.getProjections().getResources();
-        assertEquals(adminProjection, typedRes.getEntities().get(entityId)); // grant wins over caller's colliding entry
-        // callerOnlyKey = "datasync:memberships:user-123:channel-X" -> membership bare id "user-123:channel-X"
-        assertEquals(callerOnlyProjection, typedRes.getMemberships().get("user-123:channel-X"));
+        // the block also surfaces on the typed field, split by namespace with bare ids as keys.
+        assertEquals(adminProjection, pnToken.getProjections().getResources().getEntities().get(entityId));
     }
 
 }

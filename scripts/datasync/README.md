@@ -1,18 +1,18 @@
 # DataSync integration-test class provisioning
 
 The DataSync integration tests reference custom **`Test*` classes** by name (`TestNode`,
-`TestUser`, `TestFriendship`, `TestOwnership`). There is **no SDK method to create classes** —
+`TestUser`, `TestFriendship`, `TestOwnership`, `TestSubUser`, `TestSubChannel`). There is **no SDK method to create classes** —
 the SDK only creates *instances* (entities, relationships, memberships) that reference a class
 by name. The classes themselves must exist on the keyset beforehand, provisioned out-of-band via
 the **direct class-management REST API** (the admin/metadata plane). These scripts do that.
 
 | Script              | What it does                                                        |
 |---------------------|---------------------------------------------------------------------|
-| `create-classes.sh` | Registers the four `Test*` classes (POST each version).             |
-| `delete-classes.sh` | Removes the four `Test*` classes (DELETE each; 404 = already gone).  |
+| `create-classes.sh` | Registers the six `Test*` classes (POST each version).              |
+| `delete-classes.sh` | Removes the six `Test*` classes (DELETE each; 404 = already gone).   |
 | `shared.sh`         | Shared helpers (not runnable on its own).                           |
 
-## The four classes
+## The six classes
 
 | Class            | Kind         | Cardinality  | Custom properties                                                            |
 |------------------|--------------|--------------|------------------------------------------------------------------------------|
@@ -20,10 +20,24 @@ the **direct class-management REST API** (the admin/metadata plane). These scrip
 | `TestUser` v1    | entity       | —            | `username` (full), `email` (simple, **admin-only** projection), `status` (simple), `signupDate` (date, simple) |
 | `TestFriendship` v1 | relationship | many-to-many | `status` (full), `secret` (simple, **admin-only** projection); sides `TestNode`↔`TestNode` |
 | `TestOwnership` v1  | relationship | one-to-one   | none; sides `TestNode`↔`TestNode` (only exists to make DS-0801 reachable)  |
+| `TestSubUser` v1    | entity, `extends: User v1`    | — | `email` (simple); inherits `name`/`type` (full) from `User`       |
+| `TestSubChannel` v1 | entity, `extends: Channel v1` | — | `topic` (simple); inherits `name`/`type` (full) from `Channel`    |
 
-**Not provisioned:** `User`/`Channel` are built-in **Global** classes (a SubKey class of that
-name would shadow the built-in one) and `Membership` is not a class here (it is a MANY_TO_MANY
-relationship). The scripts only ever address the four `Test*` names.
+The two subclasses are registered at the **SubKey** level (a subclass is always SubKey; the parent
+is resolved from the sub-key or the Global space). `getUsers`/`getChannels` with no class, or with
+`User`/`Channel`, return the whole family including subclass instances; scoping to the subclass name
+returns only its instances, and only then is its own property (`email`/`topic`) filterable.
+
+**Not provisioned:** `User`/`Channel` are built-in **Global** classes (the names are reserved —
+DS-0907) and `Membership` is not a class here (it is a MANY_TO_MANY relationship). The scripts only
+ever address the `Test*` names above.
+
+Delete order matters: a class that still has subclasses can't be deleted (409 DS-0905), so
+`delete-classes.sh` removes the subclasses first. Deleting a class orphans its instances (404 on read,
+and they can no longer be removed), so clean up IT data before deleting.
+
+Subclass **realtime events are off by default**: event rules are per exact class and are not
+inherited from `User`/`Channel`. The scripts do not enable them, so there are no subclass realtime ITs.
 
 ## Usage
 
@@ -63,3 +77,6 @@ immediate read will flake.
 
 `filtering: "simple"` properties (`email`, `status`, `signupDate`, and `TestFriendship.secret`) are Postgres-backed, powering
 the strongly-consistent `filterFast` (+ `sort`) param — those reads are immediate.
+
+
+!!!! After script run there is a need to enable in Portal publishes of entities' state change
