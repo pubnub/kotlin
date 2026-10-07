@@ -7,10 +7,18 @@ import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
 import com.pubnub.api.v2.PNConfiguration
 
 class GrantTokenDataSync {
-    private fun grantTokenFlatList(pubnub: PubNub) {
+    private fun grantTokenFlatList() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-token-flat-list
 
         // snippet.grantTokenFlatList
+        // Only server-side applications should use the secret key, as it is required to grant tokens
+        val pubnub = PubNub.create(
+            PNConfiguration.builder(UserId("myServerUserId"), "demo").apply {
+                publishKey = "demo"
+                secretKey = "mySecretKey"
+            }.build()
+        )
+
         pubnub.grantToken(
             ttl = 15,
             authorizedUserId = UserId("user-alice"),
@@ -64,10 +72,18 @@ class GrantTokenDataSync {
         // snippet.end
     }
 
-    private fun grantTokenDataSyncProjection(pubnub: PubNub) {
+    private fun grantTokenDataSyncProjection() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-token-datasync-projection
 
         // snippet.grantTokenDataSyncProjection
+        // Only server-side applications should use the secret key, as it is required to grant tokens
+        val pubnub = PubNub.create(
+            PNConfiguration.builder(UserId("myServerUserId"), "demo").apply {
+                publishKey = "demo"
+                secretKey = "mySecretKey"
+            }.build()
+        )
+
         pubnub.grantToken(
             ttl = 15,
             authorizedUserId = UserId("user-alice"),
@@ -85,10 +101,18 @@ class GrantTokenDataSync {
         // snippet.end
     }
 
-    private fun grantTokenDataSyncPattern(pubnub: PubNub) {
+    private fun grantTokenDataSyncPattern() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-token-datasync-pattern
 
         // snippet.grantTokenDataSyncPattern
+        // Only server-side applications should use the secret key, as it is required to grant tokens
+        val pubnub = PubNub.create(
+            PNConfiguration.builder(UserId("myServerUserId"), "demo").apply {
+                publishKey = "demo"
+                secretKey = "mySecretKey"
+            }.build()
+        )
+
         pubnub.grantToken(
             ttl = 15,
             authorizedUserId = UserId("user-alice"),
@@ -106,10 +130,14 @@ class GrantTokenDataSync {
         // snippet.end
     }
 
-    private fun parseTokenDataSync(pubnub: PubNub) {
+    private fun parseTokenDataSync() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#parse-token-datasync
 
         // snippet.parseTokenDataSync
+        val pubnub = PubNub.create(
+            PNConfiguration.builder(UserId("myUserId"), "demo").build()
+        )
+
         val token = pubnub.parseToken(
             "qGF2AmF0GmqXSuBjdHRsD2R1dWlkanVzZXItYWxpY2VjcmVzpWRjaGFuoXNjaGFubmVsLXN1bW1lci1zYWxlAWNncnCgZHV1aWSgY3VzcqFqdXNlci1hbGljZRhgcWRhdGFzeW5jOmVudGl0aWVzoXJwcm9kdWN0LXNuZWFrZXItNDIYcGNwYXSjZGNoYW6gY2dycKBkdXVpZKBkbWV0YaFucG4tcHJvamVjdGlvbnOhY3Jlc6F4JGRhdGFzeW5jOmVudGl0aWVzOnByb2R1Y3Qtc25lYWtlci00MmVhZG1pbmNzaWdYIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         )
