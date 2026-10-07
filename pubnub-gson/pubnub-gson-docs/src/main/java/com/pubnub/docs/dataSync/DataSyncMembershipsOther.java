@@ -61,29 +61,29 @@ public class DataSyncMembershipsOther extends SnippetBase {
                 .limit(20)
                 .cursor(cursor)
                 .async(result -> {
-                            result.onSuccess(value -> {
-                                value.getData().forEach(item -> System.out.println(item.getId()));
-                                if (value.getNext().isHasNext()) {
-                                    fetchMembershipsPage(pubnub, value.getNext().getCursor());
-                                }
-                            }).onFailure(exception -> {
-                                System.out.println("Failed: " + exception.getMessage());
-                            });
-                        });
-            }
-            // Start with the first page by passing a null cursor: fetchMembershipsPage(pubnub, null)
-            // snippet.end
+                    result.onSuccess(value -> {
+                        value.getData().forEach(item -> System.out.println(item.getId()));
+                        if (value.getNext().isHasNext()) {
+                            fetchMembershipsPage(pubnub, value.getNext().getCursor());
+                        }
+                    }).onFailure(exception -> {
+                        System.out.println("Failed: " + exception.getMessage());
+                    });
+                });
+    }
+    // Start with the first page by passing a null cursor: fetchMembershipsPage(pubnub, null)
+    // snippet.end
 
-            private void getMembershipsByChannelId() throws PubNubException {
-                // https://www.pubnub.com/docs/sdks/java/api-reference/data-sync#get-all-memberships
+    private void getMembershipsByChannelId() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/data-sync#get-all-memberships
 
-                PubNub pubnub = createPubNub();
+        PubNub pubnub = createPubNub();
 
-                // snippet.getMembershipsByChannelId
-                pubnub.dataSync().getMemberships()
-                        .channelId("channel-summer-sale")
-                        .limit(50)
-                        .async(result -> {
+        // snippet.getMembershipsByChannelId
+        pubnub.dataSync().getMemberships()
+                .channelId("channel-summer-sale")
+                .limit(50)
+                .async(result -> {
                     result.onSuccess(value -> {
                         value.getData().forEach(item -> System.out.println(item.getUserId() + " is a member of " + item.getChannelId()));
                         System.out.println("More pages available: " + value.getNext().isHasNext());

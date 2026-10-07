@@ -129,10 +129,15 @@ public class GrantTokenDataSync extends SnippetBase {
                 "qGF2AmF0GmqXSuBjdHRsD2R1dWlkanVzZXItYWxpY2VjcmVzpWRjaGFuoXNjaGFubmVsLXN1bW1lci1zYWxlAWNncnCgZHV1aWSgY3VzcqFqdXNlci1hbGljZRhgcWRhdGFzeW5jOmVudGl0aWVzoXJwcm9kdWN0LXNuZWFrZXItNDIYcGNwYXSjZGNoYW6gY2dycKBkdXVpZKBkbWV0YaFucG4tcHJvamVjdGlvbnOhY3Jlc6F4JGRhdGFzeW5jOmVudGl0aWVzOnByb2R1Y3Qtc25lYWtlci00MmVhZG1pbmNzaWdYIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
         PNToken.PNResourcePermissions entityPermissions = token.getResources().getDatasyncEntities().get("product-sneaker-42");
-        System.out.println("Can create entities: " + entityPermissions.getCreate());
-        System.out.println("Can update entities: " + entityPermissions.getUpdate());
+        if (entityPermissions != null) {
+            System.out.println("Can create entities: " + entityPermissions.getCreate());
+            System.out.println("Can update entities: " + entityPermissions.getUpdate());
+        }
         System.out.println("User permissions: " + token.getResources().getUsers().get("user-alice"));
-        System.out.println("Projection: " + token.getProjections().getResources().getEntities().get("product-sneaker-42"));
+        // Projections are only present when the token was granted with a non-default projection
+        if (token.getProjections() != null) {
+            System.out.println("Projection: " + token.getProjections().getResources().getEntities().get("product-sneaker-42"));
+        }
         // snippet.end
     }
 }

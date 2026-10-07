@@ -5,7 +5,6 @@ import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
 import com.pubnub.docs.SnippetBase;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

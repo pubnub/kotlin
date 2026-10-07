@@ -56,16 +56,16 @@ public class DataSyncChannelsOther extends SnippetBase {
                 .limit(20)
                 .cursor(cursor)
                 .async(result -> {
-                            result.onSuccess(value -> {
-                                value.getData().forEach(item -> System.out.println(item.getId()));
-                                if (value.getNext().isHasNext()) {
-                                    fetchChannelsPage(pubnub, value.getNext().getCursor());
-                                }
-                            }).onFailure(exception -> {
-                                System.out.println("Failed: " + exception.getMessage());
-                            });
-                        });
-            }
-            // Start with the first page by passing a null cursor: fetchChannelsPage(pubnub, null)
-            // snippet.end
-        }
+                    result.onSuccess(value -> {
+                        value.getData().forEach(item -> System.out.println(item.getId()));
+                        if (value.getNext().isHasNext()) {
+                            fetchChannelsPage(pubnub, value.getNext().getCursor());
+                        }
+                    }).onFailure(exception -> {
+                        System.out.println("Failed: " + exception.getMessage());
+                    });
+                });
+    }
+    // Start with the first page by passing a null cursor: fetchChannelsPage(pubnub, null)
+    // snippet.end
+}

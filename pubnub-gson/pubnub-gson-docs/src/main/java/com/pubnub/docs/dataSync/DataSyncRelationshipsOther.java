@@ -58,29 +58,29 @@ public class DataSyncRelationshipsOther extends SnippetBase {
                 .limit(20)
                 .cursor(cursor)
                 .async(result -> {
-                            result.onSuccess(value -> {
-                                value.getData().forEach(item -> System.out.println(item.getId()));
-                                if (value.getNext().isHasNext()) {
-                                    fetchRelationshipsPage(pubnub, value.getNext().getCursor());
-                                }
-                            }).onFailure(exception -> {
-                                System.out.println("Failed: " + exception.getMessage());
-                            });
-                        });
-            }
-            // Start with the first page by passing a null cursor: fetchRelationshipsPage(pubnub, null)
-            // snippet.end
+                    result.onSuccess(value -> {
+                        value.getData().forEach(item -> System.out.println(item.getId()));
+                        if (value.getNext().isHasNext()) {
+                            fetchRelationshipsPage(pubnub, value.getNext().getCursor());
+                        }
+                    }).onFailure(exception -> {
+                        System.out.println("Failed: " + exception.getMessage());
+                    });
+                });
+    }
+    // Start with the first page by passing a null cursor: fetchRelationshipsPage(pubnub, null)
+    // snippet.end
 
-            private void getRelationshipsByEntityBId() throws PubNubException {
-                // https://www.pubnub.com/docs/sdks/java/api-reference/data-sync#get-all-relationships
+    private void getRelationshipsByEntityBId() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/data-sync#get-all-relationships
 
-                PubNub pubnub = createPubNub();
+        PubNub pubnub = createPubNub();
 
-                // snippet.getRelationshipsByEntityBId
-                pubnub.dataSync().getRelationships("ProductOwner")
-                        .entityBId("product-sneaker-42")
-                        .limit(50)
-                        .async(result -> {
+        // snippet.getRelationshipsByEntityBId
+        pubnub.dataSync().getRelationships("ProductOwner")
+                .entityBId("product-sneaker-42")
+                .limit(50)
+                .async(result -> {
                     result.onSuccess(value -> {
                         value.getData().forEach(item -> System.out.println(item.getEntityAId() + " owns " + item.getEntityBId()));
                         System.out.println("More pages available: " + value.getNext().isHasNext());
