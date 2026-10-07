@@ -1,0 +1,415 @@
+package com.pubnub.api.integration.datasync;
+
+import com.pubnub.api.PubNubError;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.UserId;
+import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
+import com.pubnub.api.java.models.consumer.datasync.PNDataSyncClassLevel;
+import com.pubnub.api.java.models.consumer.datasync.PNDataSyncSortField;
+import com.pubnub.api.java.models.consumer.datasync.entity.PNJsonPatchOperation;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncCreateUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncGetUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncGetUsersResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncUpdateUserResult;
+import com.pubnub.api.java.models.consumer.datasync.user.PNDataSyncSetUserResult;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+public class DataSyncUserIntegrationTest extends BaseIntegrationTest {
+    private final static int entityClassVersion = 1;
+    private final String userId = "user-" + RandomStringUtils.random(8, "abcdefgh");
+
+    @Override
+    protected void onBefore() {
+        server = getServer();
+    }
+
+    private static Map<String, Object> payload(String username, String email) {
+        final Map<String, Object> payload = new HashMap<>();
+        payload.put("username", username);
+        if (email != null) {
+            payload.put("email", email);
+        }
+        return payload;
+    }
+
+    @Test
+    public void createGetAndDeleteUser() throws PubNubException {
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
+
+        // create (no entityClass -> server defaults it to "User")
+        final PNDataSyncCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
+                .userId(userId)
+                .status("active")
+                .payload(payload)
+                .sync();
+
+        try {
+            assertNotNull(createResult);
+            assertEquals(userId, createResult.getData().getId());
+            assertEquals(entityClassVersion, createResult.getData().getClassVersion());
+            assertNotNull(createResult.getData().getETag());
+            // expiresAt is a required, server-computed field: proves the server always returns it
+            assertFalse(createResult.getData().getExpiresAt().trim().isEmpty());
+            assertEquals("Alice", createResult.getData().getPayload().get("username"));
+            assertEquals("alice@example.com", createResult.getData().getPayload().get("email"));
+
+            // create again with the same id -> 409 (create is create-only)
+            try {
+                server.dataSync().createUser(entityClassVersion)
+                        .userId(userId)
+                        .status("active")
+                        .payload(payload)
+                        .sync();
+                fail("Expected a 409 when creating a user with an existing id");
+            } catch (PubNubException e) {
+                assertEquals(409, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_CONFLICT, e.getPubnubError());
+            }
+
+            // get
+            final PNDataSyncGetUserResult getResult = server.dataSync().getUser(userId).sync();
+            assertEquals(userId, getResult.getData().getId());
+            assertEquals("active", getResult.getData().getStatus());
+
+            // delete
+            server.dataSync().removeUser(userId).sync();
+
+            // get after delete -> 404
+            try {
+                server.dataSync().getUser(userId).sync();
+                fail("Expected a 404 after deleting the user");
+            } catch (PubNubException e) {
+                assertEquals(404, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
+            }
+        } finally {
+            // best-effort cleanup: the happy path already deleted the user, so a 404 here is expected
+            try {
+                server.dataSync().removeUser(userId).sync();
+            } catch (PubNubException ignored) {
+                // already deleted
+            }
+        }
+    }
+
+    /**
+     * Same create/get/getAll/patch/update/delete flow as {@link #createGetAllPatchUpdateAndDeleteUser()}, but instead
+     * of relying on the client's own secretKey, the "server" (the only party holding the secretKey) mints a scoped
+     * PAM token for the client's authorized UUID and the client authenticates with it via
+     * {@link PubNub#setToken(String)}. This mirrors the production setup where the client never sees the secretKey.
+     *
+     * <p>A User is authorized under the {@code users} PAM resource type, so the grant is a {@link DataSyncGrant#user(String)} keyed by
+     * the userId. Each API call is preceded by a fresh token carrying only the single permission that call requires,
+     * verifying the client can operate with least privilege (POST -> {@code create}, GET -> {@code get},
+     * PATCH/PUT -> {@code update}, DELETE -> {@code delete}).
+     */
+    @Test
+    public void createGetAndDeleteUpdatePathGetAllUsersWithServerGrantedToken() throws PubNubException {
+        // A client on the same keyset as `server` but without the secretKey, so it can only authenticate via setToken.
+        final com.pubnub.api.java.PubNub client = getAuthorizedClient();
+        final String authorizedUUID = client.getConfiguration().getUserId().getValue();
+
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
+
+        // create -> token scoped to `create` on this specific user id
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.user(userId).create());
+        final PNDataSyncCreateUserResult createResult = client.dataSync().createUser(entityClassVersion)
+                .userId(userId)
+                .status("active")
+                .payload(payload)
+                .sync();
+
+        assertNotNull(createResult);
+        assertEquals(userId, createResult.getData().getId());
+        assertEquals(entityClassVersion, createResult.getData().getClassVersion());
+        assertNotNull(createResult.getData().getETag());
+        assertEquals("Alice", createResult.getData().getPayload().get("username"));
+        assertEquals("alice@example.com", createResult.getData().getPayload().get("email"));
+
+        // get -> token scoped to `get` on this specific user
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.user(userId).get());
+        final PNDataSyncGetUserResult getResult = client.dataSync().getUser(userId).sync();
+        assertEquals(userId, getResult.getData().getId());
+        assertEquals("active", getResult.getData().getStatus());
+
+        // getAll -> token scoped to `get` on this specific user id
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.user(userId).get());
+        final PNDataSyncGetUsersResult getAllResult = client.dataSync().getUsers()
+                .limit(100)
+                .sync();
+        assertNotNull(getAllResult);
+        assertTrue(getAllResult.getData().stream().anyMatch(u -> userId.equals(u.getId())));
+
+        // patch -> token scoped to `update` on this specific user (PATCH maps to `update`)
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.user(userId).update());
+        final List<PNJsonPatchOperation> operations = Collections.singletonList(
+                PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
+        );
+        final PNDataSyncUpdateUserResult patchResult = client.dataSync().updateUser(userId, operations)
+                .sync();
+        assertEquals("inactive", patchResult.getData().getStatus());
+
+        // update -> token scoped to `update` on this specific user (PUT maps to `update`)
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.user(userId).update());
+        final Map<String, Object> newPayload = payload("Bob", "bob@example.com");
+        final PNDataSyncSetUserResult updateResult = client.dataSync().setUser(userId, entityClassVersion)
+                .status("archived")
+                .payload(newPayload)
+                .sync();
+        assertEquals("archived", updateResult.getData().getStatus());
+        assertEquals("Bob", updateResult.getData().getPayload().get("username"));
+
+        // delete -> token scoped to `delete` on this specific user
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.user(userId).delete());
+        client.dataSync().removeUser(userId).sync();
+
+        // get after delete -> 404 (re-grant `get` so we hit a 404 rather than a permission error)
+        grantAndAuthenticate(client, authorizedUUID, DataSyncGrant.user(userId).get());
+        try {
+            client.dataSync().getUser(userId).sync();
+            fail("Expected a 404 after deleting the user");
+        } catch (PubNubException e) {
+            assertEquals(404, e.getStatusCode());
+            assertEquals(PubNubError.DATASYNC_NOT_FOUND, e.getPubnubError());
+        }
+    }
+
+    private void grantAndAuthenticate(com.pubnub.api.java.PubNub client, String authorizedUUID, TokenGrant... grants) throws PubNubException {
+        final String token = server.grantToken(60)
+                .authorizedUserId(new UserId(authorizedUUID))
+                .grants(Arrays.asList(grants))
+                .sync()
+                .getToken();
+        client.setToken(token);
+    }
+
+    @Test
+    public void createWithServerGeneratedId() throws PubNubException {
+        final Map<String, Object> payload = payload("Bob", null);
+
+        final PNDataSyncCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
+                .payload(payload)
+                .sync();
+
+        final String generatedId = createResult.getData().getId();
+        try {
+            assertFalse(generatedId.trim().isEmpty());
+        } finally {
+            // cleanup
+            server.dataSync().removeUser(generatedId).sync();
+        }
+    }
+
+    @Test
+    public void createGetAllPatchUpdateAndDeleteUser() throws PubNubException {
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
+        payload.put("hobby", "poetry");
+
+        // create
+        server.dataSync().createUser(entityClassVersion)
+                .userId(userId)
+                .status("active")
+                .payload(payload)
+                .sync();
+
+        try {
+            // getAll -> the created user is present
+            final PNDataSyncGetUsersResult getAllResult = server.dataSync().getUsers()
+                    .limit(100)
+                    .sync();
+            assertNotNull(getAllResult);
+            assertTrue(getAllResult.getData().stream().anyMatch(u -> userId.equals(u.getId())));
+
+            // patch -> replace /status
+            final List<PNJsonPatchOperation> operations = Collections.singletonList(
+                    PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
+            );
+            final PNDataSyncUpdateUserResult patchResult = server.dataSync().updateUser(userId, operations)
+                    .sync();
+            assertEquals("inactive", patchResult.getData().getStatus());
+
+            // get reflects the patched status
+            assertEquals("inactive", server.dataSync().getUser(userId).sync().getData().getStatus());
+
+            // update -> full replace of status + payload
+            final Map<String, Object> newPayload = payload("Bob", "bob@example.com");
+            final PNDataSyncSetUserResult updateResult = server.dataSync().setUser(userId, entityClassVersion)
+                    .status("archived")
+                    .payload(newPayload)
+                    .sync();
+            assertEquals("archived", updateResult.getData().getStatus());
+            assertEquals("Bob", updateResult.getData().getPayload().get("username"));
+            assertNotEquals(patchResult.getData().getETag(), updateResult.getData().getETag());
+
+            // get reflects the full replacement: `hobby` was not re-sent, so it is gone rather than kept
+            final PNDataSyncGetUserResult afterUpdate = server.dataSync().getUser(userId).sync();
+            assertEquals("archived", afterUpdate.getData().getStatus());
+            assertEquals("Bob", afterUpdate.getData().getPayload().get("username"));
+            assertFalse(afterUpdate.getData().getPayload().containsKey("hobby"));
+            assertEquals(updateResult.getData().getETag(), afterUpdate.getData().getETag());
+        } finally {
+            server.dataSync().removeUser(userId).sync();
+        }
+    }
+
+    @Test
+    public void getUsersWithFilterSortLimitAndCursor() throws PubNubException {
+        // filter/sort operate on the payload properties the entity class marks as filterable. The built-in
+        // `User` class declares `name` and `type` as filterable/sortable -- `username`/`email` are *custom*
+        // class properties and would be rejected with DS-0005 "Unknown field" on the built-in User class. Seed
+        // three users with a run-unique `name` so assertions stay isolated from any other users; the names sort
+        // a < b < c. `getUsers()` takes the typed builder args: `classLevel(PNDataSyncClassLevel)` (GLOBAL is the
+        // level the built-in User class is defined at) and `sort(List<PNDataSyncSortField>)`, and returns a
+        // non-null `next` (read `getCursor()`/`isHasNext()`).
+        final String run = RandomStringUtils.random(8, "abcdefgh");
+        final String nameA = "user-" + run + "-a";
+        final String nameB = "user-" + run + "-b";
+        final String nameC = "user-" + run + "-c";
+        final String namePrefix = "user-" + run + "-";
+        final String idA = "user-" + run + "-id-a";
+        final String idB = "user-" + run + "-id-b";
+        final String idC = "user-" + run + "-id-c";
+
+        createUserWithNameAndType(idA, nameA, "Admin");
+        createUserWithNameAndType(idB, nameB, "Member");
+        createUserWithNameAndType(idC, nameC, "Admin");
+
+        try {
+            // filterFast -> exact name equality
+            final PNDataSyncGetUsersResult filtered = server.dataSync().getUsers()
+                    .filterFast("name == \"" + nameA + "\"")
+                    .sync();
+            final List<String> filteredIds = filtered.getData().stream()
+                    .map(u -> u.getId()).collect(Collectors.toList());
+            assertEquals(Collections.singletonList(idA), filteredIds);
+
+            // filterFast on the other built-in filterable field, `type` -> the two Admin rows, not the Member
+            final PNDataSyncGetUsersResult filteredByType = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\" && type == \"Admin\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name")))
+                    .sync();
+            assertEquals(Arrays.asList(idA, idC),
+                    filteredByType.getData().stream().map(u -> u.getId()).collect(Collectors.toList()));
+
+            // classLevel -> the built-in User class is defined at the Global level
+            final PNDataSyncGetUsersResult scoped = server.dataSync().getUsers()
+                    .classLevel(PNDataSyncClassLevel.GLOBAL)
+                    .filterFast("name == \"" + nameA + "\"")
+                    .sync();
+            assertEquals(Collections.singletonList(idA),
+                    scoped.getData().stream().map(u -> u.getId()).collect(Collectors.toList()));
+
+            // sort ascending (default direction)
+            final PNDataSyncGetUsersResult sortedAsc = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name")))
+                    .sync();
+            assertEquals(Arrays.asList(idA, idB, idC),
+                    sortedAsc.getData().stream().map(u -> u.getId()).collect(Collectors.toList()));
+
+            // sort descending
+            final PNDataSyncGetUsersResult sortedDesc = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name", false)))
+                    .sync();
+            assertEquals(Arrays.asList(idC, idB, idA),
+                    sortedDesc.getData().stream().map(u -> u.getId()).collect(Collectors.toList()));
+
+            // limit + cursor -> page one user at a time; `next` is non-null
+            final PNDataSyncGetUsersResult firstPage = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name")))
+                    .limit(1)
+                    .sync();
+            assertEquals(1, firstPage.getData().size());
+            assertEquals(idA, firstPage.getData().get(0).getId());
+            assertNotNull(firstPage.getNext());
+            assertTrue("Expected more pages after the first", firstPage.getNext().isHasNext());
+            assertNotNull(firstPage.getNext().getCursor());
+
+            final PNDataSyncGetUsersResult secondPage = server.dataSync().getUsers()
+                    .filterFast("name LIKE \"" + namePrefix + "*\"")
+                    .sort(Collections.singletonList(new PNDataSyncSortField("name")))
+                    .limit(1)
+                    .cursor(firstPage.getNext().getCursor())
+                    .sync();
+            assertEquals(1, secondPage.getData().size());
+            assertEquals(idB, secondPage.getData().get(0).getId());
+        } finally {
+            server.dataSync().removeUser(idA).sync();
+            server.dataSync().removeUser(idB).sync();
+            server.dataSync().removeUser(idC).sync();
+        }
+    }
+
+    private void createUserWithNameAndType(String id, String name, String type) throws PubNubException {
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
+        payload.put("name", name);
+        payload.put("type", type);
+        server.dataSync().createUser(entityClassVersion)
+                .userId(id)
+                .status("active")
+                .payload(payload)
+                .sync();
+    }
+
+    @Test
+    public void patchWithIfMatchAndStaleETagThrows412() throws PubNubException {
+        final Map<String, Object> payload = payload("Alice", "alice@example.com");
+
+        // create
+        final PNDataSyncCreateUserResult createResult = server.dataSync().createUser(entityClassVersion)
+                .userId(userId)
+                .status("active")
+                .payload(payload)
+                .sync();
+
+        try {
+            final String originalETag = createResult.getData().getETag();
+            assertNotNull(originalETag);
+
+            // patch #1 with a matching ifMatch -> succeeds and bumps the eTag
+            final List<PNJsonPatchOperation> inactiveOps = Collections.singletonList(
+                    PNJsonPatchOperation.builder().op("replace").path("/status").value("inactive").build()
+            );
+            final PNDataSyncUpdateUserResult patch1 = server.dataSync().updateUser(userId, inactiveOps)
+                    .ifMatch(originalETag)
+                    .sync();
+            assertEquals("inactive", patch1.getData().getStatus());
+            assertNotEquals(originalETag, patch1.getData().getETag());
+
+            // patch #2 with the now-stale ifMatch -> 412 (optimistic concurrency conflict)
+            final List<PNJsonPatchOperation> archivedOps = Collections.singletonList(
+                    PNJsonPatchOperation.builder().op("replace").path("/status").value("archived").build()
+            );
+            try {
+                server.dataSync().updateUser(userId, archivedOps)
+                        .ifMatch(originalETag)
+                        .sync();
+                fail("Expected a 412 when patching with a stale ifMatch eTag");
+            } catch (PubNubException e) {
+                assertEquals(412, e.getStatusCode());
+                assertEquals(PubNubError.DATASYNC_PRECONDITION_FAILED, e.getPubnubError());
+            }
+        } finally {
+            server.dataSync().removeUser(userId).sync();
+        }
+    }
+}

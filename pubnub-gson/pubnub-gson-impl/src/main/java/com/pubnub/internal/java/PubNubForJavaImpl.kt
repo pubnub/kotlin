@@ -7,6 +7,7 @@ import com.pubnub.api.java.builder.PresenceBuilder
 import com.pubnub.api.java.builder.SubscribeBuilder
 import com.pubnub.api.java.builder.UnsubscribeBuilder
 import com.pubnub.api.java.callbacks.SubscribeCallback
+import com.pubnub.api.java.datasync.DataSync
 import com.pubnub.api.java.endpoints.DeleteMessages
 import com.pubnub.api.java.endpoints.FetchMessages
 import com.pubnub.api.java.endpoints.History
@@ -73,6 +74,7 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.java.builder.PresenceBuilderImpl
 import com.pubnub.internal.java.builder.SubscribeBuilderImpl
 import com.pubnub.internal.java.builder.UnsubscribeBuilderImpl
+import com.pubnub.internal.java.datasync.DataSyncImpl
 import com.pubnub.internal.java.endpoints.DeleteMessagesImpl
 import com.pubnub.internal.java.endpoints.FetchMessagesImpl
 import com.pubnub.internal.java.endpoints.HistoryImpl
@@ -125,6 +127,9 @@ import com.pubnub.internal.java.v2.callbacks.EventEmitterInternal
 import com.pubnub.internal.java.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.java.v2.entities.ChannelImpl
 import com.pubnub.internal.java.v2.entities.ChannelMetadataImpl
+import com.pubnub.internal.java.v2.entities.DataSyncChannelImpl
+import com.pubnub.internal.java.v2.entities.DataSyncEntityImpl
+import com.pubnub.internal.java.v2.entities.DataSyncUserImpl
 import com.pubnub.internal.java.v2.entities.UserMetadataImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
@@ -319,6 +324,10 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
         return RemoveChannelMetadataImpl.Builder(this)
     }
 
+    override fun dataSync(): DataSync {
+        return DataSyncImpl(this)
+    }
+
     override fun getMemberships(): GetMemberships {
         return GetMembershipsImpl(this)
     }
@@ -484,6 +493,18 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
 
     override fun channelMetadata(id: String): ChannelMetadataImpl {
         return ChannelMetadataImpl(this, ChannelName(id))
+    }
+
+    override fun dataSyncUser(id: String): DataSyncUserImpl {
+        return DataSyncUserImpl(this, id)
+    }
+
+    override fun dataSyncChannel(id: String): DataSyncChannelImpl {
+        return DataSyncChannelImpl(this, id)
+    }
+
+    override fun dataSyncEntity(id: String): DataSyncEntityImpl {
+        return DataSyncEntityImpl(this, id)
     }
 
     override fun userMetadata(id: String): UserMetadataImpl {

@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.datasync.DataSync
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.MessageCounts
@@ -48,7 +49,10 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -68,6 +72,9 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.Subscription
@@ -78,6 +85,11 @@ import com.pubnub.kmp.Uploadable
 
 expect interface PubNub {
     val configuration: PNConfiguration
+
+    /**
+     * Entry point for the DataSync API.
+     */
+    val dataSync: DataSync
 
     fun addListener(listener: EventListener)
 
@@ -235,6 +247,17 @@ expect interface PubNub {
 
     fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
+    /**
+     * Legacy `grantToken` overload having the `uuids` bucket (App Context v2 UUID metadata).
+     * New code should prefer the flat-list overload taking `grants: List<TokenGrant>`.
+     *
+     * @param ttl Time in minutes for which granted permissions are valid.
+     * @param meta Additional metadata.
+     * @param authorizedUUID Single uuid which is authorized to use the token to make API requests to PubNub.
+     * @param channels List of all channel grants.
+     * @param channelGroups List of all channel group grants.
+     * @param uuids List of all uuid grants.
+     */
     fun grantToken(
         ttl: Int,
         meta: CustomObject? = null,
@@ -242,6 +265,33 @@ expect interface PubNub {
         channels: List<ChannelGrant> = emptyList(),
         channelGroups: List<ChannelGroupGrant> = emptyList(),
         uuids: List<UUIDGrant> = emptyList(),
+    ): GrantToken
+
+    /**
+     * The modern `grantToken`: mint a token from a single flat list of grants. Every grant carries its own resource
+     * type ([ChannelGrant], [ChannelGroupGrant] or a [DataSyncGrantType] from [DataSyncGrant]), so a pub/sub-only
+     * customer, an App Context customer and a DataSync customer all use the same product-neutral method. DataSync
+     * realtime subscribe is granted with [DataSyncGrant.subscribe] / [DataSyncGrant.subscribePattern], which return a
+     * [ChannelGrant] on the resolved ref-channel.
+     *
+     * ```kotlin
+     * pubnub.grantToken(
+     *     ttl = 60,
+     *     grants = listOf(ChannelGrant.name("chat", read = true, write = true)),
+     * ).sync().token
+     * ```
+     *
+     * @param ttl Time in minutes for which granted permissions are valid.
+     * @param authorizedUserId Single userId which is authorized to use the token, or `null` for an unbound token.
+     * @param meta Additional metadata. Must be `null` or a map when any grant carries a projection. Must not contain
+     * `pn-projections`: the SDK builds that key from the grants' `projection`.
+     * @param grants Flat list of grants; each grant's type selects its wire bucket.
+     */
+    fun grantToken(
+        ttl: Int,
+        authorizedUserId: UserId? = null,
+        meta: CustomObject? = null,
+        grants: List<TokenGrant>,
     ): GrantToken
 
     fun revokeToken(token: String): RevokeToken
@@ -547,6 +597,28 @@ expect interface PubNub {
 
     fun userMetadata(id: String): UserMetadata
 
+    /**
+     * Creates a [DataSyncUser] handle for subscribing to DataSync realtime events about the user
+     * with the given [id].
+     *
+     * Convenience over `channel(id).subscription()` that additionally resolves projection channels; a
+     * plain channel subscription on the same ref also delivers these events. The handle is a channel
+     * filter on the ref and receives the full mix of DataSync leaf types routed to it.
+     */
+    fun dataSyncUser(id: String): DataSyncUser
+
+    /**
+     * Creates a [DataSyncChannel] handle for subscribing to DataSync realtime events about the
+     * channel with the given [id]. See [dataSyncUser].
+     */
+    fun dataSyncChannel(id: String): DataSyncChannel
+
+    /**
+     * Creates a [DataSyncEntity] handle for subscribing to DataSync realtime events about the
+     * entity with the given [id]. See [dataSyncUser].
+     */
+    fun dataSyncEntity(id: String): DataSyncEntity
+
     fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet
 
     fun subscriptionSetOf(
@@ -555,6 +627,13 @@ expect interface PubNub {
         options: SubscriptionOptions = EmptyOptions,
     ): SubscriptionSet
 
+    /**
+     * Decodes a PAM v3 [token] into its permissions, meta and DataSync projections.
+     *
+     * On the JS target, `create` for `channels` and `uuids` always parses back as `false`, because the underlying
+     * npm SDK doesn't decode that bit for them. The permission is still in the token. `users` and the DataSync
+     * resources are unaffected.
+     */
     fun parseToken(token: String): PNToken
 
     fun reconnect(timetoken: Long = 0L)

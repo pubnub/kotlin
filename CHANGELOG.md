@@ -1,3 +1,22 @@
+## v14.0.0
+October 07 2026
+
+#### Added
+- Added DataSync feature support.
+
+#### Fixed
+- `grantToken` now merges grants that target the same resource id instead of keeping only the last one. For example,                      `ChannelGrant.name("chat", read = true)` together with `ChannelGrant.name("chat", update = true)` produces a single `chat` entry with both `read`  and `update`. Previously the last grant for an id silently replaced the earlier ones. This applies to both `grantToken` overloads, to resources and to patterns.
+
+#### Modified
+- (Kotlin) removed the deprecated `grantToken(ttl, meta, authorizedUserId, spacesPermissions, usersPermissions).
+- (Java) removed deprecated `authorizedUserId(UserId)`, `spacesPermissions(...)` and `usersPermissions(...)` builder steps from grantToken() .
+- (Kotlin and Java) removed the deprecated `SpaceId`, `SpacePermissions` and `UserPermissions` classes .
+- (Kotlin) removed extension functions  `toChannelGrant()` and `toUuidGrant()`.
+- (Java) removed `GrantTokenEntitiesBuilder` interface.
+- Breaking change: (Java) `GrantTokenBuilder.channels(...)` and `channelGroups(...)` now return `GrantTokenBuilder` instead of                             `GrantTokenObjectsBuilder`. `AbstractGrantTokenBuilder` no longer takes a generic type parameter. Chained calls still compile, but code that stores the  result in a `GrantTokenObjectsBuilder` variable must be updated, and code compiled against the previous version must be recompiled.
+- Breaking change: (Java) `UUIDGrant` now extends `PNAppContextResource` instead of `PNResource`. It only exposes `get`/`update`/`delete`, so the `isRead()`, `isWrite()`, `isCreate()`, `isManage()` and `isJoin()` getters are gone, and `UUIDGrant` can no longer be used as a `PNResource`.
+- Breaking change: new entries were added to public enums and sealed classes `PubNubError` and `RetryableEndpointGroup.DATASYNC` so an exhaustive `when` or `switch` over them no longer compiles: `PubNubError` (codes 185–193: `ENTITY_ID_MISSING`, `ENTITY_CLASS_MISSING`, `JSON_PATCH_OPERATIONS_MISSING`, `DATASYNC_*`), `RetryableEndpointGroup.DATASYNC`, `HttpMethod.PUT`, and `PNOperationType.DataSyncOperation`.
+
 ## v13.4.4
 September 21 2026
 

@@ -1,6 +1,14 @@
 package com.pubnub.api.java.models.consumer.access_manager.v3;
 
-public class ChannelGrant extends PNResource<ChannelGrant> {
+/**
+ * A PAM v3 grant on a <b>channel</b>: pub/sub ({@code read}/{@code write}), presence, channel management
+ * ({@code manage}) and App Context v2 channel metadata / members / memberships ({@code get}/{@code update}/
+ * {@code delete}/{@code join}).
+ *
+ * <p>For DataSync channels use {@link DataSyncGrant#channel(String)} (REST CRUD, optional projection) and
+ * {@link DataSyncGrant#subscribe(String)} (realtime subscribe on the resolved ref-channel) instead.
+ */
+public class ChannelGrant extends PNResource<ChannelGrant> implements TokenGrant {
 
     private ChannelGrant() {
 

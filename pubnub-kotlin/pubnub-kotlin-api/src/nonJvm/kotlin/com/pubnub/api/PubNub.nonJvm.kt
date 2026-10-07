@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.datasync.DataSync
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.MessageCounts
@@ -49,6 +50,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -68,6 +70,9 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -81,6 +86,8 @@ import kotlin.native.ObjCName
 @ObjCName("PubNubInterface")
 actual interface PubNub {
     actual val configuration: PNConfiguration
+
+    actual val dataSync: DataSync
 
     actual fun addListener(listener: EventListener)
 
@@ -215,6 +222,10 @@ actual interface PubNub {
 
     actual fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
+    /**
+     * Legacy `grantToken` overload having the `uuids` bucket (App Context v2 UUID metadata).
+     * New code should prefer the flat-list overload taking `grants: List<TokenGrant>`.
+     */
     actual fun grantToken(
         ttl: Int,
         meta: CustomObject?,
@@ -222,6 +233,13 @@ actual interface PubNub {
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>
+    ): GrantToken
+
+    actual fun grantToken(
+        ttl: Int,
+        authorizedUserId: UserId?,
+        meta: CustomObject?,
+        grants: List<TokenGrant>
     ): GrantToken
 
     actual fun revokeToken(token: String): RevokeToken
@@ -499,6 +517,12 @@ actual interface PubNub {
     actual fun channelMetadata(id: String): ChannelMetadata
 
     actual fun userMetadata(id: String): UserMetadata
+
+    actual fun dataSyncUser(id: String): DataSyncUser
+
+    actual fun dataSyncChannel(id: String): DataSyncChannel
+
+    actual fun dataSyncEntity(id: String): DataSyncEntity
 
     actual fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet
 

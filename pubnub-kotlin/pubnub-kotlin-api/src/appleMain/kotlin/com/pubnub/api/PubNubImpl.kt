@@ -117,6 +117,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -137,6 +138,9 @@ import com.pubnub.api.v2.createPNConfiguration
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -154,6 +158,8 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
 class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
+    override val dataSync: com.pubnub.api.datasync.DataSync = com.pubnub.api.datasync.DataSyncImpl()
+
     constructor(configuration: PNConfiguration) : this(
         KMPPubNub(
             user = configuration.userId.value,
@@ -484,6 +490,15 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>
+    ): GrantToken {
+        TODO("Not yet implemented")
+    }
+
+    override fun grantToken(
+        ttl: Int,
+        authorizedUserId: UserId?,
+        meta: CustomObject?,
+        grants: List<TokenGrant>
     ): GrantToken {
         TODO("Not yet implemented")
     }
@@ -1014,6 +1029,15 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     override fun userMetadata(id: String): UserMetadata {
         return UserMetadataImpl(userMetadata = pubNubObjC.userMetadataWith(id = id))
     }
+
+    override fun dataSyncUser(id: String): DataSyncUser =
+        throw NotImplementedError("DataSync realtime subscribe is not implemented on the Apple target")
+
+    override fun dataSyncChannel(id: String): DataSyncChannel =
+        throw NotImplementedError("DataSync realtime subscribe is not implemented on the Apple target")
+
+    override fun dataSyncEntity(id: String): DataSyncEntity =
+        throw NotImplementedError("DataSync realtime subscribe is not implemented on the Apple target")
 
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
         return SubscriptionSetImpl(

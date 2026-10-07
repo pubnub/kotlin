@@ -12,6 +12,7 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload
@@ -25,6 +26,8 @@ import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.getMessageFingerprintInput
 import com.pubnub.internal.logging.prepareMessageLogContent
 import com.pubnub.internal.managers.DuplicationManager
+import com.pubnub.internal.models.consumer.pubsub.datasync.PNDataSyncEventMessage
+import com.pubnub.internal.models.consumer.pubsub.datasync.toApi
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventMessage
 import com.pubnub.internal.models.consumer.pubsub.objects.toApi
 import com.pubnub.internal.models.server.PresenceEnvelope
@@ -46,6 +49,9 @@ internal class SubscribeMessageProcessor(
         internal const val TYPE_OBJECT = 2
         internal const val TYPE_MESSAGE_ACTION = 3
         internal const val TYPE_FILES = 4
+        internal const val TYPE_DATASYNC = 5
+
+        private val SERVER_GENERATED_TYPES = setOf(TYPE_OBJECT, TYPE_MESSAGE_ACTION, TYPE_DATASYNC)
     }
 
     fun processIncomingPayload(message: SubscribeMessage): PNEvent? {
@@ -95,8 +101,14 @@ internal class SubscribeMessageProcessor(
             )
         } else {
             val (extractedMessage, error) =
-                message.payload?.tryDecryptMessage(pubnub.cryptoModuleWithLogConfig, pubnub.mapper, log)
-                    ?: (null to null)
+                if (message.type in SERVER_GENERATED_TYPES) {
+                    // Server-generated payloads are never client-encrypted; decrypting them would only log a
+                    // CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED warn per event.
+                    message.payload to null
+                } else {
+                    message.payload?.tryDecryptMessage(pubnub.cryptoModuleWithLogConfig, pubnub.mapper, log)
+                        ?: (null to null)
+                }
 
             if (extractedMessage == null) {
                 log.debug(
@@ -146,6 +158,29 @@ internal class SubscribeMessageProcessor(
                             PNObjectEventMessage::class.java,
                         ).toApi(),
                     )
+                }
+
+                TYPE_DATASYNC -> {
+                    try {
+                        PNDataSyncEventResult(
+                            result,
+                            pubnub.mapper.convertValue(
+                                extractedMessage,
+                                PNDataSyncEventMessage::class.java,
+                            ).toApi(),
+                        )
+                    } catch (t: Throwable) {
+                        // A single malformed e=5 payload must degrade to one dropped event, not a
+                        // dropped batch (ReceiveMessagesProviderImpl maps with no per-message guard).
+                        log.debug(
+                            LogMessage(
+                                message = LogMessageContent.Text(
+                                    "Unable to parse DataSync (e=5) payload on channel $channel; dropping event",
+                                ),
+                            )
+                        )
+                        null
+                    }
                 }
 
                 TYPE_MESSAGE_ACTION -> {

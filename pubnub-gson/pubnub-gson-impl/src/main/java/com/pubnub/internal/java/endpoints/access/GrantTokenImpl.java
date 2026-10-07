@@ -7,13 +7,13 @@ import com.pubnub.api.UserId;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.access.GrantToken;
 import com.pubnub.api.java.endpoints.access.builder.GrantTokenBuilder;
-import com.pubnub.api.java.endpoints.access.builder.GrantTokenEntitiesBuilder;
 import com.pubnub.api.java.endpoints.access.builder.GrantTokenObjectsBuilder;
-import com.pubnub.api.java.models.consumer.access_manager.sum.SpacePermissions;
-import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.TokenGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
@@ -26,7 +26,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> implements GrantToken, GrantTokenBuilder, GrantTokenEntitiesBuilder, GrantTokenObjectsBuilder {
+public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> implements GrantToken, GrantTokenBuilder, GrantTokenObjectsBuilder {
 
     private Integer ttl;
     private Object meta;
@@ -34,6 +34,7 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
     private List<ChannelGrant> channels = Collections.emptyList();
     private List<ChannelGroupGrant> channelGroups = Collections.emptyList();
     private List<UUIDGrant> uuids = Collections.emptyList();
+    private List<TokenGrant> grants = Collections.emptyList();
 
     public GrantTokenImpl(PubNub pubnub) {
         super(pubnub);
@@ -44,11 +45,35 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
         if (this.ttl == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_TTL_MISSING);
         }
+        // The legacy `uuids` bucket and the modern flat-list `grants` cannot be combined in a single grant — they
+        // enter through mutually-exclusive builder paths. Reject the mix explicitly instead of silently dropping one
+        // of them during routing.
+        if (!uuids.isEmpty() && !grants.isEmpty()) {
+            throw new PubNubException("The legacy `uuids` grants can not be combined with `grants`.");
+        }
     }
 
     @Override
     @NotNull
     protected Endpoint<PNGrantTokenResult> createRemoteAction() {
+        // The modern flat-list `grants` and the legacy `uuids` bucket are served by two distinct kotlin overloads.
+        // Route through the new overload whenever any `grants` entry is present; otherwise fall back to the legacy
+        // `uuids` overload. The authorized principal maps to the same wire field in both. `channels`/`channelGroups`
+        // supplied via the shared setters are additive with the flat list (prepended so their order is preserved).
+        if (!grants.isEmpty()) {
+            final UserId authorizedUserId;
+            try {
+                authorizedUserId = authorizedUUID == null ? null : new UserId(authorizedUUID);
+            } catch (PubNubException e) {
+                throw new RuntimeException(e);
+            }
+            return pubnub.grantToken(
+                    ttl,
+                    authorizedUserId,
+                    meta,
+                    toInternalGrants(grants)
+            );
+        }
         return pubnub.grantToken(
                 ttl,
                 meta,
@@ -60,73 +85,33 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
     }
 
     @Override
-    public GrantTokenEntitiesBuilder spacesPermissions(List<SpacePermissions> spacesPermissions) {
-        List<ChannelGrant> channelGrants = new ArrayList<>();
-        for (SpacePermissions spacePermission : spacesPermissions) {
-            final ChannelGrant channelGrant;
-            if (spacePermission.isPatternResource()) {
-                channelGrant = ChannelGrant.pattern(spacePermission.getId());
-            } else {
-                channelGrant = ChannelGrant.name(spacePermission.getId());
-            }
-            if (spacePermission.isRead()) {
-                channelGrant.read();
-            }
-            if (spacePermission.isWrite()) {
-                channelGrant.write();
-            }
-            if (spacePermission.isManage()) {
-                channelGrant.manage();
-            }
-            if (spacePermission.isDelete()) {
-                channelGrant.delete();
-            }
-            if (spacePermission.isUpdate()) {
-                channelGrant.update();
-            }
-            if (spacePermission.isJoin()) {
-                channelGrant.join();
-            }
-            if (spacePermission.isGet()) {
-                channelGrant.get();
-            }
-            channelGrants.add(channelGrant);
-        }
-
-        channels(channelGrants);
-        return this;
-    }
-
-    @Override
-    public GrantTokenEntitiesBuilder usersPermissions(List<UserPermissions> usersPermissions) {
-        List<UUIDGrant> uuidsGrants = new ArrayList<>();
-        for (UserPermissions userPermissions : usersPermissions) {
-            final UUIDGrant channelGrant;
-            if (userPermissions.isPatternResource()) {
-                channelGrant = UUIDGrant.pattern(userPermissions.getId());
-            } else {
-                channelGrant = UUIDGrant.id(userPermissions.getId());
-            }
-            if (userPermissions.isDelete()) {
-                channelGrant.delete();
-            }
-            if (userPermissions.isUpdate()) {
-                channelGrant.update();
-            }
-            if (userPermissions.isGet()) {
-                channelGrant.get();
-            }
-            uuidsGrants.add(channelGrant);
-        }
-
-        uuids(uuidsGrants);
-        return this;
-    }
-
-    @Override
-    public GrantTokenEntitiesBuilder authorizedUserId(UserId userId) {
+    public GrantTokenBuilder authorizedUserId(UserId userId) {
         authorizedUUID(userId.getValue());
         return this;
+    }
+
+    private List<? extends com.pubnub.api.models.consumer.access_manager.v3.TokenGrant> toInternalGrants(List<TokenGrant> grants) {
+        // Prepend the channels/channelGroups supplied via the shared setters so they are additive with the flat list.
+        ArrayList<com.pubnub.api.models.consumer.access_manager.v3.TokenGrant> list =
+                new ArrayList<>(channels.size() + channelGroups.size() + grants.size());
+        for (ChannelGrant channel : channels) {
+            list.add(toInternal(channel));
+        }
+        for (ChannelGroupGrant channelGroup : channelGroups) {
+            list.add(toInternal(channelGroup));
+        }
+        for (TokenGrant grant : grants) {
+            if (grant instanceof ChannelGrant) {
+                list.add(toInternal((ChannelGrant) grant));
+            } else if (grant instanceof ChannelGroupGrant) {
+                list.add(toInternal((ChannelGroupGrant) grant));
+            } else if (grant instanceof DataSyncGrant) {
+                list.add(toInternal((DataSyncGrant) grant));
+            } else {
+                throw new IllegalArgumentException("Unsupported TokenGrant type: " + grant.getClass().getName());
+            }
+        }
+        return list;
     }
 
     private List<? extends com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant> toInternalChannels(List<ChannelGrant> channels) {
@@ -194,6 +179,37 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                     grant.isRead(),
                     grant.isManage()
             );
+        }
+    }
+
+    static DataSyncGrantType toInternal(DataSyncGrant grant) {
+        boolean pattern = grant.isPatternResource();
+        com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant factory =
+                com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.INSTANCE;
+        String projection = grant.getProjection();
+        switch (grant.getNamespace()) {
+            case DataSyncGrant.DATASYNC_ENTITIES:
+                return pattern
+                        ? factory.entityPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
+                        : factory.entity(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
+            case DataSyncGrant.DATASYNC_RELATIONSHIPS:
+                return pattern
+                        ? factory.relationshipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
+                        : factory.relationship(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
+            case DataSyncGrant.DATASYNC_MEMBERSHIPS:
+                return pattern
+                        ? factory.membershipPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete())
+                        : factory.membership(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete());
+            case DataSyncGrant.DATASYNC_CHANNELS:
+                return pattern
+                        ? factory.channelPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
+                        : factory.channel(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
+            case DataSyncGrant.DATASYNC_USERS:
+                return pattern
+                        ? factory.userPattern(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection)
+                        : factory.user(grant.getId(), grant.isGet(), grant.isCreate(), grant.isUpdate(), grant.isDelete(), projection);
+            default:
+                throw new IllegalArgumentException("unknown datasync namespace: " + grant.getNamespace());
         }
     }
 

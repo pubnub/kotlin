@@ -7,6 +7,7 @@ import com.pubnub.api.java.builder.PresenceBuilder
 import com.pubnub.api.java.builder.SubscribeBuilder
 import com.pubnub.api.java.builder.UnsubscribeBuilder
 import com.pubnub.api.java.callbacks.SubscribeCallback
+import com.pubnub.api.java.datasync.DataSync
 import com.pubnub.api.java.endpoints.DeleteMessages
 import com.pubnub.api.java.endpoints.FetchMessages
 import com.pubnub.api.java.endpoints.History
@@ -70,6 +71,9 @@ import com.pubnub.api.java.v2.endpoints.pubsub.SignalBuilder
 import com.pubnub.api.java.v2.entities.Channel
 import com.pubnub.api.java.v2.entities.ChannelGroup
 import com.pubnub.api.java.v2.entities.ChannelMetadata
+import com.pubnub.api.java.v2.entities.DataSyncChannel
+import com.pubnub.api.java.v2.entities.DataSyncEntity
+import com.pubnub.api.java.v2.entities.DataSyncUser
 import com.pubnub.api.java.v2.entities.UserMetadata
 import com.pubnub.api.java.v2.subscriptions.Subscription
 import com.pubnub.api.java.v2.subscriptions.SubscriptionSet
@@ -485,6 +489,11 @@ interface PubNub : EventEmitter, StatusEmitter {
     fun removeChannelMetadata(): RemoveChannelMetadata.Builder
 
     /**
+     * Entry point for the DataSync API.
+     */
+    fun dataSync(): DataSync
+
+    /**
      * The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.
      */
     fun getMemberships(): GetMemberships
@@ -700,6 +709,30 @@ interface PubNub : EventEmitter, StatusEmitter {
     fun channelMetadata(id: String): ChannelMetadata
 
     fun userMetadata(id: String): UserMetadata
+
+    /**
+     * Creates a [DataSyncUser] handle for subscribing to DataSync realtime events about a User ref.
+     *
+     * @param id the user's ref/id.
+     * @return a [DataSyncUser] handle. Call [DataSyncUser.subscription] to obtain an inactive subscription.
+     */
+    fun dataSyncUser(id: String): DataSyncUser
+
+    /**
+     * Creates a [DataSyncChannel] handle for subscribing to DataSync realtime events about a Channel ref.
+     *
+     * @param id the channel's ref/id.
+     * @return a [DataSyncChannel] handle. Call [DataSyncChannel.subscription] to obtain an inactive subscription.
+     */
+    fun dataSyncChannel(id: String): DataSyncChannel
+
+    /**
+     * Creates a [DataSyncEntity] handle for subscribing to DataSync realtime events about an Entity ref.
+     *
+     * @param id the entity's ref/id.
+     * @return a [DataSyncEntity] handle. Call [DataSyncEntity.subscription] to obtain an inactive subscription.
+     */
+    fun dataSyncEntity(id: String): DataSyncEntity
 
     fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet
 

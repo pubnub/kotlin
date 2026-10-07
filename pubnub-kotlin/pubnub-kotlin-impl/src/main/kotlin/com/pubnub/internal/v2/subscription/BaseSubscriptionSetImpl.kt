@@ -4,6 +4,7 @@ import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -86,6 +87,7 @@ abstract class BaseSubscriptionSetImpl<SubscriptionT>(
     override var onSignal: ((PNSignalResult) -> Unit)? by emitterHelper::onSignal
     override var onMessageAction: ((PNMessageActionResult) -> Unit)? by emitterHelper::onMessageAction
     override var onObjects: ((PNObjectEventResult) -> Unit)? by emitterHelper::onObjects
+    override var onDataSync: ((PNDataSyncEventResult) -> Unit)? by emitterHelper::onDataSync
     override var onFile: ((PNFileEventResult) -> Unit)? by emitterHelper::onFile
 }
 

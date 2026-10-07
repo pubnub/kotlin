@@ -6,6 +6,9 @@ import co.nstant.`in`.cbor.model.NegativeInteger
 import co.nstant.`in`.cbor.model.UnsignedInteger
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
+import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScope
+import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjections
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
@@ -60,6 +63,7 @@ internal class TokenParser {
                 resources = resourcesValue.toPNTokenResources(),
                 patterns = patternsValue.toPNTokenResources(),
                 meta = firstLevelMap[META_KEY],
+                projections = parseProjections(firstLevelMap[META_KEY]),
             )
         } catch (e: Exception) {
             if (e is PubNubException) {
@@ -110,11 +114,76 @@ internal class TokenParser {
         val channels = (this[CHANNELS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
         val groups = (this[GROUPS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
         val uuids = (this[UUIDS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
+        val users = (this[USERS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
+        val datasyncEntities = (this[DATASYNC_ENTITIES_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
+        val datasyncRelationships = (this[DATASYNC_RELATIONSHIPS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
+        val datasyncMemberships = (this[DATASYNC_MEMBERSHIPS_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
 
         return PNToken.PNTokenResources(
             channels = channels.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
             channelGroups = groups.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
             uuids = uuids.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
+            users = users.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
+            datasyncEntities = datasyncEntities.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
+            datasyncRelationships = datasyncRelationships.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
+            datasyncMemberships = datasyncMemberships.mapValues { (_, v) -> PNToken.PNResourcePermissions(v) },
+        )
+    }
+
+    /**
+     * Lift the token's `pn-projections` meta block into a typed [PNDataSyncProjections], or `null` when the token
+     * carries no such block. The raw block is left untouched inside [PNToken.meta]; this is a purely additive decode.
+     *
+     * The block shape is `{ "res": { "$namespace:$id": projection }, "pat": {...} }` (see
+     * `GrantTokenRequestBody.mergeProjectionsIntoMeta`). Both sub-objects are optional.
+     */
+    private fun parseProjections(meta: Any?): PNDataSyncProjections? {
+        val metaMap = meta as? Map<*, *> ?: return null
+        val projectionsBlock = metaMap[DataSyncNamespace.PN_PROJECTIONS] as? Map<*, *> ?: return null
+        return PNDataSyncProjections(
+            resources = (projectionsBlock[RESOURCES_KEY] as? Map<*, *>).toProjectionScope(),
+            patterns = (projectionsBlock[PATTERNS_KEY] as? Map<*, *>).toProjectionScope(),
+        )
+    }
+
+    /**
+     * Split composite `datasync:<type>:<id>` keys back into per-namespace maps of bare id -> projection name, exactly
+     * inverting the encoder's `"$namespace:$id"`. The namespace prefix is matched against the known namespaces rather
+     * than split naively on `:`, because relationship/membership ids themselves contain colons (`user.A:channel.X`).
+     * The known namespaces are entities, relationships, memberships, users and channels; keys that match none of them
+     * are ignored.
+     */
+    private fun Map<*, *>?.toProjectionScope(): PNDataSyncProjectionScope {
+        if (this == null) {
+            return PNDataSyncProjectionScope()
+        }
+        val entities = LinkedHashMap<String, String>()
+        val relationships = LinkedHashMap<String, String>()
+        val memberships = LinkedHashMap<String, String>()
+        val users = LinkedHashMap<String, String>()
+        val channels = LinkedHashMap<String, String>()
+        for ((rawKey, rawValue) in this) {
+            val key = rawKey.toString()
+            val projection = rawValue.toString()
+            when {
+                key.startsWith("${DataSyncNamespace.ENTITIES}:") ->
+                    entities[key.removePrefix("${DataSyncNamespace.ENTITIES}:")] = projection
+                key.startsWith("${DataSyncNamespace.RELATIONSHIPS}:") ->
+                    relationships[key.removePrefix("${DataSyncNamespace.RELATIONSHIPS}:")] = projection
+                key.startsWith("${DataSyncNamespace.MEMBERSHIPS}:") ->
+                    memberships[key.removePrefix("${DataSyncNamespace.MEMBERSHIPS}:")] = projection
+                key.startsWith("${DataSyncNamespace.USERS_PROJECTION}:") ->
+                    users[key.removePrefix("${DataSyncNamespace.USERS_PROJECTION}:")] = projection
+                key.startsWith("${DataSyncNamespace.CHANNELS_PROJECTION}:") ->
+                    channels[key.removePrefix("${DataSyncNamespace.CHANNELS_PROJECTION}:")] = projection
+            }
+        }
+        return PNDataSyncProjectionScope(
+            entities = entities,
+            relationships = relationships,
+            memberships = memberships,
+            users = users,
+            channels = channels,
         )
     }
 
@@ -129,5 +198,9 @@ internal class TokenParser {
         private const val CHANNELS_KEY = "chan"
         private const val GROUPS_KEY = "grp"
         private const val UUIDS_KEY = "uuid"
+        private const val USERS_KEY = "usr"
+        private const val DATASYNC_ENTITIES_KEY = DataSyncNamespace.ENTITIES
+        private const val DATASYNC_RELATIONSHIPS_KEY = DataSyncNamespace.RELATIONSHIPS
+        private const val DATASYNC_MEMBERSHIPS_KEY = DataSyncNamespace.MEMBERSHIPS
     }
 }

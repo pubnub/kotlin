@@ -2,6 +2,7 @@ package com.pubnub.api.java.v2.callbacks
 
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.java.v2.callbacks.handlers.OnChannelMetadataHandler
+import com.pubnub.api.java.v2.callbacks.handlers.OnDataSyncHandler
 import com.pubnub.api.java.v2.callbacks.handlers.OnFileHandler
 import com.pubnub.api.java.v2.callbacks.handlers.OnMembershipHandler
 import com.pubnub.api.java.v2.callbacks.handlers.OnMessageActionHandler
@@ -240,4 +241,33 @@ interface EventEmitter {
      * incoming messages. It can be `null` to remove the current handler.
      */
     fun setOnFile(onFileHandler: OnFileHandler?)
+
+    /**
+     * Sets the handler for incoming DataSync realtime events.
+     * This method allows the assignment of an [OnDataSyncHandler] implementation or lambda expression to
+     * handle incoming DataSync create/update/delete events.
+     *
+     * A single subscribed ref-channel delivers a mix of DataSync leaf types, so branch on the sealed
+     * `PNDataSyncEventResult.getExtractedMessage()`.
+     *
+     * To deactivate the current behavior, simply set this property to `null`.
+     *
+     * Note that this property allows for the assignment of a singular behavior at a time, as any new assignment will override the previous one.
+     * For scenarios requiring multiple behaviors in response to DataSync events, it is advisable
+     * to utilize [EventEmitter.addListener].
+     *
+     *
+     * **Setting a Behavior Example:**
+     * <pre>`setOnDataSync(pnDataSyncEventResult -> System.out.println("Received: " +  pnDataSyncEventResult.getExtractedMessage()));
+     `</pre> *
+     *
+     *
+     * **Removing a Behavior Example:**
+     * <pre>`setOnDataSync(null);
+     `</pre> *
+     *
+     * @param onDataSyncHandler An implementation of [OnDataSyncHandler] or a lambda expression to handle
+     * incoming DataSync events. It can be `null` to remove the current handler.
+     */
+    fun setOnDataSync(onDataSyncHandler: OnDataSyncHandler?)
 }

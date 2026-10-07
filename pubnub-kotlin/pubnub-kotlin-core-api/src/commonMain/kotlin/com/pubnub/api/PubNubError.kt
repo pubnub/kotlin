@@ -253,6 +253,61 @@ enum class PubNubError(private val code: Int, val message: String) {
     MESSAGE_TOO_LARGE(
         code = 184,
         message = "Message payload exceeds the maximum allowed size of 2 MiB.",
+    ),
+
+    ENTITY_ID_MISSING(
+        code = 185,
+        message = "Entity Id Missing",
+    ),
+
+    ENTITY_CLASS_MISSING(
+        code = 186,
+        message = "Entity Class Missing",
+    ),
+
+    JSON_PATCH_OPERATIONS_MISSING(
+        code = 187,
+        message = "JSON Patch operations must contain at least one operation.",
+    ),
+
+    // DataSync server errors, chosen by HTTP status when the response body carries a `DS-xxxx` code. The raw body
+    // (code and details) is in the exception's message (`PubNubException.errorMessage` on JVM). On JVM it is also
+    // available parsed via `PubNubException.dataSyncErrors()` (Java: `DataSyncErrors.from(e)`).
+
+    DATASYNC_BAD_REQUEST(
+        code = 188,
+        message = "DataSync rejected the request as invalid. " +
+            "See the exception message for the DS-xxxx code and details.",
+    ),
+
+    DATASYNC_ACCESS_DENIED(
+        code = 189,
+        message = "DataSync denied access. Check the auth token, its grants and projection. " +
+            "See the exception message for the DS-xxxx code and details.",
+    ),
+
+    DATASYNC_NOT_FOUND(
+        code = 190,
+        message = "DataSync resource not found. " +
+            "See the exception message for the DS-xxxx code and details.",
+    ),
+
+    DATASYNC_CONFLICT(
+        code = 191,
+        message = "DataSync conflict (duplicate, failed JSON Patch test, or cardinality). " +
+            "See the exception message for the DS-xxxx code and details.",
+    ),
+
+    DATASYNC_PRECONDITION_FAILED(
+        code = 192,
+        message = "DataSync ETag mismatch: the resource changed since it was read. " +
+            "See the exception message for the DS-xxxx code and details.",
+    ),
+
+    DATASYNC_SERVER_ERROR(
+        code = 193,
+        message = "DataSync server error. " +
+            "See the exception message for the DS-xxxx code and details.",
     )
 
     ;

@@ -118,4 +118,68 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     object PNDeleteMessageAction : MessageActionsOperation()
 
     object PNTimeOperation : TimeOperation()
+
+    open class DataSyncOperation : PNOperationType("datasync")
+
+    object PNGetEntityOperation : DataSyncOperation()
+
+    object PNCreateEntityOperation : DataSyncOperation()
+
+    object PNRemoveEntityOperation : DataSyncOperation()
+
+    object PNGetEntitiesOperation : DataSyncOperation()
+
+    object PNUpdateEntityOperation : DataSyncOperation()
+
+    object PNSetEntityOperation : DataSyncOperation()
+
+    object PNGetUserOperation : DataSyncOperation()
+
+    object PNCreateUserOperation : DataSyncOperation()
+
+    object PNRemoveUserOperation : DataSyncOperation()
+
+    object PNGetUsersOperation : DataSyncOperation()
+
+    object PNUpdateUserOperation : DataSyncOperation()
+
+    object PNSetUserOperation : DataSyncOperation()
+
+    object PNGetChannelOperation : DataSyncOperation()
+
+    object PNCreateChannelOperation : DataSyncOperation()
+
+    object PNRemoveChannelOperation : DataSyncOperation()
+
+    object PNGetChannelsOperation : DataSyncOperation()
+
+    object PNUpdateChannelOperation : DataSyncOperation()
+
+    object PNSetChannelOperation : DataSyncOperation()
+
+    object PNGetMembershipOperation : DataSyncOperation()
+
+    object PNCreateMembershipOperation : DataSyncOperation()
+
+    object PNRemoveMembershipOperation : DataSyncOperation()
+
+    // Named PNGetDataSyncMembershipsOperation (not PNGetMembershipsOperation) to avoid a compile-blocking
+    // simple-name clash with App Context's existing ObjectsOperation `PNGetMembershipsOperation`.
+    object PNGetDataSyncMembershipsOperation : DataSyncOperation()
+
+    object PNUpdateMembershipOperation : DataSyncOperation()
+
+    object PNSetMembershipOperation : DataSyncOperation()
+
+    object PNGetRelationshipOperation : DataSyncOperation()
+
+    object PNCreateRelationshipOperation : DataSyncOperation()
+
+    object PNRemoveRelationshipOperation : DataSyncOperation()
+
+    object PNGetRelationshipsOperation : DataSyncOperation()
+
+    object PNUpdateRelationshipOperation : DataSyncOperation()
+
+    object PNSetRelationshipOperation : DataSyncOperation()
 }

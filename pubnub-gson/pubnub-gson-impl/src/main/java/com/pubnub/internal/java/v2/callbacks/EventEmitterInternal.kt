@@ -4,6 +4,7 @@ import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadata
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult
 import com.pubnub.api.java.v2.callbacks.handlers.OnChannelMetadataHandler
+import com.pubnub.api.java.v2.callbacks.handlers.OnDataSyncHandler
 import com.pubnub.api.java.v2.callbacks.handlers.OnFileHandler
 import com.pubnub.api.java.v2.callbacks.handlers.OnMembershipHandler
 import com.pubnub.api.java.v2.callbacks.handlers.OnMessageActionHandler
@@ -248,6 +249,26 @@ interface EventEmitterInternal : EventEmitter, com.pubnub.api.java.v2.callbacks.
      */
     override fun setOnFile(onFileHandler: OnFileHandler?) {
         onFile = onFileHandler?.let { handler ->
+            handler::handle
+        }
+    }
+
+    /**
+     * Sets the handler for incoming DataSync realtime events.
+     * This method allows the assignment of an [OnDataSyncHandler] implementation or lambda expression to
+     * handle incoming DataSync create/update/delete events.
+     *
+     * To deactivate the current behavior, simply set this property to `null`.
+     *
+     * Note that this property allows for the assignment of a singular behavior at a time, as any new assignment will override the previous one.
+     * For scenarios requiring multiple behaviors in response to DataSync events, it is advisable
+     * to utilize [EventEmitter.addListener].
+     *
+     * @param onDataSyncHandler An implementation of [OnDataSyncHandler] or a lambda expression to handle
+     * incoming DataSync events. It can be `null` to remove the current handler.
+     */
+    override fun setOnDataSync(onDataSyncHandler: OnDataSyncHandler?) {
+        onDataSync = onDataSyncHandler?.let { handler ->
             handler::handle
         }
     }

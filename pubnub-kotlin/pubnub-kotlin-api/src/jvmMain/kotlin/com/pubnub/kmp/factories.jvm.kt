@@ -5,6 +5,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -23,6 +24,7 @@ actual fun createEventListener(
     onSignal: (PubNub, PNSignalResult) -> Unit,
     onMessageAction: (PubNub, PNMessageActionResult) -> Unit,
     onObjects: (PubNub, PNObjectEventResult) -> Unit,
+    onDataSync: (PubNub, PNDataSyncEventResult) -> Unit,
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
     return object : EventListener {
@@ -44,6 +46,10 @@ actual fun createEventListener(
 
         override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
             onObjects(pubnub, result)
+        }
+
+        override fun dataSync(pubnub: PubNub, result: PNDataSyncEventResult) {
+            onDataSync(pubnub, result)
         }
 
         override fun file(pubnub: PubNub, result: PNFileEventResult) {

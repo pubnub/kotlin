@@ -1,6 +1,13 @@
 package com.pubnub.api.models.consumer.access_manager.v3
 
-interface ChannelGrant : PNGrant {
+/**
+ * A PAM v3 grant on a **channel**: pub/sub (`read`/`write`), presence, channel management (`manage`) and App Context
+ * v2 channel metadata / members / memberships (`get`/`update`/`delete`/`join`).
+ *
+ * For DataSync channels use [DataSyncGrant.channel] (REST CRUD, optional projection) and [DataSyncGrant.subscribe]
+ * (realtime subscribe on the resolved ref-channel) instead.
+ */
+interface ChannelGrant : TokenGrant {
     companion object {
         fun name(
             name: String, // this is channelId :|

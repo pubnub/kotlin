@@ -56,13 +56,11 @@ import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
-import com.pubnub.api.models.consumer.access_manager.sum.toChannelGrant
-import com.pubnub.api.models.consumer.access_manager.sum.toUuidGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrantType
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.TokenGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -79,6 +77,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -86,6 +85,9 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.DataSyncChannel
+import com.pubnub.api.v2.entities.DataSyncEntity
+import com.pubnub.api.v2.entities.DataSyncUser
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.Subscription
@@ -167,6 +169,9 @@ import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelImpl
 import com.pubnub.internal.v2.entities.ChannelMetadataImpl
 import com.pubnub.internal.v2.entities.ChannelName
+import com.pubnub.internal.v2.entities.DataSyncChannelImpl
+import com.pubnub.internal.v2.entities.DataSyncEntityImpl
+import com.pubnub.internal.v2.entities.DataSyncUserImpl
 import com.pubnub.internal.v2.entities.UserMetadataImpl
 import com.pubnub.internal.v2.subscription.EmitterHelper
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
@@ -210,6 +215,10 @@ open class PubNubImpl(
     )
 
     val mapper = MapperManager(logConfig)
+
+    override val dataSync: com.pubnub.api.datasync.DataSync by lazy {
+        com.pubnub.internal.datasync.DataSyncImpl(this)
+    }
 
     private val numberOfThreadsInPool = Integer.min(Runtime.getRuntime().availableProcessors(), 8)
     internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)
@@ -291,6 +300,7 @@ open class PubNubImpl(
     override var onSignal: ((PNSignalResult) -> Unit)? by emitterHelper::onSignal
     override var onMessageAction: ((PNMessageActionResult) -> Unit)? by emitterHelper::onMessageAction
     override var onObjects: ((PNObjectEventResult) -> Unit)? by emitterHelper::onObjects
+    override var onDataSync: ((PNDataSyncEventResult) -> Unit)? by emitterHelper::onDataSync
     override var onFile: ((PNFileEventResult) -> Unit)? by emitterHelper::onFile
 
     override val version: String
@@ -375,6 +385,18 @@ open class PubNubImpl(
 
     override fun userMetadata(id: String): UserMetadata {
         return UserMetadataImpl(this, ChannelName(id))
+    }
+
+    override fun dataSyncUser(id: String): DataSyncUser {
+        return DataSyncUserImpl(this, id)
+    }
+
+    override fun dataSyncChannel(id: String): DataSyncChannel {
+        return DataSyncChannelImpl(this, id)
+    }
+
+    override fun dataSyncEntity(id: String): DataSyncEntity {
+        return DataSyncEntityImpl(this, id)
     }
 
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
@@ -758,24 +780,39 @@ open class PubNubImpl(
             channels = channels,
             channelGroups = channelGroups,
             uuids = uuids,
+            dataSync = emptyList(),
         )
     }
 
     override fun grantToken(
         ttl: Int,
-        meta: Any?,
         authorizedUserId: UserId?,
-        spacesPermissions: List<SpacePermissions>,
-        usersPermissions: List<UserPermissions>,
+        meta: Any?,
+        grants: List<TokenGrant>,
     ): GrantToken {
+        val channels = ArrayList<ChannelGrant>()
+        val channelGroups = ArrayList<ChannelGroupGrant>()
+        val dataSync = ArrayList<DataSyncGrantType>()
+        grants.forEach { grant ->
+            when (grant) {
+                is DataSyncGrantType -> dataSync.add(grant)
+                is ChannelGrant -> channels.add(grant)
+                is ChannelGroupGrant -> channelGroups.add(grant)
+                else -> throw PubNubException(
+                    "Unsupported TokenGrant type: ${grant::class.simpleName}. " +
+                        "Use ChannelGrant, ChannelGroupGrant or a DataSyncGrant factory.",
+                )
+            }
+        }
         return GrantTokenEndpoint(
             pubnub = this,
             ttl = ttl,
             meta = meta,
             authorizedUUID = authorizedUserId?.value,
-            channels = spacesPermissions.map { spacePermissions -> spacePermissions.toChannelGrant() },
-            channelGroups = emptyList(),
-            uuids = usersPermissions.map { userPermissions -> userPermissions.toUuidGrant() },
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = emptyList(),
+            dataSync = dataSync,
         )
     }
 
