@@ -21,6 +21,7 @@ class DataSyncMembershipsMain {
             channelId = "channel-summer-sale",
             userId = "user-alice",
             classVersion = 1,
+            status = "active",
             payload = mapOf("role" to "viewer")
         ).async { result ->
             result.onFailure { exception ->

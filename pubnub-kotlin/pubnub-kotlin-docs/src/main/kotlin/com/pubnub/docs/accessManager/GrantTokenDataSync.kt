@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant
+import com.pubnub.api.v2.PNConfiguration
 
 class GrantTokenDataSync {
     private fun grantTokenFlatList(pubnub: PubNub) {
@@ -27,10 +28,18 @@ class GrantTokenDataSync {
         // snippet.end
     }
 
-    private fun grantTokenDataSync(pubnub: PubNub) {
+    private fun grantTokenDataSync() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-token-datasync
 
         // snippet.grantTokenDataSync
+        // Only server-side applications should use the secret key, as it is required to grant tokens
+        val pubnub = PubNub.create(
+            PNConfiguration.builder(UserId("myServerUserId"), "demo").apply {
+                publishKey = "demo"
+                secretKey = "mySecretKey"
+            }.build()
+        )
+
         pubnub.grantToken(
             ttl = 15,
             authorizedUserId = UserId("user-alice"),

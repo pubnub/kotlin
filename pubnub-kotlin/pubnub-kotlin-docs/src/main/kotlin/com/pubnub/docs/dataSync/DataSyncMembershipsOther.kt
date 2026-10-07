@@ -8,9 +8,10 @@ class DataSyncMembershipsOther {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/data-sync#filtering-and-sorting
 
         // snippet.getMembershipsFilterFast
+        // Membership payload fields such as `role` are not filterable; filter on `status` instead
         pubnub.dataSync.getMemberships(
             userId = "user-alice",
-            filterFast = "role == \"viewer\"",
+            filterFast = "status == \"active\"",
             sort = listOf(PNDataSyncSortField(property = "createdAt", ascending = false)),
             limit = 20
         ).async { result ->
@@ -28,9 +29,10 @@ class DataSyncMembershipsOther {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/data-sync#filtering-and-sorting
 
         // snippet.getMembershipsFilter
+        // Membership payload fields such as `role` are not filterable; filter on `status` instead
         pubnub.dataSync.getMemberships(
             userId = "user-alice",
-            filter = "role LIKE \"view*\"",
+            filter = "status LIKE \"act*\"",
             limit = 20
         ).async { result ->
             result.onFailure { exception ->

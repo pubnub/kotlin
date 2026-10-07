@@ -8,6 +8,7 @@ class DataSyncRelationshipsOther {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/data-sync#filtering-and-sorting
 
         // snippet.getRelationshipsFilterFast
+        // `tier` and `since` must be declared filterable (`simple` or `full`) on the `ProductOwner` class
         pubnub.dataSync.getRelationships(
             className = "ProductOwner",
             filterFast = "tier == \"gold\"",
@@ -28,9 +29,10 @@ class DataSyncRelationshipsOther {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/data-sync#filtering-and-sorting
 
         // snippet.getRelationshipsFilter
+        // `filter` only accepts properties declared with `full` filtering on the `ProductOwner` class
         pubnub.dataSync.getRelationships(
             className = "ProductOwner",
-            filter = "since LIKE \"2026-*\"",
+            filter = "tier LIKE \"gold*\"",
             limit = 20
         ).async { result ->
             result.onFailure { exception ->

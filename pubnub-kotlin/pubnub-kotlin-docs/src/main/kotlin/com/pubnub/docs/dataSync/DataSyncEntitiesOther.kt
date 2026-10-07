@@ -9,6 +9,7 @@ class DataSyncEntitiesOther {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/data-sync#filtering-and-sorting
 
         // snippet.getEntitiesFilterFast
+        // `price` and `stock` must be declared filterable (`simple` or `full`) on the `product` class
         pubnub.dataSync.getEntities(
             className = "product",
             filterFast = "price < 100 && stock > 0",
@@ -29,6 +30,7 @@ class DataSyncEntitiesOther {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/data-sync#filtering-and-sorting
 
         // snippet.getEntitiesFilter
+        // `filter` only accepts properties declared with `full` filtering on the `product` class
         pubnub.dataSync.getEntities(
             className = "product",
             filter = "name LIKE \"*Sneaker*\"",
@@ -85,8 +87,10 @@ class DataSyncEntitiesOther {
                 PNJsonPatchOperation(op = "add", path = "/payload/sale", value = true),
                 // Rename a field
                 PNJsonPatchOperation(op = "move", from = "/payload/sale", path = "/payload/onSale"),
+                // The removed field must exist on the entity, otherwise the patch is rejected
                 PNJsonPatchOperation(op = "remove", path = "/payload/legacySku")
             ),
+            // Use the eTag from an earlier read of the entity, not a literal value
             ifMatch = "a1b2c3d4e5f6"
         ).async { result ->
             result.onFailure { exception ->
