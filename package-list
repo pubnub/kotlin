@@ -224,6 +224,34 @@ $dokka.location:/PubNub.CryptorConfiguration///PointingToDeclaration/pubnub-kot
 $dokka.location:/PubNub.CryptorConfiguration/cipherKey/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-cryptor-configuration/cipher-key.html
 $dokka.location:/PubNub.CryptorConfiguration/useRandomIVs/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-cryptor-configuration/use-random-i-vs.html
 $dokka.location:/PubNub.CustomObject///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-custom-object/index.html
+$dokka.location:/PubNub.DataSyncEvent///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-event/index.html
+$dokka.location:/PubNub.DataSyncEvent/channel/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-event/channel.html
+$dokka.location:/PubNub.DataSyncEvent/message/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-event/message.html
+$dokka.location:/PubNub.DataSyncEvent/subscription/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-event/subscription.html
+$dokka.location:/PubNub.DataSyncEvent/timetoken/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-event/timetoken.html
+$dokka.location:/PubNub.DataSyncMessage///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/index.html
+$dokka.location:/PubNub.DataSyncMessage/classLevel/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/class-level.html
+$dokka.location:/PubNub.DataSyncMessage/className/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/class-name.html
+$dokka.location:/PubNub.DataSyncMessage/classVersion/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/class-version.html
+$dokka.location:/PubNub.DataSyncMessage/data/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/data.html
+$dokka.location:/PubNub.DataSyncMessage/event/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/event.html
+$dokka.location:/PubNub.DataSyncMessage/objectType/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/object-type.html
+$dokka.location:/PubNub.DataSyncMessage/source/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/source.html
+$dokka.location:/PubNub.DataSyncMessage/type/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/type.html
+$dokka.location:/PubNub.DataSyncMessage/version/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-message/version.html
+$dokka.location:/PubNub.DataSyncProjectionScope///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-projection-scope/index.html
+$dokka.location:/PubNub.DataSyncProjectionScope/channels/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-projection-scope/channels.html
+$dokka.location:/PubNub.DataSyncProjectionScope/entities/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-projection-scope/entities.html
+$dokka.location:/PubNub.DataSyncProjectionScope/memberships/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-projection-scope/memberships.html
+$dokka.location:/PubNub.DataSyncProjectionScope/relationships/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-projection-scope/relationships.html
+$dokka.location:/PubNub.DataSyncProjectionScope/users/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-projection-scope/users.html
+$dokka.location:/PubNub.DataSyncProjections///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-projections/index.html
+$dokka.location:/PubNub.DataSyncProjections/patterns/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-projections/patterns.html
+$dokka.location:/PubNub.DataSyncProjections/resources/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-projections/resources.html
+$dokka.location:/PubNub.DataSyncTokenScopes///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-token-scopes/index.html
+$dokka.location:/PubNub.DataSyncTokenScopes/entities/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-token-scopes/entities.html
+$dokka.location:/PubNub.DataSyncTokenScopes/memberships/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-token-scopes/memberships.html
+$dokka.location:/PubNub.DataSyncTokenScopes/relationships/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-data-sync-token-scopes/relationships.html
 $dokka.location:/PubNub.DeleteFileResponse///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-delete-file-response/index.html
 $dokka.location:/PubNub.DeleteFileResponse/status/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-delete-file-response/status.html
 $dokka.location:/PubNub.DeleteGroupParameters///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-delete-group-parameters/index.html
@@ -338,11 +366,13 @@ $dokka.location:/PubNub.GrantParameters/uuids/#/PointingToDeclaration/pubnub-ko
 $dokka.location:/PubNub.GrantParameters/write/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-parameters/write.html
 $dokka.location:/PubNub.GrantTokenParameters///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-parameters/index.html
 $dokka.location:/PubNub.GrantTokenParameters/authorized_uuid/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-parameters/authorized_uuid.html
+$dokka.location:/PubNub.GrantTokenParameters/dataSyncProjections/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-parameters/data-sync-projections.html
 $dokka.location:/PubNub.GrantTokenParameters/meta/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-parameters/meta.html
 $dokka.location:/PubNub.GrantTokenParameters/patterns/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-parameters/patterns.html
 $dokka.location:/PubNub.GrantTokenParameters/resources/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-parameters/resources.html
 $dokka.location:/PubNub.GrantTokenParameters/ttl/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-parameters/ttl.html
 $dokka.location:/PubNub.GrantTokenPermissions///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-permissions/index.html
+$dokka.location:/PubNub.GrantTokenPermissions/create/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-permissions/create.html
 $dokka.location:/PubNub.GrantTokenPermissions/delete/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-permissions/delete.html
 $dokka.location:/PubNub.GrantTokenPermissions/get/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-permissions/get.html
 $dokka.location:/PubNub.GrantTokenPermissions/join/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-grant-token-permissions/join.html
@@ -430,6 +460,7 @@ $dokka.location:/PubNub.ListFilesResponse/data/#/PointingToDeclaration/pubnub-k
 $dokka.location:/PubNub.ListFilesResponse/next/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-list-files-response/next.html
 $dokka.location:/PubNub.ListFilesResponse/status/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-list-files-response/status.html
 $dokka.location:/PubNub.ListenerParameters///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-listener-parameters/index.html
+$dokka.location:/PubNub.ListenerParameters/dataSync/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-listener-parameters/data-sync.html
 $dokka.location:/PubNub.ListenerParameters/file/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-listener-parameters/file.html
 $dokka.location:/PubNub.ListenerParameters/message/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-listener-parameters/message.html
 $dokka.location:/PubNub.ListenerParameters/messageAction/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-listener-parameters/message-action.html
@@ -530,7 +561,9 @@ $dokka.location:/PubNub.ParsedGrantToken/timestamp/#/PointingToDeclaration/pubn
 $dokka.location:/PubNub.ParsedGrantToken/version/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-parsed-grant-token/version.html
 $dokka.location:/PubNub.PatternsOrResources///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-patterns-or-resources/index.html
 $dokka.location:/PubNub.PatternsOrResources/channels/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-patterns-or-resources/channels.html
+$dokka.location:/PubNub.PatternsOrResources/dataSync/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-patterns-or-resources/data-sync.html
 $dokka.location:/PubNub.PatternsOrResources/groups/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-patterns-or-resources/groups.html
+$dokka.location:/PubNub.PatternsOrResources/users/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-patterns-or-resources/users.html
 $dokka.location:/PubNub.PatternsOrResources/uuids/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-patterns-or-resources/uuids.html
 $dokka.location:/PubNub.PresenceEvent///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-presence-event/index.html
 $dokka.location:/PubNub.PresenceEvent/action/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-presence-event/action.html
@@ -1080,6 +1113,10 @@ $dokka.location:com.pubnub.api/PubNubImpl/channel/#kotlin.String/PointingToDecla
 $dokka.location:com.pubnub.api/PubNubImpl/channelGroup/#kotlin.String/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/channel-group.html
 $dokka.location:com.pubnub.api/PubNubImpl/channelMetadata/#kotlin.String/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/channel-metadata.html
 $dokka.location:com.pubnub.api/PubNubImpl/configuration/#/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/configuration.html
+$dokka.location:com.pubnub.api/PubNubImpl/dataSync/#/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/data-sync.html
+$dokka.location:com.pubnub.api/PubNubImpl/dataSyncChannel/#kotlin.String/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/data-sync-channel.html
+$dokka.location:com.pubnub.api/PubNubImpl/dataSyncEntity/#kotlin.String/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/data-sync-entity.html
+$dokka.location:com.pubnub.api/PubNubImpl/dataSyncUser/#kotlin.String/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/data-sync-user.html
 $dokka.location:com.pubnub.api/PubNubImpl/deleteChannelGroup/#kotlin.String/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/delete-channel-group.html
 $dokka.location:com.pubnub.api/PubNubImpl/deleteFile/#kotlin.String#kotlin.String#kotlin.String/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/delete-file.html
 $dokka.location:com.pubnub.api/PubNubImpl/deleteMessages/#kotlin.collections.List[kotlin.String]#kotlin.Long?#kotlin.Long?/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/delete-messages.html
@@ -1110,6 +1147,8 @@ $dokka.location:com.pubnub.api/PubNubImpl/getSubscribedChannelGroups/#/PointingT
 $dokka.location:com.pubnub.api/PubNubImpl/getSubscribedChannels/#/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/get-subscribed-channels.html
 $dokka.location:com.pubnub.api/PubNubImpl/getToken/#/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/get-token.html
 $dokka.location:com.pubnub.api/PubNubImpl/getUUIDMetadata/#kotlin.String?#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/get-u-u-i-d-metadata.html
+$dokka.location:com.pubnub.api/PubNubImpl/grantToken/#kotlin.Int#<ERROR CLASS> ERROR CLASS: Symbol not found for UserId??#com.pubnub.kmp.CustomObject?#kotlin.collections.List[com.pubnub.api.models.consumer.access_manager.v3.TokenGrant]/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[apple]-pub-nub-impl/grant-token.html
+$dokka.location:com.pubnub.api/PubNubImpl/grantToken/#kotlin.Int#com.pubnub.api.UserId?#com.pubnub.kmp.CustomObject?#kotlin.collections.List[com.pubnub.api.models.consumer.access_manager.v3.TokenGrant]/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/grant-token.html
 $dokka.location:com.pubnub.api/PubNubImpl/grantToken/#kotlin.Int#com.pubnub.kmp.CustomObject?#kotlin.String?#kotlin.collections.List[com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant]#kotlin.collections.List[com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant]#kotlin.collections.List[com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant]/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/grant-token.html
 $dokka.location:com.pubnub.api/PubNubImpl/hereNow/#kotlin.collections.List[kotlin.String]#kotlin.collections.List[kotlin.String]#kotlin.Boolean#kotlin.Boolean#kotlin.Int#kotlin.Int?/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/here-now.html
 $dokka.location:com.pubnub.api/PubNubImpl/jsPubNub/#/PointingToDeclaration/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/js-pub-nub.html
@@ -1174,10 +1213,16 @@ com.pubnub.api.java
 com.pubnub.api.java.builder
 com.pubnub.api.java.builder.dto
 com.pubnub.api.java.callbacks
+com.pubnub.api.java.datasync
 com.pubnub.api.java.endpoints
 com.pubnub.api.java.endpoints.access
 com.pubnub.api.java.endpoints.access.builder
 com.pubnub.api.java.endpoints.channel_groups
+com.pubnub.api.java.endpoints.datasync.channel
+com.pubnub.api.java.endpoints.datasync.entity
+com.pubnub.api.java.endpoints.datasync.membership
+com.pubnub.api.java.endpoints.datasync.relationship
+com.pubnub.api.java.endpoints.datasync.user
 com.pubnub.api.java.endpoints.files
 com.pubnub.api.java.endpoints.files.requiredparambuilder
 com.pubnub.api.java.endpoints.message_actions
@@ -1190,8 +1235,13 @@ com.pubnub.api.java.endpoints.presence
 com.pubnub.api.java.endpoints.pubsub
 com.pubnub.api.java.endpoints.push
 com.pubnub.api.java.models.consumer.access_manager
-com.pubnub.api.java.models.consumer.access_manager.sum
 com.pubnub.api.java.models.consumer.access_manager.v3
+com.pubnub.api.java.models.consumer.datasync
+com.pubnub.api.java.models.consumer.datasync.channel
+com.pubnub.api.java.models.consumer.datasync.entity
+com.pubnub.api.java.models.consumer.datasync.membership
+com.pubnub.api.java.models.consumer.datasync.relationship
+com.pubnub.api.java.models.consumer.datasync.user
 com.pubnub.api.java.models.consumer.objects_api
 com.pubnub.api.java.models.consumer.objects_api.channel
 com.pubnub.api.java.models.consumer.objects_api.member
@@ -1205,6 +1255,11 @@ com.pubnub.api.java.v2.endpoints.pubsub
 com.pubnub.api.java.v2.entities
 com.pubnub.api.java.v2.subscriptions
 module:pubnub-gson-impl
+com.pubnub.api.java.models.consumer.datasync.channel
+com.pubnub.api.java.models.consumer.datasync.entity
+com.pubnub.api.java.models.consumer.datasync.membership
+com.pubnub.api.java.models.consumer.datasync.relationship
+com.pubnub.api.java.models.consumer.datasync.user
 com.pubnub.api.java.models.consumer.objects_api.channel
 com.pubnub.api.java.models.consumer.objects_api.member
 com.pubnub.api.java.models.consumer.objects_api.membership
@@ -1212,9 +1267,15 @@ com.pubnub.api.java.models.consumer.objects_api.uuid
 module:pubnub-kotlin-api
 com.pubnub.api
 com.pubnub.api.callbacks
+com.pubnub.api.datasync
 com.pubnub.api.endpoints
 com.pubnub.api.endpoints.access
 com.pubnub.api.endpoints.channel_groups
+com.pubnub.api.endpoints.datasync.channel
+com.pubnub.api.endpoints.datasync.entity
+com.pubnub.api.endpoints.datasync.membership
+com.pubnub.api.endpoints.datasync.relationship
+com.pubnub.api.endpoints.datasync.user
 com.pubnub.api.endpoints.files
 com.pubnub.api.endpoints.message_actions
 com.pubnub.api.endpoints.objects.channel
@@ -1225,8 +1286,13 @@ com.pubnub.api.endpoints.presence
 com.pubnub.api.endpoints.pubsub
 com.pubnub.api.endpoints.push
 com.pubnub.api.endpoints.remoteaction
-com.pubnub.api.models.consumer.access_manager.sum
 com.pubnub.api.models.consumer.access_manager.v3
+com.pubnub.api.models.consumer.datasync
+com.pubnub.api.models.consumer.datasync.channel
+com.pubnub.api.models.consumer.datasync.entity
+com.pubnub.api.models.consumer.datasync.membership
+com.pubnub.api.models.consumer.datasync.relationship
+com.pubnub.api.models.consumer.datasync.user
 com.pubnub.api.models.consumer.objects
 com.pubnub.api.models.consumer.objects.channel
 com.pubnub.api.models.consumer.objects.member
@@ -1255,6 +1321,7 @@ com.pubnub.api.models.consumer
 com.pubnub.api.models.consumer.access_manager
 com.pubnub.api.models.consumer.access_manager.v3
 com.pubnub.api.models.consumer.channel_group
+com.pubnub.api.models.consumer.datasync
 com.pubnub.api.models.consumer.files
 com.pubnub.api.models.consumer.history
 com.pubnub.api.models.consumer.message_actions
@@ -1263,6 +1330,7 @@ com.pubnub.api.models.consumer.objects.member
 com.pubnub.api.models.consumer.objects.membership
 com.pubnub.api.models.consumer.presence
 com.pubnub.api.models.consumer.pubsub
+com.pubnub.api.models.consumer.pubsub.datasync
 com.pubnub.api.models.consumer.pubsub.files
 com.pubnub.api.models.consumer.pubsub.message_actions
 com.pubnub.api.models.consumer.pubsub.objects

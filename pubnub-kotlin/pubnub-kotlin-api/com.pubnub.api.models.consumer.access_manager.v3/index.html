@@ -39,7 +39,7 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">13.4.4
+        <div class="library-version" id="library-version">14.0.0
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
@@ -110,7 +110,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-channel-grant/index.html">ChannelGrant</a> : <a href="-p-n-grant/index.html">PNGrant</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-channel-grant/index.html">ChannelGrant</a> : <a href="-token-grant/index.html">TokenGrant</a></div><div class="brief "><p class="paragraph">A PAM v3 grant on a <strong>channel</strong>: pub/sub (<code class="lang-kotlin">read</code>/<code class="lang-kotlin">write</code>), presence, channel management (<code class="lang-kotlin">manage</code>) and App Context v2 channel metadata / members / memberships (<code class="lang-kotlin">get</code>/<code class="lang-kotlin">update</code>/<code class="lang-kotlin">delete</code>/<code class="lang-kotlin">join</code>).</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -125,7 +125,52 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-channel-group-grant/index.html">ChannelGroupGrant</a> : <a href="-p-n-grant/index.html">PNGrant</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-channel-group-grant/index.html">ChannelGroupGrant</a> : <a href="-token-grant/index.html">TokenGrant</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-794221925%2FClasslikes%2F2135612140" anchor-label="DataSyncGrant" id="-794221925%2FClasslikes%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-data-sync-grant/index.html"><span>Data</span><wbr><span>Sync</span><wbr><span><span>Grant</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-794221925%2FClasslikes%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-data-sync-grant/index.html">DataSyncGrant</a></div><div class="brief "><p class="paragraph">Factory for DataSync (App Context v4) PAM v3 resource grants, passed in the <code class="lang-kotlin">grants</code> list of <a href="../com.pubnub.api/-pub-nub/grant-token.html">com.pubnub.api.PubNub.grantToken</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1317964927%2FClasslikes%2F2135612140" anchor-label="DataSyncGrantType" id="-1317964927%2FClasslikes%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-data-sync-grant-type/index.html"><span>Data</span><wbr><span>Sync</span><wbr><span>Grant</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1317964927%2FClasslikes%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">sealed </span><span class="token keyword">interface </span><a href="-data-sync-grant-type/index.html">DataSyncGrantType</a> : <a href="-token-grant/index.html">TokenGrant</a></div><div class="brief "><p class="paragraph">Marker type accepted by the <code class="lang-kotlin">dataSync</code> parameter of <a href="../com.pubnub.api/-pub-nub/grant-token.html">com.pubnub.api.PubNub.grantToken</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1352003524%2FClasslikes%2F2135612140" anchor-label="DataSyncNamespace" id="-1352003524%2FClasslikes%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-data-sync-namespace/index.html"><span>Data</span><wbr><span>Sync</span><wbr><span><span>Namespace</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1352003524%2FClasslikes%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-data-sync-namespace/index.html">DataSyncNamespace</a></div><div class="brief "><p class="paragraph">DataSync PAM v3 namespaces and helpers.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -186,6 +231,21 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">sealed </span><span class="token keyword">class </span><a href="-p-n-resource-grant/index.html">PNResourceGrant</a> : <a href="-p-n-abstract-grant/index.html">PNAbstractGrant</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="880957773%2FClasslikes%2F2135612140" anchor-label="TokenGrant" id="880957773%2FClasslikes%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-token-grant/index.html"><span>Token</span><wbr><span><span>Grant</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="880957773%2FClasslikes%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-token-grant/index.html">TokenGrant</a> : <a href="-p-n-grant/index.html">PNGrant</a></div><div class="brief "><p class="paragraph">Marker for the grant types accepted by the flat-list overload of <a href="../com.pubnub.api/-pub-nub/grant-token.html">com.pubnub.api.PubNub.grantToken</a> (<code class="lang-kotlin">grants: List&lt;TokenGrant&gt;</code>).</p></div></div></div>
                 </div>
               </div>
             </div>

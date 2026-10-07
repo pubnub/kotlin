@@ -39,7 +39,7 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">13.4.4
+        <div class="library-version" id="library-version">14.0.0
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
@@ -94,7 +94,7 @@
   <div class="breadcrumbs"><a href="../../index.html">pubnub-gson-api</a><span class="delimiter">/</span><a href="../index.html">com.pubnub.api.java.endpoints.access.builder</a><span class="delimiter">/</span><span class="current">GrantTokenBuilder</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Grant</span><wbr><span>Token</span><wbr><span><span>Builder</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">GrantTokenBuilder</a> : <a href="../../com.pubnub.api.java.endpoints/-endpoint/index.html">Endpoint</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.access_manager.v3/-p-n-grant-token-result/index.html">PNGrantTokenResult</a><span class="token operator">&gt; </span></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">GrantTokenBuilder</a> : <a href="../-abstract-grant-token-builder/index.html">AbstractGrantTokenBuilder</a></div><p class="paragraph">Entry point for a <code class="lang-kotlin">grantToken(...)</code> call. Inherits the shared <code class="lang-kotlin">ttl</code>/<code class="lang-kotlin">meta</code>/<code class="lang-kotlin">channels</code>/ <code class="lang-kotlin">channelGroups</code> setters from <a href="../-abstract-grant-token-builder/index.html">AbstractGrantTokenBuilder</a> (returning this neutral builder so a chain can start with any of them). </p><p class="paragraph">From here two grant paths are available and cannot be combined: </p><ul><li>the modern flat-list path via <a href="authorized-user-id.html">authorizedUserId</a> and <a href="grants.html">grants</a>, which stays on this neutral builder — each <a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-token-grant/index.html">TokenGrant</a> carries its own bucket. This path is additive with the shared <code class="lang-kotlin">channels(...)</code>/<code class="lang-kotlin">channelGroups(...)</code> setters (they all funnel into the same wire buckets);</li><li>the legacy (App Context v2 UUID) path via <a href="uuids.html">uuids</a> or <a href="authorized-u-u-i-d.html">authorizedUUID</a>, which returns <a href="../-grant-token-objects-builder/index.html">GrantTokenObjectsBuilder</a>.</li></ul> The legacy <code class="lang-kotlin">uuids</code> bucket cannot be mixed with <code class="lang-kotlin">grants(...)</code>: <a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-u-u-i-d-grant/index.html">UUIDGrant</a> does not implement <a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-token-grant/index.html">TokenGrant</a>, and combining the two is rejected at request time.</div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -126,7 +126,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="authorized-user-id.html"><span class="token function"><strike>authorizedUserId</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-user-id/index.html">UserId</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-grant-token-entities-builder/index.html">GrantTokenEntitiesBuilder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="authorized-user-id.html"><span class="token function">authorizedUserId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">authorizedUserId<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-user-id/index.html">UserId</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GrantTokenBuilder</a></div><div class="brief ">Sets the authorized principal for the modern flat-list grant path.</div></div></div>
                 </div>
               </div>
             </div>
@@ -141,7 +141,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="authorized-u-u-i-d.html"><span class="token function">authorizedUUID</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">authorizedUUID<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-grant-token-objects-builder/index.html">GrantTokenObjectsBuilder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="authorized-u-u-i-d.html"><span class="token function">authorizedUUID</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">authorizedUUID<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-grant-token-objects-builder/index.html">GrantTokenObjectsBuilder</a></div><div class="brief ">Sets the authorized principal for a legacy (App Context v2 UUID) grant and enters the legacy grant path, where <code class="lang-kotlin">uuids(...)</code> grants can be supplied.</div></div></div>
                 </div>
               </div>
             </div>
@@ -156,7 +156,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="channel-groups.html"><span class="token function">channelGroups</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelGroups<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-channel-group-grant/index.html">ChannelGroupGrant</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-grant-token-objects-builder/index.html">GrantTokenObjectsBuilder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="channel-groups.html"><span class="token function">channelGroups</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelGroups<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-channel-group-grant/index.html">ChannelGroupGrant</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GrantTokenBuilder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -171,7 +171,22 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="channels.html"><span class="token function">channels</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channels<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-channel-grant/index.html">ChannelGrant</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-grant-token-objects-builder/index.html">GrantTokenObjectsBuilder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="channels.html"><span class="token function">channels</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channels<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-channel-grant/index.html">ChannelGrant</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GrantTokenBuilder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1074508957%2FFunctions%2F412224181" anchor-label="grants" id="1074508957%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="grants.html"><span><span>grants</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1074508957%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="grants.html"><span class="token function">grants</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">grants<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-token-grant/index.html">TokenGrant</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GrantTokenBuilder</a></div><div class="brief ">Supplies the flat list of grants for the modern grant path.</div></div></div>
                 </div>
               </div>
             </div>
@@ -251,21 +266,6 @@
               </div>
             </div>
           </div>
-<a data-name="167043018%2FFunctions%2F412224181" anchor-label="spacesPermissions" id="167043018%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
-          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="spaces-permissions.html"><span>spaces</span><wbr><span><span>Permissions</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="167043018%2FFunctions%2F412224181"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="spaces-permissions.html"><span class="token function"><strike>spacesPermissions</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">spacesPermissions<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.access_manager.sum/-space-permissions/index.html">SpacePermissions</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-grant-token-entities-builder/index.html">GrantTokenEntitiesBuilder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
 <a data-name="40193115%2FFunctions%2F412224181" anchor-label="sync" id="40193115%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
           <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
             <div class="main-subrow keyValue ">
@@ -292,21 +292,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="ttl.html"><span class="token function"><strike>ttl</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ttl<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html">Integer</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GrantTokenBuilder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-341884774%2FFunctions%2F412224181" anchor-label="usersPermissions" id="-341884774%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
-          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="users-permissions.html"><span>users</span><wbr><span><span>Permissions</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-341884774%2FFunctions%2F412224181"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="users-permissions.html"><span class="token function"><strike>usersPermissions</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">usersPermissions<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.access_manager.sum/-user-permissions/index.html">UserPermissions</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-grant-token-entities-builder/index.html">GrantTokenEntitiesBuilder</a></div></div></div>
                 </div>
               </div>
             </div>

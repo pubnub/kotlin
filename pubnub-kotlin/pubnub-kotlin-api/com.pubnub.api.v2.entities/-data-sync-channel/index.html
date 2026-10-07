@@ -1,0 +1,161 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DataSyncChannel</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    pubnub-kotlin-docs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">14.0.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    pubnub-kotlin-docs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="pubnub-kotlin-api::com.pubnub.api.v2.entities/DataSyncChannel///PointingToDeclaration//2135612140">
+  <div class="breadcrumbs"><a href="../../index.html">pubnub-kotlin-api</a><span class="delimiter">/</span><a href="../index.html">com.pubnub.api.v2.entities</a><span class="delimiter">/</span><span class="current">DataSyncChannel</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Data</span><wbr><span>Sync</span><wbr><span><span>Channel</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">DataSyncChannel</a> : <a href="../-subscribable/index.html">Subscribable</a></div><p class="paragraph">A handle for subscribing to DataSync realtime events about a Channel by its ref/id.</p><p class="paragraph">A DataSync handle is a <strong>channel filter on the ref</strong>, not a type filter: subscribing to <code class="lang-kotlin">dataSyncChannel(id)</code> delivers the mix of events routed to that ref-channel — the channel's own create/update/delete, the memberships/relationships where the channel is an endpoint, and propagated events for entities joined to it. Branch on the sealed <a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub.datasync/-p-n-data-sync-event-result/extracted-message.html">com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventResult.extractedMessage</a>.</p><p class="paragraph">This handle is a convenience over <code class="lang-kotlin">pubnub.channel(id).subscription()</code>; a plain channel subscription on the same ref also delivers these events. The handle additionally resolves projection channels.</p><p class="paragraph"><strong>PAM:</strong> because subscribing is a plain PubSub read of the ref-channel, an authorized client needs a channel <code class="lang-kotlin">read</code> grant on the resolved ref-channel name. Use <a href="../../com.pubnub.api.models.consumer.access_manager.v3/-data-sync-grant/subscribe.html">com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.subscribe</a> (<code class="lang-kotlin">subscribe(id)</code> for the default projection, <code class="lang-kotlin">subscribe(id, projection)</code> for a non-default one) or <a href="../../com.pubnub.api.models.consumer.access_manager.v3/-data-sync-grant/subscribe-pattern.html">com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.subscribePattern</a> for many refs. This is separate from the DataSync CRUD permission on the channel <i>record</i> (<a href="../../com.pubnub.api.models.consumer.access_manager.v3/-data-sync-grant/channel.html">com.pubnub.api.models.consumer.access_manager.v3.DataSyncGrant.channel</a>): the record grant does not authorize the subscribe, and the subscribe grant does not authorize record CRUD.</p><p class="paragraph">The two <code class="lang-kotlin">projection</code> parameters differ: on <code class="lang-kotlin">channel(...)</code> it sets the REST read view (<code class="lang-kotlin">meta.pn-projections</code>); on <code class="lang-kotlin">subscribe(...)</code> it only selects the ref-channel name (<code class="lang-kotlin">__{projection}__{id}</code>) and adds nothing to the meta. To read through and subscribe to a projection, grant both:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">DataSyncGrant.channel("chat-1", get = true, projection = "admin")<br>DataSyncGrant.subscribe("chat-1", projection = "admin")</code></pre><span class="copy-tooltip"><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div><span class="copy-icon"></span></span></div><p class="paragraph">Use <a href="../../com.pubnub.api/-pub-nub/data-sync-channel.html">com.pubnub.api.PubNub.dataSyncChannel</a> to create instances.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-988075970%2FProperties%2F2135612140" anchor-label="id" id="-988075970%2FProperties%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="id.html"><span><span>id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-988075970%2FProperties%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="id.html">id</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The channel's ref/id.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-1034956495%2FFunctions%2F2135612140" anchor-label="subscription" id="-1034956495%2FFunctions%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="subscription.html"><span><span>subscription</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1034956495%2FFunctions%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="subscription.html"><span class="token function">subscription</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">options<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2.subscriptions/-subscription-options/index.html">SubscriptionOptions</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.v2.subscriptions/-subscription/index.html">Subscription</a></div><div class="brief "><p class="paragraph">Returns a <a href="../../com.pubnub.api.v2.subscriptions/-subscription/index.html">Subscription</a> to this channel's default-projection ref-channel.</p></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="subscription.html"><span class="token function">subscription</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">projection<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">options<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2.subscriptions/-subscription-options/index.html">SubscriptionOptions</a><span class="token operator"> = </span>com.pubnub.api.v2.subscriptions.EmptyOptions</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.v2.subscriptions/-subscription/index.html">Subscription</a></div><div class="brief "><p class="paragraph">Returns a <a href="../../com.pubnub.api.v2.subscriptions/-subscription/index.html">Subscription</a> to this channel's events for the given <a href="subscription.html">projection</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

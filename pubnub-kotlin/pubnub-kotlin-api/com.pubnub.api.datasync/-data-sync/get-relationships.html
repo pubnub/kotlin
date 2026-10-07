@@ -1,0 +1,118 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>getRelationships</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    pubnub-kotlin-docs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">14.0.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    pubnub-kotlin-docs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="member" id="content" pageids="pubnub-kotlin-api::com.pubnub.api.datasync/DataSync/getRelationships/#kotlin.String#kotlin.String?#kotlin.String?#kotlin.Int?#kotlin.String?#kotlin.String?#kotlin.collections.List[com.pubnub.api.models.consumer.datasync.PNDataSyncSortField]#kotlin.Int?#kotlin.String?/PointingToDeclaration//2135612140">
+  <div class="breadcrumbs"><a href="../../index.html">pubnub-kotlin-api</a><span class="delimiter">/</span><a href="../index.html">com.pubnub.api.datasync</a><span class="delimiter">/</span><a href="index.html">DataSync</a><span class="delimiter">/</span><span class="current">getRelationships</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>get</span><wbr><span><span>Relationships</span></span></h1>
+  </div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-relationships.html"><span class="token function">getRelationships</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">className<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">entityAId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">entityBId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">filterFast<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">filter<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">sort<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.models.consumer.datasync/-p-n-data-sync-sort-field/index.html">PNDataSyncSortField</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyList()<span class="token punctuation">, </span></span><span class="parameter ">limit<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">cursor<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.endpoints.datasync.relationship/-get-relationships/index.html">GetRelationships</a></div><p class="paragraph">List DataSync relationships in a relationship class, optionally filtered by either end.</p><p class="paragraph">Unlike <code class="lang-kotlin">getMemberships</code>, <a href="get-relationships.html">className</a> is <strong>required</strong> — the relationship class to query is caller-supplied, not a fixed built-in one.</p><p class="paragraph">Filtering and sorting are only allowed on properties the relationship class marks as filterable via their <code class="lang-kotlin">filtering</code> mode (<code class="lang-kotlin">none</code> / <code class="lang-kotlin">simple</code> / <code class="lang-kotlin">full</code>), which also determines which of <a href="get-relationships.html">filterFast</a> / <a href="get-relationships.html">filter</a> / <a href="get-relationships.html">sort</a> a property may be used with. The filterable set has no fixed default; it is whatever the supplied <a href="get-relationships.html">className</a> declares as filterable payload properties (indexes over the relationship's <code class="lang-kotlin">/payload</code>; the <code class="lang-kotlin">payload</code> otherwise stays arbitrary JSON). In addition, the built-in fields <code class="lang-kotlin">id</code>, <code class="lang-kotlin">createdAt</code>, <code class="lang-kotlin">updatedAt</code>, and <code class="lang-kotlin">status</code> behave as <code class="lang-kotlin">full</code> and are always filterable and sortable on any class, except that <code class="lang-kotlin">status</code> may be excluded when the class declares it as a projected field and the token cannot fully reach it.</p><p class="paragraph">Results are scoped to the caller's access token: only relationships the token is permitted to read (<code class="lang-kotlin">get</code>) are returned. Relationships the token cannot read are silently omitted — the call does not error and does not return a <code class="lang-kotlin">403</code> for the un-readable relationships. Token scoping and the <a href="get-relationships.html">filterFast</a> / <a href="get-relationships.html">filter</a> / <a href="get-relationships.html">sort</a> criteria are applied together, so the returned page never contains a relationship the token cannot read regardless of the other criteria. When the PubNub instance is configured with a secretKey (a trusted server-side deployment, never a client — the secretKey must not be shipped to clients), or when using a token whose grants cover the whole result set, no permission-based filtering is applied and all matching relationships are returned, subject only to <a href="get-relationships.html">filterFast</a> / <a href="get-relationships.html">filter</a> / <a href="get-relationships.html">sort</a> and <a href="get-relationships.html">limit</a> paging.</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>class</span><wbr><span><span>Name</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Relationship class identifier to query.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>entity</span><wbr><span><span>AId</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional entity A identifier to filter by. <a href="get-relationships.html">entityAId</a> and <a href="get-relationships.html">entityBId</a> are independent, AND-ed equality filters on the two sides of the relationship. Supplying only one narrows to relationships on that side; supplying both returns the relationships matching both; supplying neither lists all readable relationships in the class. This is not a pair-only lookup API.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>entity</span><wbr><span><span>BId</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional entity B identifier to filter by. See <a href="get-relationships.html">entityAId</a> for how the two combine.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>class</span><wbr><span><span>Version</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Restricts results to a single version of the relationship class. If <code class="lang-kotlin">null</code>, items of every version are returned, while <a href="get-relationships.html">filterFast</a>, <a href="get-relationships.html">filter</a> and <a href="get-relationships.html">sort</a> fields are checked against the latest version. Pass a version to make results stable when new class versions are published.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>filter</span><wbr><span><span>Fast</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional filter expression. <code class="lang-kotlin">filterFast</code> is strongly consistent — it always reflects the latest writes — but accepts fewer conditions than <a href="get-relationships.html">filter</a>; a limit on the number of conditions applies and can be adjusted by PubNub support (see the PubNub DataSync documentation for the current limit). For larger or more complex queries use <a href="get-relationships.html">filter</a>. At most one of <a href="get-relationships.html">filterFast</a> and <a href="get-relationships.html">filter</a> may be supplied; sending both is rejected by the server (HTTP 400).</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>filter</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional advanced filter expression. Uses the same syntax as <a href="get-relationships.html">filterFast</a>. It is not subject to the same condition limit, so use it for larger or more complex queries. The trade-off is consistency: <code class="lang-kotlin">filter</code> is eventually consistent (recent writes may not yet be reflected), whereas <a href="get-relationships.html">filterFast</a> is strongly consistent. At most one of <a href="get-relationships.html">filterFast</a> and <a href="get-relationships.html">filter</a> may be supplied; sending both is rejected by the server (HTTP 400).</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>sort</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional sort criteria applied in order; each <a href="../../com.pubnub.api.models.consumer.datasync/-p-n-data-sync-sort-field/index.html">PNDataSyncSortField</a> sorts on a property either ascending (default) or descending.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>limit</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional page size, 1–100 (server default 20). A value outside that range is rejected by the server (HTTP 400), not clamped.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>cursor</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional opaque cursor for pagination (from a previous result's <code class="lang-kotlin">next.cursor</code>).</p></div></div></div></div></div></div></div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,577 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DataSync</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    pubnub-kotlin-docs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">14.0.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":pubnub-gson:pubnub-gson-api/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-gson:pubnub-gson-api/main" data-filter=":pubnub-gson:pubnub-gson-api/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    pubnub-kotlin-docs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="pubnub-gson-api::com.pubnub.api.java.datasync/DataSync///PointingToDeclaration//412224181">
+  <div class="breadcrumbs"><a href="../../index.html">pubnub-gson-api</a><span class="delimiter">/</span><a href="../index.html">com.pubnub.api.java.datasync</a><span class="delimiter">/</span><span class="current">DataSync</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Data</span><wbr><span><span>Sync</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">DataSync</a></div><p class="paragraph">Entry point for the DataSync API, reached via <code class="lang-kotlin">pubnub.dataSync()</code>.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="1416621096%2FFunctions%2F412224181" anchor-label="createChannel" id="1416621096%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-channel.html"><span>create</span><wbr><span><span>Channel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1416621096%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="create-channel.html"><span class="token function">createChannel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.channel/-create-channel/index.html">CreateChannel</a></div><div class="brief ">Create a DataSync channel.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2018151000%2FFunctions%2F412224181" anchor-label="createEntity" id="2018151000%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-entity.html"><span>create</span><wbr><span><span>Entity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2018151000%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="create-entity.html"><span class="token function">createEntity</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">className<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.entity/-create-entity/index.html">CreateEntity</a></div><div class="brief ">Create a DataSync entity.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1038164989%2FFunctions%2F412224181" anchor-label="createMembership" id="1038164989%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-membership.html"><span>create</span><wbr><span><span>Membership</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1038164989%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="create-membership.html"><span class="token function">createMembership</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">userId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.membership/-create-membership/index.html">CreateMembership</a></div><div class="brief ">Create a DataSync membership linking a Channel and a User.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-167541149%2FFunctions%2F412224181" anchor-label="createRelationship" id="-167541149%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-relationship.html"><span>create</span><wbr><span><span>Relationship</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-167541149%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="create-relationship.html"><span class="token function">createRelationship</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entityAId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">entityBId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">className<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.relationship/-create-relationship/index.html">CreateRelationship</a></div><div class="brief ">Create a DataSync relationship linking two entities.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1779265074%2FFunctions%2F412224181" anchor-label="createUser" id="1779265074%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-user.html"><span>create</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1779265074%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="create-user.html"><span class="token function">createUser</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.user/-create-user/index.html">CreateUser</a></div><div class="brief ">Create a DataSync user.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-468787210%2FFunctions%2F412224181" anchor-label="getChannel" id="-468787210%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-channel.html"><span>get</span><wbr><span><span>Channel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-468787210%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-channel.html"><span class="token function">getChannel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.channel/-get-channel/index.html">GetChannel</a></div><div class="brief ">Get a DataSync channel by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-260105684%2FFunctions%2F412224181" anchor-label="getChannels" id="-260105684%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-channels.html"><span>get</span><wbr><span><span>Channels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-260105684%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-channels.html"><span class="token function">getChannels</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.channel/-get-channels/index.html">GetChannels</a></div><div class="brief ">List DataSync channels.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="383920982%2FFunctions%2F412224181" anchor-label="getEntities" id="383920982%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-entities.html"><span>get</span><wbr><span><span>Entities</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="383920982%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-entities.html"><span class="token function">getEntities</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">className<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.entity/-get-entities/index.html">GetEntities</a></div><div class="brief ">List DataSync entities of a class.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2064032052%2FFunctions%2F412224181" anchor-label="getEntity" id="2064032052%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-entity.html"><span>get</span><wbr><span><span>Entity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2064032052%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-entity.html"><span class="token function">getEntity</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entityId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.entity/-get-entity/index.html">GetEntity</a></div><div class="brief ">Get a DataSync entity by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1688030431%2FFunctions%2F412224181" anchor-label="getMembership" id="-1688030431%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-membership.html"><span>get</span><wbr><span><span>Membership</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1688030431%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-membership.html"><span class="token function">getMembership</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">membershipId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.membership/-get-membership/index.html">GetMembership</a></div><div class="brief ">Get a DataSync membership by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1288522143%2FFunctions%2F412224181" anchor-label="getMemberships" id="-1288522143%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-memberships.html"><span>get</span><wbr><span><span>Memberships</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1288522143%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-memberships.html"><span class="token function">getMemberships</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.membership/-get-memberships/index.html">GetMemberships</a></div><div class="brief ">List DataSync memberships, optionally filtered by channel and/or user.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="835204927%2FFunctions%2F412224181" anchor-label="getRelationship" id="835204927%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-relationship.html"><span>get</span><wbr><span><span>Relationship</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="835204927%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-relationship.html"><span class="token function">getRelationship</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">relationshipId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.relationship/-get-relationship/index.html">GetRelationship</a></div><div class="brief ">Get a DataSync relationship by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1491501570%2FFunctions%2F412224181" anchor-label="getRelationships" id="-1491501570%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-relationships.html"><span>get</span><wbr><span><span>Relationships</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1491501570%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-relationships.html"><span class="token function">getRelationships</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">className<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.relationship/-get-relationships/index.html">GetRelationships</a></div><div class="brief ">List DataSync relationships of a class, optionally filtered by entity A and/or entity B.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-723185140%2FFunctions%2F412224181" anchor-label="getUser" id="-723185140%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-user.html"><span>get</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-723185140%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-user.html"><span class="token function">getUser</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.user/-get-user/index.html">GetUser</a></div><div class="brief ">Get a DataSync user by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-882262314%2FFunctions%2F412224181" anchor-label="getUsers" id="-882262314%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-users.html"><span>get</span><wbr><span><span>Users</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-882262314%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-users.html"><span class="token function">getUsers</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.user/-get-users/index.html">GetUsers</a></div><div class="brief ">List DataSync users.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1809228910%2FFunctions%2F412224181" anchor-label="removeChannel" id="1809228910%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-channel.html"><span>remove</span><wbr><span><span>Channel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1809228910%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-channel.html"><span class="token function">removeChannel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.channel/-remove-channel/index.html">RemoveChannel</a></div><div class="brief ">Remove a DataSync channel by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1049072196%2FFunctions%2F412224181" anchor-label="removeEntity" id="-1049072196%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-entity.html"><span>remove</span><wbr><span><span>Entity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1049072196%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-entity.html"><span class="token function">removeEntity</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entityId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.entity/-remove-entity/index.html">RemoveEntity</a></div><div class="brief ">Remove a DataSync entity by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2088043607%2FFunctions%2F412224181" anchor-label="removeMembership" id="-2088043607%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-membership.html"><span>remove</span><wbr><span><span>Membership</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2088043607%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-membership.html"><span class="token function">removeMembership</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">membershipId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.membership/-remove-membership/index.html">RemoveMembership</a></div><div class="brief ">Remove a DataSync membership by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1325367865%2FFunctions%2F412224181" anchor-label="removeRelationship" id="-1325367865%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-relationship.html"><span>remove</span><wbr><span><span>Relationship</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1325367865%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-relationship.html"><span class="token function">removeRelationship</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">relationshipId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.relationship/-remove-relationship/index.html">RemoveRelationship</a></div><div class="brief ">Remove a DataSync relationship by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-252682092%2FFunctions%2F412224181" anchor-label="removeUser" id="-252682092%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-user.html"><span>remove</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-252682092%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-user.html"><span class="token function">removeUser</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.user/-remove-user/index.html">RemoveUser</a></div><div class="brief ">Remove a DataSync user by its id.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1879008746%2FFunctions%2F412224181" anchor-label="setChannel" id="-1879008746%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-channel.html"><span>set</span><wbr><span><span>Channel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1879008746%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-channel.html"><span class="token function">setChannel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.channel/-set-channel/index.html">SetChannel</a></div><div class="brief ">Replaces a channel in full.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1074824004%2FFunctions%2F412224181" anchor-label="setEntity" id="-1074824004%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-entity.html"><span>set</span><wbr><span><span>Entity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1074824004%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-entity.html"><span class="token function">setEntity</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entityId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.entity/-set-entity/index.html">SetEntity</a></div><div class="brief ">Replaces an entity in full.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1329990103%2FFunctions%2F412224181" anchor-label="setMembership" id="-1329990103%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-membership.html"><span>set</span><wbr><span><span>Membership</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1329990103%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-membership.html"><span class="token function">setMembership</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">membershipId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.membership/-set-membership/index.html">SetMembership</a></div><div class="brief ">Replaces a membership in full.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2138353223%2FFunctions%2F412224181" anchor-label="setRelationship" id="2138353223%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-relationship.html"><span>set</span><wbr><span><span>Relationship</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2138353223%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-relationship.html"><span class="token function">setRelationship</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">relationshipId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.relationship/-set-relationship/index.html">SetRelationship</a></div><div class="brief ">Replaces a relationship in full.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="500633236%2FFunctions%2F412224181" anchor-label="setUser" id="500633236%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-user.html"><span>set</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="500633236%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-user.html"><span class="token function">setUser</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">classVersion<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.user/-set-user/index.html">SetUser</a></div><div class="brief ">Replaces a user in full.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-334844388%2FFunctions%2F412224181" anchor-label="updateChannel" id="-334844388%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-channel.html"><span>update</span><wbr><span><span>Channel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-334844388%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="update-channel.html"><span class="token function">updateChannel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">operations<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.datasync.entity/-p-n-json-patch-operation/index.html">PNJsonPatchOperation</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.channel/-update-channel/index.html">UpdateChannel</a></div><div class="brief ">Partially update a DataSync channel via JSON Patch (RFC-6902).</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1721243256%2FFunctions%2F412224181" anchor-label="updateEntity" id="1721243256%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-entity.html"><span>update</span><wbr><span><span>Entity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1721243256%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="update-entity.html"><span class="token function">updateEntity</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entityId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">operations<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.datasync.entity/-p-n-json-patch-operation/index.html">PNJsonPatchOperation</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.entity/-update-entity/index.html">UpdateEntity</a></div><div class="brief ">Partially update a DataSync entity via JSON Patch (RFC-6902).</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="853007019%2FFunctions%2F412224181" anchor-label="updateMembership" id="853007019%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-membership.html"><span>update</span><wbr><span><span>Membership</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="853007019%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="update-membership.html"><span class="token function">updateMembership</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">membershipId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">operations<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.datasync.entity/-p-n-json-patch-operation/index.html">PNJsonPatchOperation</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.membership/-update-membership/index.html">UpdateMembership</a></div><div class="brief ">Partially update a DataSync membership via JSON Patch (RFC-6902).</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="907618573%2FFunctions%2F412224181" anchor-label="updateRelationship" id="907618573%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-relationship.html"><span>update</span><wbr><span><span>Relationship</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="907618573%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="update-relationship.html"><span class="token function">updateRelationship</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">relationshipId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">operations<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.datasync.entity/-p-n-json-patch-operation/index.html">PNJsonPatchOperation</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.relationship/-update-relationship/index.html">UpdateRelationship</a></div><div class="brief ">Partially update a DataSync relationship via JSON Patch (RFC-6902).</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="523588576%2FFunctions%2F412224181" anchor-label="updateUser" id="523588576%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-user.html"><span>update</span><wbr><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="523588576%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="update-user.html"><span class="token function">updateUser</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">operations<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.datasync.entity/-p-n-json-patch-operation/index.html">PNJsonPatchOperation</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.datasync.user/-update-user/index.html">UpdateUser</a></div><div class="brief ">Partially update a DataSync user via JSON Patch (RFC-6902).</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
