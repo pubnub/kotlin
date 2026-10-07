@@ -134,7 +134,7 @@ changelog:
       - type: feature
         text: "Added DataSync feature support."
       - type: bug
-        text: "`grantToken` now merges grants that target the same resource id instead of keeping only the last one. For example,                      `ChannelGrant.name("chat", read = true)` together with `ChannelGrant.name("chat", update = true)` produces a single `chat` entry with both `read`  and `update`. Previously the last grant for an id silently replaced the earlier ones. This applies to both `grantToken` overloads, to resources and to patterns."
+        text: '`grantToken` now merges grants that target the same resource id instead of keeping only the last one. For example, `ChannelGrant.name("chat", read = true)` together with `ChannelGrant.name("chat", update = true)` produces a single `chat` entry with both `read` and `update`. Previously the last grant for an id silently replaced the earlier ones. This applies to both `grantToken` overloads, to resources and to patterns.'
       - type: improvement
         text: "(Kotlin) removed the deprecated `grantToken(ttl, meta, authorizedUserId, spacesPermissions, usersPermissions)."
       - type: improvement
