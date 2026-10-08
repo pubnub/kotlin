@@ -72,7 +72,7 @@ public class GetAllEnumerationGrantIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void grantToken_flagsRoundTripThroughParseToken() throws PubNubException {
-        final PNToken parsed = server.parseToken(grantToken(true, true));
+        final PNToken parsed = server.parseToken(grantToken(true, true, null, null));
 
         assertTrue(parsed.getAllChannels());
         assertTrue(parsed.getAllUUIDs());
@@ -80,7 +80,12 @@ public class GetAllEnumerationGrantIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void tokenWithoutCategories_cannotListMetadata() throws PubNubException {
-        final PubNub client = tokenClient(grantToken(false, false));
+        final PubNub client = tokenClient(grantToken(
+                false,
+                false,
+                ChannelGrant.name(channelId).get(),
+                UUIDGrant.id(uuidId).get()
+        ));
 
         assertForbidden(() -> client.getAllChannelsMetadata().filter(channelFilter).sync());
         assertForbidden(() -> client.getAllUUIDMetadata().filter(uuidFilter).sync());
@@ -88,7 +93,7 @@ public class GetAllEnumerationGrantIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void tokenWithBothCategories_canListMetadata() throws PubNubException {
-        final PubNub client = tokenClient(grantToken(true, true));
+        final PubNub client = tokenClient(grantToken(true, true, null, null));
 
         assertListsChannel(client);
         assertListsUuid(client);
@@ -96,7 +101,7 @@ public class GetAllEnumerationGrantIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void tokenWithGetAllChannelsOnly_canListOnlyChannels() throws PubNubException {
-        final PubNub client = tokenClient(grantToken(true, false));
+        final PubNub client = tokenClient(grantToken(true, false, null, null));
 
         assertListsChannel(client);
         assertForbidden(() -> client.getAllUUIDMetadata().filter(uuidFilter).sync());
@@ -104,7 +109,7 @@ public class GetAllEnumerationGrantIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void tokenWithGetAllUUIDsOnly_canListOnlyUuids() throws PubNubException {
-        final PubNub client = tokenClient(grantToken(false, true));
+        final PubNub client = tokenClient(grantToken(false, true, null, null));
 
         assertForbidden(() -> client.getAllChannelsMetadata().filter(channelFilter).sync());
         assertListsUuid(client);
@@ -162,13 +167,18 @@ public class GetAllEnumerationGrantIntegrationTest extends BaseIntegrationTest {
         assertForbidden(() -> client.getAllUUIDMetadata().filter(uuidFilter).sync());
     }
 
-    // A named-resource `get` is included so the token is valid even with both flags off.
-    private String grantToken(boolean getAllChannels, boolean getAllUUIDs) throws PubNubException {
+    // A named-resource `get` is needed only when both flags are off, so the token is still valid.
+    private String grantToken(
+            boolean getAllChannels,
+            boolean getAllUUIDs,
+            ChannelGrant channelGrant,
+            UUIDGrant uuidGrant
+    ) throws PubNubException {
         final String token = server.grantToken(60)
-                .channels(Collections.singletonList(ChannelGrant.name(channelId).get()))
-                .uuids(Collections.singletonList(UUIDGrant.id(uuidId).get()))
                 .getAllChannels(getAllChannels)
                 .getAllUUIDs(getAllUUIDs)
+                .channels(channelGrant == null ? Collections.emptyList() : Collections.singletonList(channelGrant))
+                .uuids(uuidGrant == null ? Collections.emptyList() : Collections.singletonList(uuidGrant))
                 .sync()
                 .getToken();
         tokens.add(token);
