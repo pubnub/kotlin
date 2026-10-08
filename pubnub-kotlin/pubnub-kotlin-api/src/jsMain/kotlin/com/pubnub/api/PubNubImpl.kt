@@ -512,8 +512,13 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
-        uuids: List<UUIDGrant>
+        uuids: List<UUIDGrant>,
+        getAllChannels: Boolean,
+        getAllUUIDs: Boolean,
     ): GrantToken {
+        if (getAllChannels || getAllUUIDs) {
+            throw PubNubException("`getAllChannels` / `getAllUUIDs` are not supported on JS.")
+        }
         requireNoPnProjectionsInMeta(meta)
         return GrantTokenImpl(
             jsPubNub,

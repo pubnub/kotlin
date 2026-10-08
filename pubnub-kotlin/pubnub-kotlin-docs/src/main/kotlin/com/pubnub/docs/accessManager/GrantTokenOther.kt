@@ -88,4 +88,24 @@ class GrantTokenOther {
             }
         // snippet.end
     }
+
+    private fun grantTokenWithGetAllMetadataAccess(pubnub: PubNub) {
+        // snippet.grantTokenWithGetAllMetadataAccess
+        // Allow listing all channel and uuid metadata on the keyset (getAllChannelMetadata / getAllUUIDMetadata).
+        // A `get` on a named channel or uuid doesn't imply this.
+        pubnub.grantToken(
+            ttl = 15,
+            authorizedUUID = "my-authorized-uuid",
+            getAllChannels = true,
+            getAllUUIDs = true
+        )
+            .async { result ->
+                result.onFailure { exception ->
+                    // Handle error
+                }.onSuccess { value ->
+                    // Handle successful method result
+                }
+            }
+        // snippet.end
+    }
 }

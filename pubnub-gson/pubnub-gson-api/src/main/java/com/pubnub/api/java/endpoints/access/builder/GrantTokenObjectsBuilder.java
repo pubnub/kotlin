@@ -26,6 +26,16 @@ public interface GrantTokenObjectsBuilder extends AbstractGrantTokenBuilder {
     @Override
     GrantTokenObjectsBuilder channelGroups(List<ChannelGroupGrant> channelGroups);
 
+    /**
+     * @see GrantTokenBuilder#getAllChannels(boolean)
+     */
+    GrantTokenObjectsBuilder getAllChannels(boolean getAllChannels);
+
+    /**
+     * @see GrantTokenBuilder#getAllUUIDs(boolean)
+     */
+    GrantTokenObjectsBuilder getAllUUIDs(boolean getAllUUIDs);
+
     GrantTokenObjectsBuilder uuids(List<UUIDGrant> uuids);
 
     GrantTokenObjectsBuilder authorizedUUID(String authorizedUUID);

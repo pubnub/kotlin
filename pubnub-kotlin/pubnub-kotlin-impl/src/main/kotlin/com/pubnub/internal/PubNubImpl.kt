@@ -723,6 +723,8 @@ open class PubNubImpl(
         channels: List<String>,
         channelGroups: List<String>,
         uuids: List<String>,
+        getAllChannels: Boolean,
+        getAllUUIDs: Boolean,
     ): Grant =
         GrantEndpoint(
             pubnub = this,
@@ -738,6 +740,8 @@ open class PubNubImpl(
             channels = channels,
             channelGroups = channelGroups,
             uuids = uuids,
+            getAllChannels = getAllChannels,
+            getAllUUIDs = getAllUUIDs,
         )
 
     override fun grant(
@@ -771,6 +775,8 @@ open class PubNubImpl(
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
+        getAllChannels: Boolean,
+        getAllUUIDs: Boolean,
     ): GrantToken {
         return GrantTokenEndpoint(
             pubnub = this,
@@ -781,6 +787,8 @@ open class PubNubImpl(
             channelGroups = channelGroups,
             uuids = uuids,
             dataSync = emptyList(),
+            getAllChannels = getAllChannels,
+            getAllUUIDs = getAllUUIDs,
         )
     }
 

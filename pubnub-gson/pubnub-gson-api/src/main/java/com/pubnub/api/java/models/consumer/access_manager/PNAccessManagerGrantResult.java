@@ -24,6 +24,12 @@ public class PNAccessManagerGrantResult {
 
     private Map<String, Map<String, PNAccessManagerKeyData>> uuids;
 
+    /**
+     * Category-level access rights, keyed {@code channels} / {@code uuids}. Empty unless {@code getAllChannels} or
+     * {@code getAllUUIDs} was requested.
+     */
+    private Map<String, Map<String, PNAccessManagerKeyData>> categories;
+
     public static PNAccessManagerGrantResult from(com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult data) {
 
         return PNAccessManagerGrantResult.builder()
@@ -33,6 +39,7 @@ public class PNAccessManagerGrantResult {
                 .channels(from(data.getChannels()))
                 .channelGroups(from(data.getChannelGroups()))
                 .uuids(from(data.getUuids()))
+                .categories(from(data.getCategories()))
                 .build();
     }
 
