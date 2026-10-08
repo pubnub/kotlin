@@ -12,7 +12,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
-import java.util.*
+import java.util.UUID
 
 /**
  * Enumeration (`getAllChannelMetadata` / `getAllUUIDMetadata`) enforcement through the `getAllChannels` /
@@ -24,25 +24,19 @@ import java.util.*
 @Suppress("DEPRECATION")
 class GetAllEnumerationGrantIntegrationTest : BaseIntegrationTest() {
     private val channelId = "enum-channel-" + CommonUtils.randomChannel()
-    private val channelId02 = "enum-channel02-" + CommonUtils.randomChannel()
     private val uuidId = "enum-uuid-" + CommonUtils.randomChannel()
-    private val uuidId02 = "enum-uuid02-" + CommonUtils.randomChannel()
     private val channelFilter = "id == \"$channelId\""
     private val uuidFilter = "id == \"$uuidId\""
     private val tokens = mutableListOf<String>()
 
     override fun onBefore() {
         server.setChannelMetadata(channel = channelId, name = "enumeration test channel").sync()
-        server.setChannelMetadata(channel = channelId02, name = "enumeration test channel02").sync()
         server.setUUIDMetadata(uuid = uuidId, name = "enumeration test uuid").sync()
-        server.setUUIDMetadata(uuid = uuidId02, name = "enumeration test uuid02").sync()
     }
 
     override fun onAfter() {
         runCatching { server.removeChannelMetadata(channelId).sync() }
-        runCatching { server.removeChannelMetadata(channelId02).sync() }
         runCatching { server.removeUUIDMetadata(uuidId).sync() }
-        runCatching { server.removeUUIDMetadata(uuidId02).sync() }
         // Best effort: revoke may be disabled on the keyset, which must not fail the test.
         tokens.forEach { token -> runCatching { server.revokeToken(token).sync() } }
     }
@@ -77,10 +71,8 @@ class GetAllEnumerationGrantIntegrationTest : BaseIntegrationTest() {
     fun tokenWithBothCategories_canListMetadata() {
         val client = tokenClient(grantToken(getAllChannels = true, getAllUUIDs = true))
 
-        val fetchedChannelId = client.getAllChannelMetadata().sync().data.map { it.id }.find { it == channelId }
-        assertTrue(listOf(channelId).contains(fetchedChannelId))
-        val fetchedUuidId = client.getAllUUIDMetadata().sync().data.map { it.id }.find { it == uuidId }
-        assertTrue(listOf(uuidId).contains(fetchedUuidId))
+        assertListsChannel(client)
+        assertListsUuid(client)
     }
 
     @Test

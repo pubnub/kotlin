@@ -53,7 +53,6 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
         if (!uuids.isEmpty() && !grants.isEmpty()) {
             throw new PubNubException("The legacy `uuids` grants can not be combined with `grants`.");
         }
-        // The flat-list `grants` overload has no category flags; reject instead of silently dropping them.
         if (!grants.isEmpty() && (getAllChannels || getAllUUIDs)) {
             throw new PubNubException("`getAllChannels` / `getAllUUIDs` can not be combined with `grants`.");
         }
