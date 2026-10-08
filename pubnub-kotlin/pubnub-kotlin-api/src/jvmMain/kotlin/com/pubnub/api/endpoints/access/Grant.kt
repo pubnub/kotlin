@@ -19,4 +19,6 @@ interface Grant : Endpoint<PNAccessManagerGrantResult> {
     val channels: List<String>
     val channelGroups: List<String>
     val uuids: List<String>
+    val getAllChannels: Boolean get() = false
+    val getAllUUIDs: Boolean get() = false
 }

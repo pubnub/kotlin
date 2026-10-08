@@ -72,4 +72,18 @@ public class GrantTokenOther extends SnippetBase {
                 .async(result -> { /* check result */ });
         // snippet.end
     }
+
+    private void grantTokenWithGetAllMetadataAccess() throws PubNubException {
+        PubNub pubNub = createPubNub();
+
+        // snippet.grantTokenWithGetAllMetadataAccess
+        // Allow listing all channel and uuid metadata on the keyset (getAllChannelsMetadata / getAllUUIDMetadata).
+        // A `get` on a named channel or uuid doesn't imply this.
+        pubNub.grantToken(15)
+                .authorizedUUID("my-authorized-uuid")
+                .getAllChannels(true)
+                .getAllUUIDs(true)
+                .async(result -> { /* check result */ });
+        // snippet.end
+    }
 }

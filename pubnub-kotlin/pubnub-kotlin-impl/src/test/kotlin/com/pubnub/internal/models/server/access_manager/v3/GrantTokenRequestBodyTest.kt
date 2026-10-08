@@ -460,6 +460,72 @@ class GrantTokenRequestBodyTest {
         assertEquals(false, meta.has("pn-projections"))
     }
 
+    @Test
+    fun omitsCategoriesWhenNoFlagIsSet() {
+        // given a regular grant without category flags
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels = listOf(ChannelGrant.name("ch", get = true)),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = null,
+                uuid = null,
+            )
+
+        // when
+        val permissions = gson.toJsonTree(body).asJsonObject["permissions"].asJsonObject
+
+        // then — the request body is unchanged: no `categories` key at all
+        assertFalse(permissions.has("categories"))
+    }
+
+    @Test
+    fun serializesBothCategoriesAsGet() {
+        // given both category flags set
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels = listOf(ChannelGrant.name("ch", get = true)),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = null,
+                uuid = null,
+                getAllChannels = true,
+                getAllUUIDs = true,
+            )
+
+        // when
+        val categories = gson.toJsonTree(body).asJsonObject["permissions"].asJsonObject["categories"].asJsonObject
+
+        // then — GET (32) for both, and the regular grant is kept
+        assertEquals(32, categories["channels"].asInt)
+        assertEquals(32, categories["uuids"].asInt)
+        assertEquals(32, body.permissions.resources.channels["ch"])
+    }
+
+    @Test
+    fun serializesOnlyTheRequestedCategory() {
+        // given only getAllUUIDs and no other grants (a categories-only body)
+        val body =
+            GrantTokenRequestBody.of(
+                ttl = 60,
+                channels = emptyList(),
+                groups = emptyList(),
+                uuids = emptyList(),
+                meta = null,
+                uuid = null,
+                getAllUUIDs = true,
+            )
+
+        // when
+        val categories = gson.toJsonTree(body).asJsonObject["permissions"].asJsonObject["categories"].asJsonObject
+
+        // then — `channels` is omitted, not sent as 0
+        assertFalse(categories.has("channels"))
+        assertEquals(32, categories["uuids"].asInt)
+    }
+
     private fun intAt(
         obj: JsonObject,
         namespaceKey: String,

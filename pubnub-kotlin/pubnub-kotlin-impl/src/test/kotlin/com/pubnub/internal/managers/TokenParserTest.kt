@@ -7,6 +7,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScop
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.io.ByteArrayOutputStream
@@ -314,6 +315,62 @@ class TokenParserTest {
         val parsed = TokenParser().unwrapToken(token)
 
         assertNull(parsed.projections)
+    }
+
+    /**
+     * The optional `cat` section (`{"chan":32,"uuid":32}`) maps to [PNToken.getAllChannels] / [PNToken.getAllUUIDs].
+     */
+    @Test
+    fun parseTokenWithBothCategories() {
+        val token =
+            encodeToken { map ->
+                map.put("v", 2L)
+                map.put("t", 1632335843L)
+                map.put("ttl", 1440L)
+                map.putMap("res").end()
+                map.putMap("pat").end()
+                map.putMap("cat").put("chan", TokenBitmask.GET.toLong()).put("uuid", TokenBitmask.GET.toLong()).end()
+            }
+
+        val parsed = TokenParser().unwrapToken(token)
+
+        assertTrue(parsed.getAllChannels)
+        assertTrue(parsed.getAllUUIDs)
+    }
+
+    @Test
+    fun parseTokenWithSingleCategory() {
+        val token =
+            encodeToken { map ->
+                map.put("v", 2L)
+                map.put("t", 1632335843L)
+                map.put("ttl", 1440L)
+                map.putMap("res").end()
+                map.putMap("pat").end()
+                map.putMap("cat").put("uuid", TokenBitmask.GET.toLong()).end()
+            }
+
+        val parsed = TokenParser().unwrapToken(token)
+
+        assertFalse(parsed.getAllChannels)
+        assertTrue(parsed.getAllUUIDs)
+    }
+
+    @Test
+    fun parseTokenWithoutCategories() {
+        val token =
+            encodeToken { map ->
+                map.put("v", 2L)
+                map.put("t", 1632335843L)
+                map.put("ttl", 1440L)
+                map.putMap("res").end()
+                map.putMap("pat").end()
+            }
+
+        val parsed = TokenParser().unwrapToken(token)
+
+        assertFalse(parsed.getAllChannels)
+        assertFalse(parsed.getAllUUIDs)
     }
 
     private fun encodeToken(build: (co.nstant.`in`.cbor.builder.MapBuilder<CborBuilder>) -> Unit): String {

@@ -20,6 +20,13 @@ data class GrantTokenRequestBody(
         val patterns: GrantTokenPermission,
         val meta: Any? = null,
         val uuid: String? = null,
+        val categories: GrantTokenCategories? = null,
+    )
+
+    // Category-level (whole resource type) permissions. The only value the server accepts is GET.
+    data class GrantTokenCategories(
+        val channels: Int? = null,
+        val uuids: Int? = null,
     )
 
     data class GrantTokenPermission(
@@ -46,6 +53,8 @@ data class GrantTokenRequestBody(
             meta: Any?,
             uuid: String?,
             dataSync: List<DataSyncGrantType> = emptyList(),
+            getAllChannels: Boolean = false,
+            getAllUUIDs: Boolean = false,
         ): GrantTokenRequestBody {
             // DataSync channels/users have no bucket of their own: their bits OR-merge into the plain
             // `channels`/`users` buckets. Their namespace only prefixes the `pn-projections` key.
@@ -76,7 +85,17 @@ data class GrantTokenRequestBody(
                     datasyncMemberships = getPatterns(memberships),
                 )
             val metaWithProjections = mergeProjectionsIntoMeta(meta, dataSync)
-            val permissions = GrantTokenPermissions(resources, patterns, metaWithProjections, uuid)
+            // `null` when no flag is set, so the request body is unchanged for callers not using categories.
+            val categories =
+                if (getAllChannels || getAllUUIDs) {
+                    GrantTokenCategories(
+                        channels = TokenBitmask.GET.takeIf { getAllChannels },
+                        uuids = TokenBitmask.GET.takeIf { getAllUUIDs },
+                    )
+                } else {
+                    null
+                }
+            val permissions = GrantTokenPermissions(resources, patterns, metaWithProjections, uuid, categories)
             return GrantTokenRequestBody(ttl, permissions)
         }
 

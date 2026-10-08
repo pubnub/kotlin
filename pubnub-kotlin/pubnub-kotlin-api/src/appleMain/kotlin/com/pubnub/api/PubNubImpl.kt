@@ -489,7 +489,9 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
-        uuids: List<UUIDGrant>
+        uuids: List<UUIDGrant>,
+        getAllChannels: Boolean,
+        getAllUUIDs: Boolean,
     ): GrantToken {
         TODO("Not yet implemented")
     }

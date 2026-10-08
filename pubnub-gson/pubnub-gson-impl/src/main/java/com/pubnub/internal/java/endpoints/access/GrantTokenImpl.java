@@ -35,6 +35,8 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
     private List<ChannelGroupGrant> channelGroups = Collections.emptyList();
     private List<UUIDGrant> uuids = Collections.emptyList();
     private List<TokenGrant> grants = Collections.emptyList();
+    private boolean getAllChannels;
+    private boolean getAllUUIDs;
 
     public GrantTokenImpl(PubNub pubnub) {
         super(pubnub);
@@ -50,6 +52,10 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
         // of them during routing.
         if (!uuids.isEmpty() && !grants.isEmpty()) {
             throw new PubNubException("The legacy `uuids` grants can not be combined with `grants`.");
+        }
+        // The flat-list `grants` overload has no category flags; reject instead of silently dropping them.
+        if (!grants.isEmpty() && (getAllChannels || getAllUUIDs)) {
+            throw new PubNubException("`getAllChannels` / `getAllUUIDs` can not be combined with `grants`.");
         }
     }
 
@@ -80,7 +86,9 @@ public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> impl
                 authorizedUUID,
                 toInternalChannels(channels),
                 toInternalChannelGroups(channelGroups),
-                toInternalUuids(uuids)
+                toInternalUuids(uuids),
+                getAllChannels,
+                getAllUUIDs
         );
     }
 

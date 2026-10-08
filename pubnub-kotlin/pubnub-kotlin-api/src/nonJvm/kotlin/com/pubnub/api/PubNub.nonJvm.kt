@@ -232,7 +232,9 @@ actual interface PubNub {
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
-        uuids: List<UUIDGrant>
+        uuids: List<UUIDGrant>,
+        getAllChannels: Boolean,
+        getAllUUIDs: Boolean,
     ): GrantToken
 
     actual fun grantToken(
