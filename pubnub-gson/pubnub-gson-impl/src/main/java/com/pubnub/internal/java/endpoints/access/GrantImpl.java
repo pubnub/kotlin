@@ -33,6 +33,8 @@ public class GrantImpl extends DelegatingEndpoint<com.pubnub.api.models.consumer
     private List<String> channels = new ArrayList<>();
     private List<String> channelGroups = new ArrayList<>();
     private List<String> uuids = Collections.emptyList();
+    private boolean getAllChannels;
+    private boolean getAllUUIDs;
 
     public GrantImpl(PubNub pubnub) {
         super(pubnub);
@@ -53,7 +55,9 @@ public class GrantImpl extends DelegatingEndpoint<com.pubnub.api.models.consumer
                 authKeys,
                 channels,
                 channelGroups,
-                uuids
+                uuids,
+                getAllChannels,
+                getAllUUIDs
         );
     }
 

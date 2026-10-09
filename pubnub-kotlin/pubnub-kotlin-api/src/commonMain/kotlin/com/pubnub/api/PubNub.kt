@@ -257,6 +257,10 @@ expect interface PubNub {
      * @param channels List of all channel grants.
      * @param channelGroups List of all channel group grants.
      * @param uuids List of all uuid grants.
+     * @param getAllChannels Set to `true` to allow listing all channel metadata on the keyset
+     * ([getAllChannelMetadata]). A `get` on a named channel or a channel pattern doesn't imply this.
+     * @param getAllUUIDs Set to `true` to allow listing all uuid metadata on the keyset ([getAllUUIDMetadata]).
+     * A `get` on a named uuid or a uuid pattern doesn't imply this.
      */
     fun grantToken(
         ttl: Int,
@@ -265,6 +269,8 @@ expect interface PubNub {
         channels: List<ChannelGrant> = emptyList(),
         channelGroups: List<ChannelGroupGrant> = emptyList(),
         uuids: List<UUIDGrant> = emptyList(),
+        getAllChannels: Boolean = false,
+        getAllUUIDs: Boolean = false,
     ): GrantToken
 
     /**

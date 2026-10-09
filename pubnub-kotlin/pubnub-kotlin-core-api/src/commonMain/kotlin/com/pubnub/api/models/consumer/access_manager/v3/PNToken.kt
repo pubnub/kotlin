@@ -1,6 +1,7 @@
 package com.pubnub.api.models.consumer.access_manager.v3
 
 import com.pubnub.api.models.TokenBitmask
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
 
 data class PNToken(
@@ -17,6 +18,16 @@ data class PNToken(
      * that resource. The same data also remains available in raw form under [meta] (key `pn-projections`).
      */
     val projections: PNDataSyncProjections? = null,
+    /**
+     * `true` if the token allows listing all channel metadata on the keyset (`getAllChannelMetadata`).
+     */
+    @get:JvmName("getAllChannels")
+    val getAllChannels: Boolean = false,
+    /**
+     * `true` if the token allows listing all uuid metadata on the keyset (`getAllUUIDMetadata`).
+     */
+    @get:JvmName("getAllUUIDs")
+    val getAllUUIDs: Boolean = false,
 ) {
     data class PNTokenResources(
         val channels: Map<String, PNResourcePermissions> = emptyMap(),

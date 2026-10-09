@@ -1,6 +1,7 @@
 package com.pubnub.api.legacy.endpoints.access
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.absent
 import com.github.tomakehurst.wiremock.client.WireMock.findAll
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
@@ -18,6 +19,7 @@ import com.pubnub.test.SignatureUtils.decomposeAndVerifySignature
 import org.awaitility.Awaitility
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -1960,5 +1962,118 @@ class GrantEndpointTest : BaseTest() {
         }
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic)
+    }
+
+    @Test
+    fun categoryGrantSendsCategoryCsvAndGetAndParsesCategories() {
+        stubFor(
+            get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
+                .withQueryParam("category", matching("channels,uuids"))
+                .withQueryParam("auth", matching("key1"))
+                .withQueryParam("g", matching("1"))
+                .withQueryParam("r", matching("0"))
+                .withQueryParam("w", matching("0"))
+                .withQueryParam("m", matching("0"))
+                .willReturn(
+                    aResponse().withBody(
+                        """
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "category",
+                            "subscribe_key": "mySubscribeKey",
+                            "ttl": 1440,
+                            "categories": {
+                              "channels": { "auths": { "key1": { "r": 0, "w": 0, "m": 0, "d": 0, "g": 1, "u": 0, "j": 0 } } },
+                              "uuids": { "auths": { "key1": { "r": 0, "w": 0, "m": 0, "d": 0, "g": 1, "u": 0, "j": 0 } } }
+                            }
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
+        )
+
+        // when — `get` is not set explicitly: a category flag must send g=1 on its own
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                getAllChannels = true,
+                getAllUUIDs = true,
+            ).sync()
+
+        // then
+        assertEquals("category", result.level)
+        assertEquals(setOf("channels", "uuids"), result.categories.keys)
+        assertTrue(result.categories["channels"]!!["key1"]!!.getEnabled)
+        assertTrue(result.categories["uuids"]!!["key1"]!!.getEnabled)
+        assertFalse(result.categories["uuids"]!!["key1"]!!.readEnabled)
+    }
+
+    @Test
+    fun singleCategoryGrantSendsOnlyThatCategory() {
+        stubFor(
+            get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
+                .withQueryParam("category", matching("uuids"))
+                .withQueryParam("g", matching("1"))
+                .willReturn(
+                    aResponse().withBody(
+                        """
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "category",
+                            "subscribe_key": "mySubscribeKey",
+                            "ttl": 1440,
+                            "categories": {
+                              "uuids": { "auths": { "key1": { "r": 0, "w": 0, "m": 0, "d": 0, "g": 1, "u": 0, "j": 0 } } }
+                            }
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
+        )
+
+        val result = pubnub.grant(authKeys = listOf("key1"), getAllUUIDs = true).sync()
+
+        assertEquals(setOf("uuids"), result.categories.keys)
+    }
+
+    @Test
+    fun grantWithoutCategoryFlagsSendsNoCategoryAndKeepsGetUnset() {
+        stubFor(
+            get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
+                .withQueryParam("channel", matching("ch1"))
+                .withQueryParam("category", absent())
+                .withQueryParam("g", matching("0"))
+                .willReturn(
+                    aResponse().withBody(
+                        """
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "user",
+                            "subscribe_key": "mySubscribeKey",
+                            "ttl": 1,
+                            "channel": "ch1",
+                            "auths": { "key1": { "r": 1, "w": 0, "m": 0 } }
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
+        )
+
+        val result = pubnub.grant(read = true, authKeys = listOf("key1"), channels = listOf("ch1")).sync()
+
+        // then — no `categories` in the response maps to an empty map, never null
+        assertTrue(result.categories.isEmpty())
     }
 }

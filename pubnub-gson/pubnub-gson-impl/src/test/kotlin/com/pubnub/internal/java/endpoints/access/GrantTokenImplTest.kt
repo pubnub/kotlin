@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.java.endpoints.access.builder.GrantTokenBuilder
+import com.pubnub.api.java.endpoints.access.builder.GrantTokenObjectsBuilder
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.java.models.consumer.access_manager.v3.DataSyncGrant
@@ -61,6 +62,8 @@ class GrantTokenImplTest {
                 capture(channelsCapture),
                 capture(channelGroupsCapture),
                 capture(uuidsCapture),
+                false,
+                false,
             )
         } returns grantTokenEndpoint
 
@@ -68,10 +71,70 @@ class GrantTokenImplTest {
         objectUnderTest.createRemoteAction()
 
         // then
-        verify { pubNubCore.grantToken(ttl, meta, authorizedUUID, any(), any(), any()) }
+        verify { pubNubCore.grantToken(ttl, meta, authorizedUUID, any(), any(), any(), false, false) }
         assertEquals(2, channelsCapture.captured.size)
         assertEquals(1, channelGroupsCapture.captured.size)
         assertEquals(1, uuidsCapture.captured.size)
+    }
+
+    @Test
+    fun categoryFlagsReachTheLegacyKotlinOverload() {
+        // given — category flags on the neutral builder, no `grants(...)`
+        objectUnderTest = GrantTokenImpl(pubNubCore)
+        objectUnderTest.ttl(ttl)
+            .getAllChannels(true)
+            .getAllUUIDs(true)
+        every {
+            pubNubCore.grantToken(ttl, meta, null, any(), any(), any(), true, true)
+        } returns grantTokenEndpoint
+
+        // when
+        objectUnderTest.createRemoteAction()
+
+        // then — routed to the legacy overload with both flags set
+        verify { pubNubCore.grantToken(ttl, meta, null, any(), any(), any(), true, true) }
+    }
+
+    @Test
+    fun categoryFlagOnTheObjectsBuilderReachesTheLegacyKotlinOverload() {
+        // given — the flag is set after entering the legacy (uuids) path
+        objectUnderTest = GrantTokenImpl(pubNubCore)
+        objectUnderTest.ttl(ttl)
+            .uuids(uuids)
+            .getAllUUIDs(true)
+        every {
+            pubNubCore.grantToken(ttl, meta, null, any(), any(), any(), false, true)
+        } returns grantTokenEndpoint
+
+        // when
+        objectUnderTest.createRemoteAction()
+
+        // then
+        verify { pubNubCore.grantToken(ttl, meta, null, any(), any(), any(), false, true) }
+    }
+
+    @Test
+    fun categoryFlagsEnterTheLegacyPath() {
+        // given — the neutral builder, as returned by pubnub.grantToken(ttl)
+        val builder: GrantTokenBuilder = GrantTokenImpl(pubNubCore).ttl(ttl)
+
+        // when / then — the flags return the legacy builder, which has no `grants(...)`, so DataSync grants can't be
+        // chained after them (this is checked at compile time by the declared types)
+        val afterChannels: GrantTokenObjectsBuilder = builder.getAllChannels(true)
+        val afterUuids: GrantTokenObjectsBuilder = builder.getAllUUIDs(true)
+        assertTrue(afterChannels is GrantTokenImpl && afterUuids is GrantTokenImpl)
+    }
+
+    @Test
+    fun combiningCategoryFlagWithGrantsThrows() {
+        // given — the flat-list overload has no category flags, so the flag must not be silently dropped
+        objectUnderTest = GrantTokenImpl(pubNubCore)
+        objectUnderTest.ttl(ttl)
+        objectUnderTest.getAllChannels(true)
+        objectUnderTest.grants(listOf(DataSyncGrant.entity("capy-001").get()))
+
+        // when / then
+        assertThrows(PubNubException::class.java) { objectUnderTest.sync() }
     }
 
     @Test

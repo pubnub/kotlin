@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints.access
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
@@ -206,6 +207,131 @@ internal class GrantTokenTest {
         // then — no "At least one grant required" error, and the grant reaches the users bucket
         assertEquals("token_value", result.token)
         assertEquals(32, (capturedBodies[0] as GrantTokenRequestBody).permissions.resources.users["user-A"])
+    }
+
+    @Test
+    fun categoriesOnlyGrantSatisfiesAtLeastOneGrantCheck() {
+        val retrofitManager = mockk<RetrofitManager>(relaxed = true)
+        val accessManagerService = mockk<AccessManagerService>(relaxed = true)
+        val capturedBodies = mutableListOf<Any>()
+        val call = mockk<Call<GrantTokenResponse>>()
+
+        every { pubnub.retrofitManager } returns retrofitManager
+        every { retrofitManager.accessManagerService } returns accessManagerService
+        every { accessManagerService.grantToken(any(), capture(capturedBodies), any()) } returns call
+        every { call.execute() } returns Response.success(GrantTokenResponse(GrantTokenData("token_value")))
+
+        // when — no resource or pattern grants, only the category flags
+        val result = pubnub.grantToken(ttl = 60, getAllChannels = true, getAllUUIDs = true).sync()
+
+        // then — no "At least one grant required" error, and the categories reach the request body
+        assertEquals("token_value", result.token)
+        val categories = (capturedBodies[0] as GrantTokenRequestBody).permissions.categories!!
+        assertEquals(32, categories.channels)
+        assertEquals(32, categories.uuids)
+    }
+
+    @Test
+    fun oldGrantTokenSignatureIsKeptForBinaryCompatibility() {
+        // given — the pre-categories 6-param JVM signature, as called by code compiled against the previous release
+        val oldGrantToken =
+            PubNub::class.java.getMethod(
+                "grantToken",
+                Int::class.javaPrimitiveType,
+                Any::class.java,
+                String::class.java,
+                List::class.java,
+                List::class.java,
+                List::class.java,
+            )
+
+        val retrofitManager = mockk<RetrofitManager>(relaxed = true)
+        val accessManagerService = mockk<AccessManagerService>(relaxed = true)
+        val capturedBodies = mutableListOf<Any>()
+        val call = mockk<Call<GrantTokenResponse>>()
+
+        every { pubnub.retrofitManager } returns retrofitManager
+        every { retrofitManager.accessManagerService } returns accessManagerService
+        every { accessManagerService.grantToken(any(), capture(capturedBodies), any()) } returns call
+        every { call.execute() } returns Response.success(GrantTokenResponse(GrantTokenData("token_value")))
+
+        // when
+        val grantToken =
+            oldGrantToken.invoke(
+                pubnub,
+                60,
+                null,
+                "authorizedUserId",
+                listOf(ChannelGrant.name("ch", read = true)),
+                emptyList<ChannelGroupGrant>(),
+                emptyList<UUIDGrant>(),
+            ) as GrantToken
+        val result = grantToken.sync()
+
+        // then — it delegates to the new overload: arguments passed through, both flags off
+        assertEquals("token_value", result.token)
+        val body = capturedBodies[0] as GrantTokenRequestBody
+        assertEquals(1, body.permissions.resources.channels["ch"])
+        assertEquals("authorizedUserId", body.permissions.uuid)
+        assertEquals(null, body.permissions.categories)
+    }
+
+    @Test
+    fun oldGrantSignatureIsKeptForBinaryCompatibility() {
+        // given — the pre-categories 12-param JVM signature of the legacy `grant`
+        val oldGrant =
+            PubNub::class.java.getMethod(
+                "grant",
+                Boolean::class.javaPrimitiveType,
+                Boolean::class.javaPrimitiveType,
+                Boolean::class.javaPrimitiveType,
+                Boolean::class.javaPrimitiveType,
+                Boolean::class.javaPrimitiveType,
+                Boolean::class.javaPrimitiveType,
+                Boolean::class.javaPrimitiveType,
+                Int::class.javaPrimitiveType,
+                List::class.java,
+                List::class.java,
+                List::class.java,
+                List::class.java,
+            )
+
+        // when
+        val grant =
+            oldGrant.invoke(
+                pubnub,
+                true, // read
+                false, // write
+                false, // manage
+                false, // delete
+                true, // get
+                false, // update
+                false, // join
+                60, // ttl
+                listOf("key"), // authKeys
+                listOf("ch"), // channels
+                emptyList<String>(), // channelGroups
+                emptyList<String>(), // uuids
+            ) as Grant
+
+        // then — the arguments are passed through and both flags are off
+        assertTrue(grant.read)
+        assertTrue(grant.get)
+        assertEquals(listOf("ch"), grant.channels)
+        assertFalse(grant.getAllChannels)
+        assertFalse(grant.getAllUUIDs)
+    }
+
+    @Test
+    fun grantWithoutResourcesOrCategoriesIsRejected() {
+        // when — nothing is granted at all
+        val exception =
+            assertThrows(PubNubException::class.java) {
+                pubnub.grantToken(ttl = 60).sync()
+            }
+
+        // then
+        assertEquals("At least one grant required", exception.errorMessage)
     }
 
     @Test
