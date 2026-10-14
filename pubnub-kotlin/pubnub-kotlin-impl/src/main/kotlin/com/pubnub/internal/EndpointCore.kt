@@ -45,7 +45,14 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
     private val logger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     private lateinit var cachedCallback: Consumer<Result<Output>>
+
+    @Volatile
     private lateinit var call: Call<Input>
+
+    @Volatile
+    private var retryableCallback: RetryableCallback<Input>? = null
+
+    @Volatile
     private var silenceFailures = false
     private val retryableRestCaller by lazy {
         RetryableRestCaller<Input>(
@@ -115,7 +122,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
             return
         }
 
-        call.enqueue(
+        val retryableCallback =
             object : RetryableCallback<Input>(
                 call = call,
                 retryConfiguration = configuration.retryConfiguration,
@@ -128,6 +135,11 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
                     call: Call<Input>,
                     response: Response<Input>,
                 ) {
+                    // silentCancel() promises no further results: neither a late success nor a late HTTP error
+                    if (silenceFailures) {
+                        return
+                    }
+
                     when {
                         response.isSuccessful -> {
                             // query params
@@ -196,8 +208,17 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
                         )
                     callback.accept(Result.failure(pubnubException))
                 }
-            },
-        )
+            }
+
+        // silentCancel() writes `silenceFailures` before reading `retryableCallback`; we write `retryableCallback`
+        // before re-reading `silenceFailures`, so a concurrent cancel is always observed by at least one side
+        this.retryableCallback = retryableCallback
+        if (silenceFailures) {
+            // silentCancel() ran before or during setup; don't send the request at all
+            retryableCallback.cancel()
+            return
+        }
+        call.enqueue(retryableCallback)
     }
 
     protected fun createBaseParams(): HashMap<String, String> {
@@ -231,11 +252,12 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
      * Cancel the operation but do not alert anybody, useful for restarting the heartbeats and subscribe loops.
      */
     override fun silentCancel() {
+        silenceFailures = true
+        // Cancel both: the callback reaches an in-flight retry clone or a scheduled retry, while `call` may already
+        // hold a newer request whose callback is not published yet (repeated async()). Both cancels are idempotent.
+        retryableCallback?.cancel()
         if (::call.isInitialized) {
-            if (!call.isCanceled) {
-                silenceFailures = true
-                call.cancel()
-            }
+            call.cancel()
         }
     }
 

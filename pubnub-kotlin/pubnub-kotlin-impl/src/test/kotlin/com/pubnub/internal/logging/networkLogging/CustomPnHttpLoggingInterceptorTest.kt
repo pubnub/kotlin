@@ -8,6 +8,7 @@ import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.MapperManager
 import io.mockk.every
 import io.mockk.mockk
+import okhttp3.Call
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Protocol
@@ -15,8 +16,11 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.io.IOException
 import java.util.Base64
+import javax.net.ssl.SSLException
 
 class CustomPnHttpLoggingInterceptorTest {
     private val mapperManager = MapperManager(LogConfig(pnInstanceId = "test-instance", userId = "test-user"))
@@ -105,5 +109,71 @@ class CustomPnHttpLoggingInterceptorTest {
         val logged = loggedResponseBody(contentType = "application/octet-stream", bodyText = body)
 
         assertEquals(Base64.getEncoder().encodeToString(body.toByteArray()), logged)
+    }
+
+    /** Returns the levels ("debug" / "error") at which the interceptor logged the failure. */
+    private fun loggedFailureLevels(callCanceled: Boolean, failure: Exception): List<String> {
+        val levels = mutableListOf<String>()
+        val logger = object : PNLogger {
+            override fun trace(message: LogMessage) {}
+
+            override fun debug(message: LogMessage) {
+                if (message.message is LogMessageContent.Error) {
+                    levels.add("debug")
+                }
+            }
+
+            override fun info(message: LogMessage) {}
+
+            override fun warn(message: LogMessage) {}
+
+            override fun error(message: LogMessage) {
+                if (message.message is LogMessageContent.Error) {
+                    levels.add("error")
+                }
+            }
+
+            override fun isDebugEnabled(): Boolean = true
+        }
+
+        val interceptor = CustomPnHttpLoggingInterceptor(
+            logger = logger,
+            mapperManager = mapperManager,
+            logVerbosity = PNLogVerbosity.NONE,
+            maxLoggedBodyBytes = 1024L,
+        )
+
+        val request = Request.Builder().url("https://example.com/v2/subscribe/sub-key/ch/0").build()
+        val call = mockk<Call>()
+        every { call.isCanceled() } returns callCanceled
+        val chain = mockk<Interceptor.Chain>()
+        every { chain.request() } returns request
+        every { chain.call() } returns call
+        every { chain.proceed(request) } throws failure
+
+        assertThrows(failure.javaClass) { interceptor.intercept(chain) }
+
+        return levels
+    }
+
+    @Test
+    fun `logs intentionally cancelled call failing with Socket closed as debug, not error`() {
+        val levels = loggedFailureLevels(callCanceled = true, failure = SSLException("Socket closed"))
+
+        assertEquals(listOf("debug"), levels)
+    }
+
+    @Test
+    fun `logs Canceled IOException as debug`() {
+        val levels = loggedFailureLevels(callCanceled = false, failure = IOException("Canceled"))
+
+        assertEquals(listOf("debug"), levels)
+    }
+
+    @Test
+    fun `logs failure of a call that was not cancelled as error`() {
+        val levels = loggedFailureLevels(callCanceled = false, failure = SSLException("Socket closed"))
+
+        assertEquals(listOf("error"), levels)
     }
 }
