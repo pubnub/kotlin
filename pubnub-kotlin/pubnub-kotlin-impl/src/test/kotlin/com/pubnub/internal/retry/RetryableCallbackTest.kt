@@ -15,11 +15,13 @@ import org.junit.jupiter.api.Test
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.net.ssl.SSLException
 import kotlin.time.Duration.Companion.milliseconds
 
 class RetryableCallbackTest {
@@ -256,4 +258,117 @@ class RetryableCallbackTest {
         verify(exactly = 2) { mockCall.clone() }
         Assertions.assertTrue(onFinalFailureCalled)
     }
+
+    @Test
+    fun `should not retry onFailure after cancel`() {
+        // given
+        val mockClone = mockk<Call<Any>>(relaxed = true)
+        every { mockCall.clone() } returns mockClone
+        val retryableCallback = getCancellableRetryableCallback()
+
+        // when
+        retryableCallback.cancel()
+        retryableCallback.onFailure(mockCall, SSLException("Socket closed"))
+        Thread.sleep(RETRY_WINDOW_MS)
+
+        // then
+        verify(exactly = 0) { mockClone.enqueue(any()) }
+        verify(exactly = 0) { mockCall.clone() }
+        Assertions.assertTrue(onFinalFailureCalled)
+    }
+
+    @Test
+    fun `should not retry onFailure when call is canceled`() {
+        // given
+        val mockClone = mockk<Call<Any>>(relaxed = true)
+        every { mockCall.clone() } returns mockClone
+        every { mockCall.isCanceled } returns true
+        val retryableCallback = getCancellableRetryableCallback()
+
+        // when
+        retryableCallback.onFailure(mockCall, IOException("Canceled"))
+        Thread.sleep(RETRY_WINDOW_MS)
+
+        // then
+        verify(exactly = 0) { mockClone.enqueue(any()) }
+        verify(exactly = 0) { mockCall.clone() }
+        Assertions.assertTrue(onFinalFailureCalled)
+    }
+
+    @Test
+    fun `should not enqueue scheduled retry when cancelled during backoff`() {
+        // given
+        val mockClone = mockk<Call<Any>>(relaxed = true)
+        every { mockCall.clone() } returns mockClone
+        val retryableCallback = getCancellableRetryableCallback()
+
+        // when
+        retryableCallback.onFailure(mockCall, SocketTimeoutException()) // genuine failure -> retry scheduled
+        retryableCallback.cancel()
+        Thread.sleep(RETRY_WINDOW_MS)
+
+        // then
+        verify(exactly = 0) { mockClone.enqueue(any()) }
+        verify(exactly = 0) { mockCall.clone() }
+        Assertions.assertFalse(onFinalFailureCalled)
+    }
+
+    @Test
+    fun `cancel should cancel in-flight retry clone`() {
+        // given
+        val cloneEnqueued = AtomicBoolean()
+        val mockClone = mockk<Call<Any>>(relaxed = true)
+        every { mockCall.clone() } returns mockClone
+        // clone's enqueue does nothing: long-poll in flight
+        every { mockClone.enqueue(any()) } answers { cloneEnqueued.set(true) }
+        val retryableCallback = getCancellableRetryableCallback()
+
+        // when
+        retryableCallback.onFailure(mockCall, SocketTimeoutException())
+        cloneEnqueued.listen { cloneEnqueued.get() }
+        retryableCallback.cancel()
+
+        // then
+        verify(exactly = 1) { mockClone.cancel() }
+    }
+
+    @Test
+    fun `should not retry onResponse after cancel`() {
+        // given
+        val mockClone = mockk<Call<Any>>(relaxed = true)
+        every { mockCall.clone() } returns mockClone
+        val retryableCallback = getCancellableRetryableCallback()
+        val errorResponse: Response<Any> = Response.error<Any>(500, ResponseBody.create(null, ""))
+
+        // when
+        retryableCallback.cancel()
+        retryableCallback.onResponse(mockCall, errorResponse)
+        Thread.sleep(RETRY_WINDOW_MS)
+
+        // then
+        verify(exactly = 0) { mockClone.enqueue(any()) }
+        verify(exactly = 0) { mockCall.clone() }
+        Assertions.assertTrue(onFinalResponseCalled)
+    }
+
+    private fun getCancellableRetryableCallback(): RetryableCallback<Any> {
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+        val retryConfiguration =
+            RetryConfiguration.Exponential.createForTest(
+                minDelayInSec = RETRY_MIN_DELAY_MS.milliseconds,
+                maxDelayInSec = RETRY_MIN_DELAY_MS.milliseconds,
+                maxRetryNumber = 3,
+                // without isInternal the public 2s minimum delay is applied and RETRY_WINDOW_MS is too short
+                isInternal = true,
+            )
+        return getRetryableCallback(
+            retryConfiguration = retryConfiguration,
+            endpointGroupName = RetryableEndpointGroup.SUBSCRIBE,
+        )
+    }
 }
+
+private const val RETRY_MIN_DELAY_MS = 100L
+
+// a negative ("no retry") assertion is only meaningful once the worst-case first retry (min delay + jitter) would have fired
+private const val RETRY_WINDOW_MS = RETRY_MIN_DELAY_MS + RetryableBase.MAX_RANDOM_DELAY_IN_MILLIS + 500L

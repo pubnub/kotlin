@@ -11,6 +11,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
+import java.io.IOException
 import java.util.Base64
 
 private const val PUBNUB_OKHTTP_LOG_TAG = "pubnub.okhttp"
@@ -37,7 +38,9 @@ class CustomPnHttpLoggingInterceptor(
             // Log response (peeks at body without consuming it)
             return logResponse(response, location)
         } catch (e: Exception) {
-            logError(request, location, e, requestStartTime)
+            // An intentional cancel surfaces as "Canceled", "Socket closed", SSLException... so check the call itself
+            val isCancellation = chain.call().isCanceled() || (e is IOException && e.message == "Canceled")
+            logError(request, location, e, requestStartTime, isCancellation)
 
             throw e
         }
@@ -220,7 +223,13 @@ class CustomPnHttpLoggingInterceptor(
         }
     }
 
-    private fun logError(request: Request, location: String, error: Exception, requestStartTime: Long) {
+    private fun logError(
+        request: Request,
+        location: String,
+        error: Exception,
+        requestStartTime: Long,
+        isCancellation: Boolean,
+    ) {
         val duration = System.currentTimeMillis() - requestStartTime
 
         val errorDetails = LogMessageContent.Error(
@@ -237,8 +246,6 @@ class CustomPnHttpLoggingInterceptor(
 
         // Cancellation is normal Event Engine behavior when there is subscriptionChange
         // Log as debug instead of error to avoid noise in logs
-        val isCancellation = error is java.io.IOException && error.message == "Canceled"
-
         if (isCancellation) {
             logger.debug(logMessage)
             // to keep PNLogVerbosity.BODY functional

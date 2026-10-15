@@ -12,6 +12,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -27,11 +28,32 @@ internal abstract class RetryableCallback<T>(
     private var retryCount = 0
     private var exponentialMultiplier = 0.0
 
+    @Volatile
+    private var cancelled = false
+
+    // the request currently on the wire: the original call or the latest retry clone
+    @Volatile
+    private var currentCall: Call<T> = call
+
+    @Volatile
+    private var pendingRetry: ScheduledFuture<*>? = null
+
+    /**
+     * Cancels the current request (the original or an in-flight retry clone) and any retry scheduled
+     * during backoff. Results arriving after this call are passed to [onFinalResponse] / [onFinalFailure]
+     * without being retried.
+     */
+    fun cancel() {
+        cancelled = true
+        pendingRetry?.cancel(false)
+        currentCall.cancel()
+    }
+
     override fun onResponse(
         call: Call<T>,
         response: Response<T>,
     ) {
-        if (shouldRetryOnResponse(response)) {
+        if (!cancelled && shouldRetryOnResponse(response)) {
             retryOnResponseWithError(response)
         } else {
             onFinalResponse(call, response)
@@ -42,7 +64,12 @@ internal abstract class RetryableCallback<T>(
         call: Call<T>,
         t: Throwable,
     ) {
-        if (shouldRetryOnFailure(t)) {
+        // A cancel can surface as any IOException ("Canceled", "Socket closed", SSLException...),
+        // so decide on intent, never on the exception type.
+        // `call.isCanceled` covers a cancel issued on the call before this callback was registered for cancellation.
+        if (cancelled || call.isCanceled) {
+            onFinalFailure(call, t)
+        } else if (shouldRetryOnFailure(t)) {
             retryOnFailure()
         } else {
             onFinalFailure(call, t)
@@ -94,8 +121,18 @@ internal abstract class RetryableCallback<T>(
         )
         // don't want to block the main thread in case of Android so using executorService
         try {
-            executorService.scheduleWithDelay(effectiveDelay) {
-                call.clone().enqueue(this)
+            pendingRetry = executorService.scheduleWithDelay(effectiveDelay) {
+                if (cancelled) {
+                    return@scheduleWithDelay
+                }
+                val next = call.clone()
+                currentCall = next
+                // cancel() writes `cancelled` before reading `currentCall`, so either it sees the clone
+                // and cancels it, or we see the flag here and don't enqueue
+                if (cancelled) {
+                    return@scheduleWithDelay
+                }
+                next.enqueue(this)
             }
         } catch (_: RejectedExecutionException) {
             log.trace(
