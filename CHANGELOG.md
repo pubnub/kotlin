@@ -1,3 +1,9 @@
+## v14.0.1
+October 15 2026
+
+#### Fixed
+- Don't retry or deliver result of a canceled subscribe request after disconnect or unsubscribeAll.
+
 ## v14.0.0
 October 07 2026
 
