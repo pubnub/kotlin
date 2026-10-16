@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:PubNubImpl.kt$PubNubImpl$channelsNoPresence.isNotEmpty() || groupsNoPresence.isNotEmpty() || presenceOnlyChannels.isNotEmpty() || presenceOnlyGroups.isNotEmpty()</ID>
+    <ID>CyclomaticComplexMethod:ConfigurationLogger.kt$ConfigurationLogger$fun logConfiguration( configuration: PNConfiguration, logger: PNLogger, instanceId: String, className: Class&lt;*> )</ID>
+    <ID>CyclomaticComplexMethod:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$private fun logResponse(response: Response, location: String): Response</ID>
+    <ID>CyclomaticComplexMethod:GetChannelsEndpoint.kt$GetChannelsEndpoint$override fun doWork(queryParams: HashMap&lt;String, String>): Call&lt;EntitiesEnvelope&lt;PNDataSyncChannel>></ID>
+    <ID>CyclomaticComplexMethod:GetEntitiesEndpoint.kt$GetEntitiesEndpoint$override fun doWork(queryParams: HashMap&lt;String, String>): Call&lt;EntitiesEnvelope&lt;PNDataSyncEntity>></ID>
+    <ID>CyclomaticComplexMethod:GetMembershipsEndpoint.kt$GetMembershipsEndpoint$override fun doWork(queryParams: HashMap&lt;String, String>): Call&lt;EntitiesEnvelope&lt;PNDataSyncMembership>></ID>
+    <ID>CyclomaticComplexMethod:GetRelationshipsEndpoint.kt$GetRelationshipsEndpoint$override fun doWork(queryParams: HashMap&lt;String, String>): Call&lt;EntitiesEnvelope&lt;PNDataSyncRelationship>></ID>
+    <ID>CyclomaticComplexMethod:GetUsersEndpoint.kt$GetUsersEndpoint$override fun doWork(queryParams: HashMap&lt;String, String>): Call&lt;EntitiesEnvelope&lt;PNDataSyncUser>></ID>
+    <ID>CyclomaticComplexMethod:GrantEndpoint.kt$GrantEndpoint$private fun addQueryParams(queryParams: MutableMap&lt;String, String>)</ID>
+    <ID>CyclomaticComplexMethod:PubNubImpl.kt$PubNubImpl$internal fun subscribe( vararg subscriptions: SubscriptionInternal, cursor: SubscriptionCursor, )</ID>
+    <ID>CyclomaticComplexMethod:RetrofitManager.kt$RetrofitManager$private fun createOkHttpClient( readTimeout: Int, withSignature: Boolean = true, parentOkHttpClient: OkHttpClient? = null, ): OkHttpClient</ID>
+    <ID>CyclomaticComplexMethod:SubscribeMessageProcessor.kt$SubscribeMessageProcessor$fun processIncomingPayload(message: SubscribeMessage): PNEvent?</ID>
+    <ID>EmptyKtFile:ReconnectionPolicy.kt$.ReconnectionPolicy.kt</ID>
+    <ID>ForbiddenComment:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$// TODO: Extract from request if available</ID>
+    <ID>ForbiddenComment:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$// TODO: Parse form data if needed</ID>
+    <ID>InstanceOfCheckForException:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$e is IOException</ID>
+    <ID>InstanceOfCheckForException:DecryptingInputStream.kt$DecryptingInputStream$e is GeneralSecurityException</ID>
+    <ID>InstanceOfCheckForException:DecryptingInputStream.kt$DecryptingInputStream$e is java.io.IOException</ID>
+    <ID>InstanceOfCheckForException:TokenParser.kt$TokenParser$e is PubNubException</ID>
+    <ID>LargeClass:PubNubImpl.kt$PubNubImpl : PubNub</ID>
+    <ID>LongMethod:ConfigurationLogger.kt$ConfigurationLogger$fun logConfiguration( configuration: PNConfiguration, logger: PNLogger, instanceId: String, className: Class&lt;*> )</ID>
+    <ID>LongMethod:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$private fun logResponse(response: Response, location: String): Response</ID>
+    <ID>LongMethod:EndpointCore.kt$EndpointCore$private fun checkAndCreateResponse(input: Response&lt;Input>): Output</ID>
+    <ID>LongMethod:EndpointCore.kt$EndpointCore$private fun createException( response: Response&lt;Input>, errorString: String? = null, errorBody: JsonElement? = null, ): PubNubException</ID>
+    <ID>LongMethod:GrantEndpoint.kt$GrantEndpoint$private fun addQueryParams(queryParams: MutableMap&lt;String, String>)</ID>
+    <ID>LongMethod:PNDataSyncEventResult.kt$internal fun PNDataSyncEventMessage.toApi(): com.pubnub.api.models.consumer.pubsub.datasync.PNDataSyncEventMessage</ID>
+    <ID>LongMethod:PublishEndpoint.kt$PublishEndpoint$override fun doWork(queryParams: HashMap&lt;String, String>): Call&lt;List&lt;Any>></ID>
+    <ID>LongMethod:SubscribeMessageProcessor.kt$SubscribeMessageProcessor$fun processIncomingPayload(message: SubscribeMessage): PNEvent?</ID>
+    <ID>LongMethod:SubscribeState.kt$SubscribeState.Receiving$override fun transition(event: SubscribeEvent): Pair&lt;SubscribeState, Set&lt;SubscribeEffectInvocation>></ID>
+    <ID>LongParameterList:Presence.kt$Presence.Companion$( heartbeatProvider: HeartbeatProvider, leaveProvider: LeaveProvider, heartbeatInterval: Duration, suppressLeaveEvents: Boolean, heartbeatNotificationOptions: PNHeartbeatNotificationOptions, listenerManager: ListenerManager, eventEngineConf: EventEngineConf&lt;PresenceEffectInvocation, PresenceEvent>, presenceData: PresenceData = PresenceData(), sendStateWithHeartbeat: Boolean, executorService: ScheduledExecutorService, logConfig: LogConfig, )</ID>
+    <ID>MagicNumber:BasePathManager.kt$BasePathManager$20</ID>
+    <ID>MagicNumber:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$10</ID>
+    <ID>MagicNumber:DataSyncErrorMapping.kt$400</ID>
+    <ID>MagicNumber:DataSyncErrorMapping.kt$401</ID>
+    <ID>MagicNumber:DataSyncErrorMapping.kt$403</ID>
+    <ID>MagicNumber:DataSyncErrorMapping.kt$404</ID>
+    <ID>MagicNumber:DataSyncErrorMapping.kt$409</ID>
+    <ID>MagicNumber:DataSyncErrorMapping.kt$412</ID>
+    <ID>MagicNumber:DataSyncErrorMapping.kt$500</ID>
+    <ID>MagicNumber:DataSyncErrorMapping.kt$599</ID>
+    <ID>MagicNumber:FileEncryptionUtil.kt$FileEncryptionUtil$32</ID>
+    <ID>MagicNumber:GetMessageActionsEndpoint.kt$GetMessageActionsEndpoint$100</ID>
+    <ID>MagicNumber:HeaderParser.kt$HeaderParser$0xFF</ID>
+    <ID>MagicNumber:HeaderParser.kt$HeaderParser$8</ID>
+    <ID>MagicNumber:LegacyCryptor.kt$4</ID>
+    <ID>MagicNumber:LegacyCryptor.kt$LegacyCryptor$0x100</ID>
+    <ID>MagicNumber:LegacyCryptor.kt$LegacyCryptor$0xff</ID>
+    <ID>MagicNumber:LegacyCryptor.kt$LegacyCryptor$16</ID>
+    <ID>MagicNumber:LegacyCryptor.kt$LegacyCryptor$32</ID>
+    <ID>MagicNumber:MessageFingerprint.kt$0xFFFFFFFFL</ID>
+    <ID>MagicNumber:PubNubImpl.kt$PubNubImpl$8</ID>
+    <ID>MagicNumber:RetrofitManager.kt$RetrofitManager$100</ID>
+    <ID>MagicNumber:TokenParser.kt$TokenParser$3</ID>
+    <ID>MagicNumber:UploadFileEndpoint.kt$UploadFileEndpoint$200</ID>
+    <ID>MemberNameEqualsClassName:Subscribe.kt$Subscribe$@Synchronized fun subscribe( channels: Set&lt;String>, channelGroups: Set&lt;String>, withPresence: Boolean, withTimetoken: Long = 0L, )</ID>
+    <ID>NestedBlockDepth:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$private fun logResponse(response: Response, location: String): Response</ID>
+    <ID>NestedBlockDepth:EndpointCore.kt$EndpointCore$private fun createException( response: Response&lt;Input>, errorString: String? = null, errorBody: JsonElement? = null, ): PubNubException</ID>
+    <ID>NestedBlockDepth:HistoryEndpoint.kt$HistoryEndpoint$override fun createResponse(input: Response&lt;JsonElement>): PNHistoryResult</ID>
+    <ID>NestedBlockDepth:RetrofitManager.kt$RetrofitManager$private fun closeExecutor( client: OkHttpClient?, force: Boolean, )</ID>
+    <ID>PackageNaming:AccessManagerGrantPayload.kt$package com.pubnub.internal.models.server.access_manager</ID>
+    <ID>PackageNaming:AddChannelChannelGroupEndpoint.kt$package com.pubnub.internal.endpoints.channel_groups</ID>
+    <ID>PackageNaming:AddMessageActionEndpoint.kt$package com.pubnub.internal.endpoints.message_actions</ID>
+    <ID>PackageNaming:AllChannelsChannelGroupEndpoint.kt$package com.pubnub.internal.endpoints.channel_groups</ID>
+    <ID>PackageNaming:ChangeMemberInput.kt$package com.pubnub.internal.models.server.objects_api</ID>
+    <ID>PackageNaming:ChangeMembershipInput.kt$package com.pubnub.internal.models.server.objects_api</ID>
+    <ID>PackageNaming:ChannelMetadataInput.kt$package com.pubnub.internal.models.server.objects_api</ID>
+    <ID>PackageNaming:DeleteChannelGroupEndpoint.kt$package com.pubnub.internal.endpoints.channel_groups</ID>
+    <ID>PackageNaming:EntityArrayEnvelope.kt$package com.pubnub.internal.models.server.objects_api</ID>
+    <ID>PackageNaming:EntityEnvelope.kt$package com.pubnub.internal.models.server.objects_api</ID>
+    <ID>PackageNaming:GetMessageActionsEndpoint.kt$package com.pubnub.internal.endpoints.message_actions</ID>
+    <ID>PackageNaming:GrantTokenRequestBody.kt$package com.pubnub.internal.models.server.access_manager.v3</ID>
+    <ID>PackageNaming:GrantTokenResponse.kt$package com.pubnub.internal.models.server.access_manager.v3</ID>
+    <ID>PackageNaming:ListAllChannelGroupEndpoint.kt$package com.pubnub.internal.endpoints.channel_groups</ID>
+    <ID>PackageNaming:MessageActionsResponse.kt$package com.pubnub.internal.models.server.message_actions</ID>
+    <ID>PackageNaming:RemoveChannelChannelGroupEndpoint.kt$package com.pubnub.internal.endpoints.channel_groups</ID>
+    <ID>PackageNaming:RemoveMessageActionEndpoint.kt$package com.pubnub.internal.endpoints.message_actions</ID>
+    <ID>PackageNaming:RevokeTokenResponse.kt$package com.pubnub.internal.models.server.access_manager.v3</ID>
+    <ID>PackageNaming:ServerMemberInput.kt$package com.pubnub.internal.models.server.objects_api</ID>
+    <ID>PackageNaming:ServerMembershipInput.kt$package com.pubnub.internal.models.server.objects_api</ID>
+    <ID>PackageNaming:UUIDMetadataInput.kt$package com.pubnub.internal.models.server.objects_api</ID>
+    <ID>PrintStackTrace:MapperManager.kt$MapperManager.JSONArrayAdapter$e</ID>
+    <ID>PrintStackTrace:MapperManager.kt$MapperManager.JSONObjectAdapter$e</ID>
+    <ID>PrintStackTrace:PubNubUtil.kt$PubNubUtil$e</ID>
+    <ID>ReturnCount:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$private fun describeRequestBody(body: RequestBody?): String?</ID>
+    <ID>ReturnCount:DataSyncErrorMapping.kt$internal fun PubNubException.withDataSyncError(): PubNubException</ID>
+    <ID>ReturnCount:GrantTokenRequestBody.kt$GrantTokenRequestBody.Companion$@Throws(PubNubException::class) private fun mergeProjectionsIntoMeta( meta: Any?, dataSync: List&lt;DataSyncGrantType>, ): Any</ID>
+    <ID>ReturnCount:HeaderParser.kt$HeaderParser$fun parseDataWithHeader(data: ByteArray): ParseResult&lt;out ByteArray></ID>
+    <ID>ReturnCount:JsonElement.kt$internal fun JsonElement.tryDecryptMessage( cryptoModule: CryptoModule?, mapper: MapperManager, logger: PNLogger, ): Pair&lt;JsonElement, PubNubError?></ID>
+    <ID>ReturnCount:PubNubUtil.kt$PubNubUtil$internal fun requestBodyToString(request: Request): String?</ID>
+    <ID>ReturnCount:SubscribeMessageProcessor.kt$SubscribeMessageProcessor$fun processIncomingPayload(message: SubscribeMessage): PNEvent?</ID>
+    <ID>ReturnCount:SubscriptionImpl.kt$SubscriptionImpl$private fun checkAndUpdateTimetoken(result: PNEvent): Boolean</ID>
+    <ID>ReturnCount:TokenParser.kt$TokenParser$private fun parseProjections(meta: Any?): PNDataSyncProjections?</ID>
+    <ID>ReturnCount:UploadFileEndpoint.kt$UploadFileEndpoint$internal fun parseS3XmlError(exception: PubNubException): PubNubException</ID>
+    <ID>SpreadOperator:BaseSubscriptionSetImpl.kt$BaseSubscriptionSetImpl$(*subscriptionsInternal.toTypedArray())</ID>
+    <ID>SpreadOperator:BaseSubscriptionSetImpl.kt$BaseSubscriptionSetImpl$(*subscriptionsInternal.toTypedArray(), cursor = cursor)</ID>
+    <ID>SpreadOperator:PubNubImpl.kt$PubNubImpl$(*toSubscribe.toTypedArray(), cursor = SubscriptionCursor(withTimetoken))</ID>
+    <ID>SpreadOperator:PubNubImpl.kt$PubNubImpl$(*toUnsubscribe.toTypedArray())</ID>
+    <ID>SwallowedException:AesCbcCryptor.kt$AesCbcCryptor$e: Exception</ID>
+    <ID>SwallowedException:AesCbcCryptor.kt$AesCbcCryptor$e: java.lang.Exception</ID>
+    <ID>SwallowedException:EndpointCore.kt$EndpointCore$e: IOException</ID>
+    <ID>SwallowedException:EndpointCore.kt$EndpointCore$e: PubNubException</ID>
+    <ID>SwallowedException:EndpointCore.kt$EndpointCore$e: UninitializedPropertyAccessException</ID>
+    <ID>SwallowedException:FileEncryptionUtil.kt$FileEncryptionUtil$e: Exception</ID>
+    <ID>SwallowedException:GetFileUrlEndpoint.kt$GetFileUrlEndpoint$e: Exception</ID>
+    <ID>SwallowedException:JsonElement.kt$e: Exception</ID>
+    <ID>SwallowedException:LegacyCryptor.kt$LegacyCryptor$e: Exception</ID>
+    <ID>SwallowedException:LegacyCryptor.kt$LegacyCryptor$e: UnsupportedEncodingException</ID>
+    <ID>SwallowedException:LegacyCryptor.kt$LegacyCryptor$e: java.lang.Exception</ID>
+    <ID>SwallowedException:LoggerManager.kt$LoggerManager$fallbackException: Exception</ID>
+    <ID>SwallowedException:PubNubUtil.kt$PubNubUtil$e: PubNubException</ID>
+    <ID>SwallowedException:PubNubUtil.kt$PubNubUtil$e: UnsupportedEncodingException</ID>
+    <ID>SwallowedException:RetryableRestCaller.kt$RetryableRestCaller$e: Exception</ID>
+    <ID>SwallowedException:SubscribeMessageProcessor.kt$SubscribeMessageProcessor$t: Throwable</ID>
+    <ID>SwallowedException:TokenParser.kt$TokenParser$e: Exception</ID>
+    <ID>SwallowedException:UploadFileEndpoint.kt$UploadFileEndpoint$e: Exception</ID>
+    <ID>ThrowsCount:DecryptingInputStream.kt$DecryptingInputStream$private inline fun &lt;T> masked(block: () -> T): T</ID>
+    <ID>ThrowsCount:EndpointCore.kt$EndpointCore$private fun checkAndCreateResponse(input: Response&lt;Input>): Output</ID>
+    <ID>ThrowsCount:TokenParser.kt$TokenParser$fun unwrapToken(token: String): PNToken</ID>
+    <ID>TooGenericExceptionCaught:AesCbcCryptor.kt$AesCbcCryptor$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:CompositeLogger.kt$CompositeLogger$t: Throwable</ID>
+    <ID>TooGenericExceptionCaught:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$t: Throwable</ID>
+    <ID>TooGenericExceptionCaught:DecryptingInputStream.kt$DecryptingInputStream$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:EndpointCore.kt$EndpointCore$e: IndexOutOfBoundsException</ID>
+    <ID>TooGenericExceptionCaught:EndpointCore.kt$EndpointCore$e: NullPointerException</ID>
+    <ID>TooGenericExceptionCaught:FileEncryptionUtil.kt$FileEncryptionUtil$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:GetFileUrlEndpoint.kt$GetFileUrlEndpoint$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:JsonElement.kt$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:LegacyCryptor.kt$LegacyCryptor$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ListenerManager.kt$ListenerManager$e: Throwable</ID>
+    <ID>TooGenericExceptionCaught:LogMessageFormatter.kt$LogMessageFormatter$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:LoggerManager.kt$LoggerManager$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:LoggerManager.kt$LoggerManager$fallbackException: Exception</ID>
+    <ID>TooGenericExceptionCaught:PubNubImpl.kt$PubNubImpl$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:RetryableRestCaller.kt$RetryableRestCaller$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:SubscribeMessageProcessor.kt$SubscribeMessageProcessor$t: Throwable</ID>
+    <ID>TooGenericExceptionCaught:TokenParser.kt$TokenParser$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:UploadFileEndpoint.kt$UploadFileEndpoint$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:UploadFileEndpoint.kt$UploadFileEndpoint$t: Throwable</ID>
+    <ID>TooManyFunctions:DataSyncService.kt$DataSyncService</ID>
+    <ID>UnusedParameter:CustomPnHttpLoggingInterceptor.kt$CustomPnHttpLoggingInterceptor$request: Request</ID>
+    <ID>UnusedParameter:ToPortalLogger.kt$ToPortalLogger$message: LogMessage</ID>
+    <ID>UnusedPrivateProperty:RetryableCallback.kt$RetryableCallback$private var exponentialMultiplier = 0.0</ID>
+    <ID>UseCheckOrError:MapperManager.kt$MapperManager.&lt;no name provided>$throw IllegalStateException("Expected BOOLEAN or NUMBER but was $peek")</ID>
+    <ID>UseCheckOrError:RetrofitManager.kt$RetrofitManager$throw IllegalStateException("Can't instantiate PubNub")</ID>
+    <ID>VariableNaming:BasePathManager.kt$BasePathManager$/** * default base path if a custom one is not provided. */ private val DEFAULT_BASE_PATH = "pndsn.com"</ID>
+    <ID>VariableNaming:BasePathManager.kt$BasePathManager$/** * default subdomain used if cache busting is disabled. */ private val DEFAULT_SUBDOMAIN = "ps"</ID>
+    <ID>VariableNaming:BasePathManager.kt$BasePathManager$/** * if using cache busting, this is the max number of subdomains that are supported. */ private val MAX_SUBDOMAIN = 20</ID>
+  </CurrentIssues>
+</SmellBaseline>
