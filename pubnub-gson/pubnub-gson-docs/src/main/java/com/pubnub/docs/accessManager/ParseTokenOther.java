@@ -92,8 +92,8 @@ public class ParseTokenOther extends SnippetBase {
                 .sync();
 
         PNToken token = pubnub.parseToken(grantTokenResult.getToken());
-        boolean canListAllChannels = token.getGetAllChannels(); // true
-        boolean canListAllUuids = token.getGetAllUUIDs(); // false
+        boolean canListAllChannels = token.getAllChannels(); // true
+        boolean canListAllUuids = token.getAllUUIDs(); // false
         // snippet.end
     }
 }
