@@ -14,4 +14,26 @@ class ParseTokenOther : SnippetBase() {
         )
         // snippet.end
     }
+
+    private fun parseTokenWithGetAllMetadataAccess() {
+        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#category-permissions-1
+
+        val pubnub = createPubNub()
+
+        // snippet.parseTokenWithGetAllMetadataAccess
+        pubnub.grantToken(
+            ttl = 15,
+            authorizedUUID = "my-authorized-uuid",
+            getAllChannels = true
+        ).async { result ->
+            result.onFailure { exception ->
+                // Handle error
+            }.onSuccess { value ->
+                val token = pubnub.parseToken(value.token)
+                val canListAllChannels = token.getAllChannels // true
+                val canListAllUuids = token.getAllUUIDs // false
+            }
+        }
+        // snippet.end
+    }
 }
