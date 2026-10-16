@@ -11,6 +11,8 @@ import com.pubnub.api.utils.SerializedName
  * @property subscribeKey The subscribe key.
  * @property channels Access rights per channel.
  * @property channelGroups Access rights per channel group.
+ * @property categories Category-level access rights, keyed `channels` / `uuids`. Empty unless `getAllChannels` or
+ * `getAllUUIDs` was requested.
  */
 class PNAccessManagerGrantResult(
     val level: String,
@@ -19,6 +21,7 @@ class PNAccessManagerGrantResult(
     val channels: Map<String, Map<String, PNAccessManagerKeyData>?>,
     val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>,
     val uuids: Map<String, Map<String, PNAccessManagerKeyData>?>,
+    val categories: Map<String, Map<String, PNAccessManagerKeyData>?> = emptyMap(),
 )
 
 open class PNAccessManagerKeyData {

@@ -38,6 +38,8 @@ open class GrantEndpoint(
     override val channels: List<String> = emptyList(),
     override val channelGroups: List<String> = emptyList(),
     override val uuids: List<String> = emptyList(),
+    override val getAllChannels: Boolean = false,
+    override val getAllUUIDs: Boolean = false,
 ) : EndpointCore<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), Grant {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
@@ -68,7 +70,9 @@ open class GrantEndpoint(
                         "authKeys" to authKeys,
                         "channels" to channels,
                         "channelGroups" to channelGroups,
-                        "uuids" to uuids
+                        "uuids" to uuids,
+                        "getAllChannels" to getAllChannels,
+                        "getAllUUIDs" to getAllUUIDs,
                     ),
                     operation = this::class.simpleName
                 ),
@@ -115,6 +119,11 @@ open class GrantEndpoint(
             constructedUuids[it.key] = data.uuids[it.key]!!.authKeys
         }
 
+        val constructedCategories = mutableMapOf<String, Map<String, PNAccessManagerKeyData>?>()
+        data.categories?.forEach {
+            constructedCategories[it.key] = it.value.authKeys
+        }
+
         return PNAccessManagerGrantResult(
             level = data.level!!,
             ttl = data.ttl,
@@ -122,6 +131,7 @@ open class GrantEndpoint(
             channels = constructedChannels,
             channelGroups = constructedGroups,
             uuids = constructedUuids,
+            categories = constructedCategories,
         )
     }
 
@@ -172,6 +182,13 @@ open class GrantEndpoint(
                 queryParams["target-uuid"] = toCsv()
             }
         }
+        val categories = listOfNotNull(
+            CATEGORY_CHANNELS.takeIf { getAllChannels },
+            CATEGORY_UUIDS.takeIf { getAllUUIDs },
+        )
+        if (categories.isNotEmpty()) {
+            queryParams["category"] = categories.toCsv()
+        }
 
         if (ttl >= -1) {
             queryParams["ttl"] = ttl.toString()
@@ -201,8 +218,9 @@ open class GrantEndpoint(
             } else {
                 "0"
             }
+        // A category grant only carries `g`, so `g=1` is sent whenever a category is requested.
         queryParams["g"] =
-            if (get) {
+            if (get || categories.isNotEmpty()) {
                 "1"
             } else {
                 "0"
@@ -219,5 +237,10 @@ open class GrantEndpoint(
             } else {
                 "0"
             }
+    }
+
+    private companion object {
+        const val CATEGORY_CHANNELS = "channels"
+        const val CATEGORY_UUIDS = "uuids"
     }
 }

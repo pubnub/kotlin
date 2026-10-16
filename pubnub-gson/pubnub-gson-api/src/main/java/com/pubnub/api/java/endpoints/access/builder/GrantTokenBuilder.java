@@ -19,12 +19,14 @@ import java.util.List;
  *   <li>the modern flat-list path via {@link #authorizedUserId(UserId)} and {@link #grants(List)}, which stays on this
  *       neutral builder — each {@link TokenGrant} carries its own bucket. This path is additive with the shared
  *       {@code channels(...)}/{@code channelGroups(...)} setters (they all funnel into the same wire buckets);</li>
- *   <li>the legacy (App Context v2 UUID) path via {@link #uuids(List)} or {@link #authorizedUUID(String)}, which
- *       returns {@link GrantTokenObjectsBuilder}.</li>
+ *   <li>the legacy (App Context v2 UUID) path via {@link #uuids(List)}, {@link #authorizedUUID(String)},
+ *       {@link #getAllChannels(boolean)} or {@link #getAllUUIDs(boolean)}, which returns
+ *       {@link GrantTokenObjectsBuilder}.</li>
  * </ul>
  *
- * The legacy {@code uuids} bucket cannot be mixed with {@code grants(...)}: {@link UUIDGrant} does not implement
- * {@link TokenGrant}, and combining the two is rejected at request time.
+ * The legacy {@code uuids} bucket and the {@code getAllChannels}/{@code getAllUUIDs} flags cannot be mixed with
+ * {@code grants(...)}: {@link UUIDGrant} does not implement {@link TokenGrant}, the flat-list overload has no category
+ * flags, and combining them is rejected at request time.
  */
 public interface GrantTokenBuilder extends AbstractGrantTokenBuilder {
     /**
@@ -44,6 +46,20 @@ public interface GrantTokenBuilder extends AbstractGrantTokenBuilder {
 
     @Override
     GrantTokenBuilder channelGroups(List<ChannelGroupGrant> channelGroups);
+
+    /**
+     * Set to {@code true} to allow listing all channel metadata on the keyset ({@code getAllChannelMetadata}).
+     * A {@code get} on a named channel or a channel pattern doesn't imply this. Enters the legacy (App Context v2)
+     * grant path, so it can't be combined with {@code grants(...)}.
+     */
+    GrantTokenObjectsBuilder getAllChannels(boolean getAllChannels);
+
+    /**
+     * Set to {@code true} to allow listing all uuid metadata on the keyset ({@code getAllUUIDMetadata}).
+     * A {@code get} on a named uuid or a uuid pattern doesn't imply this. Enters the legacy (App Context v2)
+     * grant path, so it can't be combined with {@code grants(...)}.
+     */
+    GrantTokenObjectsBuilder getAllUUIDs(boolean getAllUUIDs);
 
     GrantTokenObjectsBuilder uuids(List<UUIDGrant> uuids);
 

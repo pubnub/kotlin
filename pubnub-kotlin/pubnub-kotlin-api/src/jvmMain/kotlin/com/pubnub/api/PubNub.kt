@@ -1074,6 +1074,20 @@ actual interface PubNub : StatusEmitter, EventEmitter {
 
     /**
      * See [grant]
+     *
+     * @param getAllChannels Set to `true` to allow the [authKeys] to list all channel metadata on the keyset
+     * ([getAllChannelMetadata]). A `get` on a named channel doesn't imply this.
+     * @param getAllUUIDs Set to `true` to allow the [authKeys] to list all uuid metadata on the keyset
+     * ([getAllUUIDMetadata]). A `get` on a named uuid doesn't imply this.
+     *
+     * When either flag is `true`:
+     * - the `get` permission is sent automatically;
+     * - permissions are shared by every resource in the request, so `get` is also granted on the listed [channels],
+     *   [channelGroups] and [uuids];
+     * - the server rejects the request if any other permission is set, or if no [authKeys] are given.
+     *
+     * Revoking only the category permissions isn't supported. To remove them, revoke all permissions for the auth key
+     * (`grant(authKeys = listOf(key))`), which also removes its other key-wide permissions.
      */
     @Deprecated(
         level = DeprecationLevel.WARNING,
@@ -1095,7 +1109,43 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         uuids: List<String> = emptyList(),
+        getAllChannels: Boolean = false,
+        getAllUUIDs: Boolean = false,
     ): Grant
+
+    // Kept for binary compatibility with code compiled before `getAllChannels` / `getAllUUIDs` were added.
+    @Deprecated(level = DeprecationLevel.HIDDEN, message = "Kept for binary compatibility.")
+    fun grant(
+        read: Boolean = false,
+        write: Boolean = false,
+        manage: Boolean = false,
+        delete: Boolean = false,
+        get: Boolean = false,
+        update: Boolean = false,
+        join: Boolean = false,
+        ttl: Int = -1,
+        authKeys: List<String> = emptyList(),
+        channels: List<String> = emptyList(),
+        channelGroups: List<String> = emptyList(),
+        uuids: List<String> = emptyList(),
+    ): Grant =
+        @Suppress("DEPRECATION")
+        grant(
+            read = read,
+            write = write,
+            manage = manage,
+            delete = delete,
+            get = get,
+            update = update,
+            join = join,
+            ttl = ttl,
+            authKeys = authKeys,
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = uuids,
+            getAllChannels = false,
+            getAllUUIDs = false,
+        )
 
     /**
      * This function generates a grant token for PubNub Access Manager (PAM).
@@ -1117,6 +1167,10 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param channels List of all channel grants
      * @param channelGroups List of all channel group grants
      * @param uuids List of all uuid grants
+     * @param getAllChannels Set to `true` to allow listing all channel metadata on the keyset
+     * ([getAllChannelMetadata]). A `get` on a named channel or a channel pattern doesn't imply this.
+     * @param getAllUUIDs Set to `true` to allow listing all uuid metadata on the keyset ([getAllUUIDMetadata]).
+     * A `get` on a named uuid or a uuid pattern doesn't imply this.
      */
     actual fun grantToken(
         ttl: Int,
@@ -1125,7 +1179,30 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
+        getAllChannels: Boolean,
+        getAllUUIDs: Boolean,
     ): GrantToken
+
+    // Kept for binary compatibility with code compiled before `getAllChannels` / `getAllUUIDs` were added.
+    @Deprecated(level = DeprecationLevel.HIDDEN, message = "Kept for binary compatibility.")
+    fun grantToken(
+        ttl: Int,
+        meta: Any? = null,
+        authorizedUUID: String? = null,
+        channels: List<ChannelGrant> = emptyList(),
+        channelGroups: List<ChannelGroupGrant> = emptyList(),
+        uuids: List<UUIDGrant> = emptyList(),
+    ): GrantToken =
+        grantToken(
+            ttl = ttl,
+            meta = meta,
+            authorizedUUID = authorizedUUID,
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = uuids,
+            getAllChannels = false,
+            getAllUUIDs = false,
+        )
 
     /**
      * The modern `grantToken`: mint a token from a single flat list of grants for PubNub Access Manager (PAM).
