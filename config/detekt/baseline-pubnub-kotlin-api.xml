@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:PubNubImpl.kt$internal fun buildFlatGrantTokenParams( ttl: Int, authorizedUserId: UserId?, meta: CustomObject?, grants: List&lt;TokenGrant>, ): PubNubJs.GrantTokenParameters</ID>
+    <ID>CyclomaticComplexMethod:dataSyncConverters.js.kt$private fun PubNubJs.DataSyncMessage.toDataSyncEventMessage(): PNDataSyncEventMessage</ID>
+    <ID>CyclomaticComplexMethod:factories.ios.kt$@OptIn(ExperimentalForeignApi::class) private fun mapAppContextEvent(from: KMPAppContextEventResult?): PNObjectEventMessage?</ID>
+    <ID>ExplicitItLambdaParameter:futures.kt${ it: List&lt;Any?> -> Pair(it[0] as T, it[1] as U) }</ID>
+    <ID>ExplicitItLambdaParameter:futures.kt${ it: List&lt;Any?> -> Triple(it[0] as T, it[1] as U, it[2] as X) }</ID>
+    <ID>ExplicitItLambdaParameter:futures.kt${ it: Result&lt;T> -> callback.accept(it.mapCatching(action)) }</ID>
+    <ID>ForbiddenComment:ChannelGroupImpl.kt$ChannelGroupImpl$// TODO: Handle missing filter options</ID>
+    <ID>ForbiddenComment:ChannelImpl.kt$ChannelImpl$// TODO: Handle missing filter options</ID>
+    <ID>ForbiddenComment:ChannelMetadataImpl.kt$ChannelMetadataImpl$// TODO: Add support for handling SubscriptionOptions</ID>
+    <ID>ForbiddenComment:ListFiles.ios.kt$ListFilesImpl$// TODO: count property is not retrieved from ListFilesSuccessResponse in Swift SDK</ID>
+    <ID>ForbiddenComment:PubNubImpl.kt$PubNubImpl$// TODO: Why token is optional? What's the desired behavior for a null value?</ID>
+    <ID>ForbiddenComment:PubNubImpl.kt$PubNubImpl$// TODO: cipherKey is used from PubNubConfiguration in Swift SDK</ID>
+    <ID>ForbiddenComment:PubNubImpl.kt$PubNubImpl$// TODO: replicate is not present in Swift SDK</ID>
+    <ID>ForbiddenComment:UserMetadataImpl.kt$UserMetadataImpl$// TODO: Add support for handling SubscriptionOptions</ID>
+    <ID>ForbiddenComment:converters.kt$// TODO: PatchValue should consider cases where there is no response for a given field</ID>
+    <ID>ForbiddenComment:factories.ios.kt$// TODO: Map error from Swift SDK to PubNubError in Kotlin SDK</ID>
+    <ID>ForbiddenComment:factories.ios.kt$// TODO: PatchValue should consider cases where there is no response for a given field</ID>
+    <ID>FunctionNaming:MemberInclude.kt$fun MemberInclude( includeCustom: Boolean = false, includeStatus: Boolean = false, includeType: Boolean = false, includeTotalCount: Boolean = false, includeUser: Boolean = false, includeUserCustom: Boolean = false, includeUserType: Boolean = false, includeUserStatus: Boolean = false, )</ID>
+    <ID>FunctionNaming:MembershipInclude.kt$fun MembershipInclude( includeCustom: Boolean = false, includeStatus: Boolean = false, includeType: Boolean = false, includeTotalCount: Boolean = false, includeChannel: Boolean = false, includeChannelCustom: Boolean = false, includeChannelType: Boolean = false, includeChannelStatus: Boolean = false, )</ID>
+    <ID>LargeClass:PubNub.kt$PubNub : StatusEmitterEventEmitter</ID>
+    <ID>LargeClass:PubNubImpl.kt$PubNubImpl : PubNub</ID>
+    <ID>LongMethod:dataSyncConverters.js.kt$private fun PubNubJs.DataSyncMessage.toDataSyncEventMessage(): PNDataSyncEventMessage</ID>
+    <ID>LongMethod:factories.ios.kt$@OptIn(ExperimentalForeignApi::class) private fun mapAppContextEvent(from: KMPAppContextEventResult?): PNObjectEventMessage?</ID>
+    <ID>LongMethod:factories.js.kt$actual fun createEventListener( pubnub: PubNub, onMessage: (PubNub, PNMessageResult) -> Unit, onPresence: (PubNub, PNPresenceEventResult) -> Unit, onSignal: (PubNub, PNSignalResult) -> Unit, onMessageAction: (PubNub, PNMessageActionResult) -> Unit, onObjects: (PubNub, PNObjectEventResult) -> Unit, onDataSync: (PubNub, PNDataSyncEventResult) -> Unit, onFile: (PubNub, PNFileEventResult) -> Unit ): EventListener</ID>
+    <ID>LongParameterList:PubNub.kt$PubNub$( channel: String, uuids: List&lt;MemberInput>, limit: Int?, page: PNPage?, filter: String?, sort: Collection&lt;PNSortKey&lt;PNMemberKey>>, includeCount: Boolean, includeCustom: Boolean, includeUUIDDetails: PNUUIDDetailsLevel?, includeType: Boolean, )</ID>
+    <ID>LongParameterList:PubNub.kt$PubNub$( channel: String, uuids: List&lt;String>, limit: Int?, page: PNPage?, filter: String?, sort: Collection&lt;PNSortKey&lt;PNMemberKey>>, includeCount: Boolean, includeCustom: Boolean, includeUUIDDetails: PNUUIDDetailsLevel?, includeType: Boolean, )</ID>
+    <ID>LongParameterList:PubNub.kt$PubNub$( channels: List&lt;ChannelMembershipInput>, uuid: String?, limit: Int?, page: PNPage?, filter: String?, sort: Collection&lt;PNSortKey&lt;PNMembershipKey>>, includeCount: Boolean, includeCustom: Boolean, includeChannelDetails: PNChannelDetailsLevel?, includeType: Boolean, )</ID>
+    <ID>LongParameterList:PubNub.kt$PubNub$( channels: List&lt;String>, uuid: String?, limit: Int?, page: PNPage?, filter: String?, sort: Collection&lt;PNSortKey&lt;PNMembershipKey>>, includeCount: Boolean, includeCustom: Boolean, includeChannelDetails: PNChannelDetailsLevel?, includeType: Boolean, )</ID>
+    <ID>LongParameterList:PubNub.kt$PubNub$( uuid: String?, name: String?, externalId: String?, profileUrl: String?, email: String?, custom: Any?, includeCustom: Boolean, type: String?, status: String?, ifMatchesEtag: String?, )</ID>
+    <ID>LongParameterList:PubNub.nonJvm.kt$PubNub$( channel: String, uuids: List&lt;MemberInput>, limit: Int?, page: PNPage?, filter: String?, sort: Collection&lt;PNSortKey&lt;PNMemberKey>>, includeCount: Boolean, includeCustom: Boolean, includeUUIDDetails: PNUUIDDetailsLevel?, includeType: Boolean )</ID>
+    <ID>LongParameterList:PubNub.nonJvm.kt$PubNub$( channel: String, uuids: List&lt;String>, limit: Int?, page: PNPage?, filter: String?, sort: Collection&lt;PNSortKey&lt;PNMemberKey>>, includeCount: Boolean, includeCustom: Boolean, includeUUIDDetails: PNUUIDDetailsLevel?, includeType: Boolean )</ID>
+    <ID>LongParameterList:PubNub.nonJvm.kt$PubNub$( channels: List&lt;ChannelMembershipInput>, uuid: String?, limit: Int?, page: PNPage?, filter: String?, sort: Collection&lt;PNSortKey&lt;PNMembershipKey>>, includeCount: Boolean, includeCustom: Boolean, includeChannelDetails: PNChannelDetailsLevel?, includeType: Boolean )</ID>
+    <ID>LongParameterList:PubNub.nonJvm.kt$PubNub$( channels: List&lt;String>, uuid: String?, limit: Int?, page: PNPage?, filter: String?, sort: Collection&lt;PNSortKey&lt;PNMembershipKey>>, includeCount: Boolean, includeCustom: Boolean, includeChannelDetails: PNChannelDetailsLevel?, includeType: Boolean )</ID>
+    <ID>LongParameterList:PubNub.nonJvm.kt$PubNub$( uuid: String?, name: String?, externalId: String?, profileUrl: String?, email: String?, custom: CustomObject?, includeCustom: Boolean, type: String?, status: String?, ifMatchesEtag: String? )</ID>
+    <ID>MagicNumber:DeleteFile.ios.kt$DeleteFileImpl$200</ID>
+    <ID>MagicNumber:RemoveChannelMetadata.ios.kt$RemoveChannelMetadataImpl$200</ID>
+    <ID>MagicNumber:RemoveUUIDMetadata.ios.kt$RemoveUUIDMetadataImpl$200</ID>
+    <ID>MagicNumber:SendFileImpl.kt$SendFileImpl$200</ID>
+    <ID>MagicNumber:TimetokenUtil.kt$TimetokenUtil.Companion$100</ID>
+    <ID>MagicNumber:TimetokenUtil.kt$TimetokenUtil.Companion$10_000</ID>
+    <ID>MagicNumber:TimetokenUtil.kt$TimetokenUtil.Companion$10_000_000</ID>
+    <ID>MagicNumber:datetime.kt$Instant$1_000L</ID>
+    <ID>MagicNumber:datetime.kt$Instant$1_000_000</ID>
+    <ID>MagicNumber:datetime.kt$Instant$999_999_999</ID>
+    <ID>MagicNumber:datetime.kt$Instant.Companion$1_000L</ID>
+    <ID>MagicNumber:datetime.kt$Instant.Companion$1_000_000L</ID>
+    <ID>MatchingDeclarationName:ListAllChannelGroup.ios.kt$ListAllChannelGroupImpl : ListAllChannelGroup</ID>
+    <ID>MatchingDeclarationName:PubNub.nonJvm.kt$PubNub</ID>
+    <ID>MatchingDeclarationName:RemoveChannelMembers.ios.kt$RemoveChannelMembersImpl : ManageChannelMembers</ID>
+    <ID>MatchingDeclarationName:Signal.ios.kt$SignalImpl : Signal</ID>
+    <ID>MatchingDeclarationName:Time.ios.kt$TimeImpl : Time</ID>
+    <ID>MatchingDeclarationName:abstractions.nonJvm.kt$CustomObject : Map</ID>
+    <ID>MatchingDeclarationName:datetime.js.kt$Clock</ID>
+    <ID>MatchingDeclarationName:datetime.nonJs.kt$Clock</ID>
+    <ID>PackageNaming:AddChannelChannelGroup.ios.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:AddChannelChannelGroup.js.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:AddChannelChannelGroup.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:AddChannelChannelGroupImpl.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:AddMessageAction.ios.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:AddMessageAction.js.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:AddMessageAction.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:AddMessageActionImpl.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:AllChannelsChannelGroup.ios.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:AllChannelsChannelGroup.js.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:AllChannelsChannelGroup.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:AllChannelsChannelGroupImpl.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:ChannelGrant.kt$package com.pubnub.api.models.consumer.access_manager.v3</ID>
+    <ID>PackageNaming:ChannelGroupGrant.kt$package com.pubnub.api.models.consumer.access_manager.v3</ID>
+    <ID>PackageNaming:DataSyncGrant.kt$package com.pubnub.api.models.consumer.access_manager.v3</ID>
+    <ID>PackageNaming:DeleteChannelGroup.ios.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:DeleteChannelGroup.js.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:DeleteChannelGroup.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:DeleteChannelGroupImpl.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:GetMessageActionImpl.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:GetMessageActions.ios.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:GetMessageActions.js.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:GetMessageActions.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:Grants.kt$package com.pubnub.api.models.consumer.access_manager.v3</ID>
+    <ID>PackageNaming:ListAllChannelGroup.ios.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:ListAllChannelGroupImpl.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:RemoveChannelChannelGroup.ios.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:RemoveChannelChannelGroup.js.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:RemoveChannelChannelGroup.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:RemoveChannelChannelGroupImpl.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:RemoveMessageAction.ios.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:RemoveMessageAction.js.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:RemoveMessageAction.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:RemoveMessageActionImpl.kt$package com.pubnub.api.endpoints.message_actions</ID>
+    <ID>PackageNaming:TokenGrant.kt$package com.pubnub.api.models.consumer.access_manager.v3</ID>
+    <ID>PackageNaming:UUIDGrant.kt$package com.pubnub.api.models.consumer.access_manager.v3</ID>
+    <ID>ReturnCount:factories.ios.kt$@OptIn(ExperimentalForeignApi::class) private fun mapAppContextEvent(from: KMPAppContextEventResult?): PNObjectEventMessage?</ID>
+    <ID>SwallowedException:factories.js.kt$&lt;no name provided>$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:EndpointImpl.kt$EndpointImpl$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:GetFileUrlImpl.kt$GetFileUrlImpl$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:MappingRemoteAction.kt$MappingRemoteAction$e: Throwable</ID>
+    <ID>TooGenericExceptionCaught:factories.js.kt$&lt;no name provided>$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:futures.kt$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:results.ios.kt$e: Exception</ID>
+    <ID>TooManyFunctions:DataSync.kt$DataSync</ID>
+    <ID>TooManyFunctions:PubNub.kt$PubNub</ID>
+    <ID>TooManyFunctions:PubNub.kt$PubNub : StatusEmitterEventEmitter</ID>
+    <ID>TooManyFunctions:PubNub.nonJvm.kt$PubNub</ID>
+    <ID>TooManyFunctions:Pubnub.d.kt$ObjectsFunctions</ID>
+    <ID>TooManyFunctions:Pubnub.d.kt$PubNub</ID>
+    <ID>UnusedPrivateProperty:Pubnub.d.kt$PubNub$config: Any /* UUID | UserId */</ID>
+    <ID>UnusedPrivateProperty:Pubnub.d.kt$PubNub.CryptoModule$configuration: CryptoModuleConfiguration</ID>
+    <ID>UseCheckOrError:factories.js.kt$&lt;no name provided>$throw IllegalStateException("Bad object event")</ID>
+    <ID>UseRequire:TimetokenUtil.kt$TimetokenUtil.Companion$throw IllegalArgumentException("Timetoken should have 17 digits")</ID>
+    <ID>UseRequire:TimetokenUtil.kt$TimetokenUtil.Companion$throw IllegalArgumentException("Unix timetoken should have $UNIX_TIME_LENGHT_WHEN_IN_MILLISECONDS digits.")</ID>
+    <ID>UtilityClassWithPublicConstructor:TimetokenUtil.kt$TimetokenUtil</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNAccessDeniedCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNBadRequestCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNConnectedCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNConnectionErrorCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNDisconnectedUnexpectedlyCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNNetworkDownCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNNetworkIssuesCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNNetworkUpCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNReconnectedCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNRequestMessageCountExceedCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNTimeoutCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Categories$var PNUnknownCategory: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNAccessManagerAudit: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNAccessManagerGrant: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNAddChannelsToGroupOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNAddMessageActionOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNChannelGroupsOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNChannelsForGroupOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNCreateSpaceOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNCreateUserOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNDeleteMessagesOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNDeleteSpaceOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNDeleteUserOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNFetchMessagesOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNGetMembersOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNGetMembershipsOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNGetMessageActionsOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNGetSpacesOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNGetStateOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNGetUsersOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNHeartbeatOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNHereNowOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNHistoryOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNMessageCountsOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNPublishOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNPushNotificationEnabledChannelsOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNRemoveAllPushNotificationsOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNRemoveChannelsFromGroupOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNRemoveGroupOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNRemoveMessageActionOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNSetStateOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNSubscribeOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNTimeOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNUnsubscribeOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNUpdateMembershipsOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNUpdateSpaceOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNUpdateUserOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$Operations$var PNWhereNowOperation: String</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.GrantTokenParameters$var authorized_uuid: String?</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.IncludeOptions$var UUIDFields: Boolean?</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.IncludeOptions$var UUIDStatusField: Boolean?</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.IncludeOptions$var UUIDTypeField: Boolean?</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.JsLogLevel$val Debug: dynamic</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.JsLogLevel$val Error: dynamic</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.JsLogLevel$val Info: dynamic</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.JsLogLevel$val None: dynamic</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.JsLogLevel$val Trace: dynamic</ID>
+    <ID>VariableNaming:Pubnub.d.kt$PubNub.JsLogLevel$val Warn: dynamic</ID>
+  </CurrentIssues>
+</SmellBaseline>

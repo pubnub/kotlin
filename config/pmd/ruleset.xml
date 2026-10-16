@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ruleset name="PubNub"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        PMD rules for the PubNub Java SDK. Code style is covered by Checkstyle (config/checkstyle/checkstyle.xml),
+        so the codestyle and documentation categories are not included.
+    </description>
+
+    <rule ref="category/java/bestpractices.xml">
+        <!-- the SDK uses its own logging -->
+        <exclude name="GuardLogStatement"/>
+        <!-- adding @FunctionalInterface to public API interfaces is an API commitment -->
+        <exclude name="ImplicitFunctionalInterface"/>
+    </rule>
+
+    <rule ref="category/java/errorprone.xml">
+        <!-- Lombok / builder style -->
+        <exclude name="AvoidFieldNameMatchingMethodName"/>
+    </rule>
+
+    <rule ref="category/java/multithreading.xml">
+        <!-- J2EE rule; an SDK manages its own threads and executors -->
+        <exclude name="DoNotUseThreads"/>
+    </rule>
+
+    <rule ref="category/java/performance.xml"/>
+
+    <rule ref="category/java/security.xml"/>
+
+    <!-- selected design rules; LawOfDemeter and DataClass (Lombok DTOs) are left out on purpose -->
+    <rule ref="category/java/design.xml/CyclomaticComplexity"/>
+    <rule ref="category/java/design.xml/GodClass"/>
+    <rule ref="category/java/design.xml/SimplifyBooleanReturns"/>
+</ruleset>
