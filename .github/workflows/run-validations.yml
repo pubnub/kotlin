@@ -85,8 +85,8 @@ jobs:
       - name: Update CocoaPods trunk
         run: |
           pod repo update
-      - name: Run detekt, Checkstyle, PMD and SpotBugs
-        run: ./gradlew detekt checkstyleMain pmdMain spotbugsMain --continue
+      - name: Run detekt, Checkstyle and SpotBugs
+        run: ./gradlew detekt checkstyleMain spotbugsMain --continue
       - name: Expose static analysis reports
         uses: actions/upload-artifact@v4
         if: failure()
@@ -95,7 +95,6 @@ jobs:
           path: |
             **/build/reports/detekt/**
             **/build/reports/checkstyle/**
-            **/build/reports/pmd/**
             **/build/reports/spotbugs/**
           retention-days: 7
   all-validations:

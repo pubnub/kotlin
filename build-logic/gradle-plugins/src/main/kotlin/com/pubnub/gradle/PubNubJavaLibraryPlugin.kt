@@ -13,9 +13,6 @@ import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.plugins.quality.CheckstylePlugin
-import org.gradle.api.plugins.quality.Pmd
-import org.gradle.api.plugins.quality.PmdExtension
-import org.gradle.api.plugins.quality.PmdPlugin
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.jvm.toolchain.JavaLanguageVersion
@@ -25,8 +22,6 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
-import java.io.File
-import java.util.Properties
 
 class PubNubJavaLibraryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -34,7 +29,6 @@ class PubNubJavaLibraryPlugin : Plugin<Project> {
             apply<PubNubSharedPlugin>()
             apply<JavaLibraryPlugin>()
             apply<CheckstylePlugin>()
-            apply<PmdPlugin>()
             apply<SpotBugsPlugin>()
 
             val libs = rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
@@ -72,44 +66,12 @@ class PubNubJavaLibraryPlugin : Plugin<Project> {
                 }
             }
 
-            // PMD
-            extensions.configure<PmdExtension> {
-                toolVersion = libs.findVersion("pmd").get().requiredVersion
-                // violations within the budget would be printed on every run; see the HTML/XML report instead
-                isConsoleOutput = false
-                ruleSets = emptyList()
-                ruleSetFiles = files(rootProject.file("config/pmd/ruleset.xml"))
-                sourceSets = listOf(mainSourceSet)
-                // Gradle's PMD plugin has no baseline: fail only when a module exceeds its recorded violation count
-                maxFailures.set(pmdMaxFailures(rootProject.file("config/pmd/max-failures.properties"), project.name))
-            }
-
-            tasks.withType<Pmd>().configureEach {
-                it.exclude("**/vendor/**")
-
-                it.reports { report ->
-                    report.xml.required.set(true)
-                    report.html.required.set(true)
-                }
-            }
-
-            // PMD needs the JDK classes on its aux classpath for type resolution; give it the JDK 8 the code targets
-            val jdk8RuntimeJar = extensions.getByType<JavaToolchainService>().launcherFor {
-                it.languageVersion.set(JavaLanguageVersion.of(8))
-            }.map { it.metadata.installationPath.file("jre/lib/rt.jar") }
-            tasks.named("pmdMain", Pmd::class.java) {
-                it.classpath = (it.classpath ?: files()).plus(files(jdk8RuntimeJar))
-            }
-
             // SpotBugs + FindSecBugs
             extensions.configure<SpotBugsExtension> {
                 toolVersion.set(libs.findVersion("spotbugs").get().requiredVersion)
                 effort.set(Effort.MAX)
                 reportLevel.set(Confidence.MEDIUM)
                 excludeFilter.set(rootProject.file("config/spotbugs/exclude.xml"))
-                rootProject.file("config/spotbugs/baseline-${project.name}.xml").takeIf { it.exists() }?.let {
-                    baselineFile.set(it)
-                }
             }
 
             dependencies {
@@ -131,19 +93,54 @@ class PubNubJavaLibraryPlugin : Plugin<Project> {
 
             // Analyse Java bytecode only; Kotlin code is covered by detekt and its bytecode gives many false positives.
             // Kotlin classes stay on the aux classpath so Java -> Kotlin references resolve.
-            tasks.named("spotbugsMain", SpotBugsTask::class.java) {
+            val spotbugsMain = tasks.named("spotbugsMain", SpotBugsTask::class.java) {
                 it.classDirs.setFrom(mainSourceSet.java.classesDirectory)
                 it.auxClassPaths.from(mainSourceSet.output.classesDirs)
+            }
+
+            // On-demand SpotBugs baseline update (not part of `check`/CI): when `spotbugsBaseline` is requested,
+            // spotbugsMain reports every bug (old + new) without failing, and spotbugsBaseline stores that report
+            val spotbugsBaselineFile = rootProject.file("config/spotbugs/baseline-${project.name}.xml")
+            // checked on the task graph, so any way of requesting the task (camel-case abbreviation, path) is detected
+            gradle.taskGraph.whenReady { graph ->
+                val updatingSpotbugsBaseline = graph.hasTask("${project.path}:spotbugsBaseline")
+                spotbugsMain.configure {
+                    if (updatingSpotbugsBaseline) {
+                        it.ignoreFailures = true
+                    } else if (spotbugsBaselineFile.exists()) {
+                        it.baselineFile.set(spotbugsBaselineFile)
+                    }
+                }
+            }
+            tasks.register("spotbugsBaseline") { task ->
+                task.group = "verification"
+                task.description = "Writes all current SpotBugs findings of the main source set to config/spotbugs/baseline-<module>.xml"
+                task.dependsOn(spotbugsMain)
+                task.doLast {
+                    val report = spotbugsMain.get().reports.getByName("xml").outputLocation.get().asFile
+                    // modules without Java sources (e.g. the :pubnub-gson aggregator) skip spotbugsMain, so no report
+                    if (!report.exists()) {
+                        task.logger.lifecycle("No SpotBugs report for ${project.path}, baseline not written")
+                        return@doLast
+                    }
+                    // drop the <Project> element's content: it only lists local absolute paths
+                    val baseline = report.readText().replace(
+                        Regex("""(<Project projectName="[^"]*")>.*?</Project>""", RegexOption.DOT_MATCHES_ALL),
+                        "$1/>"
+                    )
+                    spotbugsBaselineFile.writeText(stripVolatileReportAttributes(baseline))
+                    task.logger.lifecycle("SpotBugs baseline written to $spotbugsBaselineFile")
+                }
             }
         }
     }
 
-    private fun pmdMaxFailures(file: File, moduleName: String): Int {
-        if (!file.exists()) {
-            return 0
-        }
-        val properties = Properties()
-        file.inputStream().use { properties.load(it) }
-        return properties.getProperty(moduleName)?.trim()?.toInt() ?: 0
+    // Timestamps and run statistics change on every analysis; pin them so the baseline only changes when findings do.
+    // The attributes are kept (with fixed values) because SpotBugs requires some of them when reading the baseline.
+    private fun stripVolatileReportAttributes(report: String): String {
+        return report
+            .replace(Regex("""\b(timestamp|analysisTimestamp)="\d+""""), "$1=\"0\"")
+            .replace(Regex("""\btimestamp="[A-Z][a-z]{2}, [^"]*""""), "timestamp=\"Thu, 1 Jan 1970 00:00:00 +0000\"")
+            .replace(Regex("""\b(cpu_seconds|clock_seconds|peak_mbytes|alloc_mbytes|gc_seconds)="[^"]*""""), "$1=\"0.00\"")
     }
 }

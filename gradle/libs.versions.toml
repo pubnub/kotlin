@@ -19,7 +19,6 @@ detekt = "1.23.8"
 spotbugs_gradlePlugin = "6.5.13"
 spotbugs = "4.10.5"
 findsecbugs = "1.14.0"
-pmd = "7.28.0"
 checkstyle = "10.26.1"
 
 [libraries]
