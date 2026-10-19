@@ -2,6 +2,8 @@ package com.pubnub.docs.accessManager;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.PubNub;
+import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import com.pubnub.docs.SnippetBase;
 
 public class ParseTokenOther extends SnippetBase {
@@ -77,4 +79,21 @@ public class ParseTokenOther extends SnippetBase {
         // snippet.end
 
     }
-} 
+
+    private void parseTokenWithGetAllMetadataAccess() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/access-manager#category-permissions-1
+
+        PubNub pubnub = createPubNub();
+
+        // snippet.parseTokenWithGetAllMetadataAccess
+        PNGrantTokenResult grantTokenResult = pubnub.grantToken(15)
+                .authorizedUUID("my-authorized-uuid")
+                .getAllChannels(true)
+                .sync();
+
+        PNToken token = pubnub.parseToken(grantTokenResult.getToken());
+        boolean canListAllChannels = token.getAllChannels(); // true
+        boolean canListAllUuids = token.getAllUUIDs(); // false
+        // snippet.end
+    }
+}

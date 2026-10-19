@@ -1,3 +1,7 @@
+<img width="1920" height="600" alt="PubNub Java and Kotlin SDK header: a publish call sends Hello world! to the hello_world channel" src="https://github.com/user-attachments/assets/8eb62cc0-2c3a-4666-a3a4-3d73319bd152" />
+
+
+
 ### PubNub Java and Kotlin-based SDKs for Android
 
 [![Tests](https://github.com/pubnub/kotlin/actions/workflows/run-tests.yml/badge.svg)](https://github.com/pubnub/kotlin/actions/workflows/run-tests.yml)
@@ -20,7 +24,7 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
      <dependency>
         <groupId>com.pubnub</groupId>
         <artifactId>pubnub-kotlin</artifactId>
-        <version>14.0.1</version>
+        <version>14.1.0</version>
      </dependency>
      ```
 

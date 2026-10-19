@@ -6,6 +6,7 @@ import co.nstant.`in`.cbor.model.NegativeInteger
 import co.nstant.`in`.cbor.model.UnsignedInteger
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.models.TokenBitmask
 import com.pubnub.api.models.consumer.access_manager.v3.DataSyncNamespace
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjectionScope
 import com.pubnub.api.models.consumer.access_manager.v3.PNDataSyncProjections
@@ -54,6 +55,9 @@ internal class TokenParser {
                 pubnubError = PubNubError.INVALID_ACCESS_TOKEN, errorMessage = "Patterns are not present or are not map",
             )
 
+        // Optional: present only if the token was granted with `categories`.
+        val categories = (firstLevelMap[CATEGORIES_KEY] as? Map<*, *>)?.toMapOfStringToInt() ?: emptyMap()
+
         return try {
             PNToken(
                 version = version,
@@ -64,6 +68,8 @@ internal class TokenParser {
                 patterns = patternsValue.toPNTokenResources(),
                 meta = firstLevelMap[META_KEY],
                 projections = parseProjections(firstLevelMap[META_KEY]),
+                getAllChannels = (categories[CHANNELS_KEY] ?: 0) and TokenBitmask.GET != 0,
+                getAllUUIDs = (categories[UUIDS_KEY] ?: 0) and TokenBitmask.GET != 0,
             )
         } catch (e: Exception) {
             if (e is PubNubException) {
@@ -195,6 +201,7 @@ internal class TokenParser {
         private const val RESOURCES_KEY = "res"
         private const val PATTERNS_KEY = "pat"
         private const val META_KEY = "meta"
+        private const val CATEGORIES_KEY = "cat"
         private const val CHANNELS_KEY = "chan"
         private const val GROUPS_KEY = "grp"
         private const val UUIDS_KEY = "uuid"

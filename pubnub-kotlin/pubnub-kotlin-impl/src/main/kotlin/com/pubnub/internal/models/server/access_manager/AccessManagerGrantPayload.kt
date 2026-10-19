@@ -25,4 +25,7 @@ class AccessManagerGrantPayload {
     internal val uuids: Map<String, PNAccessManagerKeysData>? = null
 
     internal val channel: String? = null
+
+    // Keyed by category (`channels`, `uuids`). Present only if `category` was requested.
+    internal val categories: Map<String, PNAccessManagerKeysData>? = null
 }
