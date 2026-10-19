@@ -39,7 +39,7 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">14.0.1
+        <div class="library-version" id="library-version">14.1.0
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
@@ -94,7 +94,7 @@
   <div class="breadcrumbs"><a href="../../index.html">pubnub-gson-api</a><span class="delimiter">/</span><a href="../index.html">com.pubnub.api.java.endpoints.access.builder</a><span class="delimiter">/</span><span class="current">GrantTokenBuilder</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Grant</span><wbr><span>Token</span><wbr><span><span>Builder</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">GrantTokenBuilder</a> : <a href="../-abstract-grant-token-builder/index.html">AbstractGrantTokenBuilder</a></div><p class="paragraph">Entry point for a <code class="lang-kotlin">grantToken(...)</code> call. Inherits the shared <code class="lang-kotlin">ttl</code>/<code class="lang-kotlin">meta</code>/<code class="lang-kotlin">channels</code>/ <code class="lang-kotlin">channelGroups</code> setters from <a href="../-abstract-grant-token-builder/index.html">AbstractGrantTokenBuilder</a> (returning this neutral builder so a chain can start with any of them). </p><p class="paragraph">From here two grant paths are available and cannot be combined: </p><ul><li>the modern flat-list path via <a href="authorized-user-id.html">authorizedUserId</a> and <a href="grants.html">grants</a>, which stays on this neutral builder — each <a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-token-grant/index.html">TokenGrant</a> carries its own bucket. This path is additive with the shared <code class="lang-kotlin">channels(...)</code>/<code class="lang-kotlin">channelGroups(...)</code> setters (they all funnel into the same wire buckets);</li><li>the legacy (App Context v2 UUID) path via <a href="uuids.html">uuids</a> or <a href="authorized-u-u-i-d.html">authorizedUUID</a>, which returns <a href="../-grant-token-objects-builder/index.html">GrantTokenObjectsBuilder</a>.</li></ul> The legacy <code class="lang-kotlin">uuids</code> bucket cannot be mixed with <code class="lang-kotlin">grants(...)</code>: <a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-u-u-i-d-grant/index.html">UUIDGrant</a> does not implement <a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-token-grant/index.html">TokenGrant</a>, and combining the two is rejected at request time.</div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">GrantTokenBuilder</a> : <a href="../-abstract-grant-token-builder/index.html">AbstractGrantTokenBuilder</a></div><p class="paragraph">Entry point for a <code class="lang-kotlin">grantToken(...)</code> call. Inherits the shared <code class="lang-kotlin">ttl</code>/<code class="lang-kotlin">meta</code>/<code class="lang-kotlin">channels</code>/ <code class="lang-kotlin">channelGroups</code> setters from <a href="../-abstract-grant-token-builder/index.html">AbstractGrantTokenBuilder</a> (returning this neutral builder so a chain can start with any of them). </p><p class="paragraph">From here two grant paths are available and cannot be combined: </p><ul><li>the modern flat-list path via <a href="authorized-user-id.html">authorizedUserId</a> and <a href="grants.html">grants</a>, which stays on this neutral builder — each <a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-token-grant/index.html">TokenGrant</a> carries its own bucket. This path is additive with the shared <code class="lang-kotlin">channels(...)</code>/<code class="lang-kotlin">channelGroups(...)</code> setters (they all funnel into the same wire buckets);</li><li>the legacy (App Context v2 UUID) path via <a href="uuids.html">uuids</a>, <a href="authorized-u-u-i-d.html">authorizedUUID</a>, <a href="get-all-channels.html">getAllChannels</a> or <a href="get-all-u-u-i-ds.html">getAllUUIDs</a>, which returns <a href="../-grant-token-objects-builder/index.html">GrantTokenObjectsBuilder</a>.</li></ul> The legacy <code class="lang-kotlin">uuids</code> bucket and the <code class="lang-kotlin">getAllChannels</code>/<code class="lang-kotlin">getAllUUIDs</code> flags cannot be mixed with <code class="lang-kotlin">grants(...)</code>: <a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-u-u-i-d-grant/index.html">UUIDGrant</a> does not implement <a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-token-grant/index.html">TokenGrant</a>, the flat-list overload has no category flags, and combining them is rejected at request time.</div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -172,6 +172,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="channels.html"><span class="token function">channels</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channels<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.access_manager.v3/-channel-grant/index.html">ChannelGrant</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GrantTokenBuilder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-985320574%2FFunctions%2F412224181" anchor-label="getAllChannels" id="-985320574%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-all-channels.html"><span>get</span><wbr><span>All</span><wbr><span><span>Channels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-985320574%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-all-channels.html"><span class="token function">getAllChannels</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">getAllChannels<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-grant-token-objects-builder/index.html">GrantTokenObjectsBuilder</a></div><div class="brief ">Set to <code class="lang-kotlin">true</code> to allow listing all channel metadata on the keyset (<code class="lang-kotlin">getAllChannelMetadata</code>).</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="429132832%2FFunctions%2F412224181" anchor-label="getAllUUIDs" id="429132832%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-all-u-u-i-ds.html"><span>get</span><wbr><span>All</span><wbr><span><span>UUIDs</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="429132832%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-all-u-u-i-ds.html"><span class="token function">getAllUUIDs</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">getAllUUIDs<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-grant-token-objects-builder/index.html">GrantTokenObjectsBuilder</a></div><div class="brief ">Set to <code class="lang-kotlin">true</code> to allow listing all uuid metadata on the keyset (<code class="lang-kotlin">getAllUUIDMetadata</code>).</div></div></div>
                 </div>
               </div>
             </div>
