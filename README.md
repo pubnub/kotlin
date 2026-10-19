@@ -24,7 +24,7 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
      <dependency>
         <groupId>com.pubnub</groupId>
         <artifactId>pubnub-kotlin</artifactId>
-        <version>14.0.1</version>
+        <version>14.1.0</version>
      </dependency>
      ```
 

@@ -1,3 +1,9 @@
+## v14.1.0
+October 19 2026
+
+#### Added
+- Add support for categories in grant, grantToken and parseToken methods.
+
 ## v14.0.1
 October 15 2026
 
