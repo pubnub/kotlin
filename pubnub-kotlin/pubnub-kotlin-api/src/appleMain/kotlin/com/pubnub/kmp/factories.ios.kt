@@ -80,8 +80,8 @@ actual fun createEventListener(
             onSignal = { onSignal(pubnub, createSignalResult(it)) },
             onMessageAction = { onMessageAction(pubnub, createMessageActionResult(it)) },
             onAppContext = { value -> createObjectEvent(value)?.let { res -> onObjects(pubnub, res) } },
-            onFile = { onFile(pubnub, createFileEventResult(it)) }
-            // todo add dataSync once available
+            onFile = { onFile(pubnub, createFileEventResult(it)) },
+            onDataSync = null // todo map KMPDataSyncEvent once Apple DataSync delivery is supported
         ),
         onMessage = onMessage,
         onPresence = onPresence,
