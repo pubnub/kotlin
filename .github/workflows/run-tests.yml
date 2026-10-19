@@ -39,7 +39,7 @@ jobs:
       - name: Build and run tests
         # static analysis runs in the Validations workflow
         run: |
-          ./gradlew check -x detekt -x checkstyleMain -x spotbugsMain
+          ./gradlew check -x ktlintCheck -x detekt -x checkstyleMain -x spotbugsMain
         env:
           SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
           SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}

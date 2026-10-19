@@ -85,14 +85,15 @@ jobs:
       - name: Update CocoaPods trunk
         run: |
           pod repo update
-      - name: Run detekt, Checkstyle and SpotBugs
-        run: ./gradlew detekt checkstyleMain spotbugsMain --continue
+      - name: Run ktlint, detekt, Checkstyle and SpotBugs
+        run: ./gradlew ktlintCheck detekt checkstyleMain spotbugsMain --continue
       - name: Expose static analysis reports
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: static-analysis-reports
           path: |
+            **/build/reports/ktlint/**
             **/build/reports/detekt/**
             **/build/reports/checkstyle/**
             **/build/reports/spotbugs/**
