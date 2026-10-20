@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="4.10.5" sequence="0" timestamp="1792148455964" analysisTimestamp="1792148455964" release="">
+  <Project projectName="pubnub-gson-impl (spotbugsMain)"/>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="7fad6389def5f9d62074f85600aec95b" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter.from(PNChannelMetadataArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" start="9" end="17" sourcefile="PNGetAllChannelsMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java">
+        <Message>At PNGetAllChannelsMetadataResultConverter.java:[lines 9-17]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/channel/PNChannelMetadataArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResult;" isStatic="true" primary="true" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" start="9" end="12" startBytecode="0" endBytecode="250" sourcefile="PNGetAllChannelsMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter.from(PNChannelMetadataArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNChannelMetadataArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/channel/PNChannelMetadataArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" primary="true" start="16" end="16" startBytecode="50" endBytecode="50" sourcefile="PNGetAllChannelsMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNGetAllChannelsMetadataResultConverter.java:[line 16]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" start="16" end="16" startBytecode="47" endBytecode="47" sourcefile="PNGetAllChannelsMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNGetAllChannelsMetadataResultConverter.java:[line 16]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="b36f66a02267703207a3adf39a27154e" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter.from(PNChannelMetadataArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" start="9" end="17" sourcefile="PNGetAllChannelsMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java">
+        <Message>At PNGetAllChannelsMetadataResultConverter.java:[lines 9-17]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/channel/PNChannelMetadataArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResult;" isStatic="true" primary="true" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" start="9" end="12" startBytecode="0" endBytecode="250" sourcefile="PNGetAllChannelsMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter.from(PNChannelMetadataArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNChannelMetadataArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/channel/PNChannelMetadataArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" primary="true" start="15" end="15" startBytecode="32" endBytecode="32" sourcefile="PNGetAllChannelsMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNGetAllChannelsMetadataResultConverter.java:[line 15]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter" start="15" end="15" startBytecode="29" endBytecode="29" sourcefile="PNGetAllChannelsMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNGetAllChannelsMetadataResultConverter.java:[line 15]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="1c668bc0ad3025485c1b2049ba282f75" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter.from(PNMemberArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" start="7" end="12" sourcefile="PNGetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java">
+        <Message>At PNGetChannelMembersResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/member/PNMemberArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNGetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter.from(PNMemberArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNMemberArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/member/PNMemberArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" primary="true" start="11" end="11" startBytecode="44" endBytecode="44" sourcefile="PNGetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNGetChannelMembersResultConverter.java:[line 11]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" start="11" end="11" startBytecode="41" endBytecode="41" sourcefile="PNGetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNGetChannelMembersResultConverter.java:[line 11]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="ced0fc604274118136b52d5f502bd8c5" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter.from(PNMemberArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" start="7" end="12" sourcefile="PNGetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java">
+        <Message>At PNGetChannelMembersResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/member/PNMemberArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNGetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter.from(PNMemberArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNMemberArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/member/PNMemberArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" primary="true" start="10" end="10" startBytecode="26" endBytecode="26" sourcefile="PNGetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNGetChannelMembersResultConverter.java:[line 10]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter" start="10" end="10" startBytecode="23" endBytecode="23" sourcefile="PNGetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNGetChannelMembersResultConverter.java:[line 10]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="559fad6d7a77869e3950dbf3a10646fd" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter.from(PNMemberArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" start="7" end="12" sourcefile="PNManageChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java">
+        <Message>At PNManageChannelMembersResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/member/PNMemberArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNManageChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter.from(PNMemberArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNMemberArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/member/PNMemberArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" primary="true" start="11" end="11" startBytecode="44" endBytecode="44" sourcefile="PNManageChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNManageChannelMembersResultConverter.java:[line 11]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" start="11" end="11" startBytecode="41" endBytecode="41" sourcefile="PNManageChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNManageChannelMembersResultConverter.java:[line 11]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="203b81e1ebcd4f87a76912b89fab1d9d" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter.from(PNMemberArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" start="7" end="12" sourcefile="PNManageChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java">
+        <Message>At PNManageChannelMembersResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/member/PNMemberArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNManageChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter.from(PNMemberArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNMemberArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/member/PNMemberArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" primary="true" start="10" end="10" startBytecode="26" endBytecode="26" sourcefile="PNManageChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNManageChannelMembersResultConverter.java:[line 10]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter" start="10" end="10" startBytecode="23" endBytecode="23" sourcefile="PNManageChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNManageChannelMembersResultConverter.java:[line 10]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="b845dd75fa03dd6f98c2bf63e90f0647" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter.from(PNMemberArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" start="7" end="12" sourcefile="PNRemoveChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java">
+        <Message>At PNRemoveChannelMembersResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/member/PNMemberArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNRemoveChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter.from(PNMemberArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNMemberArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/member/PNMemberArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" primary="true" start="11" end="11" startBytecode="44" endBytecode="44" sourcefile="PNRemoveChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNRemoveChannelMembersResultConverter.java:[line 11]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" start="11" end="11" startBytecode="41" endBytecode="41" sourcefile="PNRemoveChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNRemoveChannelMembersResultConverter.java:[line 11]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="9ac9663cd387d67fc3ee3517a8e283ed" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter.from(PNMemberArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" start="7" end="12" sourcefile="PNRemoveChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java">
+        <Message>At PNRemoveChannelMembersResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/member/PNMemberArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNRemoveChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter.from(PNMemberArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNMemberArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/member/PNMemberArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" primary="true" start="10" end="10" startBytecode="26" endBytecode="26" sourcefile="PNRemoveChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNRemoveChannelMembersResultConverter.java:[line 10]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter" start="10" end="10" startBytecode="23" endBytecode="23" sourcefile="PNRemoveChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNRemoveChannelMembersResultConverter.java:[line 10]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="248489e4b865da7160176f32b364c61c" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter.from(PNMemberArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" start="7" end="12" sourcefile="PNSetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java">
+        <Message>At PNSetChannelMembersResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/member/PNMemberArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNSetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter.from(PNMemberArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNMemberArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/member/PNMemberArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" primary="true" start="11" end="11" startBytecode="44" endBytecode="44" sourcefile="PNSetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNSetChannelMembersResultConverter.java:[line 11]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" start="11" end="11" startBytecode="41" endBytecode="41" sourcefile="PNSetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNSetChannelMembersResultConverter.java:[line 11]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="7f2e73a651f52200dba3184d665b6605" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter.from(PNMemberArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" start="7" end="12" sourcefile="PNSetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java">
+        <Message>At PNSetChannelMembersResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/member/PNMemberArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNSetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter.from(PNMemberArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNMemberArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/member/PNMemberArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" primary="true" start="10" end="10" startBytecode="26" endBytecode="26" sourcefile="PNSetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNSetChannelMembersResultConverter.java:[line 10]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter" start="10" end="10" startBytecode="23" endBytecode="23" sourcefile="PNSetChannelMembersResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNSetChannelMembersResultConverter.java:[line 10]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="cb31c7d3d8eb818bea6eefafda6eafa" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter.from(PNChannelMembershipArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" start="7" end="12" sourcefile="PNGetMembershipsResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java">
+        <Message>At PNGetMembershipsResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNGetMembershipsResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter.from(PNChannelMembershipArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNChannelMembershipArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" primary="true" start="11" end="11" startBytecode="44" endBytecode="44" sourcefile="PNGetMembershipsResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNGetMembershipsResultConverter.java:[line 11]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" start="11" end="11" startBytecode="41" endBytecode="41" sourcefile="PNGetMembershipsResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNGetMembershipsResultConverter.java:[line 11]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="f66baa63329351072cf8d65a5b8bcb96" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter.from(PNChannelMembershipArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" start="7" end="12" sourcefile="PNGetMembershipsResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java">
+        <Message>At PNGetMembershipsResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNGetMembershipsResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter.from(PNChannelMembershipArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNChannelMembershipArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" primary="true" start="10" end="10" startBytecode="26" endBytecode="26" sourcefile="PNGetMembershipsResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNGetMembershipsResultConverter.java:[line 10]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter" start="10" end="10" startBytecode="23" endBytecode="23" sourcefile="PNGetMembershipsResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNGetMembershipsResultConverter.java:[line 10]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="b7c68e51e38ed2e41d02a5fb02b59a0b" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter.from(PNChannelMembershipArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" start="7" end="12" sourcefile="PNManageMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java">
+        <Message>At PNManageMembershipResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNManageMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter.from(PNChannelMembershipArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNChannelMembershipArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" primary="true" start="11" end="11" startBytecode="44" endBytecode="44" sourcefile="PNManageMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNManageMembershipResultConverter.java:[line 11]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" start="11" end="11" startBytecode="41" endBytecode="41" sourcefile="PNManageMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNManageMembershipResultConverter.java:[line 11]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="d3de05f2a35ce3f2b6f2aa756d20eead" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter.from(PNChannelMembershipArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" start="7" end="12" sourcefile="PNManageMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java">
+        <Message>At PNManageMembershipResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNManageMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter.from(PNChannelMembershipArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNChannelMembershipArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" primary="true" start="10" end="10" startBytecode="26" endBytecode="26" sourcefile="PNManageMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNManageMembershipResultConverter.java:[line 10]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResultConverter" start="10" end="10" startBytecode="23" endBytecode="23" sourcefile="PNManageMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNManageMembershipResultConverter.java:[line 10]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="6b07c8f6e816a5fcc7d50299f6c1961c" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter.from(PNChannelMembershipArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" start="9" end="14" sourcefile="PNRemoveMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java">
+        <Message>At PNRemoveMembershipResultConverter.java:[lines 9-14]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResult;" isStatic="true" primary="true" classAnnotationNames="org.jetbrains.annotations.NotNull">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" start="9" end="9" startBytecode="0" endBytecode="235" sourcefile="PNRemoveMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter.from(PNChannelMembershipArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNChannelMembershipArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" primary="true" start="13" end="13" startBytecode="44" endBytecode="44" sourcefile="PNRemoveMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNRemoveMembershipResultConverter.java:[line 13]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" start="13" end="13" startBytecode="41" endBytecode="41" sourcefile="PNRemoveMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNRemoveMembershipResultConverter.java:[line 13]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="c2ca036f7a8612a757f0d7fa3ca5c857" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter.from(PNChannelMembershipArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" start="9" end="14" sourcefile="PNRemoveMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java">
+        <Message>At PNRemoveMembershipResultConverter.java:[lines 9-14]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResult;" isStatic="true" primary="true" classAnnotationNames="org.jetbrains.annotations.NotNull">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" start="9" end="9" startBytecode="0" endBytecode="235" sourcefile="PNRemoveMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter.from(PNChannelMembershipArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNChannelMembershipArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" primary="true" start="12" end="12" startBytecode="26" endBytecode="26" sourcefile="PNRemoveMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNRemoveMembershipResultConverter.java:[line 12]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter" start="12" end="12" startBytecode="23" endBytecode="23" sourcefile="PNRemoveMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNRemoveMembershipResultConverter.java:[line 12]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="9e4ea403d50208991234d8bf63af4354" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter.from(PNChannelMembershipArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" start="9" end="14" sourcefile="PNSetMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java">
+        <Message>At PNSetMembershipResultConverter.java:[lines 9-14]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResult;" isStatic="true" primary="true" classAnnotationNames="org.jetbrains.annotations.NotNull">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" start="9" end="9" startBytecode="0" endBytecode="235" sourcefile="PNSetMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter.from(PNChannelMembershipArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNChannelMembershipArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" primary="true" start="13" end="13" startBytecode="44" endBytecode="44" sourcefile="PNSetMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNSetMembershipResultConverter.java:[line 13]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" start="13" end="13" startBytecode="41" endBytecode="41" sourcefile="PNSetMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNSetMembershipResultConverter.java:[line 13]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="280136526ef0f03c919d5bdbd50967c4" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter.from(PNChannelMembershipArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" start="9" end="14" sourcefile="PNSetMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java">
+        <Message>At PNSetMembershipResultConverter.java:[lines 9-14]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResult;" isStatic="true" primary="true" classAnnotationNames="org.jetbrains.annotations.NotNull">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" start="9" end="9" startBytecode="0" endBytecode="235" sourcefile="PNSetMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter.from(PNChannelMembershipArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNChannelMembershipArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/membership/PNChannelMembershipArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" primary="true" start="12" end="12" startBytecode="26" endBytecode="26" sourcefile="PNSetMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNSetMembershipResultConverter.java:[line 12]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter" start="12" end="12" startBytecode="23" endBytecode="23" sourcefile="PNSetMembershipResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNSetMembershipResultConverter.java:[line 12]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="d80c6b33e47419cc787b0981407ec3b7" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter.from(PNUUIDMetadataArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" start="7" end="12" sourcefile="PNGetAllUUIDMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java">
+        <Message>At PNGetAllUUIDMetadataResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/uuid/PNUUIDMetadataArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNGetAllUUIDMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter.from(PNUUIDMetadataArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult" name="getNext" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNNext;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult" start="9" end="9" startBytecode="0" endBytecode="46" sourcefile="PNUUIDMetadataArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/uuid/PNUUIDMetadataArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult.getNext()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" primary="true" start="11" end="11" startBytecode="44" endBytecode="44" sourcefile="PNGetAllUUIDMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNGetAllUUIDMetadataResultConverter.java:[line 11]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" start="11" end="11" startBytecode="41" endBytecode="41" sourcefile="PNGetAllUUIDMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNGetAllUUIDMetadataResultConverter.java:[line 11]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="dd8c1d14da25bf9513fc0c11c42f5696" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter.from(PNUUIDMetadataArrayResult) due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" start="7" end="12" sourcefile="PNGetAllUUIDMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java">
+        <Message>At PNGetAllUUIDMetadataResultConverter.java:[lines 7-12]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" name="from" signature="(Lcom/pubnub/api/models/consumer/objects/uuid/PNUUIDMetadataArrayResult;)Lcom/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResult;" isStatic="true" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" start="7" end="7" startBytecode="0" endBytecode="235" sourcefile="PNGetAllUUIDMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java"/>
+      <Message>In method com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter.from(PNUUIDMetadataArrayResult)</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult" name="getPrev" signature="()Lcom/pubnub/api/models/consumer/objects/PNPage$PNPrev;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult" start="10" end="10" startBytecode="0" endBytecode="46" sourcefile="PNUUIDMetadataArrayResult.kt" sourcepath="com/pubnub/api/models/consumer/objects/uuid/PNUUIDMetadataArrayResult.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult.getPrev()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" primary="true" start="10" end="10" startBytecode="26" endBytecode="26" sourcefile="PNGetAllUUIDMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at PNGetAllUUIDMetadataResultConverter.java:[line 10]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter" start="10" end="10" startBytecode="23" endBytecode="23" sourcefile="PNGetAllUUIDMetadataResultConverter.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at PNGetAllUUIDMetadataResultConverter.java:[line 10]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="8c679cd5191b671773fb84e578fb8753" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.internal.java.endpoints.message_actions.AddMessageActionImpl.validateParams() due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.internal.java.endpoints.message_actions.AddMessageActionImpl" primary="true">
+      <SourceLine classname="com.pubnub.internal.java.endpoints.message_actions.AddMessageActionImpl" start="19" end="50" sourcefile="AddMessageActionImpl.java" sourcepath="com/pubnub/internal/java/endpoints/message_actions/AddMessageActionImpl.java" relSourcepath="java/com/pubnub/internal/java/endpoints/message_actions/AddMessageActionImpl.java">
+        <Message>At AddMessageActionImpl.java:[lines 19-50]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.java.endpoints.message_actions.AddMessageActionImpl</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.java.endpoints.message_actions.AddMessageActionImpl" name="validateParams" signature="()V" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.internal.java.endpoints.message_actions.AddMessageActionImpl" start="38" end="50" startBytecode="0" endBytecode="183" sourcefile="AddMessageActionImpl.java" sourcepath="com/pubnub/internal/java/endpoints/message_actions/AddMessageActionImpl.java" relSourcepath="java/com/pubnub/internal/java/endpoints/message_actions/AddMessageActionImpl.java"/>
+      <Message>In method com.pubnub.internal.java.endpoints.message_actions.AddMessageActionImpl.validateParams()</Message>
+    </Method>
+    <Method classname="com.pubnub.api.models.consumer.message_actions.PNMessageAction" name="getMessageTimetoken" signature="()Ljava/lang/Long;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.api.models.consumer.message_actions.PNMessageAction" start="81" end="81" startBytecode="0" endBytecode="49" sourcefile="PNMessageAction.kt" sourcepath="com/pubnub/api/models/consumer/message_actions/PNMessageAction.kt"/>
+      <Message>Called method com.pubnub.api.models.consumer.message_actions.PNMessageAction.getMessageTimetoken()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.java.endpoints.message_actions.AddMessageActionImpl" primary="true" start="44" end="44" startBytecode="53" endBytecode="53" sourcefile="AddMessageActionImpl.java" sourcepath="com/pubnub/internal/java/endpoints/message_actions/AddMessageActionImpl.java" relSourcepath="java/com/pubnub/internal/java/endpoints/message_actions/AddMessageActionImpl.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at AddMessageActionImpl.java:[line 44]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.internal.java.endpoints.message_actions.AddMessageActionImpl" start="44" end="44" startBytecode="50" endBytecode="50" sourcefile="AddMessageActionImpl.java" sourcepath="com/pubnub/internal/java/endpoints/message_actions/AddMessageActionImpl.java" relSourcepath="java/com/pubnub/internal/java/endpoints/message_actions/AddMessageActionImpl.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at AddMessageActionImpl.java:[line 44]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="BC_BAD_CAST_TO_ABSTRACT_COLLECTION" priority="1" rank="15" abbrev="BC" category="STYLE" instanceHash="6b158587fc834e6742ccbb3a91cbe2ba" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="704">
+    <ShortMessage>Questionable cast to abstract collection</ShortMessage>
+    <LongMessage>Questionable cast from Collection to abstract class java.util.List in new com.pubnub.internal.java.endpoints.objects_api.memberships.RemoveMembershipsImpl(Collection, PubNub)</LongMessage>
+    <Class classname="com.pubnub.internal.java.endpoints.objects_api.memberships.RemoveMembershipsImpl" primary="true">
+      <SourceLine classname="com.pubnub.internal.java.endpoints.objects_api.memberships.RemoveMembershipsImpl" start="29" end="87" sourcefile="RemoveMembershipsImpl.java" sourcepath="com/pubnub/internal/java/endpoints/objects_api/memberships/RemoveMembershipsImpl.java" relSourcepath="java/com/pubnub/internal/java/endpoints/objects_api/memberships/RemoveMembershipsImpl.java">
+        <Message>At RemoveMembershipsImpl.java:[lines 29-87]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.java.endpoints.objects_api.memberships.RemoveMembershipsImpl</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.java.endpoints.objects_api.memberships.RemoveMembershipsImpl" name="&lt;init&gt;" signature="(Ljava/util/Collection;Lcom/pubnub/api/PubNub;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.internal.java.endpoints.objects_api.memberships.RemoveMembershipsImpl" start="46" end="48" startBytecode="0" endBytecode="10" sourcefile="RemoveMembershipsImpl.java" sourcepath="com/pubnub/internal/java/endpoints/objects_api/memberships/RemoveMembershipsImpl.java" relSourcepath="java/com/pubnub/internal/java/endpoints/objects_api/memberships/RemoveMembershipsImpl.java"/>
+      <Message>In method new com.pubnub.internal.java.endpoints.objects_api.memberships.RemoveMembershipsImpl(Collection, PubNub)</Message>
+    </Method>
+    <Type descriptor="Ljava/util/Collection;" role="TYPE_FOUND" typeParameters="&lt;java.lang.String&gt;">
+      <SourceLine classname="java.util.Collection" start="418" end="771" sourcefile="Collection.java" sourcepath="java/util/Collection.java">
+        <Message>At Collection.java:[lines 418-771]</Message>
+      </SourceLine>
+      <Message>Actual type java.util.Collection&lt;java.lang.String&gt;</Message>
+    </Type>
+    <Type descriptor="Ljava/util/List;" role="TYPE_EXPECTED">
+      <SourceLine classname="java.util.List" start="141" end="1193" sourcefile="List.java" sourcepath="java/util/List.java">
+        <Message>At List.java:[lines 141-1193]</Message>
+      </SourceLine>
+      <Message>Expected java.util.List</Message>
+    </Type>
+    <LocalVariable name="channelIds" register="1" pc="13" role="LOCAL_VARIABLE_VALUE_OF">
+      <Message>Value loaded from channelIds</Message>
+    </LocalVariable>
+    <SourceLine classname="com.pubnub.internal.java.endpoints.objects_api.memberships.RemoveMembershipsImpl" primary="true" start="47" end="47" startBytecode="14" endBytecode="14" sourcefile="RemoveMembershipsImpl.java" sourcepath="com/pubnub/internal/java/endpoints/objects_api/memberships/RemoveMembershipsImpl.java" relSourcepath="java/com/pubnub/internal/java/endpoints/objects_api/memberships/RemoveMembershipsImpl.java">
+      <Message>At RemoveMembershipsImpl.java:[line 47]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugCategory category="STYLE">
+    <Description>Dodgy code</Description>
+  </BugCategory>
+  <BugPattern type="BC_BAD_CAST_TO_ABSTRACT_COLLECTION" abbrev="BC" category="STYLE" cweid="704">
+    <ShortDescription>Questionable cast to abstract collection</ShortDescription>
+    <Details><![CDATA[
+
+<p>
+This code casts a Collection to an abstract collection
+(such as <code>List</code>, <code>Set</code>, or <code>Map</code>).
+Ensure that you are guaranteed that the object is of the type
+you are casting to. If all you need is to be able
+to iterate through a collection, you don't need to cast it to a Set or List.
+</p>
+<p>See <a href="https://cwe.mitre.org/data/definitions/704.html">CWE-704: Incorrect Type Conversion or Cast</a>.
+</p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugPattern type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" abbrev="NP" category="STYLE">
+    <ShortDescription>Possible null pointer dereference due to return value of called method</ShortDescription>
+    <Details><![CDATA[
+      
+<p> The return value from a method is dereferenced without a null check,
+and the return value of that method is one that should generally be checked
+for null.  This may lead to a <code>NullPointerException</code> when the code is executed.
+</p>
+      
+   ]]></Details>
+  </BugPattern>
+  <BugCode abbrev="BC">
+    <Description>Bad casts of object references</Description>
+  </BugCode>
+  <BugCode abbrev="NP" cweid="476">
+    <Description>Null pointer dereference</Description>
+  </BugCode>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Fri, 16 Oct 2026 13:00:55 +0200" total_classes="0" referenced_classes="0" total_bugs="22" total_size="0" num_packages="6" java_version="21.0.2" vm_version="21.0.2+13-jvmci-23.1-b30" cpu_seconds="13.17" clock_seconds="6.16" peak_mbytes="480.32" alloc_mbytes="8192.00" gc_seconds="0.11" priority_2="21" priority_1="1">
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/channel/PNGetAllChannelsMetadataResultConverter.java" bugCount="2" size="0" bugHash="e7bd93dea9765d4dcc313d32a4b74c51"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/member/PNGetChannelMembersResultConverter.java" bugCount="2" size="0" bugHash="04168350546ccee32dfba587acc162a5"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/member/PNManageChannelMembersResultConverter.java" bugCount="2" size="0" bugHash="8ed93e05339366fdde10a7379409f85f"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/member/PNRemoveChannelMembersResultConverter.java" bugCount="2" size="0" bugHash="39eb4ccace1b96909a7b4a84d49823eb"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/member/PNSetChannelMembersResultConverter.java" bugCount="2" size="0" bugHash="7b85d098a3d9a76a9eeb1ee90c120323"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/membership/PNGetMembershipsResultConverter.java" bugCount="2" size="0" bugHash="b87586bea9247c9effe45398acf52f01"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/membership/PNManageMembershipResultConverter.java" bugCount="2" size="0" bugHash="1cae165f68d2a6a7c4ea6e94ea5e57f0"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/membership/PNRemoveMembershipResultConverter.java" bugCount="2" size="0" bugHash="3913658f8b17b88fd856a11b221323e3"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/membership/PNSetMembershipResultConverter.java" bugCount="2" size="0" bugHash="18188701d78dfcfa236128e0de20c68f"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/uuid/PNGetAllUUIDMetadataResultConverter.java" bugCount="2" size="0" bugHash="56114f007ac1aa4af38c27644e8f1d1d"/>
+    <FileStats path="com/pubnub/internal/java/endpoints/message_actions/AddMessageActionImpl.java" bugCount="1" size="0" bugHash="b04555855f7d851793ed6045f2866a3e"/>
+    <FileStats path="com/pubnub/internal/java/endpoints/objects_api/memberships/RemoveMembershipsImpl.java" bugCount="1" size="0" bugHash="5d2d4891f9f64212b24f59f7f84c2679"/>
+    <FindBugsProfile></FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>

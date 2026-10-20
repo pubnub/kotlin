@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="4.10.5" sequence="0" timestamp="1792148447825" analysisTimestamp="1792148447825" release="">
+  <Project projectName="pubnub-kotlin-impl (spotbugsMain)"/>
+  <BugInstance type="NP_METHOD_RETURN_RELAXING_ANNOTATION" priority="1" rank="16" abbrev="NP" category="STYLE" instanceHash="886b89cd2e104b68ef14d71e7395d03c" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Method relaxes nullness annotation on return value</ShortMessage>
+    <LongMessage>Method com.pubnub.internal.vendor.AppEngineFactory.tag(Class, Function0) overrides the return value nullness annotation in an incompatible way.</LongMessage>
+    <Class classname="com.pubnub.internal.vendor.AppEngineFactory" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="27" end="162" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java">
+        <Message>At AppEngineFactory.java:[lines 27-162]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.vendor.AppEngineFactory</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.vendor.AppEngineFactory" name="tag" signature="(Ljava/lang/Class;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;" isStatic="false" primary="true" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="153" end="153" startBytecode="0" endBytecode="91" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java" synthetic="true"/>
+      <Message>In method com.pubnub.internal.vendor.AppEngineFactory.tag(Class, Function0)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="153" end="153" startBytecode="0" endBytecode="91" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java" synthetic="true">
+      <Message>At AppEngineFactory.java:[line 153]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_METHOD_RETURN_RELAXING_ANNOTATION" priority="1" rank="16" abbrev="NP" category="STYLE" instanceHash="a57795fb333dbf5976dd7e4c9e0ce3e" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Method relaxes nullness annotation on return value</ShortMessage>
+    <LongMessage>Method com.pubnub.internal.vendor.AppEngineFactory.tag(KClass, Function0) overrides the return value nullness annotation in an incompatible way.</LongMessage>
+    <Class classname="com.pubnub.internal.vendor.AppEngineFactory" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="27" end="162" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java">
+        <Message>At AppEngineFactory.java:[lines 27-162]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.vendor.AppEngineFactory</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.vendor.AppEngineFactory" name="tag" signature="(Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;" isStatic="false" primary="true" classAnnotationNames="org.jetbrains.annotations.Nullable">
+      <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="147" end="147" startBytecode="0" endBytecode="91" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java" synthetic="true"/>
+      <Message>In method com.pubnub.internal.vendor.AppEngineFactory.tag(KClass, Function0)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="147" end="147" startBytecode="0" endBytecode="91" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java" synthetic="true">
+      <Message>At AppEngineFactory.java:[line 147]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="fc3c4a32941c24ed997e7d737fb31730" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.pubnub.internal.vendor.AppEngineFactory.execute() due to return value of called method</LongMessage>
+    <Class classname="com.pubnub.internal.vendor.AppEngineFactory" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="27" end="162" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java">
+        <Message>At AppEngineFactory.java:[lines 27-162]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.vendor.AppEngineFactory</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.vendor.AppEngineFactory" name="execute" signature="()Lokhttp3/Response;" isStatic="false" primary="true" classAnnotationNames="org.jetbrains.annotations.NotNull">
+      <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="45" end="103" startBytecode="0" endBytecode="534" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java"/>
+      <Message>In method com.pubnub.internal.vendor.AppEngineFactory.execute()</Message>
+    </Method>
+    <Method classname="okhttp3.Request" name="body" signature="()Lokhttp3/RequestBody;" isStatic="false" role="METHOD_CALLED" classAnnotationNames="kotlin.jvm.JvmName,org.jetbrains.annotations.Nullable">
+      <SourceLine classname="okhttp3.Request" start="47" end="47" startBytecode="0" endBytecode="46" sourcefile="Request.kt" sourcepath="okhttp3/Request.kt"/>
+      <Message>Called method okhttp3.Request.body()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" primary="true" start="64" end="64" startBytecode="142" endBytecode="142" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java" role="SOURCE_LINE_DEREF">
+      <Message>Dereferenced at AppEngineFactory.java:[line 64]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="64" end="64" startBytecode="137" endBytecode="137" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at AppEngineFactory.java:[line 64]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="URLCONNECTION_SSRF_FD" priority="2" rank="12" abbrev="SECSSSRFUC" category="SECURITY" instanceHash="401cbbd39fa8c27f459bcc3261cf2cdd" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="918">
+    <ShortMessage>URLConnection Server-Side Request Forgery (SSRF) and File Disclosure</ShortMessage>
+    <LongMessage>This web server request could be used by an attacker to expose internal services and filesystem.</LongMessage>
+    <Class classname="com.pubnub.internal.vendor.AppEngineFactory" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="27" end="162" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java">
+        <Message>At AppEngineFactory.java:[lines 27-162]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.vendor.AppEngineFactory</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.vendor.AppEngineFactory" name="execute" signature="()Lokhttp3/Response;" isStatic="false" primary="true" classAnnotationNames="org.jetbrains.annotations.NotNull">
+      <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" start="45" end="103" startBytecode="0" endBytecode="534" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java"/>
+      <Message>In method com.pubnub.internal.vendor.AppEngineFactory.execute()</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.vendor.AppEngineFactory" primary="true" start="48" end="48" startBytecode="33" endBytecode="33" sourcefile="AppEngineFactory.java" sourcepath="com/pubnub/internal/vendor/AppEngineFactory.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/AppEngineFactory.java">
+      <Message>At AppEngineFactory.java:[line 48]</Message>
+    </SourceLine>
+    <String value="java/net/URL.openConnection()Ljava/net/URLConnection;" role="Sink method">
+      <Message>Sink method java/net/URL.openConnection()Ljava/net/URLConnection;</Message>
+    </String>
+    <String value="0" role="Sink parameter">
+      <Message>Sink parameter 0</Message>
+    </String>
+    <String value="okhttp3/HttpUrl.url()Ljava/net/URL;" role="Unknown source">
+      <Message>Unknown source okhttp3/HttpUrl.url()Ljava/net/URL;</Message>
+    </String>
+  </BugInstance>
+  <BugInstance type="CIPHER_INTEGRITY" priority="1" rank="10" abbrev="CIPINT" category="SECURITY" instanceHash="68c3df523e3933614f2e47a311955bfa" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="353">
+    <ShortMessage>Cipher with no integrity</ShortMessage>
+    <LongMessage>The cipher does not provide data integrity</LongMessage>
+    <Class classname="com.pubnub.internal.vendor.Crypto" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="21" end="158" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+        <Message>At Crypto.java:[lines 21-158]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.vendor.Crypto</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.vendor.Crypto" name="decrypt" signature="(Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/String;" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="124" end="140" startBytecode="0" endBytecode="371" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java"/>
+      <Message>In method com.pubnub.internal.vendor.Crypto.decrypt(String, Integer)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.vendor.Crypto" primary="true" start="136" end="136" startBytecode="100" endBytecode="100" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+      <Message>At Crypto.java:[line 136]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="CIPHER_INTEGRITY" priority="1" rank="10" abbrev="CIPINT" category="SECURITY" instanceHash="4671e42880ddd2f3e88c2be85ce9af15" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="353">
+    <ShortMessage>Cipher with no integrity</ShortMessage>
+    <LongMessage>The cipher does not provide data integrity</LongMessage>
+    <Class classname="com.pubnub.internal.vendor.Crypto" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="21" end="158" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+        <Message>At Crypto.java:[lines 21-158]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.vendor.Crypto</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.vendor.Crypto" name="encrypt" signature="(Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/String;" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="97" end="112" startBytecode="0" endBytecode="394" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java"/>
+      <Message>In method com.pubnub.internal.vendor.Crypto.encrypt(String, Integer)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.vendor.Crypto" primary="true" start="100" end="100" startBytecode="33" endBytecode="33" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+      <Message>At Crypto.java:[line 100]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="PADDING_ORACLE" priority="1" rank="10" abbrev="PADORA" category="SECURITY" instanceHash="934581252629b63a23e356045f3d3442" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="326">
+    <ShortMessage>Cipher is susceptible to Padding Oracle</ShortMessage>
+    <LongMessage>The cipher is susceptible to padding oracle attacks</LongMessage>
+    <Class classname="com.pubnub.internal.vendor.Crypto" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="21" end="158" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+        <Message>At Crypto.java:[lines 21-158]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.vendor.Crypto</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.vendor.Crypto" name="decrypt" signature="(Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/String;" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="124" end="140" startBytecode="0" endBytecode="371" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java"/>
+      <Message>In method com.pubnub.internal.vendor.Crypto.decrypt(String, Integer)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.vendor.Crypto" primary="true" start="136" end="136" startBytecode="100" endBytecode="100" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+      <Message>At Crypto.java:[line 136]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="PADDING_ORACLE" priority="1" rank="10" abbrev="PADORA" category="SECURITY" instanceHash="2ff2f17837eb8434a886298aef5e3250" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="326">
+    <ShortMessage>Cipher is susceptible to Padding Oracle</ShortMessage>
+    <LongMessage>The cipher is susceptible to padding oracle attacks</LongMessage>
+    <Class classname="com.pubnub.internal.vendor.Crypto" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="21" end="158" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+        <Message>At Crypto.java:[lines 21-158]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.vendor.Crypto</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.vendor.Crypto" name="encrypt" signature="(Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/String;" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="97" end="112" startBytecode="0" endBytecode="394" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java"/>
+      <Message>In method com.pubnub.internal.vendor.Crypto.encrypt(String, Integer)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.vendor.Crypto" primary="true" start="100" end="100" startBytecode="33" endBytecode="33" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+      <Message>At Crypto.java:[line 100]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="STATIC_IV" priority="2" rank="12" abbrev="STAIV" category="SECURITY" instanceHash="99c19ed239e73c42acd0e9aaab3d6b96" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="329">
+    <ShortMessage>Static IV</ShortMessage>
+    <LongMessage>The initialization vector (IV) is not properly generated</LongMessage>
+    <Class classname="com.pubnub.internal.vendor.Crypto" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="21" end="158" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+        <Message>At Crypto.java:[lines 21-158]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.internal.vendor.Crypto</Message>
+    </Class>
+    <Method classname="com.pubnub.internal.vendor.Crypto" name="encrypt" signature="(Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/String;" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.internal.vendor.Crypto" start="97" end="112" startBytecode="0" endBytecode="394" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java"/>
+      <Message>In method com.pubnub.internal.vendor.Crypto.encrypt(String, Integer)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.internal.vendor.Crypto" primary="true" start="98" end="98" startBytecode="12" endBytecode="12" sourcefile="Crypto.java" sourcepath="com/pubnub/internal/vendor/Crypto.java" relSourcepath="src/main/java/com/pubnub/internal/vendor/Crypto.java">
+      <Message>At Crypto.java:[line 98]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugCategory category="STYLE">
+    <Description>Dodgy code</Description>
+  </BugCategory>
+  <BugCategory category="SECURITY">
+    <Description>Security</Description>
+  </BugCategory>
+  <BugPattern type="NP_METHOD_RETURN_RELAXING_ANNOTATION" abbrev="NP" category="STYLE">
+    <ShortDescription>Method relaxes nullness annotation on return value</ShortDescription>
+    <Details><![CDATA[
+        <p>
+        A method should always implement the contract of a method it overrides. Thus, if a method takes is annotated
+    as returning a @Nonnull value,
+    you shouldn't override that method in a subclass with a method annotated as returning a @Nullable or @CheckForNull value.
+    Doing so violates the contract that the method shouldn't return null.
+        </p>
+      ]]></Details>
+  </BugPattern>
+  <BugPattern type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" abbrev="NP" category="STYLE">
+    <ShortDescription>Possible null pointer dereference due to return value of called method</ShortDescription>
+    <Details><![CDATA[
+      
+<p> The return value from a method is dereferenced without a null check,
+and the return value of that method is one that should generally be checked
+for null.  This may lead to a <code>NullPointerException</code> when the code is executed.
+</p>
+      
+   ]]></Details>
+  </BugPattern>
+  <BugPattern type="URLCONNECTION_SSRF_FD" abbrev="SECSSSRFUC" category="SECURITY" cweid="918">
+    <ShortDescription>URLConnection Server-Side Request Forgery (SSRF) and File Disclosure</ShortDescription>
+    <Details><![CDATA[
+            
+<p>
+    Server-Side Request Forgery occur when a web server executes a request to a user supplied destination
+    parameter that is not validated. Such vulnerabilities could allow an attacker to access internal services
+    or to launch attacks from your web server.
+</p>
+<p>
+    URLConnection can be used with file:// protocol or other protocols to access local filesystem and potentially other services.
+<p>
+    <b>Vulnerable Code:</b>
+<pre>
+new URL(String url).openConnection()
+</pre>
+
+<pre>
+new URL(String url).openStream()
+</pre>
+
+<pre>
+new URL(String url).getContent()
+</pre>
+</p>
+<p>
+    <b>Solution/Countermeasures:</b><br/>
+    <ul>
+        <li>Don't accept URL destinations from users</li>
+        <li>Accept a destination key, and use it to look up the target destination associate with the key</li>
+        <li>White list URLs (if possible)</li>
+        <li>Validate that the beginning of the URL is part of a white list</li>
+    </ul>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://cwe.mitre.org/data/definitions/918.html">CWE-918: Server-Side Request Forgery (SSRF)</a><br/>
+<a href="https://www.bishopfox.com/blog/2015/04/vulnerable-by-design-understanding-server-side-request-forgery/">Understanding Server-Side Request Forgery</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/73.html">CWE-73: External Control of File Name or Path</a><br/>
+<a href="https://www.pwntester.com/blog/2013/11/28/abusing-jar-downloads/">Abusing jar:// downloads</a><br />
+</p>
+            ]]></Details>
+  </BugPattern>
+  <BugPattern type="CIPHER_INTEGRITY" abbrev="CIPINT" category="SECURITY" cweid="353">
+    <ShortDescription>Cipher with no integrity</ShortDescription>
+    <Details><![CDATA[
+            
+<p>
+    The ciphertext produced is susceptible to alteration by an adversary. This mean that the cipher provides no way to detect that the
+    data has been tampered with. If the ciphertext can be controlled by an attacker, it could be altered without detection.
+</p>
+<p>
+    The solution is to use a cipher that includes a Hash based Message Authentication Code (HMAC) to sign the data. Combining a HMAC function to the
+    existing cipher is prone to error <sup><a href="https://moxie.org/blog/the-cryptographic-doom-principle/">[1]</a></sup>. Specifically,
+    it is always recommended that you be able to verify the HMAC first, and only if the data is unmodified, do you then perform any cryptographic
+    functions on the data.
+</p>
+<p>The following modes are vulnerable because they don't provide a HMAC:<br/>
+    - CBC<br/>
+    - OFB<br/>
+    - CTR<br/>
+    - ECB<br/><br/>
+    The following snippets code are some examples of vulnerable code.<br/><br/>
+    <b>Code at risk:</b><br/>
+    <i>AES in CBC mode</i><br/>
+
+    <pre>Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+    <br/>
+    <i>Triple DES with ECB mode</i><br/>
+
+<pre>Cipher c = Cipher.getInstance("DESede/ECB/PKCS5Padding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<p>
+In the example solution above, the GCM mode introduces an HMAC into the resulting encrypted data, providing integrity of the result.
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="https://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
+    <a href="https://csrc.nist.gov/projects/block-cipher-techniques/bcm/modes-develoment#01">NIST: Authenticated Encryption Modes</a><br/>
+    <a href="https://moxie.org/blog/the-cryptographic-doom-principle/">Moxie Marlinspike's blog: The Cryptographic Doom Principle</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/353.html">CWE-353: Missing Support for Integrity Check</a>
+</p>
+
+        ]]></Details>
+  </BugPattern>
+  <BugPattern type="STATIC_IV" abbrev="STAIV" category="SECURITY" cweid="329">
+    <ShortDescription>Static IV</ShortDescription>
+    <Details><![CDATA[
+            
+<p>
+    Initialization vector must be regenerated for each message to be encrypted.
+</p>
+<p><b>Vulnerable Code:</b></p>
+<p>
+<pre>
+private static byte[] IV = new byte[16] {(byte)0,(byte)1,(byte)2,[...]};
+
+public void encrypt(String message) throws Exception {
+
+    IvParameterSpec ivSpec = new IvParameterSpec(IV);
+[...]
+</pre>
+<p><b>Solution:</b></p>
+<p>
+<pre>
+public void encrypt(String message) throws Exception {
+
+    byte[] iv = new byte[16];
+    new SecureRandom().nextBytes(iv);
+
+    IvParameterSpec ivSpec = new IvParameterSpec(iv);
+[...]
+</pre>
+</p>
+<br/>
+<p>
+<b>References</b><br/>
+<a href="https://en.wikipedia.org/wiki/Initialization_vector">Wikipedia: Initialization vector</a><br/>
+<a href="https://cwe.mitre.org/data/definitions/329.html">CWE-329: Not Using a Random IV with CBC Mode</a><br/>
+<a href="https://defuse.ca/cbcmodeiv.htm">Encryption - CBC Mode IV: Secret or Not?</a>
+</p>
+            
+        ]]></Details>
+  </BugPattern>
+  <BugPattern type="PADDING_ORACLE" abbrev="PADORA" category="SECURITY" cweid="326">
+    <ShortDescription>Cipher is susceptible to Padding Oracle</ShortDescription>
+    <Details><![CDATA[
+            
+<p>
+    This specific mode of CBC with PKCS5Padding is susceptible to padding oracle attacks. An adversary could potentially decrypt the
+    message if the system exposed the difference between plaintext with invalid padding or valid padding. The distinction between
+    valid and invalid padding is usually revealed through distinct error messages being returned for each condition.
+</p>
+<p>
+    <b>Code at risk:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<p>
+    <b>Solution:</b>
+    <pre>Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);</pre>
+</p>
+<br/>
+<p>
+    <b>References</b><br/>
+    <a href="http://www.infobytesec.com/down/paddingoracle_openjam.pdf">Padding Oracles for the masses (by Matias Soler)</a><br/>
+    <a href="https://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated encryption</a><br/>
+    <a href="https://csrc.nist.gov/projects/block-cipher-techniques/bcm/modes-develoment#01">NIST: Authenticated Encryption Modes</a><br/>
+    <a href="https://capec.mitre.org/data/definitions/463.html">CAPEC: Padding Oracle Crypto Attack</a><br/>
+    <a href="https://cwe.mitre.org/data/definitions/696.html">CWE-696: Incorrect Behavior Order</a>
+    <a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a>
+</p>
+
+        ]]></Details>
+  </BugPattern>
+  <BugCode abbrev="NP" cweid="476">
+    <Description>Null pointer dereference</Description>
+  </BugCode>
+  <BugCode abbrev="STAIV">
+    <Description>Static IV</Description>
+  </BugCode>
+  <BugCode abbrev="SECSSSRFUC">
+    <Description>URLConnection Server-Side Request Forgery</Description>
+  </BugCode>
+  <BugCode abbrev="CIPINT">
+    <Description>Cipher with no integrity</Description>
+  </BugCode>
+  <BugCode abbrev="PADORA">
+    <Description>Cipher is susceptible to padding oracle attack</Description>
+  </BugCode>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Fri, 16 Oct 2026 13:00:47 +0200" total_classes="0" referenced_classes="0" total_bugs="9" total_size="0" num_packages="1" java_version="21.0.2" vm_version="21.0.2+13-jvmci-23.1-b30" cpu_seconds="7.40" clock_seconds="3.26" peak_mbytes="471.67" alloc_mbytes="8192.00" gc_seconds="0.04" priority_2="3" priority_1="6">
+    <FileStats path="com/pubnub/internal/vendor/AppEngineFactory.java" bugCount="4" size="0" bugHash="a53eae25af901abb1a3d16139f8227c3"/>
+    <FileStats path="com/pubnub/internal/vendor/Crypto.java" bugCount="5" size="0" bugHash="d800c70c4e1da264aaec54c01419b2f6"/>
+    <FindBugsProfile></FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>

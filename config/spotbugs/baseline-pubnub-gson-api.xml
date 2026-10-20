@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="4.10.5" sequence="0" timestamp="1792148442353" analysisTimestamp="1792148442353" release="">
+  <Project projectName="pubnub-gson-api (spotbugsMain)"/>
+  <BugInstance type="CT_CONSTRUCTOR_THROW" priority="2" rank="16" abbrev="CT" category="BAD_PRACTICE" instanceHash="86a2eb94e5faa1f5670c4797df98e39b" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
+    <ShortMessage>Be wary of letting constructors throw exceptions.</ShortMessage>
+    <LongMessage>Exception thrown in class com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder at new com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder(String) will leave the constructor. The object under construction remains partially initialized and may be vulnerable to Finalizer attacks.</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder" start="20" end="49" sourcefile="PNUser.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNUser.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNUser.java">
+        <Message>At PNUser.java:[lines 20-49]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder" name="&lt;init&gt;" signature="(Ljava/lang/String;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder" start="26" end="31" startBytecode="0" endBytecode="120" sourcefile="PNUser.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNUser.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNUser.java"/>
+      <Message>In method new com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder(String)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder" primary="true" start="28" end="28" startBytecode="24" endBytecode="24" sourcefile="PNUser.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNUser.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNUser.java">
+      <Message>At PNUser.java:[line 28]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.member.PNUser$Builder" start="28" end="28" startBytecode="24" endBytecode="24" sourcefile="PNUser.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/member/PNUser.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/member/PNUser.java">
+      <Message>At PNUser.java:[line 28]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="CT_CONSTRUCTOR_THROW" priority="2" rank="16" abbrev="CT" category="BAD_PRACTICE" instanceHash="ff0c2f8e492101dbda0964e18017d4bc" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
+    <ShortMessage>Be wary of letting constructors throw exceptions.</ShortMessage>
+    <LongMessage>Exception thrown in class com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder at new com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder(String) will leave the constructor. The object under construction remains partially initialized and may be vulnerable to Finalizer attacks.</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder" start="33" end="62" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java">
+        <Message>At PNChannelMembership.java:[lines 33-62]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder" name="&lt;init&gt;" signature="(Ljava/lang/String;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder" start="39" end="44" startBytecode="0" endBytecode="120" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java"/>
+      <Message>In method new com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder(String)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder" primary="true" start="41" end="41" startBytecode="24" endBytecode="24" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java">
+      <Message>At PNChannelMembership.java:[line 41]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$Builder" start="41" end="41" startBytecode="24" endBytecode="24" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java">
+      <Message>At PNChannelMembership.java:[line 41]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="CT_CONSTRUCTOR_THROW" priority="2" rank="16" abbrev="CT" category="BAD_PRACTICE" instanceHash="eb8f4831fdc36a21a42a330e05469959" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
+    <ShortMessage>Be wary of letting constructors throw exceptions.</ShortMessage>
+    <LongMessage>Exception thrown in class com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom at new com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom(PNChannelMembership$ChannelId, Object) will leave the constructor. The object under construction remains partially initialized and may be vulnerable to Finalizer attacks.</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom" start="98" end="105" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java">
+        <Message>At PNChannelMembership.java:[lines 98-105]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom" name="&lt;init&gt;" signature="(Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership$ChannelId;Ljava/lang/Object;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom" start="103" end="105" startBytecode="0" endBytecode="137" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java"/>
+      <Message>In method new com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom(PNChannelMembership$ChannelId, Object)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom" primary="true" start="102" end="102" startBytecode="18" endBytecode="18" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java">
+      <Message>At PNChannelMembership.java:[line 102]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$ChannelWithCustom" start="102" end="102" startBytecode="18" endBytecode="18" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java">
+      <Message>At PNChannelMembership.java:[line 102]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="CT_CONSTRUCTOR_THROW" priority="2" rank="16" abbrev="CT" category="BAD_PRACTICE" instanceHash="cc4e50eeaf6f9d01b99061248a755125" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
+    <ShortMessage>Be wary of letting constructors throw exceptions.</ShortMessage>
+    <LongMessage>Exception thrown in class com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel at new com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel(PNChannelMembership$ChannelId) will leave the constructor. The object under construction remains partially initialized and may be vulnerable to Finalizer attacks.</LongMessage>
+    <Class classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel" start="87" end="91" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java">
+        <Message>At PNChannelMembership.java:[lines 87-91]</Message>
+      </SourceLine>
+      <Message>In class com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel</Message>
+    </Class>
+    <Method classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel" name="&lt;init&gt;" signature="(Lcom/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership$ChannelId;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel" start="90" end="91" startBytecode="0" endBytecode="100" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java"/>
+      <Message>In method new com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel(PNChannelMembership$ChannelId)</Message>
+    </Method>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel" primary="true" start="89" end="89" startBytecode="18" endBytecode="18" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java">
+      <Message>At PNChannelMembership.java:[line 89]</Message>
+    </SourceLine>
+    <SourceLine classname="com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership$JustChannel" start="89" end="89" startBytecode="18" endBytecode="18" sourcefile="PNChannelMembership.java" sourcepath="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" relSourcepath="java/com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java">
+      <Message>At PNChannelMembership.java:[line 89]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugCategory category="BAD_PRACTICE">
+    <Description>Bad practice</Description>
+  </BugCategory>
+  <BugPattern type="CT_CONSTRUCTOR_THROW" abbrev="CT" category="BAD_PRACTICE">
+    <ShortDescription>Be wary of letting constructors throw exceptions.</ShortDescription>
+    <Details><![CDATA[
+      
+            <p>Classes that throw exceptions in their constructors are vulnerable to Finalizer attacks</p>
+
+            <p>A finalizer attack can be prevented, by declaring the class final, using an empty finalizer declared as final, or by a clever use of a private constructor.</p>
+
+            <p>See <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/object-orientation-obj/obj11-j/"><code>SEI CERT Rule OBJ-11</code></a>
+            for more information.
+            </p>
+            
+    ]]></Details>
+  </BugPattern>
+  <BugCode abbrev="CT">
+    <Description>Constructor throws</Description>
+  </BugCode>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Fri, 16 Oct 2026 13:00:42 +0200" total_classes="0" referenced_classes="0" total_bugs="4" total_size="0" num_packages="2" java_version="21.0.2" vm_version="21.0.2+13-jvmci-23.1-b30" cpu_seconds="11.50" clock_seconds="5.56" peak_mbytes="455.45" alloc_mbytes="8192.00" gc_seconds="0.07" priority_2="4">
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/member/PNUser.java" bugCount="1" size="0" bugHash="e817b590d0a7e9037767f280039b4ce1"/>
+    <FileStats path="com/pubnub/api/java/models/consumer/objects_api/membership/PNChannelMembership.java" bugCount="3" size="0" bugHash="7f3865216b8bcde27dd5ac28a796ddbc"/>
+    <FindBugsProfile></FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>

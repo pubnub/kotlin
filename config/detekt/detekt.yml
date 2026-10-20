@@ -1,0 +1,25 @@
+# Overrides only - applied on top of detekt's default config (buildUponDefaultConfig = true).
+# Existing issues are tracked in config/detekt/baseline-<module>.xml (regenerate with `./gradlew detektBaseline`).
+
+complexity:
+  LongParameterList:
+    # endpoint factories and configuration builders take many parameters by design
+    functionThreshold: 10
+    constructorThreshold: 15
+    ignoreDefaultParameters: true
+    ignoreDataClasses: true
+  TooManyFunctions:
+    # PubNub facade classes expose the whole API surface
+    thresholdInFiles: 30
+    thresholdInClasses: 30
+    thresholdInInterfaces: 30
+    thresholdInObjects: 30
+    ignoreOverridden: true
+
+style:
+  # handled by ktlint (max-line-length is disabled there too)
+  MaxLineLength:
+    active: false
+  # handled by ktlint (no-wildcard-imports)
+  WildcardImport:
+    active: false

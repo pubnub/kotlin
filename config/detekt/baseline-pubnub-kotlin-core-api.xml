@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:PNPresenceEventResult.kt$PNPresenceEventResult$override fun equals(other: Any?): Boolean</ID>
+    <ID>CyclomaticComplexMethod:PushPayloadHelper.kt$PushPayloadHelper.FCMPayloadV2$override fun toMap(): Map&lt;String, Any></ID>
+    <ID>CyclomaticComplexMethod:PushPayloadHelper.kt$PushPayloadHelper.FCMPayloadV2.AndroidConfig.AndroidNotification$override fun toMap(): Map&lt;String, Any></ID>
+    <ID>MagicNumber:HistoryMessageType.kt$HistoryMessageType.Companion$4</ID>
+    <ID>MagicNumber:HistoryMessageType.kt$HistoryMessageType.Companion$999</ID>
+    <ID>MagicNumber:HistoryMessageType.kt$HistoryMessageType.File$4</ID>
+    <ID>MagicNumber:LogLevel.ios.kt$LogLevel.Level.ERROR$5</ID>
+    <ID>MagicNumber:LogLevel.ios.kt$LogLevel.Level.EVENT$3</ID>
+    <ID>MagicNumber:LogLevel.ios.kt$LogLevel.Level.WARN$4</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CHANNELS_TIMETOKEN_MISMATCH$146</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING$181</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CHANNEL_AND_GROUP_MISSING$141</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CHANNEL_MISSING$132</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CHANNEL_OR_CHANNEL_GROUP_MISSING$171</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CONNECT_EXCEPTION$102</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL$173</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CRYPTOR_HEADER_PARSE_ERROR$175</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CRYPTOR_HEADER_VERSION_UNKNOWN$174</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CRYPTO_ERROR$135</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED$177</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.DEVICE_ID_MISSING$144</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED$176</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.GROUP_MISSING$136</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS$163</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.HTTP_ERROR$103</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.INTERNAL_ERROR$125</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.INVALID_ACCESS_TOKEN$157</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.INVALID_ARGUMENTS$131</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.JSON_ERROR$121</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.MESSAGE_ACTION_MISSING$158</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.MESSAGE_ACTION_TIMETOKEN_MISSING$162</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.MESSAGE_ACTION_TYPE_MISSING$159</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.MESSAGE_ACTION_VALUE_MISSING$160</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.MESSAGE_MISSING$142</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.MESSAGE_TIMETOKEN_MISSING$161</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.PARSING_ERROR$126</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.PERMISSION_MISSING$156</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.PUBLISH_KEY_MISSING$139</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.PUSH_TOPIC_MISSING$164</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.PUSH_TYPE_MISSING$143</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.RESOURCES_MISSING$153</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.SECRET_KEY_MISSING$114</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.STATE_MISSING$140</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.STATE_MUST_BE_JSON_OBJECT$179</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.SUBSCRIBE_KEY_MISSING$138</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.SUBSCRIBE_TIMEOUT$130</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.TIMEOUT$100</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.TIMETOKEN_MISSING$145</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.TOKEN_MISSING$168</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.TTL_MISSING$178</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.UNKNOWN_CRYPTOR$172</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.USERID_CAN_NOT_BE_DIFFERENT_FROM_IN_CONFIGURATION_WHEN_WITHHEARTBEAT_TRUE$180</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.USERID_NULL_OR_EMPTY$170</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.USER_ID_MISSING$148</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.USER_MISSING$147</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.USER_NAME_MISSING$149</ID>
+    <ID>MagicNumber:PubNubError.kt$PubNubError.UUID_NULL_OR_EMPTY$169</ID>
+    <ID>MatchingDeclarationName:Consumer.nonJvm.kt$Consumer&lt;T></ID>
+    <ID>NestedBlockDepth:PushPayloadHelper.kt$PushPayloadHelper$fun build(): Map&lt;String, Any></ID>
+    <ID>NestedBlockDepth:PushPayloadHelper.kt$PushPayloadHelper.APNSPayload$override fun toMap(): Map&lt;String, Any></ID>
+    <ID>NestedBlockDepth:PushPayloadHelper.kt$PushPayloadHelper.APNSPayload.APNS2Configuration$override fun toMap(): Map&lt;String, Any></ID>
+    <ID>NestedBlockDepth:PushPayloadHelper.kt$PushPayloadHelper.FCMPayload$override fun toMap(): Map&lt;String, Any></ID>
+    <ID>NestedBlockDepth:PushPayloadHelper.kt$PushPayloadHelper.FCMPayloadV2$override fun toMap(): Map&lt;String, Any></ID>
+    <ID>PackageNaming:ListAllChannelGroup.js.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:ListAllChannelGroup.kt$package com.pubnub.api.endpoints.channel_groups</ID>
+    <ID>PackageNaming:PNAccessManagerGrantResults.kt$package com.pubnub.api.models.consumer.access_manager</ID>
+    <ID>PackageNaming:PNAddMessageActionResult.kt$package com.pubnub.api.models.consumer.message_actions</ID>
+    <ID>PackageNaming:PNChannelGroupsResults.kt$package com.pubnub.api.models.consumer.channel_group</ID>
+    <ID>PackageNaming:PNGetMessageActionsResult.kt$package com.pubnub.api.models.consumer.message_actions</ID>
+    <ID>PackageNaming:PNGrantTokenResult.kt$package com.pubnub.api.models.consumer.access_manager.v3</ID>
+    <ID>PackageNaming:PNMessageAction.kt$package com.pubnub.api.models.consumer.message_actions</ID>
+    <ID>PackageNaming:PNMessageActionResult.kt$package com.pubnub.api.models.consumer.pubsub.message_actions</ID>
+    <ID>PackageNaming:PNRemoveMessageActionResult.kt$package com.pubnub.api.models.consumer.message_actions</ID>
+    <ID>PackageNaming:PNToken.kt$package com.pubnub.api.models.consumer.access_manager.v3</ID>
+    <ID>ReturnCount:PubNubExceptionDataSync.kt$private fun JsonObject.toDataSyncErrorLocation(): PNDataSyncErrorLocation?</ID>
+    <ID>ReturnCount:PubNubExceptionDataSync.kt$private fun parseDataSyncErrors(json: String?): List&lt;PNDataSyncError></ID>
+    <ID>SwallowedException:PubNubExceptionDataSync.kt$e: IllegalStateException</ID>
+    <ID>TooGenericExceptionCaught:Result.kt$e: Throwable</ID>
+    <ID>UnusedPrivateProperty:Downloadable.ios.kt$DownloadableImpl$private val inputStream: NSInputStream</ID>
+    <ID>UnusedPrivateProperty:PNConfiguration.ios.kt$private const val NO_AUTH_TOKEN = ""</ID>
+    <ID>UnusedPrivateProperty:PNConfiguration.js.kt$private const val NO_AUTH_TOKEN = ""</ID>
+    <ID>UnusedPrivateProperty:PubNubException.kt$PubNubException$cause: Throwable? = null</ID>
+    <ID>UnusedPrivateProperty:PubNubException.kt$PubNubException$errorMessage: String?</ID>
+    <ID>UnusedPrivateProperty:PubNubException.kt$PubNubException$pubnubError: PubNubError</ID>
+    <ID>UnusedPrivateProperty:PubNubException.kt$PubNubException$statusCode: Int</ID>
+    <ID>UseCheckOrError:NetworkRequestMessage.kt$HttpMethod.Companion$throw IllegalStateException("Unknown HTTP method: $method")</ID>
+    <ID>UtilityClassWithPublicConstructor:LogLevel.kt$LogLevel</ID>
+  </CurrentIssues>
+</SmellBaseline>

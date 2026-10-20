@@ -61,9 +61,46 @@ jobs:
       - name: Cancel workflow runs for commit on error
         if: failure()
         uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
+  static-analysis:
+    name: Static analysis
+    runs-on:
+      group: macos-gh
+    steps:
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu" # See 'Supported distributions' for available options
+          java-version: "21"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Update CocoaPods trunk
+        run: |
+          pod repo update
+      - name: Run ktlint, detekt, Checkstyle and SpotBugs
+        run: ./gradlew ktlintCheck detekt checkstyleMain spotbugsMain --continue
+      - name: Expose static analysis reports
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: static-analysis-reports
+          path: |
+            **/build/reports/ktlint/**
+            **/build/reports/detekt/**
+            **/build/reports/checkstyle/**
+            **/build/reports/spotbugs/**
+          retention-days: 7
   all-validations:
     name: Validations
-    needs: [pubnub-yml, build-validation]
+    needs: [pubnub-yml, build-validation, static-analysis]
     runs-on:
       group: macos-gh
     steps:

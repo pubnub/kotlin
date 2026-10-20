@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:BaseIntegrationTest.kt$PubNubTest$(pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &amp;&amp; pnStatus.affectedChannels.containsAll(channels) &amp;&amp; pnStatus.affectedChannelGroups.containsAll( channelGroups ) || ( getSubscribedChannels().containsAll(channels) &amp;&amp; getSubscribedChannelGroups().containsAll( channelGroups ) )</ID>
+    <ID>ComplexCondition:BaseIntegrationTest.kt$PubNubTest$(pnStatus.category == PNStatusCategory.PNDisconnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &amp;&amp; ( pnStatus.affectedChannels.containsAll(channels) &amp;&amp; pnStatus.affectedChannelGroups.containsAll( channelGroups ) )</ID>
+    <ID>InvalidPackageDeclaration:BaseIntegrationTest.kt$package com.pubnub.test</ID>
+    <ID>InvalidPackageDeclaration:platform.kt$package com.pubnub.test</ID>
+    <ID>InvalidPackageDeclaration:testlauncher.kt$package testlauncher</ID>
+    <ID>MagicNumber:BaseIntegrationTest.kt$100</ID>
+    <ID>MagicNumber:BaseIntegrationTest.kt$6</ID>
+    <ID>MagicNumber:BaseIntegrationTest.kt$PubNubTest$10</ID>
+    <ID>MagicNumber:BaseIntegrationTest.kt$PubNubTest$200</ID>
+    <ID>UnusedPrivateProperty:BaseIntegrationTest.kt$PubNubTest$i</ID>
+    <ID>UnusedPrivateProperty:BaseIntegrationTest.kt$PubNubTest$private val withPresenceOverride: Boolean</ID>
+  </CurrentIssues>
+</SmellBaseline>

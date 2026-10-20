@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:SubscribeCallback.kt$SubscribeCallback.BaseSubscribeCallback${ }</ID>
+    <ID>PackageNaming:MemberInclude.kt$package com.pubnub.api.java.models.consumer.objects_api.member</ID>
+    <ID>PackageNaming:MembershipInclude.kt$package com.pubnub.api.java.models.consumer.objects_api.membership</ID>
+    <ID>TooManyFunctions:PNConfiguration.kt$PNConfiguration$Builder : Builder</ID>
+    <ID>TooManyFunctions:PubNub.kt$PubNub : EventEmitterStatusEmitter</ID>
+    <ID>UseRequire:TimetokenUtil.kt$TimetokenUtil.Companion$throw IllegalArgumentException("Timetoken should have 17 digits")</ID>
+    <ID>UseRequire:TimetokenUtil.kt$TimetokenUtil.Companion$throw IllegalArgumentException("Unix timetoken should have $UNIX_TIME_LENGHT_WHEN_IN_MILLISECONDS digits.")</ID>
+    <ID>UtilityClassWithPublicConstructor:TimetokenUtil.kt$TimetokenUtil</ID>
+  </CurrentIssues>
+</SmellBaseline>
