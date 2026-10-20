@@ -1,0 +1,5 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit is replaced by Detekt/SpotBugs; keep the app installed but silent.
+reviews:
+  auto_review:
+    enabled: false
