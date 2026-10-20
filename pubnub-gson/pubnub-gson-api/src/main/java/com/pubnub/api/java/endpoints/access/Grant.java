@@ -30,12 +30,18 @@ public interface Grant extends Endpoint<PNAccessManagerGrantResult> {
 
     /**
      * Set to {@code true} to allow the auth keys to list all channel metadata on the keyset
-     * ({@code getAllChannelMetadata}). A {@code get} on a named channel doesn't imply this.
+     * ({@code getAllChannelsMetadata}). A {@code get} on a named channel doesn't imply this.
      *
-     * <p>When this or {@link #getAllUUIDs(boolean)} is {@code true}, the {@code get} permission is sent automatically
-     * and also applies to any channels/channel groups/uuids in the same request. The server rejects the request if
-     * any other permission is set, or if no auth keys are given. Revoking only the category permissions isn't
-     * supported: revoke all permissions for the auth key instead, which also removes its other key-wide permissions.
+     * <p>When this or {@link #getAllUUIDs(boolean)} is {@code true}:
+     * <ul>
+     *     <li>the {@code get} permission is sent automatically;</li>
+     *     <li>permissions are shared by every resource in the request, so {@code get} is also granted on the listed
+     *     channels, channel groups and uuids;</li>
+     *     <li>the server rejects the request if any other permission is set, or if no auth keys are given.</li>
+     * </ul>
+     *
+     * <p>Revoking only the category permissions isn't supported. To remove them, revoke all permissions for the auth
+     * key ({@code grant().authKeys(Collections.singletonList(key))}), which also removes its other key-wide permissions.
      */
     Grant getAllChannels(boolean getAllChannels);
 
