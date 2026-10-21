@@ -49,7 +49,12 @@
       "clearedSuffix": false
     },
     {
-      "pattern": "^\\s{2,}implementation 'com\\.pubnub:pubnub-kotlin:(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)'$",
+      "pattern": "^\\s*implementation\\s*\\(?[\"']com\\.pubnub:pubnub-kotlin:(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)[\"']\\)?$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    },
+    {
+      "pattern": "^\\s*implementation\\s*\\(?[\"']com\\.pubnub:pubnub-gson:(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)[\"']\\)?$",
       "clearedPrefix": true,
       "clearedSuffix": false
     }
