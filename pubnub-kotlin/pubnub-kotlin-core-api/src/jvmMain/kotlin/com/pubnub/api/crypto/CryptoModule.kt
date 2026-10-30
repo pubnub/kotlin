@@ -18,6 +18,8 @@ interface CryptoModule {
          * [createAesCbcCryptoModule] — it encrypts with the stronger cipher and still decrypts payloads
          * produced in the older format.
          *
+         * Also decrypts AES-256-GCM (`ACGM`) payloads.
+         *
          * @param cipherKey Use a randomly generated key instead of a dictionary word to increase security.
          * @param randomIv whether to prepend a random initialization vector to the ciphertext. Keep the
          * default of `true`. **Setting `randomIv = false` makes every message encrypt with the same
@@ -34,7 +36,8 @@ interface CryptoModule {
                 primaryCryptor = instantiateLegacyCryptor(cipherKey, randomIv),
                 cryptorsForDecryptionOnly = listOf(
                     instantiateLegacyCryptor(cipherKey, randomIv),
-                    instantiateAesCbcCryptor(cipherKey)
+                    instantiateAesCbcCryptor(cipherKey),
+                    instantiateAesGcmCryptor(cipherKey)
                 ),
             )
         }
@@ -43,7 +46,8 @@ interface CryptoModule {
          * Returns the recommended [CryptoModule] for encryption and decryption.
          *
          * Encrypts new payloads with the AES-CBC cryptor and registers the legacy cryptor as a secondary
-         * decryptor, so payloads produced in the older format remain readable.
+         * decryptor, so payloads produced in the older format remain readable. Also decrypts AES-256-GCM
+         * (`ACGM`) payloads.
          *
          * @param cipherKey Use a randomly generated key instead of a dictionary word to increase security.
          * @param randomIv applies only to the legacy cryptor kept for decryption: whether data being
@@ -59,7 +63,8 @@ interface CryptoModule {
                 primaryCryptor = instantiateAesCbcCryptor(cipherKey),
                 cryptorsForDecryptionOnly = listOf(
                     instantiateAesCbcCryptor(cipherKey),
-                    instantiateLegacyCryptor(cipherKey, randomIv)
+                    instantiateLegacyCryptor(cipherKey, randomIv),
+                    instantiateAesGcmCryptor(cipherKey)
                 ),
             )
         }
@@ -116,6 +121,15 @@ private fun instantiateLegacyCryptor(
 
 private fun instantiateAesCbcCryptor(cipherKey: String): Cryptor {
     return Class.forName("com.pubnub.internal.crypto.cryptor.AesCbcCryptor").getConstructor(String::class.java)
+        .newInstance(
+            cipherKey,
+        ) as Cryptor
+}
+
+private fun instantiateAesGcmCryptor(cipherKey: String): Cryptor {
+    // the constructor is private, so Java callers can't create this decrypt-only cryptor directly
+    return Class.forName("com.pubnub.internal.crypto.cryptor.AesGcmCryptor").getDeclaredConstructor(String::class.java)
+        .apply { isAccessible = true }
         .newInstance(
             cipherKey,
         ) as Cryptor
