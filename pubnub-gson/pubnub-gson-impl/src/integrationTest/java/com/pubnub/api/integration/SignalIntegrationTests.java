@@ -3,6 +3,7 @@ package com.pubnub.api.integration;
 import com.google.gson.Gson;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
+import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
@@ -93,6 +94,49 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
             @Override
             public void signal(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull PNSignalResult signal) {
                 assertEquals(pubNub.getConfiguration().getUserId().getValue(), signal.getPublisher());
+                assertEquals(expectedChannel, signal.getChannel());
+                assertEquals(expectedPayload, new Gson().fromJson(signal.getMessage(), String.class));
+                assertEquals(expectedCustomMessageType, signal.getCustomMessageType());
+                success.set(true);
+            }
+        });
+
+        observerClient.subscribe()
+                .channels(Collections.singletonList(expectedChannel))
+                .execute();
+
+        Awaitility.await().atMost(Durations.FIVE_SECONDS).untilTrue(success);
+    }
+
+    @Test
+    public void testReceiveSignalMessageWithCryptoConfiguredOnSubscriber() {
+        final AtomicBoolean success = new AtomicBoolean();
+
+        final String expectedChannel = randomChannel();
+        final String expectedPayload = RandomGenerator.newValue(5);
+        final String expectedCustomMessageType = "myCustomType";
+
+        final com.pubnub.api.java.PubNub observerClient =
+                getPubNub(builder -> builder.cryptoModule(CryptoModule.createAesCbcCryptoModule("test", false)));
+
+        observerClient.addListener(new SubscribeCallback() {
+
+            @Override
+            public void status(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull PNStatus status) {
+                if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
+                    if (status.getAffectedChannels().contains(expectedChannel)) {
+                        pubNub.signal(expectedPayload, expectedChannel)
+                                .customMessageType(expectedCustomMessageType)
+                                .async((result) -> {
+                                    assertFalse(result.isFailure());
+                                    assertNotNull(result);
+                                });
+                    }
+                }
+            }
+
+            @Override
+            public void signal(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull PNSignalResult signal) {
                 assertEquals(expectedChannel, signal.getChannel());
                 assertEquals(expectedPayload, new Gson().fromJson(signal.getMessage(), String.class));
                 assertEquals(expectedCustomMessageType, signal.getCustomMessageType());

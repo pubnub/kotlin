@@ -50,8 +50,6 @@ internal class SubscribeMessageProcessor(
         internal const val TYPE_MESSAGE_ACTION = 3
         internal const val TYPE_FILES = 4
         internal const val TYPE_DATASYNC = 5
-
-        private val SERVER_GENERATED_TYPES = setOf(TYPE_OBJECT, TYPE_MESSAGE_ACTION, TYPE_DATASYNC)
     }
 
     fun processIncomingPayload(message: SubscribeMessage): PNEvent? {
@@ -101,9 +99,11 @@ internal class SubscribeMessageProcessor(
             )
         } else {
             val (extractedMessage, error) =
-                if (message.type in SERVER_GENERATED_TYPES) {
-                    // Server-generated payloads are never client-encrypted; decrypting them would only log a
-                    // CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED warn per event.
+                if (!message.supportsEncryption()) {
+                    // Only messages and files are encrypted by PubNub SDKs (see supportsEncryption). Signals,
+                    // objects, message actions and DataSync events are delivered as received: decrypting them
+                    // would log a "message is not encrypted" warning, or silently alter a payload that merely
+                    // looks like ciphertext.
                     message.payload to null
                 } else {
                     message.payload?.tryDecryptMessage(pubnub.cryptoModuleWithLogConfig, pubnub.mapper, log)
