@@ -1,3 +1,12 @@
+## v14.2.0
+November 04 2026
+
+#### Added
+- LegacyCryptoModule and AesCbcCryptoModule can decrypt AES-GCM payloads. Encryption remains unchanged for now.
+
+#### Fixed
+- Skip decryption of signals on subscribe.
+
 ## v14.1.0
 October 19 2026
 

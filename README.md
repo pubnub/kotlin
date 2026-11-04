@@ -25,9 +25,9 @@ Choose the dependency for your language and add it to the `dependencies` block o
 
 ```kotlin
 // Java
-implementation("com.pubnub:pubnub-gson:14.1.0")
+implementation("com.pubnub:pubnub-gson:14.2.0")
 // Kotlin
-implementation("com.pubnub:pubnub-kotlin:14.1.0")
+implementation("com.pubnub:pubnub-kotlin:14.2.0")
 ```
 
 For Maven, add the dependency for your language to `pom.xml`.
@@ -38,7 +38,7 @@ Java:
 <dependency>
     <groupId>com.pubnub</groupId>
     <artifactId>pubnub-gson</artifactId>
-    <version>14.1.0</version>
+    <version>14.2.0</version>
 </dependency>
 ```
 
@@ -48,7 +48,7 @@ Kotlin:
 <dependency>
     <groupId>com.pubnub</groupId>
     <artifactId>pubnub-kotlin</artifactId>
-    <version>14.1.0</version>
+    <version>14.2.0</version>
 </dependency>
 ```
 
