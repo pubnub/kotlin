@@ -8,6 +8,7 @@ import com.pubnub.api.crypto.data.EncryptedStreamData
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.crypto.CryptoModuleImpl
 import com.pubnub.internal.crypto.cryptor.AesCbcCryptor
+import com.pubnub.internal.crypto.cryptor.AesGcmCryptor
 import com.pubnub.internal.crypto.cryptor.LegacyCryptor
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
@@ -37,13 +38,14 @@ class CryptoModuleTest {
 
         // then
         assertTrue(legacyCryptoModule.primaryCryptor is LegacyCryptor)
-        assertThat(legacyCryptoModule.cryptorsForDecryptionOnly, hasSize(2))
+        assertThat(legacyCryptoModule.cryptorsForDecryptionOnly, hasSize(3))
         assertThat(
             legacyCryptoModule.cryptorsForDecryptionOnly,
             containsInAnyOrder(
                 listOf(
                     iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java)),
                     iz(CoreMatchers.instanceOf(LegacyCryptor::class.java)),
+                    iz(CoreMatchers.instanceOf(AesGcmCryptor::class.java)),
                 ),
             ),
         )
@@ -59,13 +61,14 @@ class CryptoModuleTest {
 
         // then
         assertTrue(aesCbcCryptoModule.primaryCryptor is AesCbcCryptor)
-        assertThat(aesCbcCryptoModule.cryptorsForDecryptionOnly, hasSize(2))
+        assertThat(aesCbcCryptoModule.cryptorsForDecryptionOnly, hasSize(3))
         assertThat(
             aesCbcCryptoModule.cryptorsForDecryptionOnly,
             containsInAnyOrder(
                 listOf(
                     iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java)),
                     iz(CoreMatchers.instanceOf(LegacyCryptor::class.java)),
+                    iz(CoreMatchers.instanceOf(AesGcmCryptor::class.java)),
                 ),
             ),
         )
@@ -330,6 +333,88 @@ class CryptoModuleTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("legacyAndAesCbcModuleFactories")
+    fun `built-in modules can decrypt data encrypted with AesGcmCryptor`(createModule: (String) -> CryptoModule) {
+        // given
+        val cipherKey = "enigma"
+        val gcmModule = CryptoModule.createNewCryptoModule(defaultCryptor = AesGcmCryptor(cipherKey))
+        val cryptoModule = createModule(cipherKey)
+        val msgToEncrypt = "Hello world, encrypted with AES-256-GCM".toByteArray()
+
+        // when
+        val encryptedBytes = gcmModule.encrypt(msgToEncrypt)
+        // read to EOF: the GCM tag is only written when the encrypting stream reaches end of input
+        val encryptedStreamBytes = gcmModule.encryptStream(ByteArrayInputStream(msgToEncrypt)).readBytes()
+
+        // then
+        assertEquals(10 + 12 + msgToEncrypt.size + 16, encryptedStreamBytes.size)
+        assertArrayEquals(msgToEncrypt, cryptoModule.decrypt(encryptedBytes))
+        assertArrayEquals(msgToEncrypt, cryptoModule.decryptStream(ByteArrayInputStream(encryptedBytes)).readBytes())
+        assertArrayEquals(msgToEncrypt, cryptoModule.decrypt(encryptedStreamBytes))
+        assertArrayEquals(msgToEncrypt, cryptoModule.decryptStream(ByteArrayInputStream(encryptedStreamBytes)).readBytes())
+    }
+
+    @Test
+    fun `header written for AesGcmCryptor carries 12-byte nonce`() {
+        // given
+        val cipherKey = "enigma"
+        val gcmModule = CryptoModule.createNewCryptoModule(defaultCryptor = AesGcmCryptor(cipherKey))
+        val msgToEncrypt = "Hello world".toByteArray()
+
+        // when
+        val encrypted = gcmModule.encrypt(msgToEncrypt)
+
+        // then: "PNED" | version 1 | "ACGM" | size 0x0c | 12-byte nonce | ciphertext || 16-byte tag
+        assertArrayEquals("PNED".toByteArray(), encrypted.copyOfRange(0, 4))
+        assertEquals(1.toByte(), encrypted[4])
+        assertArrayEquals("ACGM".toByteArray(), encrypted.copyOfRange(5, 9))
+        assertEquals(0x0c.toByte(), encrypted[9])
+        assertEquals(10 + 12 + msgToEncrypt.size + 16, encrypted.size)
+    }
+
+    @Test
+    fun `module without AesGcmCryptor reports unknown cryptor for ACGM payload`() {
+        // given
+        val cipherKey = "enigma"
+        val gcmModule = CryptoModule.createNewCryptoModule(defaultCryptor = AesGcmCryptor(cipherKey))
+        val cbcOnlyModule = CryptoModule.createNewCryptoModule(defaultCryptor = AesCbcCryptor(cipherKey))
+        val encrypted = gcmModule.encrypt("Hello world".toByteArray())
+
+        // when
+        val blockException =
+            assertThrows(PubNubException::class.java) {
+                cbcOnlyModule.decrypt(encrypted)
+            }
+        val streamException =
+            assertThrows(PubNubException::class.java) {
+                cbcOnlyModule.decryptStream(ByteArrayInputStream(encrypted))
+            }
+
+        // then
+        for (exception in listOf(blockException, streamException)) {
+            assertEquals("No cryptor found", exception.errorMessage)
+            assertEquals(PubNubError.UNKNOWN_CRYPTOR, exception.pubnubError)
+        }
+    }
+
+    @Test
+    fun `decryptStream reports unknown cryptor for unregistered cryptor id`() {
+        // given "PNED" | version 1 | "XXXX" | size 0 | some data
+        val payload = "PNED".toByteArray() + byteArrayOf(1) + "XXXX".toByteArray() + byteArrayOf(0) + ByteArray(16) { 1 }
+        val cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma")
+
+        // when
+        val exception =
+            assertThrows(PubNubException::class.java) {
+                cryptoModule.decryptStream(ByteArrayInputStream(payload))
+            }
+
+        // then
+        assertEquals("No cryptor found", exception.errorMessage)
+        assertEquals(PubNubError.UNKNOWN_CRYPTOR, exception.pubnubError)
+    }
+
     private fun myCustomCryptor() =
         object : Cryptor {
             override fun id(): ByteArray {
@@ -453,6 +538,13 @@ class CryptoModuleTest {
             listOf(
                 Arguments.of(CryptoModule.createLegacyCryptoModule("myCipherKey", true)),
                 Arguments.of(CryptoModule.createAesCbcCryptoModule("myCipherKey", true)),
+            )
+
+        @JvmStatic
+        fun legacyAndAesCbcModuleFactories(): List<Arguments> =
+            listOf(
+                Arguments.of({ key: String -> CryptoModule.createLegacyCryptoModule(key) }),
+                Arguments.of({ key: String -> CryptoModule.createAesCbcCryptoModule(key) }),
             )
 
         @JvmStatic
