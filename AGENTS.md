@@ -35,7 +35,7 @@ The CI workflow symlinks `sdk-specifications` into `pubnub-kotlin/pubnub-kotlin-
 
 ### Test credentials
 
-`test-example.properties` documents the required keys. To run integration tests locally, copy it to `test.properties` and fill in real values, or export env vars: `PUB_KEY`, `SUB_KEY`, `PAM_PUB_KEY`, `PAM_SUB_KEY`, `PAM_SEC_KEY`. CI uses `SDK_*`-prefixed env vars.
+`test-example.properties` documents the required keys. To run integration tests locally, copy it to `test.properties` and fill in real values, or export env vars with the same names as the property keys: `pubKey`, `subKey`, `pamPubKey`, `pamSubKey`, `pamSecKey` (case-sensitive; the integration suites read them via OWNER `System.getenv()`). The `SDK_*`-prefixed vars CI sets are read only by the `pubnub-kotlin-test` buildkonfig for KMP common tests, not by the integration suites.
 
 ### Multiplatform targets
 

@@ -22,8 +22,9 @@ ensure_java() {
 # Integration tests hit real PubNub; fail fast (without printing any secret) if credentials are missing.
 require_credentials() {
   if [ -f "$REPO_ROOT/test.properties" ]; then return 0; fi
-  if [ -n "${PUB_KEY:-}" ] && [ -n "${SUB_KEY:-}" ]; then return 0; fi
-  echo "FAIL $1: no credentials. Create test.properties (copy test-example.properties) or export PUB_KEY/SUB_KEY/PAM_* env vars."
+  # The integration suites read these exact names (OWNER keys in Keys.kt / ITTestConfig.java) via System.getenv().
+  if [ -n "${pubKey:-}" ] && [ -n "${subKey:-}" ]; then return 0; fi
+  echo "FAIL $1: no credentials. Create test.properties (copy test-example.properties) or export pubKey/subKey/pamPubKey/pamSubKey/pamSecKey env vars."
   exit 2
 }
 
