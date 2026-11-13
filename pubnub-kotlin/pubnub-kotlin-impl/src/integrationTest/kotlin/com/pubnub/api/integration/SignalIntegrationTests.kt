@@ -2,6 +2,7 @@ package com.pubnub.api.integration
 
 import com.google.gson.Gson
 import com.pubnub.api.PubNubError
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.test.CommonUtils.assertPnException
@@ -12,6 +13,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.Base64
 
 class SignalIntegrationTests : BaseIntegrationTest() {
     lateinit var expectedChannel: String
@@ -60,6 +62,38 @@ class SignalIntegrationTests : BaseIntegrationTest() {
             assertEquals(expectedChannel, pnSignalResult.channel)
             assertEquals(expectedPayload, Gson().fromJson(pnSignalResult.message, String::class.java))
             assertEquals(expectedCustomMessageType, pnSignalResult.customMessageType)
+        }
+    }
+
+    @Test
+    fun testReceiveSignalWithCryptoConfiguredOnSubscriber() {
+        val subscriber = createPubNub { cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false) }
+        subscriber.test {
+            subscribe(expectedChannel)
+            pubnub.signal(
+                channel = expectedChannel,
+                message = expectedPayload,
+                customMessageType = expectedCustomMessageType,
+            ).sync()
+            val pnSignalResult = nextEvent<PNSignalResult>()
+            assertEquals(expectedChannel, pnSignalResult.channel)
+            assertEquals(expectedPayload, Gson().fromJson(pnSignalResult.message, String::class.java))
+            assertEquals(expectedCustomMessageType, pnSignalResult.customMessageType)
+        }
+    }
+
+    @Test
+    fun testReceivePreEncryptedSignalIsNotDecrypted() {
+        val ciphertext =
+            Base64.getEncoder().encodeToString(
+                CryptoModule.createLegacyCryptoModule("enigma", randomIv = false).encrypt("\"x\"".toByteArray()),
+            )
+        val subscriber = createPubNub { cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false) }
+        subscriber.test {
+            subscribe(expectedChannel)
+            pubnub.signal(channel = expectedChannel, message = ciphertext).sync()
+            val pnSignalResult = nextEvent<PNSignalResult>()
+            assertEquals(ciphertext, Gson().fromJson(pnSignalResult.message, String::class.java))
         }
     }
 

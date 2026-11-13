@@ -106,9 +106,8 @@ class CryptoModuleImpl(
 
             is ParseResult.Success -> {
                 val decryptor =
-                    cryptorsForDecryptionOnly.first {
-                        it.id().contentEquals(parsedHeader.cryptoId)
-                    }
+                    getCryptorById(parsedHeader.cryptoId)
+                        ?: throw PubNubException(errorMessage = "No cryptor found", pubnubError = PubNubError.UNKNOWN_CRYPTOR)
                 decryptor.decryptStream(
                     EncryptedStreamData(
                         metadata = parsedHeader.cryptorData,
