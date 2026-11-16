@@ -9,9 +9,13 @@ import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
 import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
 import java.io.IOException
 import java.net.Socket
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class SubscribeConnectionTrackerTest {
     private val tracker = SubscribeConnectionTracker()
@@ -83,6 +87,46 @@ class SubscribeConnectionTrackerTest {
 
         verify(exactly = 0) { firstSocket.close() }
         verify(exactly = 1) { secondSocket.close() }
+    }
+
+    @Test
+    @Timeout(10, unit = TimeUnit.SECONDS)
+    fun `returns after the timeout when closing the socket blocks`() {
+        // given: a TLS close that hangs, as it can on a dead path with a full send buffer.
+        // A real Socket subclass, not a mockk answer: blocking inside a mocked call can deadlock mockk's verify.
+        val blockingTracker = SubscribeConnectionTracker(closeTimeoutMillis = 200)
+        val closeStarted = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val socket =
+            object : Socket() {
+                override fun close() {
+                    closeStarted.countDown()
+                    release.await()
+                }
+            }
+        val connection = mockk<Connection>()
+        every { connection.protocol() } returns Protocol.HTTP_2
+        every { connection.socket() } returns socket
+        val chain = mockk<Interceptor.Chain>()
+        val request = Request.Builder().url("https://ps.pndsn.com/v2/subscribe/sub/ch/0").build()
+        every { chain.connection() } returns connection
+        every { chain.request() } returns request
+        every { chain.proceed(request) } returns mockk()
+        blockingTracker.intercept(chain)
+
+        try {
+            // when
+            val startNanos = System.nanoTime()
+            blockingTracker.closeIfHttp2()
+            val elapsedMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNanos)
+
+            // then: the caller (the subscribe effect thread) is released after the timeout, not when close returns
+            assertTrue(elapsedMillis >= 150, "returned before the timeout: ${elapsedMillis}ms")
+            assertTrue(elapsedMillis < 2_000, "blocked on the hanging close: ${elapsedMillis}ms")
+            assertTrue(closeStarted.await(1, TimeUnit.SECONDS), "socket close was never attempted")
+        } finally {
+            release.countDown()
+        }
     }
 
     @Test
