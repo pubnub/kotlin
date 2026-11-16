@@ -33,8 +33,14 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
 
         override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.Heartbeat(channels, channelGroups))
 
+        override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelHeartbeat)
+
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
+                is PresenceEvent.Reconnect -> {
+                    transitionTo(Heartbeating(channels, channelGroups))
+                }
+
                 is PresenceEvent.LeftAll -> {
                     transitionTo(HeartbeatInactive, PresenceEffectInvocation.Leave(channels, channelGroups))
                 }
@@ -159,6 +165,12 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
         }
     }
 
+    /**
+     * Waiting `heartbeatInterval` for the next heartbeat. `Reconnect` cancels the wait and sends a heartbeat at once
+     * (same invocations as `TimesUp`, only earlier), so after an outage the user is shown online again without waiting
+     * for the timer. If the pooled connection died during the outage, that heartbeat times out and ends in
+     * [HeartbeatFailed], like the next `TimesUp` heartbeat would.
+     */
     class HeartbeatCooldown(
         channels: Set<String>,
         channelGroups: Set<String>,
@@ -188,6 +200,10 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
                 }
 
                 is PresenceEvent.TimesUp -> {
+                    transitionTo(Heartbeating(channels, channelGroups))
+                }
+
+                is PresenceEvent.Reconnect -> {
                     transitionTo(Heartbeating(channels, channelGroups))
                 }
 

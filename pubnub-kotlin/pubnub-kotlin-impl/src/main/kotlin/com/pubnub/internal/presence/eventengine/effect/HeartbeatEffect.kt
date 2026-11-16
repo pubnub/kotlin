@@ -8,7 +8,7 @@ import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.internal.eventengine.Effect
+import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
@@ -20,7 +20,7 @@ internal class HeartbeatEffect(
     val heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
     val statusConsumer: StatusConsumer,
     private val logConfig: LogConfig,
-) : Effect {
+) : ManagedEffect {
     private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     override fun runEffect() {
@@ -44,5 +44,13 @@ internal class HeartbeatEffect(
                 )
             }
         }
+    }
+
+    /**
+     * Stops the call on the wire and any retry it scheduled, and suppresses its late result: a cancelled heartbeat
+     * emits no status and no event.
+     */
+    override fun cancel() {
+        heartbeatRemoteAction.silentCancel()
     }
 }

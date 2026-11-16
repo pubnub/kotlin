@@ -663,8 +663,11 @@ interface PubNub : EventEmitter, StatusEmitter {
      * - **Stopped during a handshake** (for example [disconnect] before the first connect):
      *   no cursor is stored, so a plain `reconnect()` starts from the latest messages.
      *   Pass [timetoken] to resume from a known point.
-     * - **Nothing subscribed:** no effect on subscriptions. Presence heartbeats that were stopped by
-     *   [disconnect] or by a heartbeat failure are restarted.
+     * - **Nothing subscribed:** no effect on subscriptions.
+     * - **Presence heartbeats** (only when `heartbeatInterval` > 0): a heartbeat is sent at once,
+     *   without waiting for the next interval. A heartbeat in progress, or waiting to be retried,
+     *   is cancelled first. Heartbeats stopped by [disconnect] or by a heartbeat failure are
+     *   restarted.
      *
      * Call it once when connectivity is regained (on Android, in `onAvailable` after `onLost`),
      * not on every capability or link-property update. Each call cancels any request in progress

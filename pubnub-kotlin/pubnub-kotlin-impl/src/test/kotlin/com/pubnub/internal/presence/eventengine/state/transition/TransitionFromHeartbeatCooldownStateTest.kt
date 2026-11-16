@@ -178,6 +178,29 @@ class TransitionFromHeartbeatCooldownStateTest {
     }
 
     @Test
+    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_WAIT and HEARTBEAT invocations when there is RECONNECT event`() {
+        // when
+        val (newState, invocations) =
+            transition(
+                PresenceState.HeartbeatCooldown(channels, channelGroups),
+                PresenceEvent.Reconnect,
+            )
+
+        // then
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(channels, heartbeating.channels)
+        Assertions.assertEquals(channelGroups, heartbeating.channelGroups)
+        Assertions.assertEquals(
+            listOf(
+                PresenceEffectInvocation.CancelWait,
+                PresenceEffectInvocation.Heartbeat(channels, channelGroups),
+            ),
+            invocations.toList(),
+        )
+    }
+
+    @Test
     fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_WAIT and HEARTBEAT invocations when there is TIMES_UP event`() {
         // given
         val newChannels = channels + setOf("NewChannel")

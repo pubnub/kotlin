@@ -33,7 +33,31 @@ class TransitionFromHeartbeatingStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEATING to INACTIVE and create LEAVE invocations when there is LEFT_ALL event`() {
+    fun `should transit from HEARTBEATING to HEARTBEATING and create CANCEL_HEARTBEAT and HEARTBEAT invocations when there is RECONNECT event`() {
+        // when
+        val (newState, invocations) =
+            transition(
+                PresenceState.Heartbeating(channels, channelGroups),
+                PresenceEvent.Reconnect,
+            )
+
+        // then
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(channels, heartbeating.channels)
+        Assertions.assertEquals(channelGroups, heartbeating.channelGroups)
+        // the cancel must be dispatched before the new heartbeat
+        Assertions.assertEquals(
+            listOf(
+                PresenceEffectInvocation.CancelHeartbeat,
+                PresenceEffectInvocation.Heartbeat(channels, channelGroups),
+            ),
+            invocations.toList(),
+        )
+    }
+
+    @Test
+    fun `should transit from HEARTBEATING to INACTIVE and create CANCEL_HEARTBEAT and LEAVE invocations when there is LEFT_ALL event`() {
         // when
         val (newState, invocations) =
             transition(
@@ -43,14 +67,29 @@ class TransitionFromHeartbeatingStateTest {
 
         // then
         Assertions.assertEquals(PresenceState.HeartbeatInactive, newState)
+        // the heartbeat must be cancelled before the leave goes out, or it can re-join the channels
         Assertions.assertEquals(
-            setOf(PresenceEffectInvocation.Leave(channels, channelGroups)),
-            invocations,
+            listOf(
+                PresenceEffectInvocation.CancelHeartbeat,
+                PresenceEffectInvocation.Leave(channels, channelGroups),
+            ),
+            invocations.toList(),
         )
     }
 
     @Test
-    fun `should transit from HEARTBEATING to HEARTBEAT_STOPPED and create LEAVE invocations when there is DISCONNECT event`() {
+    fun `should not transit from HEARTBEATING when there is TIMES_UP event`() {
+        // when
+        val heartbeating = PresenceState.Heartbeating(channels, channelGroups)
+        val (newState, invocations) = transition(heartbeating, PresenceEvent.TimesUp)
+
+        // then
+        Assertions.assertSame(heartbeating, newState)
+        Assertions.assertEquals(0, invocations.size)
+    }
+
+    @Test
+    fun `should transit from HEARTBEATING to HEARTBEAT_STOPPED and create CANCEL_HEARTBEAT and LEAVE invocations when there is DISCONNECT event`() {
         // when
         val (newState, invocations) =
             transition(
@@ -64,13 +103,16 @@ class TransitionFromHeartbeatingStateTest {
         Assertions.assertEquals(channels, heartbeatStopped.channels)
         Assertions.assertEquals(channelGroups, heartbeatStopped.channelGroups)
         Assertions.assertEquals(
-            setOf(PresenceEffectInvocation.Leave(channels, channelGroups)),
-            invocations,
+            listOf(
+                PresenceEffectInvocation.CancelHeartbeat,
+                PresenceEffectInvocation.Leave(channels, channelGroups),
+            ),
+            invocations.toList(),
         )
     }
 
     @Test
-    fun `should transit from HEARTBEATING to HEARTBEATING and create HEARTBEAT invocations when there is JOINED event`() {
+    fun `should transit from HEARTBEATING to HEARTBEATING and create CANCEL_HEARTBEAT and HEARTBEAT invocations when there is JOINED event`() {
         // given
         val newChannels = setOf("NewChannel")
         val newChannelGroup = setOf("NewChannelGroup")
@@ -88,15 +130,16 @@ class TransitionFromHeartbeatingStateTest {
         Assertions.assertEquals(channels + newChannels, heartbeating.channels)
         Assertions.assertEquals(channelGroups + newChannelGroup, heartbeating.channelGroups)
         Assertions.assertEquals(
-            setOf(
+            listOf(
+                PresenceEffectInvocation.CancelHeartbeat,
                 PresenceEffectInvocation.Heartbeat(channels + newChannels, channelGroups + newChannelGroup),
             ),
-            invocations,
+            invocations.toList(),
         )
     }
 
     @Test
-    fun `should transit from HEARTBEATING to INACTIVE and create LEAVE and HEARTBEAT invocations when there is LEFT event and no channels remain`() {
+    fun `should transit from HEARTBEATING to INACTIVE and create CANCEL_HEARTBEAT and LEAVE invocations when there is LEFT event and no channels remain`() {
         // given
         val channelToLeave = channels
         val channelGroupToLeave = channelGroups
@@ -111,15 +154,16 @@ class TransitionFromHeartbeatingStateTest {
         // then
         Assertions.assertTrue(newState is PresenceState.HeartbeatInactive)
         Assertions.assertEquals(
-            setOf(
+            listOf(
+                PresenceEffectInvocation.CancelHeartbeat,
                 PresenceEffectInvocation.Leave(channels, channelGroups),
             ),
-            invocations,
+            invocations.toList(),
         )
     }
 
     @Test
-    fun `should transit from HEARTBEATING to HEARTBEATING and create LEAVE and HEARTBEAT invocations when there is LEFT event`() {
+    fun `should transit from HEARTBEATING to HEARTBEATING and create CANCEL_HEARTBEAT, LEAVE and HEARTBEAT invocations when there is LEFT event`() {
         // given
         val channelToLeave = setOf("Channel01")
         val channelGroupToLeave = setOf("ChannelGroup01")
@@ -136,17 +180,19 @@ class TransitionFromHeartbeatingStateTest {
         val heartbeating = newState as PresenceState.Heartbeating
         Assertions.assertEquals(channels - channelToLeave, heartbeating.channels)
         Assertions.assertEquals(channelGroups - channelGroupToLeave, heartbeating.channelGroups)
+        // the old heartbeat still carries the left channels, so it must be cancelled before the leave
         Assertions.assertEquals(
-            setOf(
+            listOf(
+                PresenceEffectInvocation.CancelHeartbeat,
                 PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave),
                 PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave),
             ),
-            invocations,
+            invocations.toList(),
         )
     }
 
     @Test
-    fun `should transit from HEARTBEATING to HEARTBEAT_COOLDOWN and create WAIT invocations when there is HEARTBEAT_SUCCESS event`() {
+    fun `should transit from HEARTBEATING to HEARTBEAT_COOLDOWN and create CANCEL_HEARTBEAT and WAIT invocations when there is HEARTBEAT_SUCCESS event`() {
         // when
         val (newState, invocations) =
             transition(
@@ -159,12 +205,13 @@ class TransitionFromHeartbeatingStateTest {
         val heartbeatCooldown = newState as PresenceState.HeartbeatCooldown
         Assertions.assertEquals(channels, heartbeatCooldown.channels)
         Assertions.assertEquals(channelGroups, heartbeatCooldown.channelGroups)
-        Assertions.assertTrue(invocations.any { it is PresenceEffectInvocation.Wait })
-        Assertions.assertEquals(1, invocations.size)
+        Assertions.assertEquals(2, invocations.size)
+        Assertions.assertEquals(PresenceEffectInvocation.CancelHeartbeat, invocations.first())
+        Assertions.assertTrue(invocations.last() is PresenceEffectInvocation.Wait)
     }
 
     @Test
-    fun `should transit from HEARTBEATING to HEARTBEAT_FAILED when there is HEARTBEAT_FAILURE event`() {
+    fun `should transit from HEARTBEATING to HEARTBEAT_FAILED and create CANCEL_HEARTBEAT invocation when there is HEARTBEAT_FAILURE event`() {
         // when
         val (newState, invocations) =
             transition(
@@ -178,6 +225,6 @@ class TransitionFromHeartbeatingStateTest {
         Assertions.assertEquals(channels, heartbeatFailed.channels)
         Assertions.assertEquals(channelGroups, heartbeatFailed.channelGroups)
         Assertions.assertEquals(reason, heartbeatFailed.reason)
-        Assertions.assertEquals(0, invocations.size)
+        Assertions.assertEquals(listOf(PresenceEffectInvocation.CancelHeartbeat), invocations.toList())
     }
 }
