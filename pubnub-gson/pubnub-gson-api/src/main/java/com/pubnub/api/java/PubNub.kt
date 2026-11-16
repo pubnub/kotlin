@@ -647,12 +647,33 @@ interface PubNub : EventEmitter, StatusEmitter {
      */
     fun publishFileMessage(): PublishFileMessage.Builder
 
+    /** Same as [reconnect] with `timetoken = 0`. */
     fun reconnect()
 
     /**
-     * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
+     * Restart the subscribe connection. Use it when the app knows the network has come back,
+     * for example after a network switch that left the current request on a dead connection.
      *
-     * @param timetoken optional timetoken to use for the subscriptions on reconnection.
+     * What happens depends on the subscribe state:
+     * - **Connected:** the current long-poll request is cancelled and a new one starts, on a new
+     *   connection, from the current cursor. No status is emitted.
+     * - **Connecting**, or **stopped** by [disconnect] or a receive error after connecting: a new
+     *   handshake starts, on a new connection, from the stored cursor, and `PNConnectedCategory`
+     *   is emitted when it succeeds.
+     * - **Stopped during a handshake** (for example [disconnect] before the first connect):
+     *   no cursor is stored, so a plain `reconnect()` starts from the latest messages.
+     *   Pass [timetoken] to resume from a known point.
+     * - **Nothing subscribed:** no effect on subscriptions. Presence heartbeats that were stopped by
+     *   [disconnect] or by a heartbeat failure are restarted.
+     *
+     * Call it once when connectivity is regained (on Android, in `onAvailable` after `onLost`),
+     * not on every capability or link-property update. Each call cancels any request in progress
+     * and restarts the retry sequence, so calling it again before that sequence finishes (about
+     * 2 minutes with the default retry configuration) postpones the failure status.
+     *
+     * Monitor the results in [SubscribeCallback.status].
+     *
+     * @param timetoken optional timetoken to resume from. A non-zero value overrides the stored cursor.
      */
     fun reconnect(timetoken: Long = 0L)
 

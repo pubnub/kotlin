@@ -65,7 +65,8 @@ internal class Subscribe(
                     statusConsumer = listenerManager,
                     presenceData = presenceData,
                     sendStateWithSubscribe = sendStateWithSubscribe,
-                    logConfig = pubNub.logConfig
+                    logConfig = pubNub.logConfig,
+                    resetSubscribeConnection = pubNub.retrofitManager.subscribeConnectionTracker::closeIfHttp2,
                 )
 
             val subscribeEventEngine =

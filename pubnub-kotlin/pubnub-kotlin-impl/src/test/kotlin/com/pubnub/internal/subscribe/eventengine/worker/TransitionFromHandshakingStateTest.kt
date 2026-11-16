@@ -8,6 +8,7 @@ import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocatio
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.EmitStatus
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.Handshake
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.ReceiveMessages
+import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.ResetSubscribeConnection
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.internal.subscribe.eventengine.state.SubscribeState
@@ -24,6 +25,64 @@ class TransitionFromHandshakingStateTest {
     private val region = "42"
     private val subscriptionCursor = SubscriptionCursor(timeToken, region)
     private val reason = PubNubException("test")
+
+    @Test
+    fun `RECONNECT in HANDSHAKING restarts handshake on a new connection keeping the stored cursor`() {
+        // given
+        val handshaking = SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor)
+
+        // when
+        val (state, invocations) = transition(handshaking, SubscribeEvent.Reconnect())
+
+        // then
+        assertTrue(state is SubscribeState.Handshaking)
+        state as SubscribeState.Handshaking
+        assertTrue(handshaking !== state)
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(subscriptionCursor, state.subscriptionCursor)
+        assertEquals(
+            listOf(CancelHandshake, ResetSubscribeConnection, Handshake(channels, channelGroups)),
+            invocations.toList(),
+        )
+    }
+
+    @Test
+    fun `RECONNECT with timetoken in HANDSHAKING overrides the stored cursor`() {
+        // given
+        val cursorFromReconnect = SubscriptionCursor(99945345452L, null)
+
+        // when
+        val (state, invocations) =
+            transition(
+                SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor),
+                SubscribeEvent.Reconnect(cursorFromReconnect),
+            )
+
+        // then
+        assertTrue(state is SubscribeState.Handshaking)
+        state as SubscribeState.Handshaking
+        assertEquals(cursorFromReconnect, state.subscriptionCursor)
+        assertEquals(
+            listOf(CancelHandshake, ResetSubscribeConnection, Handshake(channels, channelGroups)),
+            invocations.toList(),
+        )
+    }
+
+    @Test
+    fun `RECONNECT in HANDSHAKING without a stored cursor keeps it null`() {
+        // when
+        val (state, _) =
+            transition(
+                SubscribeState.Handshaking(channels, channelGroups),
+                SubscribeEvent.Reconnect(),
+            )
+
+        // then
+        assertTrue(state is SubscribeState.Handshaking)
+        state as SubscribeState.Handshaking
+        assertEquals(null, state.subscriptionCursor)
+    }
 
     @Test
     fun `channel and channelGroup should be immutable set`() {

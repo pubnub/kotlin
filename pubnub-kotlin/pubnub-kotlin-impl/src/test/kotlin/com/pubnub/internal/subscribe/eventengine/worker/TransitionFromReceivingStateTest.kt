@@ -26,6 +26,60 @@ class TransitionFromReceivingStateTest {
     private val reason = PubNubException(PubNubError.PARSING_ERROR)
 
     @Test
+    fun `RECONNECT in RECEIVING restarts receive on a new connection from the same cursor without status`() {
+        // given
+        val receiving = SubscribeState.Receiving(channels, channelGroups, subscriptionCursor)
+
+        // when
+        val (state, invocations) = transition(receiving, SubscribeEvent.Reconnect())
+
+        // then
+        Assertions.assertTrue(state is SubscribeState.Receiving)
+        state as SubscribeState.Receiving
+        // a new instance is required, otherwise onExit/onEntry would not describe a restart
+        Assertions.assertNotSame(receiving, state)
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(subscriptionCursor, state.subscriptionCursor)
+        assertEquals(
+            listOf(
+                SubscribeEffectInvocation.CancelReceiveMessages,
+                SubscribeEffectInvocation.ResetSubscribeConnection,
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+            ),
+            invocations.toList(),
+        )
+        Assertions.assertTrue(invocations.none { it is SubscribeEffectInvocation.EmitStatus })
+    }
+
+    @Test
+    fun `RECONNECT with timetoken in RECEIVING uses that timetoken and keeps the current region`() {
+        // given
+        val timeTokenFromReconnect = 99945345452L
+
+        // when
+        val (state, invocations) =
+            transition(
+                SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
+                SubscribeEvent.Reconnect(SubscriptionCursor(timeTokenFromReconnect, null)),
+            )
+
+        // then
+        Assertions.assertTrue(state is SubscribeState.Receiving)
+        state as SubscribeState.Receiving
+        val expectedCursor = SubscriptionCursor(timeTokenFromReconnect, region)
+        assertEquals(expectedCursor, state.subscriptionCursor)
+        assertEquals(
+            listOf(
+                SubscribeEffectInvocation.CancelReceiveMessages,
+                SubscribeEffectInvocation.ResetSubscribeConnection,
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedCursor),
+            ),
+            invocations.toList(),
+        )
+    }
+
+    @Test
     fun can_transit_from_RECEIVING_to_RECEIVE_FAILED_when_there_is_RECEIVE_FAILURE_event() {
         // when
         val (state, invocations) =
