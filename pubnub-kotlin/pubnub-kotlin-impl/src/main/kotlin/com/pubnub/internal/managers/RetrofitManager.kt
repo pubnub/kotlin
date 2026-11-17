@@ -40,6 +40,12 @@ class RetrofitManager(
 ) {
     private var signatureInterceptor: SignatureInterceptor = SignatureInterceptor(configuration)
 
+    /**
+     * Tracks the connection of the latest subscribe call so `reconnect()` can drop it on HTTP/2.
+     * Installed as a network interceptor on [subscriptionClientInstance] only.
+     */
+    internal val subscribeConnectionTracker = SubscribeConnectionTracker()
+
     internal val timeService: TimeService
     internal val publishService: PublishService
     internal val historyService: HistoryService
@@ -72,7 +78,9 @@ class RetrofitManager(
     init {
         if (!configuration.googleAppEngineNetworking) {
             transactionClientInstance = createOkHttpClient(configuration.nonSubscribeReadTimeout, parentOkHttpClient = transactionClientInstance)
-            subscriptionClientInstance = createOkHttpClient(configuration.subscribeTimeout, parentOkHttpClient = subscriptionClientInstance)
+            subscriptionClientInstance =
+                createOkHttpClient(configuration.subscribeTimeout, parentOkHttpClient = subscriptionClientInstance)
+                    .withSubscribeConnectionTracker(subscribeConnectionTracker)
             noSignatureClientInstance =
                 createOkHttpClient(configuration.nonSubscribeReadTimeout, withSignature = false, parentOkHttpClient = noSignatureClientInstance)
             heartbeatClientInstance = createOkHttpClient(configuration.nonSubscribeReadTimeout, parentOkHttpClient = heartbeatClientInstance)
@@ -187,6 +195,18 @@ class RetrofitManager(
 
         return okHttpClient
     }
+
+    /**
+     * Returns a client (sharing this one's dispatcher and connection pool) with [tracker] as its only
+     * [SubscribeConnectionTracker]. A client rebuilt from a parent inherits the parent's tracker, so it is dropped
+     * first and only this manager's tracker sees the calls.
+     */
+    private fun OkHttpClient.withSubscribeConnectionTracker(tracker: SubscribeConnectionTracker): OkHttpClient =
+        newBuilder()
+            .apply {
+                networkInterceptors().removeAll { it is SubscribeConnectionTracker }
+                addNetworkInterceptor(tracker)
+            }.build()
 
     private fun createRetrofit(callFactory: Call.Factory?): Retrofit {
         val retrofitBuilder =

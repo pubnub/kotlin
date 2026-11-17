@@ -118,8 +118,11 @@ internal class TransitionFromReceiveFailedStateTest {
         assertEquals(channelGroups, state.channelGroups)
         assertEquals(subscriptionCursorForReconnect, state.subscriptionCursor)
         assertEquals(
-            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
-            effectInvocations,
+            listOf(
+                SubscribeEffectInvocation.ResetSubscribeConnection,
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
+            ),
+            effectInvocations.toList(),
         )
     }
 
@@ -140,8 +143,11 @@ internal class TransitionFromReceiveFailedStateTest {
         assertEquals(channelGroups, state.channelGroups)
         assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
-            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
-            effectInvocations,
+            listOf(
+                SubscribeEffectInvocation.ResetSubscribeConnection,
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
+            ),
+            effectInvocations.toList(),
         )
     }
 

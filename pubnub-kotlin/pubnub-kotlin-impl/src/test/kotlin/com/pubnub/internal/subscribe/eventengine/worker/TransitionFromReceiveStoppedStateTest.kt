@@ -52,10 +52,11 @@ class TransitionFromReceiveStoppedStateTest {
         assertEquals(channelGroups, state.channelGroups)
         assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
-            setOf(
+            listOf(
+                SubscribeEffectInvocation.ResetSubscribeConnection,
                 SubscribeEffectInvocation.Handshake(channels, channelGroups),
             ),
-            invocations,
+            invocations.toList(),
         )
     }
 
@@ -80,10 +81,11 @@ class TransitionFromReceiveStoppedStateTest {
         assertEquals(channelGroups, state.channelGroups)
         assertEquals(subscriptionCursorForReconnect, state.subscriptionCursor)
         assertEquals(
-            setOf(
+            listOf(
+                SubscribeEffectInvocation.ResetSubscribeConnection,
                 SubscribeEffectInvocation.Handshake(channels, channelGroups),
             ),
-            invocations,
+            invocations.toList(),
         )
     }
 

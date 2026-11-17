@@ -57,7 +57,13 @@ class TransitionFromHandshakeStoppedStateTest {
         assertEquals(channels, state.channels)
         assertEquals(channelGroups, state.channelGroups)
         assertEquals(subscriptionCursorForReconnect, state.subscriptionCursor)
-        assertEquals(setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)), invocations)
+        assertEquals(
+            listOf(
+                SubscribeEffectInvocation.ResetSubscribeConnection,
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
+            ),
+            invocations.toList(),
+        )
     }
 
     @Test
@@ -75,7 +81,13 @@ class TransitionFromHandshakeStoppedStateTest {
 
         assertEquals(channels, state.channels)
         assertEquals(channelGroups, state.channelGroups)
-        assertEquals(setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)), invocations)
+        assertEquals(
+            listOf(
+                SubscribeEffectInvocation.ResetSubscribeConnection,
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
+            ),
+            invocations.toList(),
+        )
     }
 
     @Test

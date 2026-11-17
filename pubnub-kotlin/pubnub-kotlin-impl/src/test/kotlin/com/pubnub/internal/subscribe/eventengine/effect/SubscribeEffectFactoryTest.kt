@@ -16,6 +16,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsInstanceOf.instanceOf
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -48,7 +49,25 @@ class SubscribeEffectFactoryTest {
                 presenceData,
                 true,
                 logConfig,
+                resetSubscribeConnection = { resetSubscribeConnectionCalls++ },
             )
+    }
+
+    private var resetSubscribeConnectionCalls = 0
+
+    @Test
+    fun `should return effect calling the injected resetter once when getting ResetSubscribeConnection invocation`() {
+        // given
+        resetSubscribeConnectionCalls = 0
+
+        // when
+        val effect = subscribeEffectFactory.create(SubscribeEffectInvocation.ResetSubscribeConnection)
+
+        // then
+        assertThat(effect, instanceOf(ResetSubscribeConnectionEffect::class.java))
+        assertEquals(0, resetSubscribeConnectionCalls)
+        effect!!.runEffect()
+        assertEquals(1, resetSubscribeConnectionCalls)
     }
 
     @Test
@@ -145,6 +164,7 @@ class SubscribeEffectFactoryTest {
                 presenceData,
                 false,
                 logConfig,
+                resetSubscribeConnection = {},
             )
         presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
         val effectInvocation = SubscribeEffectInvocation.Handshake(channels, channelGroups)

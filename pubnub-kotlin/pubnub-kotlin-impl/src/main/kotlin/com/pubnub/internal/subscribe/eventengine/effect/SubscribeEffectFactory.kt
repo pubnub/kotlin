@@ -25,10 +25,15 @@ internal class SubscribeEffectFactory(
     private val statusConsumer: StatusConsumer,
     private val presenceData: PresenceData,
     private val sendStateWithSubscribe: Boolean,
-    private val logConfig: LogConfig
+    private val logConfig: LogConfig,
+    private val resetSubscribeConnection: () -> Unit,
 ) : EffectFactory<SubscribeEffectInvocation> {
     override fun create(effectInvocation: SubscribeEffectInvocation): Effect? {
         return when (effectInvocation) {
+            SubscribeEffectInvocation.ResetSubscribeConnection -> {
+                ResetSubscribeConnectionEffect(resetSubscribeConnection, logConfig)
+            }
+
             is SubscribeEffectInvocation.EmitMessages -> {
                 EmitMessagesEffect(messagesConsumer, effectInvocation.messages, logConfig)
             }
