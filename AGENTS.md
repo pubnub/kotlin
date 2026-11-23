@@ -49,9 +49,15 @@ KMP targets are gated by `gradle.properties` flags (`ENABLE_TARGET_JS`, `ENABLE_
 - **Git:** commit or push only when asked. Stage new files explicitly with `git add` before committing; `git commit -am` silently skips untracked files.
 - **Builds, tests and linters go through `scripts/dev/`, never raw `./gradlew`** (in Claude Code a `PreToolUse` hook in `.claude/settings.json` blocks it). The wrappers print one `PASS`/`FAIL` line plus the first failing tests/errors and write the full output to `build/agent-logs/`; read that log only if the summary is not enough.
   - `scripts/dev/check.sh lint | static | compile | unit [module] [--tests X]` — `lint`, `static`, `compile` can be combined in one run (`check.sh static compile`). `static` = ktlint + detekt + Checkstyle + SpotBugs, same as CI.
-  - Before reporting Kotlin changes as done, run `scripts/dev/check.sh lint`.
+  - Before reporting Kotlin changes as done, run `scripts/dev/check.sh lint` and `scripts/dev/check.sh unit [module]` (for the module(s) you changed; add `--tests X` to narrow). Report both results per "Reporting results".
   - Integration tests are **opt-in** (real PubNub, need credentials, see "Test credentials"): `scripts/dev/integration-kotlin.sh`, `integration-gson.sh`, or `integration-both.sh`. Run them only when the user asks; when shared `pubnub-kotlin-impl` internals changed, recommend both suites.
   - `check.sh format` rewrites files; run it only on request.
+
+## Reporting results
+
+- Never say "tests pass", "fixed", or "done" without evidence in the same message.
+- For tests, builds, linters: paste the exact command you ran and its relevant output (the summary line plus any failures). The `PASS`/`FAIL` line from `scripts/dev/check.sh` is the evidence.
+- If you could not run a check, say so explicitly rather than implying it passed.
 
 ## Architecture
 
