@@ -64,6 +64,35 @@ class SubscribeCancelRetryIntegrationTest : BaseIntegrationTest() {
     }
 
     /**
+     * `reconnect()` while Receiving cancels the long-poll and starts a new one (#437). Neither sequential nor
+     * back-to-back calls may leave more than one long-poll open, and none of them emits `PNConnectedCategory`.
+     */
+    @Test
+    fun reconnectWhileReceivingCyclesShouldKeepSingleReceiveRequestOpen() {
+        val listener = RecordingListener()
+        pubnub.addListener(listener)
+        pubnub.subscribe(channels = listOf(randomChannel()))
+        awaitConnected(listener, previousConnectedCount = 0)
+        awaitReceiveInFlight(previousReceiveCount = 0)
+        val connectedCount = listener.connectedCount.get()
+
+        repeat(CYCLES) {
+            val receiveCount = tracker.receiveRequestCount.get()
+            pubnub.reconnect()
+            awaitReceiveInFlight(receiveCount)
+        }
+        repeat(CYCLES) { pubnub.reconnect() }
+        Thread.sleep(RETRY_WINDOW_MS)
+
+        assertEquals(
+            "Open subscribe requests after ${2 * CYCLES} reconnect() calls while receiving",
+            1,
+            tracker.inFlightCount(),
+        )
+        assertEquals("PNConnectedCategory emitted by reconnect() while receiving", connectedCount, listener.connectedCount.get())
+    }
+
+    /**
      * A leaked receive clone still long-polls the old channel. Its result lands in the new `Receiving` state and its
      * messages are emitted, although the client is no longer subscribed to that channel.
      */

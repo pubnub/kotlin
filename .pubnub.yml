@@ -1,9 +1,9 @@
 name: kotlin
-version: 14.2.0
+version: 14.2.1
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-14.2.0-all.jar
+  - build/libs/pubnub-kotlin-14.2.1-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-14.2.0
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/14.2.0/pubnub-kotlin-14.2.0.jar
+              package-name: pubnub-kotlin-14.2.1
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/14.2.1/pubnub-kotlin-14.2.1.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -128,6 +128,19 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2026-11-17
+    version: v14.2.1
+    changes:
+      - type: bug
+        text: "`reconnect()` now works while the client is connected or connecting. It cancels the subscribe request in progress, skips any pending retry wait and starts a new request at once, without emitting a status. Previously it was ignored, so after a silent network drop no messages arrived until the subscribe timeout (310 s by default). Call `reconnect()` once when connectivity is regained."
+      - type: bug
+        text: "`reconnect()` after a failed first handshake now resumes from the timetoken passed to `subscribe` instead of starting from the latest messages."
+      - type: bug
+        text: "On HTTP/2, `reconnect()` (also after `disconnect()`) now sends the next subscribe request over a new connection. Previously it could be sent over the old, silently dead connection and hang until the subscribe timeout."
+      - type: bug
+        text: "When `heartbeatInterval` is greater than 0, `reconnect()` now sends a presence heartbeat at once instead of waiting for the next interval. A heartbeat in progress, or one waiting to be retried, is cancelled first."
+      - type: bug
+        text: "A presence heartbeat in progress, or its scheduled retry, is now cancelled when leaving channels, so it can no longer mark the user as present again after the leave. A cancelled heartbeat emits no `PNHeartbeatSuccess` or `PNHeartbeatFailed` status."
   - date: 2026-11-04
     version: v14.2.0
     changes:

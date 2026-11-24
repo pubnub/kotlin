@@ -1,3 +1,13 @@
+## v14.2.1
+November 17 2026
+
+#### Fixed
+- `reconnect()` now works while the client is connected or connecting. It cancels the subscribe request in progress, skips any pending retry wait and starts a new request at once, without emitting a status. Previously it was ignored, so after a silent network drop no messages arrived until the subscribe timeout (310 s by default). Call `reconnect()` once when connectivity is regained. Fixed the following issues reported by [@JorgeDLS](https://github.com/JorgeDLS): [#437](https://github.com/pubnub/kotlin/issues/437).
+- `reconnect()` after a failed first handshake now resumes from the timetoken passed to `subscribe` instead of starting from the latest messages.
+- On HTTP/2, `reconnect()` (also after `disconnect()`) now sends the next subscribe request over a new connection. Previously it could be sent over the old, silently dead connection and hang until the subscribe timeout.
+- When `heartbeatInterval` is greater than 0, `reconnect()` now sends a presence heartbeat at once instead of waiting for the next interval. A heartbeat in progress, or one waiting to be retried, is cancelled first.
+- A presence heartbeat in progress, or its scheduled retry, is now cancelled when leaving channels, so it can no longer mark the user as present again after the leave. A cancelled heartbeat emits no `PNHeartbeatSuccess` or `PNHeartbeatFailed` status.
+
 ## v14.2.0
 November 04 2026
 

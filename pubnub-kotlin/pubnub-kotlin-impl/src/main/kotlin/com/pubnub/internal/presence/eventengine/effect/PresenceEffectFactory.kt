@@ -66,6 +66,7 @@ internal class PresenceEffectFactory(
             }
 
             PresenceEffectInvocation.CancelWait,
+            PresenceEffectInvocation.CancelHeartbeat,
             -> null
         }
     }

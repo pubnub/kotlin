@@ -60,6 +60,41 @@ class RetrofitManagerTest : BaseTest() {
     }
 
     @Test
+    fun `only the subscription client has the subscribe connection tracker as a network interceptor`() {
+        val retrofitManager = RetrofitManager(pubnub, pubnub.configuration)
+
+        Assert.assertSame(
+            retrofitManager.subscribeConnectionTracker,
+            retrofitManager.subscriptionClientInstance!!.networkInterceptors.single { it is SubscribeConnectionTracker },
+        )
+        listOf(
+            retrofitManager.transactionClientInstance!!,
+            retrofitManager.noSignatureClientInstance!!,
+            retrofitManager.heartbeatClientInstance!!,
+        ).forEach { client ->
+            Assert.assertTrue(client.networkInterceptors.none { it is SubscribeConnectionTracker })
+            Assert.assertTrue(client.interceptors.none { it is SubscribeConnectionTracker })
+        }
+    }
+
+    @Test
+    fun `retrofit manager created from another has exactly one subscribe connection tracker, its own`() {
+        val retrofitManager = RetrofitManager(pubnub, pubnub.configuration)
+        val clonedRetrofitManager = RetrofitManager(retrofitManager, pubnub.configuration)
+
+        Assert.assertNotSame(retrofitManager.subscribeConnectionTracker, clonedRetrofitManager.subscribeConnectionTracker)
+        Assert.assertSame(
+            clonedRetrofitManager.subscribeConnectionTracker,
+            clonedRetrofitManager.subscriptionClientInstance!!.networkInterceptors.single { it is SubscribeConnectionTracker },
+        )
+        // the parent's client is untouched
+        Assert.assertSame(
+            retrofitManager.subscribeConnectionTracker,
+            retrofitManager.subscriptionClientInstance!!.networkInterceptors.single { it is SubscribeConnectionTracker },
+        )
+    }
+
+    @Test
     fun `heartbeat client has its own OkHttpClient - dispatcher and connection pool isolation`() {
         val retrofitManager = RetrofitManager(pubnub, pubnub.configuration)
 

@@ -100,9 +100,27 @@ internal class TransitionFromHandshakeFailedStateTest {
         assertEquals(channels, state.channels)
         assertEquals(channelGroups, state.channelGroups)
         assertEquals(
-            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
-            invocations,
+            listOf(
+                SubscribeEffectInvocation.ResetSubscribeConnection,
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
+            ),
+            invocations.toList(),
         )
+    }
+
+    @Test
+    fun `RECONNECT without timetoken in HANDSHAKE_FAILED keeps the stored cursor`() {
+        // when
+        val (state, _) =
+            transition(
+                SubscribeState.HandshakeFailed(channels, channelGroups, exception, subscriptionCursor),
+                SubscribeEvent.Reconnect(),
+            )
+
+        // then
+        assertTrue(state is SubscribeState.Handshaking)
+        state as SubscribeState.Handshaking
+        assertEquals(subscriptionCursor, state.subscriptionCursor)
     }
 
     @Test
@@ -125,8 +143,11 @@ internal class TransitionFromHandshakeFailedStateTest {
         assertEquals(channelGroups, handshaking.channelGroups)
         assertEquals(subscriptionCursorForReconnect, handshaking.subscriptionCursor)
         assertEquals(
-            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
-            invocations,
+            listOf(
+                SubscribeEffectInvocation.ResetSubscribeConnection,
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
+            ),
+            invocations.toList(),
         )
     }
 

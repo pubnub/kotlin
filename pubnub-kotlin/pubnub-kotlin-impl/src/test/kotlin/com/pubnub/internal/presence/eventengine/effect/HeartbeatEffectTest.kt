@@ -1,8 +1,10 @@
 package com.pubnub.internal.presence.eventengine.effect
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.logging.LogConfig
+import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.TestEventSink
@@ -14,6 +16,7 @@ import io.mockk.verify
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -82,6 +85,24 @@ class HeartbeatEffectTest {
             .untilAsserted {
                 assertEquals(listOf(PresenceEvent.HeartbeatFailure(reason)), eventSink.events)
             }
+    }
+
+    @Test
+    fun `should silently cancel remoteAction when cancel effect`() {
+        // given
+        val remoteAction: RemoteAction<Boolean> = mockk(relaxed = true)
+        val heartbeatEffect =
+            HeartbeatEffect(remoteAction, eventSink, heartbeatNotificationOptions, statusConsumer, logConfig)
+
+        // when
+        heartbeatEffect.runEffect()
+        heartbeatEffect.cancel()
+
+        // then
+        assertInstanceOf(ManagedEffect::class.java, heartbeatEffect)
+        verify(exactly = 1) { remoteAction.silentCancel() }
+        verify(exactly = 0) { statusConsumer.announce(any()) }
+        assertEquals(emptyList<PresenceEvent>(), eventSink.events)
     }
 
     @ParameterizedTest

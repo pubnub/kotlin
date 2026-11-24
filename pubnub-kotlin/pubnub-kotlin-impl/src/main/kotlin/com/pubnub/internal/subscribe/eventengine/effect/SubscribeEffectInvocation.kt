@@ -33,6 +33,12 @@ internal sealed class SubscribeEffectInvocation(override val type: EffectInvocat
     object CancelHandshake :
         SubscribeEffectInvocation(Cancel(idToCancel = Handshake::class.java.simpleName))
 
+    /**
+     * Makes sure the next subscribe request doesn't reuse the connection of the previous one (needed on HTTP/2,
+     * where cancelling a request leaves a possibly dead connection in the pool). Emitted on every `Reconnect`.
+     */
+    data object ResetSubscribeConnection : SubscribeEffectInvocation(NonManaged)
+
     data class EmitStatus(val status: PNStatus) : SubscribeEffectInvocation(NonManaged)
 
     data class EmitMessages(val messages: List<PNEvent>) : SubscribeEffectInvocation(NonManaged)

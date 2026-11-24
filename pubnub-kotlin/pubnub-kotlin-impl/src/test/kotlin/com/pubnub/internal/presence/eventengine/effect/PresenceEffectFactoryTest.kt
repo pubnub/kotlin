@@ -153,6 +153,15 @@ class PresenceEffectFactoryTest {
     }
 
     @Test
+    fun `should return null when getting CancelHeartbeat invocation`() {
+        // when
+        val effect = presenceEffectFactory.create(PresenceEffectInvocation.CancelHeartbeat)
+
+        // then
+        assertNull(effect)
+    }
+
+    @Test
     fun `should return null when getting Leave invocation while suppressLeaveEvents is true`() {
         // given
         val effectInvocation = PresenceEffectInvocation.Leave(channels, channelGroups)
