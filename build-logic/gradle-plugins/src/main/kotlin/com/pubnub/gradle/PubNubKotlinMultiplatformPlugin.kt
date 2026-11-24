@@ -1,5 +1,9 @@
 package com.pubnub.gradle
 
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import com.vanniktech.maven.publish.MavenPublishPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -21,6 +25,16 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply<PubNubBaseKotlinMultiplatformPlugin>()
+            // Must be set before vanniktech's afterEvaluate auto-detection, which would pick the Dokka javadoc jar.
+            // withType runs now if publishing is already applied, later if it is applied after this plugin,
+            // and never for modules without publishing (e.g. *-test).
+            plugins.withType<MavenPublishPlugin> {
+                extensions.configure<MavenPublishBaseExtension> {
+                    // One Dokka jar copied into every KMP publication (10 with all iOS targets) cost about 109 MB
+                    // per release. Central only needs a javadoc jar to exist. Hosted KDoc comes from :pubnub-kotlin-docs.
+                    configure(KotlinMultiplatform(javadocJar = JavadocJar.Empty(), sourcesJar = true))
+                }
+            }
             if (enableAnyIosTarget) {
                 apply<KotlinCocoapodsPlugin>()
                 extensions.configure<KotlinMultiplatformExtension> {
