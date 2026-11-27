@@ -8,6 +8,53 @@ jobs:
   tests:
     name: Integration and Unit tests
     runs-on:
+      group: organization/Default
+    env:
+      # Apple targets are built and checked in the `apple-tests` job on macOS.
+      ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_OTHER: "false"
+      ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_SIMULATOR_ARM64: "false"
+      ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_ALL: "false"
+    steps:
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu" # See 'Supported distributions' for available options
+          java-version: "21"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Checkout actions
+        uses: actions/checkout@v4
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: v1
+          token: ${{ secrets.GH_TOKEN }}
+          path: .github/.release/actions
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          # "-js" keeps this cache apart from the JVM-only Linux cache saved by live-integration.yml
+          key: ${{ runner.os }}-gradle-js-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-js-
+      - name: Build and run tests
+        # static analysis runs in the Validations workflow
+        run: |
+          ./gradlew check -x ktlintCheck -x detekt -x checkstyleMain -x spotbugsMain
+        env:
+          SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
+          SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}
+          SDK_PAM_SUB_KEY: ${{ secrets.SDK_PAM_SUB_KEY }}
+          SDK_PAM_PUB_KEY: ${{ secrets.SDK_PAM_PUB_KEY }}
+          SDK_PAM_SEC_KEY: ${{ secrets.SDK_PAM_SEC_KEY }}
+      - name: Cancel workflow runs for commit on error
+        if: failure()
+        uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
+  apple-tests:
+    name: Apple targets (iOS)
+    runs-on:
       group: macos-gh
     steps:
       - name: Install JDK
@@ -36,10 +83,11 @@ jobs:
       - name: Update CocoaPods trunk
         run: |
           pod repo update
-      - name: Build and run tests
-        # static analysis runs in the Validations workflow
+      - name: Build and test Apple targets, lint Apple source sets
+        # ktlintCheck here covers src/appleMain, src/appleTest and src/iosSimulatorArm64Test,
+        # which only exist when an Apple target is enabled.
         run: |
-          ./gradlew check -x ktlintCheck -x detekt -x checkstyleMain -x spotbugsMain
+          ./gradlew iosSimulatorArm64Test ktlintCheck --continue
         env:
           SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
           SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}
@@ -52,8 +100,11 @@ jobs:
   acceptance-tests:
     name: Acceptance tests
     runs-on:
-      group: macos-gh
+      group: organization/Default
     env:
+      ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_OTHER: "false"
+      ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_SIMULATOR_ARM64: "false"
+      ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_ALL: "false"
       pubKey: somePubKey
       subKey: someSubKey
       pamPubKey: somePamPubKey
@@ -96,7 +147,7 @@ jobs:
       - name: Run acceptance tests (optional)
         run: |
           pwd
-          ln -s /Users/github/actions-runner/_work/kotlin/kotlin/sdk-specifications pubnub-kotlin/pubnub-kotlin-impl/src/test/resources/sdk-specifications
+          ln -s "$GITHUB_WORKSPACE/sdk-specifications" pubnub-kotlin/pubnub-kotlin-impl/src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="../../sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
@@ -113,9 +164,9 @@ jobs:
         uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
   all-tests:
     name: Tests
-    needs: [tests, acceptance-tests]
+    needs: [tests, apple-tests, acceptance-tests]
     runs-on:
-      group: macos-gh
+      group: organization/Default
     steps:
       - name: Tests summary
         run: echo -e "\033[38;2;95;215;0m\033[1mAll tests successfully passed"

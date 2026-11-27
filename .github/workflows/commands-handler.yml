@@ -12,7 +12,7 @@ jobs:
     name: Process command
     if: github.event.issue.pull_request && endsWith(github.repository, '-private') != true
     runs-on:
-      group: macos-gh
+      group: organization/Default
     steps:
       - name: Check referred user
         id: user-check
@@ -35,9 +35,6 @@ jobs:
           ref: v1
           token: ${{ secrets.GH_TOKEN }}
           path: .github/.release/actions
-      - name: Update CocoaPods trunk
-        run: |
-          pod repo update
       - name: Process changelog entries
         if: steps.user-check.outputs.expected-user == 'true'
         uses: ./.github/.release/actions/actions/commands
