@@ -68,6 +68,15 @@ defaults:
   run:
     shell: bash
 
+# The tier is JVM only, so its jobs run on the GitHub-hosted Linux runners of organization/Default (a fresh machine per
+# job, several jobs at once), not on the macos-gh runner of the other workflows. Gradle skips the JS and iOS targets, so
+# the build needs neither CocoaPods nor a Mac. These override gradle.properties for this workflow only.
+env:
+  ORG_GRADLE_PROJECT_ENABLE_TARGET_JS: "false"
+  ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_OTHER: "false"
+  ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_SIMULATOR_ARM64: "false"
+  ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_ALL: "false"
+
 permissions:
   contents: read
 
@@ -76,7 +85,7 @@ jobs:
     name: Offline checks (compile, lint, plan)
     if: ${{ github.event_name != 'pull_request' || !github.event.pull_request.draft }}
     runs-on:
-      group: macos-gh
+      group: organization/Default
     timeout-minutes: 30
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
@@ -93,6 +102,7 @@ jobs:
           # The extractor golden test reads the removed docs modules from history (git show 78e6a3118:<path>), so the
           # offline job needs the full history. The live jobs do not run that test and keep the shallow checkout.
           fetch-depth: 0
+      # The only job of this workflow that saves the Gradle cache. The live jobs restore it and never save.
       - name: Cache
         uses: actions/cache@v4
         with:
@@ -102,8 +112,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Update CocoaPods trunk
-        run: pod repo update
       # No keys: the offline tools (extractor, marker lint, manifest, groups, equivalence) need no network.
       - name: Compile both trees and run the offline tools
         run: |
@@ -136,7 +144,7 @@ jobs:
     # Pull requests: only non-draft ones from a branch of this repository (never a fork: no secrets for fork code).
     if: ${{ (github.event_name != 'pull_request' || (!github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository)) && inputs.sdk != 'java' }}
     runs-on:
-      group: macos-gh
+      group: organization/Default
     timeout-minutes: 60
     strategy:
       # One group at a time (the Kotlin keysets are shared by the groups), and every group runs even after a failed one.
@@ -153,8 +161,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Cache
-        uses: actions/cache@v4
+      # Restore only: the offline job saves the cache, so the live jobs skip the slow save at the end of each job.
+      - name: Restore the Gradle cache
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.gradle/caches
@@ -162,8 +171,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Update CocoaPods trunk
-        run: pod repo update
       # Secrets are set per step below, never on the job, so the build never sees them.
       - name: Compile
         id: compile
@@ -216,7 +223,7 @@ jobs:
     # Pull requests: only non-draft ones from a branch of this repository (never a fork: no secrets for fork code).
     if: ${{ (github.event_name != 'pull_request' || (!github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository)) && inputs.sdk != 'kotlin' }}
     runs-on:
-      group: macos-gh
+      group: organization/Default
     timeout-minutes: 60
     strategy:
       # One group at a time (the Java keysets are shared by the groups), and every group runs even after a failed one.
@@ -233,8 +240,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Cache
-        uses: actions/cache@v4
+      # Restore only: the offline job saves the cache, so the live jobs skip the slow save at the end of each job.
+      - name: Restore the Gradle cache
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.gradle/caches
@@ -242,8 +250,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Update CocoaPods trunk
-        run: pod repo update
       # Secrets are set per step below, never on the job, so the build never sees them.
       - name: Compile
         id: compile
