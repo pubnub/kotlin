@@ -42,13 +42,20 @@ jobs:
       - name: Build and run tests
         # static analysis runs in the Validations workflow
         run: |
-          ./gradlew check -x ktlintCheck -x detekt -x checkstyleMain -x spotbugsMain --no-parallel --continue
+          ./gradlew check -x ktlintCheck -x detekt -x checkstyleMain -x spotbugsMain --continue
         env:
           SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
           SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}
           SDK_PAM_SUB_KEY: ${{ secrets.SDK_PAM_SUB_KEY }}
           SDK_PAM_PUB_KEY: ${{ secrets.SDK_PAM_PUB_KEY }}
           SDK_PAM_SEC_KEY: ${{ secrets.SDK_PAM_SEC_KEY }}
+      - name: Expose test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: linux-test-results
+          path: pubnub-kotlin/pubnub-kotlin-api/build/test-results/**
+          retention-days: 7
       - name: Cancel workflow runs for commit on error
         if: failure()
         uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
