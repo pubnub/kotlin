@@ -23,7 +23,11 @@ class FailureOutputRedactTest {
     /** An ExtensionContext that answers only getDisplayName, the one call testFailed makes. */
     private val context: ExtensionContext =
         Proxy.newProxyInstance(ExtensionContext::class.java.classLoader, arrayOf(ExtensionContext::class.java)) { _, method, _ ->
-            if (method.name == "getDisplayName") "someTest()" else throw UnsupportedOperationException(method.name)
+            if (method.name == "getDisplayName") {
+                "someTest()"
+            } else {
+                throw UnsupportedOperationException(method.name)
+            }
         } as ExtensionContext
 
     private fun consoleOf(block: () -> Unit): String {
