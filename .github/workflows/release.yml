@@ -10,15 +10,10 @@ jobs:
     name: Check release required
     if: github.event.pull_request.merged && endsWith(github.repository, '-private') != true
     runs-on:
-      group: macos-gh
+      group: organization/Default
     outputs:
       release: ${{ steps.check.outputs.ready }}
     steps:
-      - name: Install JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
-          java-version: '21'
       - name: Checkout actions
         uses: actions/checkout@v4
         with:
