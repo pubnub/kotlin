@@ -90,6 +90,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+          # The extractor golden test reads the removed docs modules from history (git show 78e6a3118:<path>), so the
+          # offline job needs the full history. The live jobs do not run that test and keep the shallow checkout.
+          fetch-depth: 0
       - name: Cache
         uses: actions/cache@v4
         with:

@@ -18,6 +18,7 @@ import com.pubnub.api.java.v2.PNConfigurationOverride;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.docs.configuration.samples.ConfigurationLoggerProbe;
 import com.pubnub.docs.support.Cleanup;
 import com.pubnub.docs.support.CompileOnly;
 import com.pubnub.docs.support.JavaWait;
@@ -28,7 +29,6 @@ import com.pubnub.docs.support.Recorder;
 import com.pubnub.docs.support.Redact;
 import com.pubnub.docs.support.Stdout;
 import com.pubnub.docs.support.Wait;
-import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Arrays;
@@ -59,22 +59,13 @@ class ConfigurationDocsTest {
         return clients.javaClient(OPEN, user);
     }
 
-    private static List<?> staticList(String className, String field) throws Exception {
-        Field f = Class.forName(className).getDeclaredField(field);
-        f.setAccessible(true);
-        return (List<?>) f.get(null);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // Configuration
     // -----------------------------------------------------------------------------------------------------------------
 
     @Test
     void configurationMain(LiveClients clients) throws Exception {
-        String logger = "com.pubnub.docs.configuration.samples.MyCustomLoggerImpl";
-        java.lang.reflect.Method clear = Class.forName(logger).getDeclaredMethod("clear");
-        clear.setAccessible(true);
-        clear.invoke(null);
+        ConfigurationLoggerProbe.clear();
         Stdout out = Stdout.captureForTest();
 
         com.pubnub.docs.configuration.samples.ConfigurationApp.main(new String[0]);
@@ -82,11 +73,10 @@ class ConfigurationDocsTest {
         out.assertPrinted("PubNub client initialized.");
         assertEquals(0, Redact.INSTANCE.leakCount(out.text()), "the sample printed a key of the keysets");
         // the custom logger of the sample is in the configuration: the SDK logged the configuration of the new client to it
-        List<?> logMessages = staticList(logger, "logMessages");
+        List<com.pubnub.api.logging.LogMessage> logMessages = ConfigurationLoggerProbe.logMessages();
         assertFalse(logMessages.isEmpty(), "the custom logger of the sample received no log message");
         boolean configurationLogged =
                 logMessages.stream()
-                        .map(m -> (com.pubnub.api.logging.LogMessage) m)
                         .anyMatch(m -> "Configuration logged".equals(m.getDetails()));
         assertTrue(configurationLogged, "the custom logger did not receive the configuration of the client");
     }
