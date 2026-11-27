@@ -1,0 +1,292 @@
+name: Live tests
+
+# Live docs snippet tier (pubnub-kotlin/pubnub-kotlin-impl/src/integrationTest/kotlin/com/pubnub/docs/README.md): every
+# code sample that the public Kotlin and Java SDK docs embed from this repository, run against the real PubNub service.
+# Runs on non-draft pull requests into master, and on demand. No scheduled runs. Draft pull requests run nothing. Fork
+# pull requests never get the live jobs (no secrets for fork code). Not a required check.
+#
+# One job per API group and SDK. The groups and their test classes are in groups.json next to the tier README. The
+# offline job turns that file into the job matrix, so a new group needs no change here except the `group` input options
+# below (the offline tools check that they match). Kotlin and Java have their own keysets, so the two SDK jobs run in
+# parallel. Each SDK runs one group at a time (max-parallel: 1, the keysets are shared by its groups) and does not stop
+# at a failed group (fail-fast: false), so every group reports its own result and the run is red when any group failed.
+# Each group cleans the keysets before and after its tests (the janitor of the tier) and can be re-run alone.
+#
+# Secrets: the live jobs take the docs keys only from the repository secrets (SDK_DOCS_* names), passed as environment
+# variables to the steps that need them. They never come from a file: LIVE_ENV_FILE is /dev/null, so an env file left in
+# a checkout is not read. The repository is public, but only PubNub people have push access. Push access is the trust
+# boundary: a pull request from a branch of this repository runs its own code with these secrets, so it is only as
+# trusted as its author.
+
+on:
+  # Every pull request into master, whatever files it changes, so SDK changes are tested too. A new push to the pull
+  # request starts a new run. Marking a draft as ready for review also starts a run.
+  pull_request:
+    branches:
+      - master
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      group:
+        description: 'Run only this group (groups.json of the docs tier). "all" runs every group, one after another per SDK.'
+        required: false
+        default: 'all'
+        type: choice
+        # Must list 'all' and then every group name of groups.json (checked by the offline tools, DocsToolsTest).
+        options:
+          - all
+          - messaging
+          - getting-started
+          - access-manager
+          - app-context
+          - datasync
+      sdk:
+        description: 'Run the Kotlin tests, the Java tests, or both.'
+        required: false
+        default: 'both'
+        type: choice
+        options:
+          - both
+          - kotlin
+          - java
+      tests:
+        description: 'Run only the tests that match this Gradle --tests filter, inside the selected groups. Empty runs everything.'
+        required: false
+        default: ''
+        type: string
+
+# One live run at a time for the whole workflow: the tier uses fixed resource names on shared keysets, so the jobs of
+# two runs must never interleave. This group never cancels in progress, because that would also cancel the run of
+# another pull request. A new push to a pull request cancels the older live runs of the same pull request through
+# cancel-superseded-live-runs.yml (a run that waits for this group cannot cancel itself). Runs that get no live jobs
+# (draft or fork pull requests) take one group per pull request and cancel their own older run.
+concurrency:
+  group: ${{ (github.event_name == 'pull_request' && (github.event.pull_request.draft || github.event.pull_request.head.repo.full_name != github.repository)) && format('kotlin-live-tests-no-live-{0}', github.ref) || 'kotlin-docs-snippets-live' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' && (github.event.pull_request.draft || github.event.pull_request.head.repo.full_name != github.repository) }}
+
+defaults:
+  run:
+    shell: bash
+
+# The tier is JVM only, so its jobs run on the GitHub-hosted Linux runners of organization/Default (a fresh machine per
+# job, several jobs at once), not on the macos-gh runner of the other workflows. Gradle skips the JS and iOS targets, so
+# the build needs neither CocoaPods nor a Mac. These override gradle.properties for this workflow only.
+env:
+  ORG_GRADLE_PROJECT_ENABLE_TARGET_JS: "false"
+  ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_OTHER: "false"
+  ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_SIMULATOR_ARM64: "false"
+  ORG_GRADLE_PROJECT_ENABLE_TARGET_IOS_ALL: "false"
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    name: Offline checks (compile, lint, plan)
+    if: ${{ github.event_name != 'pull_request' || !github.event.pull_request.draft }}
+    runs-on:
+      group: organization/Default
+    timeout-minutes: 30
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "21"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          # The extractor golden test reads the removed docs modules from history (git show 78e6a3118:<path>), so the
+          # offline job needs the full history. The live jobs do not run that test and keep the shallow checkout.
+          fetch-depth: 0
+      # The only job of this workflow that saves the Gradle cache. The live jobs restore it and never save.
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      # No keys: the offline tools (extractor, marker lint, manifest, groups, equivalence) need no network.
+      - name: Compile both trees and run the offline tools
+        run: |
+          ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:compileIntegrationTestKotlin :pubnub-gson:pubnub-gson-impl:compileIntegrationTestJava \
+            :pubnub-kotlin:pubnub-kotlin-impl:docsSnippetsTest --tests 'com.pubnub.docs.offline.*' \
+            :pubnub-gson:pubnub-gson-impl:docsSnippetsTest --tests 'com.pubnub.docs.offline.*'
+      - name: Plan the group jobs
+        id: plan
+        env:
+          # Empty on pull requests: every group. Reaches the script only through the environment.
+          GROUP: ${{ inputs.group }}
+        run: |
+          matrix="$(python3 -I -c '
+          import json, os, sys
+          names = [g["name"] for g in json.load(open(sys.argv[1]))["groups"]]
+          selected = os.environ.get("GROUP") or "all"
+          if selected != "all" and selected not in names:
+              sys.exit("unknown group " + selected)
+          print(json.dumps({"group": names if selected == "all" else [selected]}))
+          ' pubnub-kotlin/pubnub-kotlin-impl/src/integrationTest/kotlin/com/pubnub/docs/groups.json)"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "$matrix"
+
+  live-kotlin:
+    name: kotlin ${{ matrix.group }}
+    env:
+      # Never read an env file: the keys come only from the repository secrets of the steps below.
+      LIVE_ENV_FILE: /dev/null
+    needs: [offline]
+    # Pull requests: only non-draft ones from a branch of this repository (never a fork: no secrets for fork code).
+    if: ${{ (github.event_name != 'pull_request' || (!github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository)) && inputs.sdk != 'java' }}
+    runs-on:
+      group: organization/Default
+    timeout-minutes: 60
+    strategy:
+      # One group at a time (the Kotlin keysets are shared by the groups), and every group runs even after a failed one.
+      max-parallel: 1
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.offline.outputs.matrix) }}
+    steps:
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "21"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      # Restore only: the offline job saves the cache, so the live jobs skip the slow save at the end of each job.
+      - name: Restore the Gradle cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      # Secrets are set per step below, never on the job, so the build never sees them.
+      - name: Compile
+        id: compile
+        run: ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:integrationTestClasses
+      # The janitor and the preflight of the tier run before the group's tests, the janitor again after them. CI gets no
+      # Admin API key: the keysets are set up by hand, so the preflight skips the keyset
+      # settings read and runs only its live probes (publish, history, delete, presence, mobile push, DataSync events).
+      - name: Docs samples (janitor and preflight on)
+        if: ${{ !cancelled() && steps.compile.outcome == 'success' }}
+        env:
+          PUBLISH_KEY: ${{ secrets.SDK_DOCS_OPEN_PUBLISH_KEY }}
+          SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_OPEN_SUBSCRIBE_KEY }}
+          PAM_PUBLISH_KEY: ${{ secrets.SDK_DOCS_PAM_PUBLISH_KEY }}
+          PAM_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_PAM_SUBSCRIBE_KEY }}
+          PAM_SECRET_KEY: ${{ secrets.SDK_DOCS_PAM_SECRET_KEY }}
+          DS_PUBLISH_KEY: ${{ secrets.SDK_DOCS_DS_PUBLISH_KEY }}
+          DS_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_DS_SUBSCRIBE_KEY }}
+          DS_SECRET_KEY: ${{ secrets.SDK_DOCS_DS_SECRET_KEY }}
+          LIVE_GROUP: ${{ matrix.group }}
+          # Untrusted input: reaches the command only through the environment.
+          TESTS: ${{ inputs.tests }}
+        run: |
+          if [ -n "$TESTS" ]; then
+            ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:docsSnippetsTest --tests "$TESTS"
+          else
+            ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:docsSnippetsTest
+          fi
+      # After a failure or a cancel the tier's own teardown may not have run (killed process): revoke the
+      # application-level Access Manager grant and remove leftovers, so a keyset is never left open.
+      - name: Revoke grants and clean up
+        if: ${{ (cancelled() || failure()) && steps.compile.outcome == 'success' }}
+        env:
+          PUBLISH_KEY: ${{ secrets.SDK_DOCS_OPEN_PUBLISH_KEY }}
+          SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_OPEN_SUBSCRIBE_KEY }}
+          PAM_PUBLISH_KEY: ${{ secrets.SDK_DOCS_PAM_PUBLISH_KEY }}
+          PAM_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_PAM_SUBSCRIBE_KEY }}
+          PAM_SECRET_KEY: ${{ secrets.SDK_DOCS_PAM_SECRET_KEY }}
+          DS_PUBLISH_KEY: ${{ secrets.SDK_DOCS_DS_PUBLISH_KEY }}
+          DS_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_DS_SUBSCRIBE_KEY }}
+          DS_SECRET_KEY: ${{ secrets.SDK_DOCS_DS_SECRET_KEY }}
+          DOCS_SNIPPETS_TOOL_SDK: kotlin
+        run: ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:docsSnippetsTest --tests 'com.pubnub.docs.support.tools.JanitorCommandTest'
+
+  live-java:
+    name: java ${{ matrix.group }}
+    env:
+      # Never read an env file: the keys come only from the repository secrets of the steps below.
+      LIVE_ENV_FILE: /dev/null
+    needs: [offline]
+    # Pull requests: only non-draft ones from a branch of this repository (never a fork: no secrets for fork code).
+    if: ${{ (github.event_name != 'pull_request' || (!github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository)) && inputs.sdk != 'kotlin' }}
+    runs-on:
+      group: organization/Default
+    timeout-minutes: 60
+    strategy:
+      # One group at a time (the Java keysets are shared by the groups), and every group runs even after a failed one.
+      max-parallel: 1
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.offline.outputs.matrix) }}
+    steps:
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "21"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      # Restore only: the offline job saves the cache, so the live jobs skip the slow save at the end of each job.
+      - name: Restore the Gradle cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      # Secrets are set per step below, never on the job, so the build never sees them.
+      - name: Compile
+        id: compile
+        run: ./gradlew :pubnub-gson:pubnub-gson-impl:integrationTestClasses :pubnub-kotlin:pubnub-kotlin-impl:integrationTestClasses
+      - name: Docs samples (janitor and preflight on)
+        if: ${{ !cancelled() && steps.compile.outcome == 'success' }}
+        env:
+          JAVA_PUBLISH_KEY: ${{ secrets.SDK_DOCS_JAVA_OPEN_PUBLISH_KEY }}
+          JAVA_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_JAVA_OPEN_SUBSCRIBE_KEY }}
+          JAVA_PAM_PUBLISH_KEY: ${{ secrets.SDK_DOCS_JAVA_PAM_PUBLISH_KEY }}
+          JAVA_PAM_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_JAVA_PAM_SUBSCRIBE_KEY }}
+          JAVA_PAM_SECRET_KEY: ${{ secrets.SDK_DOCS_JAVA_PAM_SECRET_KEY }}
+          JAVA_DS_PUBLISH_KEY: ${{ secrets.SDK_DOCS_JAVA_DS_PUBLISH_KEY }}
+          JAVA_DS_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_JAVA_DS_SUBSCRIBE_KEY }}
+          JAVA_DS_SECRET_KEY: ${{ secrets.SDK_DOCS_JAVA_DS_SECRET_KEY }}
+          LIVE_GROUP: ${{ matrix.group }}
+          # Untrusted input: reaches the command only through the environment.
+          TESTS: ${{ inputs.tests }}
+        run: |
+          if [ -n "$TESTS" ]; then
+            ./gradlew :pubnub-gson:pubnub-gson-impl:docsSnippetsTest --tests "$TESTS"
+          else
+            ./gradlew :pubnub-gson:pubnub-gson-impl:docsSnippetsTest
+          fi
+      # The janitor tool runs in the Kotlin module. DOCS_SNIPPETS_TOOL_SDK=java points it at the Java keysets.
+      - name: Revoke grants and clean up
+        if: ${{ (cancelled() || failure()) && steps.compile.outcome == 'success' }}
+        env:
+          JAVA_PUBLISH_KEY: ${{ secrets.SDK_DOCS_JAVA_OPEN_PUBLISH_KEY }}
+          JAVA_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_JAVA_OPEN_SUBSCRIBE_KEY }}
+          JAVA_PAM_PUBLISH_KEY: ${{ secrets.SDK_DOCS_JAVA_PAM_PUBLISH_KEY }}
+          JAVA_PAM_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_JAVA_PAM_SUBSCRIBE_KEY }}
+          JAVA_PAM_SECRET_KEY: ${{ secrets.SDK_DOCS_JAVA_PAM_SECRET_KEY }}
+          JAVA_DS_PUBLISH_KEY: ${{ secrets.SDK_DOCS_JAVA_DS_PUBLISH_KEY }}
+          JAVA_DS_SUBSCRIBE_KEY: ${{ secrets.SDK_DOCS_JAVA_DS_SUBSCRIBE_KEY }}
+          JAVA_DS_SECRET_KEY: ${{ secrets.SDK_DOCS_JAVA_DS_SECRET_KEY }}
+          DOCS_SNIPPETS_TOOL_SDK: java
+        run: ./gradlew :pubnub-kotlin:pubnub-kotlin-impl:docsSnippetsTest --tests 'com.pubnub.docs.support.tools.JanitorCommandTest'
+
+  # No failure alerts (Slack or similar): the run logs in GitHub are the only signal. No artifact upload.

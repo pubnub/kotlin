@@ -29,4 +29,5 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation("com.google.guava:guava:33.3.0-jre")
     "integrationTestImplementation"(libs.owner)
+    "integrationTestImplementation"(project(path = ":pubnub-kotlin:pubnub-kotlin-impl", configuration = "integrationTestSupport"))
 }
