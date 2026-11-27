@@ -7,11 +7,13 @@ object LeakCheck {
 
     /**
      * The threads of clients that were destroyed a moment ago are still winding down (an executor shut down with
-     * `shutdownNow` needs a few milliseconds), so the check waits up to [waitMs] for them to end before it calls them leaked.
+     * `shutdownNow` needs a few milliseconds, more on a small CI machine), so the check waits up to [waitMs] for them to
+     * end before it calls them leaked. A real leak (a client that is never destroyed) stays alive, so the longer wait
+     * only delays that failure and does not hide it.
      */
     @JvmStatic
     @JvmOverloads
-    fun nonDaemonThreadsAfterWinddown(waitMs: Long = 5000): List<String> {
+    fun nonDaemonThreadsAfterWinddown(waitMs: Long = 20_000): List<String> {
         val deadline = System.nanoTime() + waitMs * 1_000_000
         var found = nonDaemonThreads()
         while (found.isNotEmpty() && System.nanoTime() < deadline) {

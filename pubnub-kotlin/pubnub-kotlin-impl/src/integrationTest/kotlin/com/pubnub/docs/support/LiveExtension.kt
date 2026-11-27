@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
+import org.junit.jupiter.api.extension.TestWatcher
 
 /**
  * JUnit 5 extension of every live docs test class: `@ExtendWith(LiveExtension::class)`.
@@ -20,7 +21,7 @@ import org.junit.jupiter.api.extension.ParameterResolver
  *   and destroyed.
  * - After the last class (when the root context closes): the janitor again, then a check for leftover non-daemon threads.
  */
-class LiveExtension : BeforeAllCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
+class LiveExtension : BeforeAllCallback, AfterEachCallback, AfterAllCallback, ParameterResolver, TestWatcher {
     private val namespace = ExtensionContext.Namespace.create(LiveExtension::class.java)
 
     /** One per JVM. Its close() runs when the whole run ends. */
@@ -45,6 +46,10 @@ class LiveExtension : BeforeAllCallback, AfterEachCallback, AfterAllCallback, Pa
                 clean = Janitor.run(roles).also { Janitor.formatReport(it).forEach { line -> println(line) } }.critical.isEmpty()
             }
             val leftovers = LeakCheck.nonDaemonThreadsAfterWinddown()
+            if (leftovers.isNotEmpty()) {
+                // Printed as well, because the build log shows only the exception class of an extension failure.
+                println("live roles: non-daemon threads still alive after the run: ${Redact.scrub(leftovers.joinToString(", "))}")
+            }
             check(clean) { "the janitor could not revoke the application level grant after the run" }
             check(leftovers.isEmpty()) { "non-daemon threads are still alive after the run: ${leftovers.joinToString(", ")}" }
         }
@@ -103,5 +108,36 @@ class LiveExtension : BeforeAllCallback, AfterEachCallback, AfterAllCallback, Pa
 
     override fun afterAll(context: ExtensionContext) {
         // The run itself closes when the root context closes. Nothing per class.
+    }
+
+    /**
+     * Prints why a test failed, so the CI log shows more than the exception class. Gradle keeps its short exception
+     * format (it would print messages unredacted), so this is the only place a failure message reaches the log: every
+     * message of the cause chain goes through [Redact] (registered key and token values, key and token shapes, auth and
+     * signature query values) and is capped in length.
+     */
+    override fun testFailed(
+        context: ExtensionContext,
+        cause: Throwable?,
+    ) {
+        var current = cause
+        var depth = 0
+        while (current != null && depth < MAX_CAUSES) {
+            val message = Redact.scrub(current.message.orEmpty()).take(MAX_MESSAGE_CHARS)
+            val label =
+                if (depth == 0) {
+                    "failed"
+                } else {
+                    "caused by"
+                }
+            println("live failure: ${context.displayName} $label ${current.javaClass.name}: $message")
+            current = current.cause.takeIf { it !== current }
+            depth++
+        }
+    }
+
+    private companion object {
+        const val MAX_CAUSES = 5
+        const val MAX_MESSAGE_CHARS = 2000
     }
 }

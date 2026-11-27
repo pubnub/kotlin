@@ -57,6 +57,8 @@ class PubNubIntegrationTestPlugin : Plugin<Project> {
                     testLogging {
                         it.events("passed", "failed", "skipped")
                         it.showStandardStreams = true
+                        // Keep Gradle's short exception format (class and line, no message): Gradle prints messages
+                        // unredacted. LiveExtension prints each failure message itself, through Redact.
                     }
                     // LIVE_GROUP selects the classes of one group from groups.json (its kotlin and java lists).
                     val liveGroup = providers.environmentVariable("LIVE_GROUP").orNull?.trim().orEmpty()
