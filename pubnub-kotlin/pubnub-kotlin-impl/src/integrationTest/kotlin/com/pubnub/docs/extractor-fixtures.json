@@ -1,0 +1,737 @@
+{
+ "cases": [
+  {
+   "name": "simple",
+   "text": "// snippet.a\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "indented",
+   "text": "fun f() {\n    // snippet.a\n    val x = 1\n    if (x > 0) {\n        println(x)\n    }\n    // snippet.end\n}\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "if (x > 0) {",
+    "    println(x)",
+    "}"
+   ]
+  },
+  {
+   "name": "nested start ends the outer",
+   "text": "// snippet.a\nval x = 1\n// snippet.b\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "nested start, inner id",
+   "text": "// snippet.a\nval x = 1\n// snippet.b\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "b"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val y = 2"
+   ]
+  },
+  {
+   "name": "missing space is no marker with default prefixes",
+   "text": "//snippet.a\nval x = 1\n//snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": []
+  },
+  {
+   "name": "missing space with the prefixes option",
+   "text": "//snippet.a\nval x = 1\n//snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "//"
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "prefixes option also reads the spaced form",
+   "text": "// snippet.a\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "//"
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "prefixes option with an empty region guard",
+   "text": "//snippet.a\n//snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "//"
+   ],
+   "expected": []
+  },
+  {
+   "name": "two spaces after slashes",
+   "text": "//  snippet.a\nval x = 1\n//  snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "id with a slash",
+   "text": "// snippet.a/b\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "a/b"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "id with a slash is no boundary",
+   "text": "// snippet.a\nval x = 1\n// snippet.a/b\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "// snippet.a/b",
+    "val y = 2"
+   ]
+  },
+  {
+   "name": "id with a regex metacharacter matches loosely",
+   "text": "// snippet.axb\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "a.b"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "hide and show",
+   "text": "// snippet.a\nval x = 1\n// snippet.hide\nval secret = 2\n// snippet.show\nval y = 3\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "val y = 3"
+   ]
+  },
+  {
+   "name": "hide without show",
+   "text": "// snippet.a\nval x = 1\n// snippet.hide\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "hide and show do not end the region",
+   "text": "// snippet.a\n// snippet.hide\nhidden()\n// snippet.show\nshown()\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "shown()"
+   ]
+  },
+  {
+   "name": "blank lines with whitespace",
+   "text": "    // snippet.a\n    val x = 1\n   \n\n    val y = 2\n    // snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "   ",
+    "",
+    "val y = 2"
+   ]
+  },
+  {
+   "name": "tabs",
+   "text": "\t// snippet.a\n\tval x = 1\n\t\tval y = 2\n\t// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "\tval y = 2"
+   ]
+  },
+  {
+   "name": "blueprint line",
+   "text": "// snippet.a\nval x = 1\n// blueprint._o945md2\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "val y = 2"
+   ]
+  },
+  {
+   "name": "blueprint line with the prefixes option",
+   "text": "// snippet.a\nval x = 1\n//blueprint.abc\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "//"
+   ],
+   "expected": [
+    "val x = 1",
+    "val y = 2"
+   ]
+  },
+  {
+   "name": "empty region",
+   "text": "// snippet.a\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": []
+  },
+  {
+   "name": "region with only hidden lines",
+   "text": "// snippet.a\n// snippet.hide\nx()\n// snippet.show\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": []
+  },
+  {
+   "name": "id not found",
+   "text": "// snippet.a\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "zzz"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": []
+  },
+  {
+   "name": "region runs to the end of the file",
+   "text": "val z = 0\n// snippet.a\nval x = 1\nval y = 2\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "val y = 2",
+    ""
+   ]
+  },
+  {
+   "name": "first start marker wins",
+   "text": "// snippet.a\nval x = 1\n// snippet.end\n// snippet.a\nval x = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "two ids in one call",
+   "text": "// snippet.a\nval x = 1\n// snippet.end\n// snippet.b\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a",
+    "b"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "val y = 2"
+   ]
+  },
+  {
+   "name": "one found, one missing",
+   "text": "// snippet.a\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "a",
+    "zzz"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "no ids returns the content",
+   "text": "val x = 1\n",
+   "ids": [],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1\n"
+   ]
+  },
+  {
+   "name": "trailing spaces on markers",
+   "text": "// snippet.a   \nval x = 1\n// snippet.end  \n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "carriage returns",
+   "text": "// snippet.a\r\nval x = 1\r\n// snippet.end\r\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1\r"
+   ]
+  },
+  {
+   "name": "no-break space before the marker",
+   "text": " // snippet.a\nval x = 1\n // snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "byte order mark before the marker",
+   "text": "﻿// snippet.a\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "hash prefix ends a slash region as a boundary",
+   "text": "// snippet.a\nval x = 1\n# snippet.b\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "same id with another prefix is no boundary",
+   "text": "// snippet.a\nval x = 1\n# snippet.a\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "# snippet.a",
+    "val y = 2"
+   ]
+  },
+  {
+   "name": "end marker of another prefix is no end",
+   "text": "// snippet.a\nval x = 1\n# snippet.end\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "hash prefix",
+   "text": "# snippet.a\nx = 1\n# snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "x = 1"
+   ]
+  },
+  {
+   "name": "block comment prefix",
+   "text": "/* snippet.a\nx = 1\n/* snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "x = 1"
+   ]
+  },
+  {
+   "name": "html prefix",
+   "text": "<!-- snippet.a\n<p>x</p>\n<!-- snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "<p>x</p>"
+   ]
+  },
+  {
+   "name": "prefix list without a match falls through to the next",
+   "text": "# snippet.a\nx = 1\n# snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# "
+   ],
+   "expected": [
+    "x = 1"
+   ]
+  },
+  {
+   "name": "empty prefix list uses the default slashes",
+   "text": "// snippet.a\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [],
+   "expected": [
+    "val x = 1"
+   ]
+  },
+  {
+   "name": "unindent keeps the relative indentation",
+   "text": "        // snippet.a\n        if (x) {\n            y()\n        }\n        // snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "if (x) {",
+    "    y()",
+    "}"
+   ]
+  },
+  {
+   "name": "unindent with a flush-left line",
+   "text": "    // snippet.a\n    a()\nb()\n    // snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "    a()",
+    "b()"
+   ]
+  },
+  {
+   "name": "end marker with trailing text is no marker",
+   "text": "// snippet.a\nval x = 1\n// snippet.end now\nval y = 2\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1",
+    "// snippet.end now",
+    "val y = 2"
+   ]
+  },
+  {
+   "name": "start marker with trailing text is no marker",
+   "text": "// snippet.a b\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": []
+  },
+  {
+   "name": "marker inside code line is no marker",
+   "text": "val s = \"// snippet.a\"\n// snippet.a\nval x = 1\n// snippet.end\n",
+   "ids": [
+    "a"
+   ],
+   "prefixes": [
+    "// ",
+    "# ",
+    "/* ",
+    "<!-- ",
+    "<%-- "
+   ],
+   "expected": [
+    "val x = 1"
+   ]
+  }
+ ]
+}

@@ -11,6 +11,8 @@ bin/
 gen/
 out/
 test.properties
+.env.local
+*.env.local
 local.properties
 *.DS_STORE
 *.podspec

@@ -59,6 +59,21 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
     testImplementation(libs.owner)
+
+    // The docs sample iterativelyUpdateExistingMetadataMain (com.pubnub.docs) imports kotlin.test.
+    integrationTestImplementation(kotlin("test"))
+}
+
+// Exposes the integrationTest classes (the com.pubnub.docs support code) to pubnub-gson-impl.
+val integrationTestSupport by configurations.creating {
+    isCanBeConsumed = true
+    isCanBeResolved = false
+}
+afterEvaluate {
+    val integrationTestOutput = sourceSets.getByName("integrationTest").output
+    integrationTestOutput.classesDirs.forEach { dir ->
+        integrationTestSupport.outgoing.artifact(dir) { builtBy(integrationTestOutput) }
+    }
 }
 
 task<Test>("cucumber") {
